@@ -1,6 +1,6 @@
 /*
     TE4 - T-Engine 4
-    Copyright (C) 2009, 2010, 2011, 2012, 2013 Nicolas Casalini
+    Copyright (C) 2009 - 2014 Nicolas Casalini
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -37,6 +37,29 @@ int get_number_cpus()
 {
 	return sysconf(_SC_NPROCESSORS_ONLN);
 //	return 1;
+}
+
+#elif defined(SELFEXE_BSD)
+#include <limits.h>
+#include <stdlib.h>
+const char *get_self_executable(int argc, char **argv)
+{
+	static char res[PATH_MAX];
+	// Like linux, but /proc is not always mounted
+	//  return 0 if it's not
+	if (realpath("/proc/curproc/file", res)) return NULL;
+	return res;
+}
+
+#import <sys/sysctl.h>
+
+int get_number_cpus()
+{
+	int count;
+	size_t size=sizeof(count);
+	
+	if (sysctlbyname("hw.ncpu",&count,&size,NULL,0)) return 1;
+	return count;
 }
 
 #elif defined(SELFEXE_WINDOWS)

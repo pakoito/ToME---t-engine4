@@ -1,5 +1,5 @@
 -- ToME - Tales of Maj'Eyal
--- Copyright (C) 2009, 2010, 2011, 2012, 2013 Nicolas Casalini
+-- Copyright (C) 2009 - 2014 Nicolas Casalini
 --
 -- This program is free software: you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -39,7 +39,7 @@ return {
 			class = "engine.generator.map.Cavern",
 			zoom = 16,
 			min_floor = 1100,
-			floor = "CAVEFLOOR",
+			floor = function() if rng.percent(96) then return "CAVEFLOOR" else return "WORMHOLE" end end,
 			wall = "CAVEWALL",
 			up = "CAVE_LADDER_UP",
 			down = "CAVE_LADDER_DOWN",
@@ -71,6 +71,9 @@ return {
 	},
 
 	post_process = function(level)
+		-- Place a lore note on each level
+		game:placeRandomLoreObject("NOTE"..level.level)
+
 		game.state:makeAmbientSounds(level, {
 			dungeon2={ chance=250, volume_mod=1, pitch=1, random_pos={rad=10}, files={"ambient/dungeon/dungeon1","ambient/dungeon/dungeon2","ambient/dungeon/dungeon3","ambient/dungeon/dungeon4","ambient/dungeon/dungeon5"}},
 		})

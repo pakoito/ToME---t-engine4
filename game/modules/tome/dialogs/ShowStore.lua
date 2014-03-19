@@ -1,5 +1,5 @@
 -- TE4 - T-Engine 4
--- Copyright (C) 2009, 2010, 2011, 2012, 2013 Nicolas Casalini
+-- Copyright (C) 2009 - 2014 Nicolas Casalini
 --
 -- This program is free software: you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -37,7 +37,7 @@ function _M:init(title, store_inven, actor_inven, store_filter, actor_filter, ac
 	self.actor_filter = actor_filter
 	self.actor_actor = actor_actor
 	self.base_title = title or "Store"
-	Dialog.init(self, self:getStoreTitle(), math.max(800, game.w * 0.8), math.max(600, game.h * 0.8))
+	Dialog.init(self, self:getStoreTitle(), game.w * 0.8, game.h * 0.8)
 
 	if store_actor.faction then
 		local i = Map.tiles:loadImage("faction/"..store_actor.faction..".png")

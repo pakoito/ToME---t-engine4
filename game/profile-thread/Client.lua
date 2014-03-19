@@ -1,5 +1,5 @@
 -- TE4 - T-Engine 4
--- Copyright (C) 2009, 2010, 2011, 2012, 2013 Nicolas Casalini
+-- Copyright (C) 2009 - 2014 Nicolas Casalini
 --
 -- This program is free software: you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -223,7 +223,7 @@ function _M:step()
 
 		-- Ping every minute, lest the server kills us
 		local time = os.time()
-		if time - self.last_ping > 60 then
+		if time - self.last_ping > 60 and self.sock then
 			self.last_ping = time
 			self:orderPing()
 		end
@@ -239,7 +239,7 @@ function _M:run()
 		while order do self:handleOrder(order) order = cprofile.popOrder() end
 
 		self:step()
-		core.game.sleep(20)
+		core.game.sleep(10)
 --	end
 end
 
@@ -334,10 +334,13 @@ function _M:orderSetConfigsBatch(o)
 
 		print("[PROFILE THREAD] flushing CSETs")
 
-		local data = zlib.compress(table.serialize(self.setConfigsBatching))
-		self:command("FSET", data:len())
-		if self:read("200") then self.sock:send(data) end
-
+		if #self.setConfigsBatching <= 0 then
+			print("[PROFILE THREAD] flushing CSETs ignored, empty dataset")
+		else
+			local data = zlib.compress(table.serialize(self.setConfigsBatching))
+			self:command("FSET", data:len())
+			if self:read("200") then self.sock:send(data) end
+		end
 		self.setConfigsBatching = nil
 	else
 		print("[PROFILE THREAD] batching CSETs")
@@ -381,6 +384,22 @@ function _M:orderCheckAddonHash(o)
 		cprofile.pushEvent("e='CheckAddonHash' ok=true")
 	else
 		cprofile.pushEvent("e='CheckAddonHash' ok=false")
+	end
+end
+
+function _M:orderCheckBatchHash(o)
+	if not self.sock then cprofile.pushEvent("e='CheckBatchHash' ok=false not_connected=true") end
+	local data = table.serialize(o.data)
+	self:command("BMD5", #data)
+	if self:read("200") then
+		self.sock:send(data)
+		if self:read("200") then		
+			cprofile.pushEvent("e='CheckBatchHash' ok=true")
+		else
+			cprofile.pushEvent(("e='CheckBatchHash' ok=false error=%q"):format(self.last_error))
+		end
+	else
+		cprofile.pushEvent(("e='CheckBatchHash' ok=false error=%q"):format("unknown error"))
 	end
 end
 

@@ -1,5 +1,5 @@
 -- ToME - Tales of Maj'Eyal
--- Copyright (C) 2009, 2010, 2011, 2012, 2013 Nicolas Casalini
+-- Copyright (C) 2009 - 2014 Nicolas Casalini
 --
 -- This program is free software: you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -214,6 +214,7 @@ newBirthDescriptor{
 		"Absolutely unfair game setting.  You are really mentally ill to play this mode!",
 		"All zone levels increased by 120% + 5",
 		"All creature talent levels increased by 100%",
+		"Bosses will have randomly selected talents",
 		"Player rank is normal instead of elite",
 		"Player can earn Insane version of achievements if also playing in Roguelike or Adventure permadeath mode.",
 	},
@@ -239,6 +240,7 @@ newBirthDescriptor{
 		"All zone levels increased by 150% + 10",
 		"All creature talent levels increased by 170%",
 		"Rare creatures are far more frequent and random bosses start to appear",
+		"Bosses will have randomly selected talents",
 		"Player is being hunted! Randomly all foes in a radius will get a feeling of where she/he is",
 		"Player rank is normal instead of elite",
 		"Player can earn Madness version of achievements if also playing in Roguelike or Adventure permadeath mode.",

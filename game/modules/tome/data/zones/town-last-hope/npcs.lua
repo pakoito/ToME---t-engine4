@@ -1,5 +1,5 @@
 -- ToME - Tales of Maj'Eyal
--- Copyright (C) 2009, 2010, 2011, 2012, 2013 Nicolas Casalini
+-- Copyright (C) 2009 - 2014 Nicolas Casalini
 --
 -- This program is free software: you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -78,7 +78,7 @@ newEntity{ base = "BASE_NPC_LAST_HOPE_TOWN",
 
 newEntity{ base = "BASE_NPC_LAST_HOPE_TOWN",
 	name = "human citizen", color=colors.WHITE,
-	desc = [[A clean looking human resident of Last Hope.]],
+	desc = [[A clean-looking Human resident of Last Hope.]],
 	level_range = {1, nil}, exp_worth = 1,
 	rarity = 1,
 	max_life = resolvers.rngavg(30,40),
@@ -88,7 +88,7 @@ newEntity{ base = "BASE_NPC_LAST_HOPE_TOWN",
 newEntity{ base = "BASE_NPC_LAST_HOPE_TOWN",
 	name = "halfling citizen", color=colors.WHITE,
 	subtype = "halfling",
-	desc = [[A clean looking halfling resident of Last Hope.]],
+	desc = [[A clean-looking Halfling resident of Last Hope.]],
 	level_range = {1, nil}, exp_worth = 1,
 	rarity = 1,
 	max_life = resolvers.rngavg(30,40),

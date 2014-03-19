@@ -1,5 +1,5 @@
 -- ToME - Tales of Maj'Eyal
--- Copyright (C) 2009, 2010, 2011, 2012, 2013 Nicolas Casalini
+-- Copyright (C) 2009 - 2014 Nicolas Casalini
 --
 -- This program is free software: you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -22,28 +22,30 @@ newTalent{
 	type = {"spell/arcane", 1},
 	mode = "sustained",
 	require = spells_req1,
-	sustain_mana = 50,
+	sustain_mana = 25,
 	points = 5,
 	cooldown = 30,
 	tactical = { BUFF = 2 },
 	use_only_arcane = 1,
 	getSpellpowerIncrease = function(self, t) return self:combatTalentScale(t, 5, 20, 0.75) end,
+	getArcaneResist = function(self, t) return 5 + self:combatTalentSpellDamage(t, 10, 500) / 18 end,
 	activate = function(self, t)
 		game:playSoundNear(self, "talents/arcane")
 		return {
 			power = self:addTemporaryValue("combat_spellpower", t.getSpellpowerIncrease(self, t)),
+			res = self:addTemporaryValue("resists", {[DamageType.ARCANE] = t.getArcaneResist(self, t)}),
 			particle = self:addParticles(Particles.new("arcane_power", 1)),
 		}
 	end,
 	deactivate = function(self, t, p)
 		self:removeParticles(p.particle)
 		self:removeTemporaryValue("combat_spellpower", p.power)
+		self:removeTemporaryValue("resists", p.res)
 		return true
 	end,
 	info = function(self, t)
-		local spellpowerinc = t.getSpellpowerIncrease(self, t)
-		return ([[Your mastery of magic allows you to enter a state of deep concentration, increasing your Spellpower by %d.]]):
-		format(spellpowerinc)
+		return ([[Your mastery of magic allows you to enter a state of deep concentration, increasing your Spellpower by %d and arcane resistance by %d%%.]]):
+		format(t.getSpellpowerIncrease(self, t), t.getArcaneResist(self, t))
 	end,
 }
 

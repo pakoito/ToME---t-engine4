@@ -1,5 +1,5 @@
 -- ToME - Tales of Maj'Eyal
--- Copyright (C) 2009, 2010, 2011, 2012, 2013 Nicolas Casalini
+-- Copyright (C) 2009 - 2014 Nicolas Casalini
 --
 -- This program is free software: you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -62,9 +62,14 @@ newBirthDescriptor{
 		undead = 1,
 		forbid_nature = 1,
 		inscription_restrictions = { ["inscriptions/runes"] = true, ["inscriptions/taints"] = true, },
-		resolvers.inscription("RUNE:_SHIELDING", {cooldown=14, dur=5, power=100}),
-		resolvers.inscription("RUNE:_PHASE_DOOR", {cooldown=7, range=10, dur=5, power=15}),
+		resolvers.inscription("RUNE:_SHIELDING", {cooldown=14, dur=5, power=130}),
+		--resolvers.inscription("RUNE:_PHASE_DOOR", {cooldown=7, range=10, dur=5, power=15}),
+		resolvers.inscription("RUNE:_HEAT_BEAM", {cooldown=18, range=8, power=40}), -- yeek and undead starts are unfun to the point of absurdity
+		resolvers.inventory({id=true, transmo=false,
+			{type="scroll", subtype="rune", name="phase door rune", ego_chance=-1000, ego_chance=-1000}}), -- keep this in inventory incase people actually want it, can't add it baseline because some classes start with 3 inscribed
 	},
+
+	
 	random_escort_possibilities = { {"tier1.1", 1, 2}, {"tier1.2", 1, 2}, {"daikara", 1, 2}, {"old-forest", 1, 4}, {"dreadfell", 1, 8}, {"reknor", 1, 2}, },
 }
 

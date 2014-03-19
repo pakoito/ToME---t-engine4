@@ -1,5 +1,5 @@
 -- ToME - Tales of Maj'Eyal
--- Copyright (C) 2009, 2010, 2011, 2012, 2013 Nicolas Casalini
+-- Copyright (C) 2009 - 2014 Nicolas Casalini
 --
 -- This program is free software: you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -23,7 +23,7 @@ newEntity{
 	define_as = "BASE_GEM",
 	type = "gem", subtype="white",
 	display = "*", color=colors.YELLOW,
-	encumber = 0, slot = "GEM",
+	encumber = 0, slot = "GEM", use_no_wear = true,
 	identified = true,
 	stacking = true,
 	auto_pickup = true, pickup_sound = "actions/gem",
@@ -69,7 +69,7 @@ newGem("Diamond",	"object/diamond.png",5,		18,	"white",	40,	50, 5, 70,
 )
 newGem("Pearl",	"object/pearl.png",	5,		18,	"white",	40,	50, 5, 70,
 	{ resists = {all=5}, combat_armor = 5 },
-	{ splash={type="LITE", dam=100} }
+	{ splash={type="LITE", dam=100, desc = "Lights terrain (power 100)"} }
 )
 newGem("Moonstone",	"object/moonstone.png",5,	18,	"white",	40,	50, 5, 70,
 	{ combat_def=10, combat_mentalresist=10, combat_spellresist=10, combat_physresist=10, },
@@ -97,7 +97,7 @@ newGem("Turquoise",	"object/turquoise.png",4,	16,	"green",	30,	40, 4, 65,
 )
 newGem("Jade",		"object/jade.png",	4,	16,	"green",	30,	40, 4, 65,
 	{ resists = {all=4}, combat_armor = 4 },
-	{ splash={type="SLOW", dam=-1 + 1 / (1 + 0.20)} }
+	{ splash={type="SLOW", dam= 1 - 1 / (1 + 0.20), desc = "Slows by 17%"} }
 )
 newGem("Sapphire",	"object/sapphire.png",4,	16,	"blue",		30,	40, 4, 65,
 	{ combat_def=8, combat_mentalresist=8, combat_spellresist=8, combat_physresist=8, },
@@ -141,7 +141,7 @@ newGem("Aquamarine",	"object/aquamarine.png",2,	10,	"blue",		10,	20, 2, 35,
 )
 newGem("Ametrine",	"object/ametrine.png",1,	8,	"yellow",	1,	10, 1, 20,
 	{ inc_damage = {all=2}, combat_physcrit=1, combat_mindcrit=1, combat_spellcrit=1, },
-	{ splash={type="LITE", dam=1} }
+	{ splash={type="LITE", dam=10, desc = "Lights terrain (power 10)"} }
 )
 newGem("Zircon",	"object/zircon.png",1,	8,	"yellow",	1,	10, 1, 20,
 	{ resists = {all=1}, combat_armor = 1 },

@@ -1,5 +1,5 @@
 -- ToME - Tales of Maj'Eyal
--- Copyright (C) 2009, 2010, 2011, 2012, 2013 Nicolas Casalini
+-- Copyright (C) 2009 - 2014 Nicolas Casalini
 --
 -- This program is free software: you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -19,6 +19,11 @@
 
 base_size = 32
 
+rm, rM = rm or 180, rM or 220
+gm, gM = gm or 0, gM or 0
+bm, bM = bm or 200, bM or 255
+am, aM = am or 80, aM or 255
+
 return {
 	base = 1000,
 
@@ -27,10 +32,10 @@ return {
 	life = { 20, 30 },
 	size = { 15, 35 }, sizev = {0, 0}, sizea = {0, 0},
 
-	r = {180, 220}, rv = {0, 10}, ra = {0, 0},
-	g = {0, 0}, gv = {0, 0}, ga = {0, 0},
-	b = {200, 255}, bv = {0, 10}, ba = {0, 0},
-	a = {80, 255}, av = {0, 0}, aa = {0, 0},
+	r = {rm, rM}, rv = {0, 10}, ra = {0, 0},
+	g = {gm, gM}, gv = {0, 0}, ga = {0, 0},
+	b = {bm, bM}, bv = {0, 10}, ba = {0, 0},
+	a = {am, aM}, av = {0, 0}, aa = {0, 0},
 
 }, function(self)
 	self.nb = (self.nb or 0) + 1

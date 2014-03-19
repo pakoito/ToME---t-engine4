@@ -1,5 +1,5 @@
 -- ToME - Tales of Maj'Eyal
--- Copyright (C) 2009, 2010, 2011, 2012, 2013 Nicolas Casalini
+-- Copyright (C) 2009 - 2014 Nicolas Casalini
 --
 -- This program is free software: you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -70,7 +70,7 @@ newEntity{ base = "BASE_NPC_SANDWORM",
 	name = "sand-drake", display = 'D',
 	type = "dragon", subtype = "sand",
 	color={r=204,g=255,b=95},
-	desc = [[This unholy creature looks like a wingless dragon in shape, but resembles a sandworm in color.]],
+	desc = [[This unholy creature looks like a wingless dragon in shape, but it is sand-colored, making it all the more dangerous for its prey.]],
 	rarity = 5,
 	rank = 3,
 	size_category = 5,

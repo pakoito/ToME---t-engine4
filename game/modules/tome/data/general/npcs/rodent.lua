@@ -1,5 +1,5 @@
 -- ToME - Tales of Maj'Eyal
--- Copyright (C) 2009, 2010, 2011, 2012 Nicolas Casalini
+-- Copyright (C) 2009 - 2014 Nicolas Casalini
 --
 -- This program is free software: you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -105,7 +105,7 @@ newEntity{ base = "BASE_NPC_RODENT",
 
 newEntity{ base = "BASE_NPC_RODENT",
 	name = "giant crystal rat", color=colors.PINK,
-	desc = [[Instead of fur, this rat has crystals growing on its back which provide extra protection.]],
+	desc = [[Instead of fur, this rat has crystals growing on its back, which provide extra protection.]],
 	level_range = {1, 5}, exp_worth = 1,
 	rarity = 3,
 	max_life = resolvers.rngavg(35,50),

@@ -1,5 +1,5 @@
 -- ToME - Tales of Maj'Eyal
--- Copyright (C) 2009, 2010, 2011, 2012, 2013 Nicolas Casalini
+-- Copyright (C) 2009 - 2014 Nicolas Casalini
 --
 -- This program is free software: you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -26,7 +26,7 @@ for i = 1, 3 do
 newEntity{ base = "BASE_LORE",
 	define_as = "SLAZISH_NOTE"..i,
 	name = "weird conch", lore="slazish-note-"..i, image = "terrain/shell1.png",
-	desc = [[A conch, it seemed the naga was using it as a communication tool.]],
+	desc = [[A conch; it seems the naga was using it as a communication tool.]],
 	rarity = false,
 	encumberance = 0,
 }

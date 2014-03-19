@@ -1,5 +1,5 @@
 -- ToME - Tales of Maj'Eyal
--- Copyright (C) 2009, 2010, 2011, 2012, 2013 Nicolas Casalini
+-- Copyright (C) 2009 - 2014 Nicolas Casalini
 --
 -- This program is free software: you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -26,8 +26,8 @@ newEntity{ define_as = "GOD_GERLYK",
 	type = "god", subtype = "eyal", unique = true,
 	name = "Gerlyk, the Creator",
 	display = "P", color=colors.VIOLET,
-	desc = [[During the Age of Haze nearly all gods were destroyed by the Sher'tuls Godslayers. Yet a few escaped.
-Gerlyk, the creator of the human race, prefered to flee into the void between the stars than to face death. He has been trapped ever since.
+	desc = [[During the Age of Haze nearly all gods were destroyed by the Sher'tul Godslayers. However, a small number escaped.
+Gerlyk, the creator of the Human race, prefered to flee into the void between the stars than to face death. He has been trapped ever since.
 The sorcerers tried to bring him back and nearly succeeded.
 Now you have come to finish what the Sher'tul began. Become a Godslayer yourself.]],
 	level_range = {100, nil}, exp_worth = 3,

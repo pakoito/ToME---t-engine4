@@ -1,5 +1,5 @@
 -- ToME - Tales of Maj'Eyal
--- Copyright (C) 2009, 2010, 2011, 2012, 2013 Nicolas Casalini
+-- Copyright (C) 2009 - 2014 Nicolas Casalini
 --
 -- This program is free software: you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -31,7 +31,6 @@ if core.shader.allow("distort") and allow then
 use_shader = {type="distort", power=0.06, power_time=1000000, blacken=30} alterscreen = true
 base_size = 64
 local nb = 0
-
 local life=16
 local sizev=2*64*radius / life
 

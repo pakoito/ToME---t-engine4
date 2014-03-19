@@ -1,5 +1,5 @@
 -- ToME - Tales of Maj'Eyal
--- Copyright (C) 2009, 2010, 2011 Nicolas Casalini
+-- Copyright (C) 2009 - 2014 Nicolas Casalini
 --
 -- This program is free software: you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -26,6 +26,7 @@ But no! If nightmare mode couldn't bring you down, Insane mode will!
 Insane features:#YELLOW#
 - All zone levels increased by 120% + 5
 - All creature talent levels increased by 100%
+- Bosses will have randomly selected talents
 - Player rank is normal instead of elite
 - Player can earn Insane version of achievements if also playing in Roguelike permadeath mode.
 

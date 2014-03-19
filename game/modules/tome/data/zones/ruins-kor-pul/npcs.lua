@@ -1,5 +1,5 @@
 -- ToME - Tales of Maj'Eyal
--- Copyright (C) 2009, 2010, 2011, 2012, 2013 Nicolas Casalini
+-- Copyright (C) 2009 - 2014 Nicolas Casalini
 --
 -- This program is free software: you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -128,7 +128,7 @@ newEntity{ define_as = "KOR_FURY",
 	type = "undead", subtype = "ghost", unique = true,
 	name = "Kor's Fury",
 	display = "G", color=colors.VIOLET,
-	desc = [[The shade's colossal will keeps it anchored to this world, now as a vengeful, insane spirit.]],
+	desc = [[The Shade's colossal will keeps it anchored to this world, now as a vengeful, insane spirit.]],
 	level_range = {38, nil}, exp_worth = 3,
 	max_life = 250, life_rating = 20, fixed_rating = true,
 	rank = 4,

@@ -1,5 +1,5 @@
 -- ToME - Tales of Maj'Eyal
--- Copyright (C) 2009, 2010, 2011, 2012, 2013 Nicolas Casalini
+-- Copyright (C) 2009 - 2014 Nicolas Casalini
 --
 -- This program is free software: you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -104,7 +104,7 @@ newEntity{ base = "BASE_GEM",
 	define_as = "ATAMATHON_ACTIVATE",
 	subtype = "red",
 	name = "Atamathon's Lost Ruby Eye", color=colors.VIOLET, quest=true, unique=true, identified=true, image="object/artifact/atamathons_lost_ruby_eye.png",
-	desc = [[One of the ruby eyes of the legendary giant golem: Atamathon.
+	desc = [[One of the ruby eyes of the legendary giant golem Atamathon.
 It is said it was made by the halflings during the Age of Pyre as a weapon against the orcs. Even though it was destroyed it managed to deal a crippling blow by killing their leader, Garkul the Devourer.]],
 	material_level = 5,
 	cost = 100,

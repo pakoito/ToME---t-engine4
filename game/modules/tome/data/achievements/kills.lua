@@ -1,5 +1,5 @@
 -- ToME - Tales of Maj'Eyal
--- Copyright (C) 2009, 2010, 2011, 2012, 2013 Nicolas Casalini
+-- Copyright (C) 2009 - 2014 Nicolas Casalini
 --
 -- This program is free software: you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -261,4 +261,15 @@ newAchievement{
 	show = "full", huge=true,
 	desc = [[Deal one million damage to training dummies in a single training session.]],
 	mode = "player",
+}
+newAchievement{
+	name = "I meant to do that...", id = "AVOID_DEATH",
+	show = "full",
+	desc = [[Avoid death 50 times with a life-saving talent.]],
+	mode = "player",
+	can_gain = function(self, who)
+		self.nb = (self.nb or 0) + 1
+		if self.nb >= 50 then return true end
+	end,
+	track = function(self) return tstring{tostring(self.nb or 0)," / 50"} end,
 }

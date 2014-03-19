@@ -1,5 +1,5 @@
 -- ToME - Tales of Maj'Eyal
--- Copyright (C) 2009, 2010, 2011, 2012, 2013 Nicolas Casalini
+-- Copyright (C) 2009 - 2014 Nicolas Casalini
 --
 -- This program is free software: you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -159,9 +159,7 @@ newEffect{
 newEffect{
 	name = "BATTLE_SHOUT", image = "talents/battle_shout.png",
 	desc = "Battle Shout",
-	
 	long_desc = function(self, eff) return ("Increases maximum life and stamina by %d%%. When the effect ends, the extra life and stamina will be lost."):format(eff.power) end,
-	
 	type = "mental",
 	subtype = { morale=true },
 	status = "beneficial",
@@ -194,10 +192,9 @@ newEffect{
 	on_gain = function(self, err) return "#Target#'s will is shattered.", "+Battle Cry" end,
 	on_lose = function(self, err) return "#Target# regains some of its will.", "-Battle Cry" end,
 	activate = function(self, eff)
-		eff.tmpid = self:addTemporaryValue("combat_def", -eff.power)
-	end,
-	deactivate = function(self, eff)
-		self:removeTemporaryValue("combat_def", eff.tmpid)
+		self:effectTemporaryValue("combat_def", -eff.power)
+		self:effectTemporaryValue("no_evasion", 1)
+		self:effectTemporaryValue("blind_fighted", 1)
 	end,
 }
 
@@ -279,7 +276,7 @@ newEffect{
 		local tids = {}
 		for tid, lev in pairs(self.talents) do
 			local t = self:getTalentFromId(tid)
-			if t and not self.talents_cd[tid] and t.mode == "activated" and not t.innate and t.no_energy ~= true then tids[#tids+1] = t end
+			if t and not self.talents_cd[tid] and t.mode == "activated" and not t.innate and util.getval(t.no_energy, self, t) ~= true then tids[#tids+1] = t end
 		end
 		for i = 1, 4 do
 			local t = rng.tableRemove(tids)

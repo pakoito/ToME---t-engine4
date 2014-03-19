@@ -1,5 +1,5 @@
 -- ToME - Tales of Maj'Eyal
--- Copyright (C) 2009, 2010, 2011, 2012, 2013 Nicolas Casalini
+-- Copyright (C) 2009 - 2014 Nicolas Casalini
 --
 -- This program is free software: you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -26,7 +26,7 @@ subGenerator{
 		sqrt_percent = 45,
 		noise = "fbm_perlin",
 		floor = "BURNT_GROUND",
-		wall = {"BURNT_TREE1","BURNT_TREE2","BURNT_TREE3","BURNT_TREE4","BURNT_TREE5","BURNT_TREE6","BURNT_TREE7","BURNT_TREE8","BURNT_TREE9","BURNT_TREE10","BURNT_TREE11","BURNT_TREE12","BURNT_TREE13","BURNT_TREE14","BURNT_TREE15","BURNT_TREE16","BURNT_TREE17","BURNT_TREE18","BURNT_TREE19","BURNT_TREE20",},
+		wall = "BURNT_TREE",
 		up = "BURNT_UP4",
 		down = "BURNT_DOWN6",
 	},
@@ -36,7 +36,7 @@ subGenerator{
 checkConnectivity({55,24}, "entrance", "boss-area", "boss-area")
 
 -- defineTile section
-defineTile("#", {"BURNT_TREE1","BURNT_TREE2","BURNT_TREE3","BURNT_TREE4","BURNT_TREE5","BURNT_TREE6","BURNT_TREE7","BURNT_TREE8","BURNT_TREE9","BURNT_TREE10","BURNT_TREE11","BURNT_TREE12","BURNT_TREE13","BURNT_TREE14","BURNT_TREE15","BURNT_TREE16","BURNT_TREE17","BURNT_TREE18","BURNT_TREE19","BURNT_TREE20",})
+defineTile("#", "BURNT_TREE")
 defineTile("~", "LAVA")
 defineTile("+", "ALTAR")
 defineTile(".", "BURNT_GROUND")

@@ -1,5 +1,5 @@
 -- ToME - Tales of Maj'Eyal
--- Copyright (C) 2009, 2010, 2011, 2012, 2013 Nicolas Casalini
+-- Copyright (C) 2009 - 2014 Nicolas Casalini
 --
 -- This program is free software: you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -23,7 +23,7 @@ newEntity{ base = "BASE_RING",
 	power_source = {psionic=true},
 	define_as = "RING_OF_BLOOD", rarity=false,
 	name = "Bloodcaller", unique=true, image = "object/artifact/jewelry_ring_bloodcaller.png",
-	desc = [[You won the Ring of Blood trial, this is your reward.]],
+	desc = [[You won the Ring of Blood trial, and this is your reward.]],
 	unided_name = "bloody ring",
 	rarity = false,
 	cost = 300,

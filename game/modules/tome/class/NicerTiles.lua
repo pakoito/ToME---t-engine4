@@ -1,5 +1,5 @@
 -- ToME - Tales of Maj'Eyal
--- Copyright (C) 2009, 2010, 2011, 2012, 2013 Nicolas Casalini
+-- Copyright (C) 2009 - 2014 Nicolas Casalini
 --
 -- This program is free software: you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -22,7 +22,7 @@ local Map = require "engine.Map"
 
 module(..., package.seeall, class.make)
 
-local NB_VARIATIONS = 1
+local NB_VARIATIONS = 20
 
 function _M:init()
 	self.repo = {}
@@ -394,7 +394,38 @@ grass = { method="borders", type="grass", forbid={lava=true, rock=true},
 	water7i={add_mos={{image="terrain/grass/grass_inner_7_%02d.png", display_x=-1, display_y=-1}}, min=1, max=1},
 	water9i={add_mos={{image="terrain/grass/grass_inner_9_%02d.png", display_x=1, display_y=-1}}, min=1, max=1},
 },
-grass_wm = { method="borders", type="grass", forbid={lava=true},
+autumn_grass = { method="borders", type="autumn_grass", forbid={grass=true, lava=true, rock=true},
+	default8={add_mos={{image="terrain/grass/autumn_grass_2_%02d.png", display_y=-1}}, min=1, max=2},
+	default2={add_mos={{image="terrain/grass/autumn_grass_8_%02d.png", display_y=1}}, min=1, max=2},
+	default4={add_mos={{image="terrain/grass/autumn_grass_6_%02d.png", display_x=-1}}, min=1, max=2},
+	default6={add_mos={{image="terrain/grass/autumn_grass_4_%02d.png", display_x=1}}, min=1, max=2},
+
+	default1={add_mos={{image="terrain/grass/autumn_grass_9_%02d.png", display_x=-1, display_y=1}}, min=1, max=1},
+	default3={add_mos={{image="terrain/grass/autumn_grass_7_%02d.png", display_x=1, display_y=1}}, min=1, max=1},
+	default7={add_mos={{image="terrain/grass/autumn_grass_3_%02d.png", display_x=-1, display_y=-1}}, min=1, max=1},
+	default9={add_mos={{image="terrain/grass/autumn_grass_1_%02d.png", display_x=1, display_y=-1}}, min=1, max=1},
+
+	default1i={add_mos={{image="terrain/grass/autumn_grass_inner_1_%02d.png", display_x=-1, display_y=1}}, min=1, max=2},
+	default3i={add_mos={{image="terrain/grass/autumn_grass_inner_3_%02d.png", display_x=1, display_y=1}}, min=1, max=2},
+	default7i={add_mos={{image="terrain/grass/autumn_grass_inner_7_%02d.png", display_x=-1, display_y=-1}}, min=1, max=2},
+	default9i={add_mos={{image="terrain/grass/autumn_grass_inner_9_%02d.png", display_x=1, display_y=-1}}, min=1, max=2},
+
+	water8={add_mos={{image="terrain/grass/autumn_grass_2_%02d.png", display_y=-1}}, min=1, max=1},
+	water2={add_mos={{image="terrain/grass/autumn_grass_8_%02d.png", display_y=1}}, min=1, max=1},
+	water4={add_mos={{image="terrain/grass/autumn_grass_6_%02d.png", display_x=-1}}, min=1, max=1},
+	water6={add_mos={{image="terrain/grass/autumn_grass_4_%02d.png", display_x=1}}, min=1, max=1},
+
+	water1={add_mos={{image="terrain/grass/autumn_grass_9_%02d.png", display_x=-1, display_y=1}}, min=1, max=1},
+	water3={add_mos={{image="terrain/grass/autumn_grass_7_%02d.png", display_x=1, display_y=1}}, min=1, max=1},
+	water7={add_mos={{image="terrain/grass/autumn_grass_3_%02d.png", display_x=-1, display_y=-1}}, min=1, max=1},
+	water9={add_mos={{image="terrain/grass/autumn_grass_1_%02d.png", display_x=1, display_y=-1}}, min=1, max=1},
+
+	water1i={add_mos={{image="terrain/grass/autumn_grass_inner_1_%02d.png", display_x=-1, display_y=1}}, min=1, max=1},
+	water3i={add_mos={{image="terrain/grass/autumn_grass_inner_3_%02d.png", display_x=1, display_y=1}}, min=1, max=1},
+	water7i={add_mos={{image="terrain/grass/autumn_grass_inner_7_%02d.png", display_x=-1, display_y=-1}}, min=1, max=1},
+	water9i={add_mos={{image="terrain/grass/autumn_grass_inner_9_%02d.png", display_x=1, display_y=-1}}, min=1, max=1},
+},
+grass_wm = { method="borders", type="grass", forbid={lava=true, rock=true},
 	default8={add_mos={{image="terrain/grass_worldmap/grass_2_%02d.png", display_y=-1}}, min=1, max=2},
 	default2={add_mos={{image="terrain/grass_worldmap/grass_8_%02d.png", display_y=1}}, min=1, max=2},
 	default4={add_mos={{image="terrain/grass_worldmap/grass_6_%02d.png", display_x=-1}}, min=1, max=2},
@@ -967,6 +998,27 @@ dirt = { method="road", marker="road",
 	default6={add_mos={{image="terrain/road_dirt/road_end_a_01.png"}}, min=1, max=1},
 	default2={add_mos={{image="terrain/road_dirt/road_end_a_03.png"}}, min=1, max=1},
 	default8={add_mos={{image="terrain/road_dirt/road_end_a_04.png"}}, min=1, max=1},
+},
+wooden_barricade = { method="road", marker="barricade",
+	default82={add_mos={{image="terrain/wooden_barricade/barricade_vertical_a_%02d.png"}}, min=1, max=3},
+	default46={add_mos={{image="terrain/wooden_barricade/barricade_horizontal_a_%02d.png"}}, min=1, max=3},
+
+	default8246={add_mos={{image="terrain/wooden_barricade/barricade_cross_a_%02d.png"}}, min=1, max=1},
+
+	default846={add_mos={{image="terrain/wooden_barricade/barricade_t_section_c_%02d.png"}}, min=1, max=1},
+	default246={add_mos={{image="terrain/wooden_barricade/barricade_t_section_a_%02d.png"}}, min=1, max=1},
+	default824={add_mos={{image="terrain/wooden_barricade/barricade_t_section_b_%02d.png"}}, min=1, max=1},
+	default826={add_mos={{image="terrain/wooden_barricade/barricade_t_section_d_%02d.png"}}, min=1, max=1},
+
+	default84={add_mos={{image="terrain/wooden_barricade/barricade_turn_c_%02d.png"}}, min=1, max=2},
+	default86={add_mos={{image="terrain/wooden_barricade/barricade_turn_d_%02d.png"}}, min=1, max=2},
+	default26={add_mos={{image="terrain/wooden_barricade/barricade_turn_a_%02d.png"}}, min=1, max=2},
+	default24={add_mos={{image="terrain/wooden_barricade/barricade_turn_b_%02d.png"}}, min=1, max=2},
+
+	default4={add_mos={{image="terrain/wooden_barricade/barricade_end_a_02.png"}}, min=1, max=1},
+	default6={add_mos={{image="terrain/wooden_barricade/barricade_end_a_01.png"}}, min=1, max=1},
+	default2={add_mos={{image="terrain/wooden_barricade/barricade_end_a_03.png"}}, min=1, max=1},
+	default8={add_mos={{image="terrain/wooden_barricade/barricade_end_a_04.png"}}, min=1, max=1},
 },
 }
 _M.generic_roads_defs = defs

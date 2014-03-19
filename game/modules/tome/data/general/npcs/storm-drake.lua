@@ -1,5 +1,5 @@
 -- ToME - Tales of Maj'Eyal
--- Copyright (C) 2009, 2010, 2011, 2012, 2013 Nicolas Casalini
+-- Copyright (C) 2009 - 2014 Nicolas Casalini
 --
 -- This program is free software: you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -61,7 +61,7 @@ newEntity{ base = "BASE_NPC_STORM_DRAKE",
 
 newEntity{ base = "BASE_NPC_STORM_DRAKE",
 	name = "storm drake", color=colors.BLUE, display="D",
-	desc = [[A mature storm drake, armed with a deadly breath weapon and nasty claws.]],
+	desc = [[A mature storm drake, armed with deadly breath and nasty claws.]],
 	level_range = {14, nil}, exp_worth = 1,
 	rarity = 3,
 	max_life = resolvers.rngavg(100,110),
@@ -83,7 +83,7 @@ newEntity{ base = "BASE_NPC_STORM_DRAKE",
 
 newEntity{ base = "BASE_NPC_STORM_DRAKE",
 	name = "storm wyrm", color=colors.LIGHT_BLUE, display="D",
-	desc = [[An old and powerful storm drake, armed with a deadly breath weapon and nasty claws.]],
+	desc = [[An old and powerful storm drake, armed with deadly breath and nasty claws.]],
 	resolvers.nice_tile{image="invis.png", add_mos = {{image="npc/dragon_storm_storm_wyrm.png", display_h=2, display_y=-1}}},
 	level_range = {25, nil}, exp_worth = 1,
 	rarity = 5,

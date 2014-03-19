@@ -1,5 +1,5 @@
 -- ToME - Tales of Maj'Eyal
--- Copyright (C) 2009, 2010, 2011, 2012, 2013 Nicolas Casalini
+-- Copyright (C) 2009 - 2014 Nicolas Casalini
 --
 -- This program is free software: you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -17,35 +17,10 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-
-newTalent{
-	name = "Bloodbath",
-	type = {"technique/bloodthirst", 1},
-	require = techs_req_high1,
-	points = 5,
-	mode = "passive",
-	getHealth = function(self,t) return self:combatTalentLimit(t, 50, 2, 10)  end,  -- Limit max health increase to <+50%
-	getDuration = function(self, t) return math.floor(self:combatTalentScale(t, 6, 10)) end,
-	getRegen = function (self, t) return self:combatTalentScale(t, 1.7, 5) end,
-	getMax = function(self, t) return 5*self:combatTalentScale(t, 1.7, 5) end,
-	-- called by _M:attackTargetWith in mod.class.interface.Combat.lua
-	do_bloodbath = function(self, t)
-		self:setEffect(self.EFF_BLOODBATH, t.getDuration(self, t), {regen=t.getRegen(self, t), max=t.getMax(self, t), hp=t.getHealth(self,t)})
-	end,
-	info = function(self, t)
-		local regen = t.getRegen(self, t)
-		local max_regen = t.getMax(self, t)
-		local max_health = t.getHealth(self,t)
-		return ([[Delight in spilling the blood of your foes.  After scoring a critical hit, your maximum hit points will be increased by %d%%, your life regeneration by %0.2f per turn, and your stamina regeneration by %0.2f per turn for %d turns.
-		The life and stamina regeneration will stack up to five times, for a maximum of %0.2f and %0.2f each turn, respectively.]]):
-		format(t.getHealth(self, t), regen, regen/5, t.getDuration(self, t),max_regen, max_regen/5)
-	end,
-}
-
 newTalent{
 	name = "Mortal Terror",
-	type = {"technique/bloodthirst", 2},
-	require = techs_req_high2,
+	type = {"technique/bloodthirst", 1},
+	require = techs_req_high1,
 	points = 5,
 	mode = "passive",
 	threshold = function(self,t) return self:combatTalentLimit(t, 10, 45, 25) end, -- Limit >10%
@@ -77,18 +52,42 @@ newTalent{
 }
 
 newTalent{
-	name = "Bloodrage",
+	name = "Bloodbath",
+	type = {"technique/bloodthirst", 2},
+	require = techs_req_high2,
+	points = 5,
+	mode = "passive",
+	getHealth = function(self,t) return self:combatTalentLimit(t, 50, 2, 10)  end,  -- Limit max health increase to <+50%
+	getDuration = function(self, t) return math.floor(self:combatTalentScale(t, 6, 10)) end,
+	getRegen = function (self, t) return self:combatTalentScale(t, 1.7, 5) end,
+	getMax = function(self, t) return 5*self:combatTalentScale(t, 1.7, 5) end,
+	-- called by _M:attackTargetWith in mod.class.interface.Combat.lua
+	do_bloodbath = function(self, t)
+		self:setEffect(self.EFF_BLOODBATH, t.getDuration(self, t), {regen=t.getRegen(self, t), max=t.getMax(self, t), hp=t.getHealth(self,t)})
+	end,
+	info = function(self, t)
+		local regen = t.getRegen(self, t)
+		local max_regen = t.getMax(self, t)
+		local max_health = t.getHealth(self,t)
+		return ([[Delight in spilling the blood of your foes.  After scoring a critical hit, your maximum hit points will be increased by %d%%, your life regeneration by %0.2f per turn, and your stamina regeneration by %0.2f per turn for %d turns.
+		The life and stamina regeneration will stack up to five times, for a maximum of %0.2f and %0.2f each turn, respectively.]]):
+		format(t.getHealth(self, t), regen, regen/5, t.getDuration(self, t),max_regen, max_regen/5)
+	end,
+}
+
+newTalent{
+	name = "Bloody Butcher",
 	type = {"technique/bloodthirst", 3},
 	require = techs_req_high3,
 	points = 5,
 	mode = "passive",
-	getDuration = function(self, t) return math.floor(self:combatTalentScale(t, 6, 10)) end,
-	on_kill = function(self, t)
-		self:setEffect(self.EFF_BLOODRAGE, t.getDuration(self, t), {max=math.floor(self:getTalentLevel(t) * 6), inc=2})
-	end,
+	getDam = function(self, t) return self:combatScale(self:getStr(7, true) * self:getTalentLevel(t), 5, 0, 40, 35) end,
+	getResist = function(self,t) return self:combatTalentLimit(t, 50, 10, 40) end,
 	info = function(self, t)
-		return ([[Each time one of your foes bites the dust, you feel a surge of power, increasing your strength by 2 up to a maximum of %d for %d turns.]]):
-		format(math.floor(self:getTalentLevel(t) * 6), t.getDuration(self, t))
+		return ([[You delight in the inflicting of wounds, providing %d physical power.
+		In addition when you make a creature bleed its physical damage resistance is reduced by %d%% (but never below 0%%).
+		Physical power depends on your Strength stat.]]):
+		format(t.getDam(self, t), t.getResist(self, t))
 	end,
 }
 
@@ -108,7 +107,8 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[You enter a battle frenzy for %d turns. During that time, you can not use items, healing has no effect, and your health cannot drop below 1.
-		At the end of the frenzy, you regain %d%% of your health per foe slain during the frenzy.]]):
+		At the end of the frenzy, you regain %d%% of your health per foe slain during the frenzy.
+		While Unstoppable is active, Berserker Rage critical bonus is disabled as you loose the thrill of the risk of death.]]):
 		format(t.getDuration(self, t), t.getHealPercent(self,t))
 	end,
 }

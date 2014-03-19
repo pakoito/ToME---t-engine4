@@ -1,5 +1,5 @@
 -- ToME - Tales of Maj'Eyal
--- Copyright (C) 2009, 2010, 2011, 2012, 2013 Nicolas Casalini
+-- Copyright (C) 2009 - 2014 Nicolas Casalini
 --
 -- This program is free software: you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -374,6 +374,9 @@ end
 --- Funky shader stuff
 function _M:updateMainShader()
 	if game.fbo_shader then
+		local effects = {}
+		local pf = game.posteffects
+
 		-- Set shader HP warning
 		if self.life ~= self.shader_old_life then
 			if self.life < self.max_life / 2 then game.fbo_shader:setUniform("hp_warning", 1 - (self.life / self.max_life))
@@ -408,22 +411,26 @@ function _M:updateMainShader()
 		end
 
 		-- Blur shader
-		if self:attr("confused") and self.confused >= 1 then game.fbo_shader:setUniform("blur", 2)
---		elseif game:hasDialogUp() then game.fbo_shader:setUniform("blur", 3)
-		else game.fbo_shader:setUniform("blur", 0) -- Disable
+		if self:attr("confused") and self.confused >= 1 then pf.blur.shad:uniBlur(2) effects[pf.blur.shad] = true
 		end
 
 		-- Moving Blur shader
-		if self:attr("invisible") then game.fbo_shader:setUniform("motionblur", 3)
-		elseif self:attr("lightning_speed") then game.fbo_shader:setUniform("motionblur", 2)
-		elseif game.level and game.level.data and game.level.data.motionblur then game.fbo_shader:setUniform("motionblur", game.level.data.motionblur)
-		else game.fbo_shader:setUniform("motionblur", 0) -- Disable
+		if self:attr("invisible") then pf.motionblur.shad:uniMotionblur(3) effects[pf.motionblur.shad] = true
+		elseif self:attr("lightning_speed") then pf.motionblur.shad:uniMotionblur(2) effects[pf.motionblur.shad] = true
+		elseif game.level and game.level.data and game.level.data.motionblur then pf.motionblur.shad:uniMotionblur(game.level.data.motionblur) effects[pf.motionblur.shad] = true
 		end
 
 		-- Underwater shader
-		if game.level and game.level.data and game.level.data.underwater then game.fbo_shader:setUniform("underwater", 1)
-		else game.fbo_shader:setUniform("underwater", 0) -- Disable
+		if game.level and game.level.data and game.level.data.underwater then effects[pf.underwater.shad] = true
 		end
+
+		-- Wobbling shader
+		if self:attr("stunned") and self.stunned >= 1 then pf.wobbling.shad:uniWobbling(1) effects[pf.wobbling.shad] = true
+		elseif self:attr("dazed") and self.dazed >= 1 then pf.wobbling.shad:uniWobbling(0.7) effects[pf.wobbling.shad] = true
+		end
+
+		game.posteffects_use = table.keys(effects)
+		game.posteffects_use[#game.posteffects_use+1] = game.fbo_shader.shad
 	end
 end
 
@@ -560,14 +567,16 @@ function _M:playerFOV()
 		self:computeFOV(self.sight or 10, "block_sight", function(x, y, dx, dy, sqdist)
 			game.level.map:apply(x, y, fovdist[sqdist])
 		end, true, false, true)
+		local lradius = self.lite
+		if self.radiance_aura and lradius < self.radiance_aura then lradius = self.radiance_aura end
 		if self.lite <= 0 then game.level.map:applyLite(self.x, self.y)
-		else self:computeFOV(self.lite + bonus, "block_sight", function(x, y, dx, dy, sqdist) game.level.map:applyLite(x, y) end, true, true, true) end
+		else self:computeFOV(lradius + bonus, "block_sight", function(x, y, dx, dy, sqdist) game.level.map:applyLite(x, y) end, true, true, true) end
 
 		-- For each entity, generate lite
 		local uid, e = next(game.level.entities)
 		while uid do
-			if e ~= self and e.lite and e.lite > 0 and e.computeFOV then
-				e:computeFOV(e.lite, "block_sight", function(x, y, dx, dy, sqdist) game.level.map:applyExtraLite(x, y, fovdist[sqdist]) end, true, true)
+			if e ~= self and ((e.lite and e.lite > 0) or (e.radiance_aura and e.radiance_aura > 0)) and e.computeFOV then
+				e:computeFOV(math.max(e.lite or 0, e.radiance_aura or 0), "block_sight", function(x, y, dx, dy, sqdist) game.level.map:applyExtraLite(x, y, fovdist[sqdist]) end, true, true)
 			end
 			uid, e = next(game.level.entities, uid)
 		end
@@ -778,25 +787,26 @@ function _M:automaticTalents()
 		if (t.mode ~= "sustained" or not self.sustain_talents[tid]) and not self.talents_cd[tid] and self:preUseTalent(t, true, true) and (not t.auto_use_check or t.auto_use_check(self, t)) then
 			if (c == 1) or (c == 2 and #spotted <= 0) or (c == 3 and #spotted > 0) then
 				if c ~= 2 then
-					uses[#uses+1] = {name=t.name, no_energy=t.no_energy == true and 0 or 1, cd=self:getTalentCooldown(t) or 0, fct=function() self:useTalent(tid) end}
+					uses[#uses+1] = {name=t.name, no_energy=util.getval(t.no_energy, self, t) == true and 0 or 1, cd=self:getTalentCooldown(t) or 0, fct=function() self:useTalent(tid) end}
 				else
 					if not self:attr("blind") then
-						uses[#uses+1] = {name=t.name, no_energy=t.no_energy == true and 0 or 1, cd=self:getTalentCooldown(t) or 0, fct=function() self:useTalent(tid,nil,nil,nil,self) end}
+						uses[#uses+1] = {name=t.name, no_energy=util.getval(t.no_energy, self, t) == true and 0 or 1, cd=self:getTalentCooldown(t) or 0, fct=function() self:useTalent(tid,nil,nil,nil,self) end}
 					end
 				end
 			end
 			if c == 4 and #spotted > 0 then
 				for fid, foe in pairs(spotted) do
 					if foe.x >= self.x-1 and foe.x <= self.x+1 and foe.y >= self.y-1 and foe.y <= self.y+1 then
-						uses[#uses+1] = {name=t.name, no_energy=t.no_energy == true and 0 or 1, cd=self:getTalentCooldown(t) or 0, fct=function() self:useTalent(tid) end}
+						uses[#uses+1] = {name=t.name, no_energy=util.getval(t.no_energy, self, t) == true and 0 or 1, cd=self:getTalentCooldown(t) or 0, fct=function() self:useTalent(tid) end}
 					end
 				end
 			end
 		end
 	end
 	table.sort(uses, function(a, b)
-		if a.no_energy < b.no_energy then return true
-		elseif a.no_energy > b.no_energy then return false
+		local an, nb = util.getval(a.no_energy, self, a), util.getval(b.no_energy, self, b)
+		if an < bn then return true
+		elseif an > bn then return false
 		else
 			if a.cd > b.cd then return true
 			else return false
@@ -806,7 +816,7 @@ function _M:automaticTalents()
 	table.print(uses)
 	for _, use in ipairs(uses) do
 		use.fct()
-		if use.no_energy == 1 then break end
+		if util.getval(use.no_energy, self, use) == 1 then break end
 	end
 	self:attr("_forbid_sounds", -1)
 end

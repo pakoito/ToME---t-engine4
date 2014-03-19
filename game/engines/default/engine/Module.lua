@@ -1,6 +1,6 @@
 
 -- TE4 - T-Engine 4
--- Copyright (C) 2009, 2010, 2011, 2012, 2013 Nicolas Casalini
+-- Copyright (C) 2009 - 2014 Nicolas Casalini
 --
 -- This program is free software: you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -302,6 +302,7 @@ function _M:listAddons(mod, ignore_compat)
 				add.natural_compatible = engine.version_nearly_same(mod.version, add.version)
 				add.version_txt = ("%d.%d.%d"):format(add.version[1], add.version[2], add.version[3])
 				if add.dlc and not profile:isDonator(add.dlc) then add.dlc = "no" end
+				if add.id_dlc and not profile:allowDLC(add.id_dlc) then add.id_dlc = "no" end
 				adds[#adds+1] = add
 			end
 		end
@@ -370,6 +371,7 @@ function _M:addonMD5(add, base)
 end
 
 function _M:loadAddons(mod, saveuse)
+	local hashlist = {}
 	local adds = self:listAddons(mod, true)
 
 	if saveuse then saveuse = table.reverse(saveuse) end
@@ -388,7 +390,10 @@ function _M:loadAddons(mod, saveuse)
 				print("Removing addon "..add.short_name..": cheat mode required")
 				table.remove(adds, i) removed = true
 			elseif add.dlc == "no" then
-				print("Removing addon "..add.short_name..": DLC required")
+				print("Removing addon "..add.short_name..": donator required")
+				table.remove(adds, i) removed = true
+			elseif add.id_dlc == "no" then
+				print("Removing addon "..add.short_name..": DLC not granted")
 				table.remove(adds, i) removed = true
 			elseif config.settings.addons[add.for_module] and config.settings.addons[add.for_module][add.short_name] ~= nil then
 				-- Forbidden by config
@@ -411,10 +416,22 @@ function _M:loadAddons(mod, saveuse)
 					local data = profile:getDLCD(add.for_module.."-"..add.short_name, ("%d.%d.%d"):format(add.version[1],add.version[2],add.version[3]), name:gsub("%.", "/")..".lua")
 					if data and data ~= '' then
 						profile.dlc_files.classes[name] = data
-					else
+					elseif not __module_extra_info.ignore_addons_not_loading then
 						print("Removing addon "..add.short_name..": DLC class not received")
 						table.remove(adds, i) removed = true
+						if saveuse then
+							-- The savefile requires it, but we couldnt activate it, abord
+							core.game.setRebootMessage(([[The savefile requires the #YELLOW#%s#WHITE# addon.
+Some of its features require being online and could not be enabled. To prevent damaging the savefile loading was aborded.
+
+You may try to force loading if you are sure the savefile does not use that addon, at your own risk, by checking the "Ignore unloadable addons" checkbox on the load game screen..]]):format(add.long_name))
+							util.showMainMenu(nil, nil, nil, nil, nil, nil, "show_ignore_addons_not_loading=true")
+						end
 						break
+					else
+						add.dlc = "no"
+						print("Removing addon "..add.short_name..": dlc file required not found")
+						table.remove(adds, i) removed = true
 					end
 				end
 			end
@@ -471,15 +488,16 @@ function _M:loadAddons(mod, saveuse)
 			hash_valid, hash_err = false, "cheat mode skipping addon validation"
 		else
 			local fmd5 = self:addonMD5(add)
-			hash_valid, hash_err = profile:checkAddonHash(mod.short_name, add.version_name, fmd5)
+			hashlist[#hashlist+1] = {module=mod.short_name, addon=add.version_name, md5=fmd5}
+--			hash_valid, hash_err = profile:checkAddonHash(mod.short_name, add.version_name, fmd5)
 		end
 
-		if hash_err then hash_err = hash_err .. " [addon: "..add.short_name.."]" end
-		add.hash_valid, add.hash_err = hash_valid, hash_err
+--		if hash_err then hash_err = hash_err .. " [addon: "..add.short_name.."]" end
+--		add.hash_valid, add.hash_err = hash_valid, hash_err
 
 		mod.addons[add.short_name] = add
 	end
---	os.exit()
+	return hashlist
 end
 
 -- Grab some fun facts!
@@ -662,11 +680,11 @@ end
 -- @param mod the module definition as given by Module:loadDefinition()
 -- @param name the savefile name
 -- @param new_game true if the game must be created (aka new character)
-function _M:instanciate(mod, name, new_game, no_reboot)
+function _M:instanciate(mod, name, new_game, no_reboot, extra_module_info)
 	if not no_reboot then
 		local eng_v = nil
 		if not mod.incompatible then eng_v = ("%d.%d.%d"):format(mod.engine[1], mod.engine[2], mod.engine[3]) end
-		util.showMainMenu(false, mod.engine[4], eng_v, mod.version_string, name, new_game)
+		util.showMainMenu(false, mod.engine[4], eng_v, mod.version_string, name, new_game, extra_module_info)
 		return
 	end
 
@@ -732,6 +750,7 @@ function _M:instanciate(mod, name, new_game, no_reboot)
 	end
 	local hash_valid, hash_err
 	local t = core.game.getTime()
+	local module_md5 = "--"
 	if config.settings.cheat then
 		hash_valid, hash_err = false, "cheat mode skipping validation"
 	else
@@ -740,30 +759,25 @@ function _M:instanciate(mod, name, new_game, no_reboot)
 			fp("/data")
 			fp("/engine")
 			table.sort(md5s)
-			local fmd5 = md5.sumhexa(table.concat(md5s))
-			print("[MODULE LOADER] module MD5", fmd5, "computed in ", core.game.getTime() - t)
-			hash_valid, hash_err = profile:checkModuleHash(mod.version_name, fmd5)
+			module_md5 = md5.sumhexa(table.concat(md5s))
+			print("[MODULE LOADER] module MD5", module_md5, "computed in ", core.game.getTime() - t)
 		end
 	end
 
-	self:loadAddons(mod, (save_desc and save_desc.addons) or (__module_extra_info.set_addons))
+	local hashlist = self:loadAddons(mod, (save_desc and save_desc.addons) or (__module_extra_info.set_addons))
+
+	-- Check all hashes at once
+	hashlist[#hashlist+1] = {module=mod.version_name, md5=module_md5}
+	hash_valid, hash_err = profile:checkBatchHash(hashlist)
+	print("[MODULE] All hashes validation: ", hash_valid, hash_err)
 
 	-- Now that addons are loaded we can load UI definitions
 	for _, file in ipairs(fs.list("/data/gfx/ui/definitions")) do
 		if file:find("%.lua$") then UIBase:loadUIDefinitions("/data/gfx/ui/definitions/"..file) end
 	end
 
-	-- Check addons
-	if hash_valid then
-		for name, add in pairs(mod.addons) do
-			if not add.hash_valid then
-				hash_valid = false
-				hash_err = add.hash_err or "?????? unknown ...."
-				profile.hash_valid = false
-				break
-			end
-		end
-	end
+	-- Validate addons if all is valid
+	if hash_valid then for name, add in pairs(mod.addons) do add.hash_valid = true end end
 
 	local addl = {}
 	for name, add in pairs(mod.addons) do

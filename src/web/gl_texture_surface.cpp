@@ -1,5 +1,6 @@
 // Taken from awesomium examples
 #include "gl_texture_surface.h"
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -9,21 +10,11 @@ GLRAMTextureSurface::GLRAMTextureSurface(int width, int height) : texture_id_(0)
 	buffer_ = new unsigned char[rowspan_ * height_];
 	needs_update_ = false;
 
-	glGenTextures(1, &texture_id_);
-	glBindTexture(GL_TEXTURE_2D, texture_id_);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
-	GLfloat largest_supported_anisotropy;
-	glGetFloatv(GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, &largest_supported_anisotropy);
-	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT, largest_supported_anisotropy);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width_, height_, 0,
-							 bpp_ == 3 ? GL_RGB : GL_BGRA, GL_UNSIGNED_BYTE, buffer_);
+	texture_id_ = web_make_texture(width_, height_);
 }
 
 GLRAMTextureSurface::~GLRAMTextureSurface() {
-	glDeleteTextures(1, &texture_id_);
+	web_del_texture(texture_id_);
 	delete[] buffer_;
 }
 
@@ -94,10 +85,7 @@ void GLRAMTextureSurface::Scroll(int dx,
 
 void GLRAMTextureSurface::UpdateTexture() {
 	if (needs_update_) {
-		glBindTexture(GL_TEXTURE_2D, texture_id_);
-		glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, width_, height_,
-											bpp_ == 3 ? GL_RGB : GL_BGRA, GL_UNSIGNED_BYTE,
-											buffer_);
+		web_texture_update(texture_id_, width_, height_, buffer_);
 		needs_update_ = false;
 	}
 }
@@ -109,9 +97,7 @@ GLTextureSurfaceFactory::GLTextureSurfaceFactory() {
 GLTextureSurfaceFactory::~GLTextureSurfaceFactory() {
 }
 
-Awesomium::Surface* GLTextureSurfaceFactory::CreateSurface(Awesomium::WebView* view,
-																					int width,
-																					int height) {
+Awesomium::Surface* GLTextureSurfaceFactory::CreateSurface(Awesomium::WebView* view, int width, int height) {
 	return new GLRAMTextureSurface(width, height);
 }
 

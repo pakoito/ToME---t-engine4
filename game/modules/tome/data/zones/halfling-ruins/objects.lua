@@ -1,5 +1,5 @@
 -- ToME - Tales of Maj'Eyal
--- Copyright (C) 2009, 2010, 2011, 2012, 2013 Nicolas Casalini
+-- Copyright (C) 2009 - 2014 Nicolas Casalini
 --
 -- This program is free software: you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -23,7 +23,7 @@ for i = 1, 4 do
 newEntity{ base = "BASE_LORE",
 	define_as = "NOTE"..i,
 	name = "research log of halfling mage Hompalan", lore="halfling-research-note-"..i,
-	desc = [[A very research note, nearly unreadable.]],
+	desc = [[A very faded research note, nearly unreadable.]],
 	rarity = false,
 	encumberance = 0,
 }
@@ -34,7 +34,7 @@ newEntity{ base = "BASE_CLOTH_ARMOR",
 	unique = true,
 	name = "Yeek-fur Robe", color = colors.WHITE, image = "object/artifact/yeek_fur_robe.png",
 	unided_name = "sleek fur robe",
-	desc = [[A beautifully soft robe of fine white fur. It looks designed for a halfling noble, with glorious sapphires sewn across the hems. But entrancing as it is you can't help but feel a little queasy wearing it.]],
+	desc = [[A beautifully soft robe of fine white fur. It looks designed for a halfling noble, with glorious sapphires sewn across the hems. But entrancing as it is, you can't help but feel a little queasy wearing it.]],
 	level_range = {12, 22},
 	rarity = 20,
 	cost = 250,

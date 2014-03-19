@@ -1,5 +1,5 @@
 -- ToME - Tales of Maj'Eyal
--- Copyright (C) 2009, 2010, 2011, 2012, 2013 Nicolas Casalini
+-- Copyright (C) 2009 - 2014 Nicolas Casalini
 --
 -- This program is free software: you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -73,8 +73,8 @@ newEntity{ define_as = "ORB_MANY_WAYS2",
 	level_range = {30, 30},
 	display = "*", color=colors.VIOLET, image = "object/artifact/orb_many_ways.png",
 	encumber = 1,
-	desc = [[The orb projects images of distant places, some that seem to not be of this world, switching rapidly.
-If used near a portal it could probably activate it.]],
+	desc = [[The orb projects images of distant places, some that seem not to be of this world, switching rapidly.
+If used near a portal, it could probably activate it.]],
 
 	max_power = 30, power_regen = 1,
 	use_power = { name = "activate a portal", power = 10,

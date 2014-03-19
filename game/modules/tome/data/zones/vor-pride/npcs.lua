@@ -1,5 +1,5 @@
 -- ToME - Tales of Maj'Eyal
--- Copyright (C) 2009, 2010, 2011, 2012, 2013 Nicolas Casalini
+-- Copyright (C) 2009 - 2014 Nicolas Casalini
 --
 -- This program is free software: you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -44,9 +44,10 @@ newEntity{ base="BASE_NPC_ORC_VOR", define_as = "VOR",
 	autolevel = "caster",
 	ai = "tactical", ai_state = { talent_in=1, ai_move="move_astar", },
 	ai_tactic = resolvers.tactic"ranged",
-	resolvers.inscriptions(4, "rune"),
 	resolvers.inscriptions(1, {"manasurge rune"}),
-
+	resolvers.inscriptions(4, "rune"),
+	max_inscriptions = 5,
+	
 	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1, HEAD=1 },
 
 	resolvers.equip{

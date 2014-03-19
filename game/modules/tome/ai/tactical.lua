@@ -1,5 +1,5 @@
 -- ToME - Tales of Maj'Eyal
--- Copyright (C) 2009, 2010, 2011, 2012, 2013 Nicolas Casalini
+-- Copyright (C) 2009 - 2014 Nicolas Casalini
 --
 -- This program is free software: you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -173,7 +173,7 @@ newAI("use_tactical", function(self)
 						if not avail[tact] then avail[tact] = {} end
 						-- Save the tactic, if the talent is instant it gets a huge bonus
 						-- Note the addition of a less than one random value, this means the sorting will randomly shift equal values
-						val = ((t.no_energy==true) and val * 10 or val) + rng.float(0, 0.9)
+						val = ((util.getval(t.no_energy, self, t)==true) and val * 10 or val) + rng.float(0, 0.9)
 						avail[tact][#avail[tact]+1] = {val=val, tid=tid, nb_foes_hit=nb_foes_hit, nb_allies_hit=nb_allies_hit, nb_self_hit=nb_self_hit}
 						print(self.name, self.uid, "tactical ai talents can use", t.name, tid, tact, "weight", val)
 						ok = true

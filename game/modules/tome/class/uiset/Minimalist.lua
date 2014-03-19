@@ -1,5 +1,5 @@
 -- ToME - Tales of Maj'Eyal
--- Copyright (C) 2009, 2010, 2011, 2012, 2013 Nicolas Casalini
+-- Copyright (C) 2009 - 2014 Nicolas Casalini
 --
 -- This program is free software: you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -1206,6 +1206,16 @@ function _M:displayResources(scale, bx, by, a)
 				aprint(px, py, "Rank: "..arena.printRank(arena.rank, arena.ranks), 255, 255, 255)
 			end
 		end
+
+		-----------------------------------------------------------------------------------
+		-- Specific display for zone
+		if game.zone and game.zone.specific_ui then
+			local w, h = game.zone.specific_ui(self, game.zone, x, y)
+			if w and h then
+				self:showResourceTooltip(bx+x*scale, by+y*scale, w, h, "res:levelspec", "")
+				x, y = self:resourceOrientStep(orient, bx, by, scale, x, y, w, h)
+			end
+		elseif game.mouse:getZone("res:levelspec") then game.mouse:unregisterZone("res:levelspec") end
 
 		-----------------------------------------------------------------------------------
 		-- Saving

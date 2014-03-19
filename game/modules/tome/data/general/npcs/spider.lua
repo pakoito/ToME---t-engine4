@@ -1,5 +1,5 @@
 -- ToME - Tales of Maj'Eyal
--- Copyright (C) 2009, 2010, 2011, 2012, 2013 Nicolas Casalini
+-- Copyright (C) 2009 - 2014 Nicolas Casalini
 --
 -- This program is free software: you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -181,7 +181,7 @@ newEntity{ base = "BASE_NPC_SPIDER",
 -- the brethren of Ungoliant :D  tough and deadly, probably too tough, but meh <evil laughter>
 newEntity{ base = "BASE_NPC_SPIDER",
 	name = "ungolmor", color={0,0,0},  -- spider night, don't change the color
-	desc = [[Largest of all the spiderkin, its folds of skin seem nigh impenetrable.]],
+	desc = [[Largest of all the spiderkin, its folds of skin seem nearly impenetrable.]],
 	level_range = {38, nil}, exp_worth = 1,
 	rarity = 4,
 	max_life = 120,

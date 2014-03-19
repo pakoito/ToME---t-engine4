@@ -1,5 +1,5 @@
 -- ToME - Tales of Maj'Eyal
--- Copyright (C) 2009, 2010, 2011, 2012, 2013 Nicolas Casalini
+-- Copyright (C) 2009 - 2014 Nicolas Casalini
 --
 -- This program is free software: you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -165,7 +165,7 @@ newTalent{
 		return ([[You bind light in a glyph on the floor. All targets walking over the glyph will be hit by a blast that knocks them back and does %0.2f physical damage.
 		The glyph is a hidden trap (%d detection and %d disarm power based on your Magic) and lasts for %d turns.
 		The damage will increase with your Spellpower.]]):
-		format(damDesc(self, DamageType.SPELLKNOCKBACK, damage), t.trapPower(self, t)*0.8, t.trapPower(self, t), duration)
+		format(damDesc(self, DamageType.PHYSICAL, damage), t.trapPower(self, t)*0.8, t.trapPower(self, t), duration)
 	end,
 }
 

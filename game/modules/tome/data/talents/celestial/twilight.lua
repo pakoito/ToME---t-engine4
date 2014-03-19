@@ -1,5 +1,5 @@
 -- ToME - Tales of Maj'Eyal
--- Copyright (C) 2009, 2010, 2011, 2012, 2013 Nicolas Casalini
+-- Copyright (C) 2009 - 2014 Nicolas Casalini
 --
 -- This program is free software: you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -237,7 +237,7 @@ newTalent{
 			ai_target = {actor=target},
 			ai = "summoned", ai_real = target.ai,
 			resists = { all = modifier, [DamageType.DARKNESS] = 50, [DamageType.LIGHT] = - 50, },
-			desc = [[A dark shadowy shape who's form resembles the creature it was taken from.]],
+			desc = [[A dark, shadowy shape whose form resembles the humanoid creature it was taken from. It is not a perfect replica, though, and it makes you feel uneasy to look at it.]],
 		}
 		m:removeAllMOs()
 		m.make_escort = nil

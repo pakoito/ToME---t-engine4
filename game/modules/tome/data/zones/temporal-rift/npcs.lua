@@ -1,5 +1,5 @@
 -- ToME - Tales of Maj'Eyal
--- Copyright (C) 2009, 2010, 2011, 2012, 2013 Nicolas Casalini
+-- Copyright (C) 2009 - 2014 Nicolas Casalini
 --
 -- This program is free software: you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -140,7 +140,7 @@ newEntity{ base="BASE_NPC_HORROR_TEMPORAL", define_as = "CHRONOLITH_TWIN",
 	name = "Chronolith Twin", color=colors.VIOLET, unique = true,
 	subtype = "temporal",
 	resolvers.nice_tile{image="invis.png", add_mos = {{image="npc/horror_temporal_cronolith_twin.png", display_h=2, display_y=-1}}},
-	desc = [[A six armed creature with black insect-like eyes dressed in robes.]],
+	desc = [[A six-armed creature, dressed in robes, with black insectile eyes.]],
 	level_range = {20, nil}, exp_worth = 1,
 	max_life = 150, life_rating = 15, fixed_rating = true,
 	rank = 4,
@@ -189,7 +189,7 @@ newEntity{ base="BASE_NPC_HORROR_TEMPORAL", define_as = "CHRONOLITH_CLONE",
 	name = "Chronolith Clone", color=colors.VIOLET, unique = true,
 	subtype = "temporal",
 	resolvers.nice_tile{image="invis.png", add_mos = {{image="npc/horror_temporal_cronolith_clone.png", display_h=2, display_y=-1}}},
-	desc = [[A six armed creature with black insect-like eyes dressed in robes.]],
+	desc = [[A six-armed creature, dressed in robes, with black insectile eyes.]],
 	level_range = {20, nil}, exp_worth = 1,
 	max_life = 150, life_rating = 15, fixed_rating = true,
 	rank = 4,

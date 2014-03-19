@@ -1,5 +1,5 @@
 -- ToME - Tales of Maj'Eyal
--- Copyright (C) 2009, 2010, 2011, 2012, 2013 Nicolas Casalini
+-- Copyright (C) 2009 - 2014 Nicolas Casalini
 --
 -- This program is free software: you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -216,7 +216,7 @@ newEntity{ define_as = "ALUIN",
 	type = "humanoid", subtype = "human", unique = true,
 	name = "Aluin the Fallen",
 	display = "p", color=colors.VIOLET,
-	desc = [[His once shining armour now dull and bloodstained, this Sun Paladin has given in to despair.]],
+	desc = [[His once-shining armour now dull and bloodstained, this Sun Paladin has given in to despair.]],
 	level_range = {35, nil}, exp_worth = 3,
 	max_life = 350, life_rating = 23, fixed_rating = true,
 	hate_regen = 100,

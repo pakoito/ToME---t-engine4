@@ -1,5 +1,5 @@
 -- ToME - Tales of Maj'Eyal
--- Copyright (C) 2009, 2010, 2011, 2012, 2013 Nicolas Casalini
+-- Copyright (C) 2009 - 2014 Nicolas Casalini
 --
 -- This program is free software: you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -235,6 +235,7 @@ end
 --- Determines the combat field to use for this item
 function _M:getObjectCombat(o, kind)
 	if kind == "barehand" then return self.combat end
+	if not o then return nil end
 	if kind == "mainhand" then return o.combat end
 	if kind == "offhand" then return o.combat end
 	return nil
@@ -317,6 +318,7 @@ end
 --- Try to totally evade an attack
 function _M:checkEvasion(target)
 	if not target:attr("evasion") or self == target then return end
+	if target:attr("no_evasion") then return end
 
 	local evasion = target:attr("evasion")
 	print("checkEvasion", evasion, target.level, self.level)
@@ -340,6 +342,12 @@ end
 function _M:attackTargetWith(target, weapon, damtype, mult, force_dam)
 	damtype = damtype or (weapon and weapon.damtype) or DamageType.PHYSICAL
 	mult = mult or 1
+	
+	--Life Steal
+	if weapon and weapon.lifesteal then
+		self:attr("lifesteal", weapon.lifesteal)
+		self:attr("silent_heal", 1)
+	end
 
 	local mode = "other"
 	if self:hasShield() then mode = "shield"
@@ -393,12 +401,11 @@ function _M:attackTargetWith(target, weapon, damtype, mult, force_dam)
 	elseif self:checkEvasion(target) then
 		evaded = true
 		self:logCombat(target, "#Target# evades #Source#.")
-	elseif self:checkHit(atk, def) and (self:canSee(target) or self:attr("blind_fight") or rng.chance(3)) then
+	elseif self.turn_procs.auto_melee_hit or (self:checkHit(atk, def) and (self:canSee(target) or self:attr("blind_fight") or target:attr("blind_fighted") or rng.chance(3))) then
 		local pres = util.bound(target:combatArmorHardiness() / 100, 0, 1)
 		if target.knowTalent and target:hasEffect(target.EFF_DUAL_WEAPON_DEFENSE) then
 			local deflect = math.min(dam, target:callTalent(target.T_DUAL_WEAPON_DEFENSE, "doDeflect"))
 			if deflect > 0 then
---				self:logCombat(target, "#Target# parries %d damage from #Source#'s attack.", deflect)
 				game:delayedLogDamage(self, target, 0, ("%s(%d parried#LAST#)"):format(DamageType:get(damtype).text_color or "#aaaaaa#", deflect), false)
 				dam = math.max(dam - deflect,0)
 				print("[ATTACK] after DUAL_WEAPON_DEFENSE", dam)
@@ -406,7 +413,6 @@ function _M:attackTargetWith(target, weapon, damtype, mult, force_dam)
 		end
 		if target.knowTalent and target:hasEffect(target.EFF_GESTURE_OF_GUARDING) and not target:attr("encased_in_ice") then
 			local deflected = math.min(dam, target:callTalent(target.T_GESTURE_OF_GUARDING, "doGuard")) or 0
---			if deflected > 0 then self:logCombat(target, "#Target# dismisses %d damage from #Source#'s attack with a sweeping gesture.", deflected) end
 			if deflected > 0 then
 				game:delayedLogDamage(self, target, 0, ("%s(%d gestured#LAST#)"):format(DamageType:get(damtype).text_color or "#aaaaaa#", deflected), false)
 				dam = dam - deflected
@@ -463,6 +469,8 @@ function _M:attackTargetWith(target, weapon, damtype, mult, force_dam)
 	
 		local oldproj = DamageType:getProjectingFor(self)
 		if self.__talent_running then DamageType:projectingFor(self, {project_type={talent=self.__talent_running}}) end
+		
+		if weapon and weapon.crushing_blow then self:attr("crushing_blow", 1) end
 
 		-- Damage conversion?
 		-- Reduces base damage but converts it into another damage type
@@ -486,6 +494,8 @@ function _M:attackTargetWith(target, weapon, damtype, mult, force_dam)
 		if dam > 0 then
 			DamageType:get(damtype).projector(self, target.x, target.y, damtype, math.max(0, dam))
 		end
+		
+		if weapon and weapon.crushing_blow then self:attr("crushing_blow", -1) end
 
 		if self.__talent_running then DamageType:projectingFor(self, oldproj) end
 
@@ -499,12 +509,12 @@ function _M:attackTargetWith(target, weapon, damtype, mult, force_dam)
 			dam = dam + total_conversion
 		end
 
-		target:fireTalentCheck("callbackOnMeleeHit", self)
+		target:fireTalentCheck("callbackOnMeleeHit", self, dam)
 
 		hitted = true
 	else
 		self:logCombat(target, "#Source# misses #Target#.")
-		target:fireTalentCheck("callbackOnMeleeMiss", self)
+		target:fireTalentCheck("callbackOnMeleeMiss", self, dam)
 	end
 
 	-- cross-tier effect for accuracy vs. defense
@@ -633,8 +643,16 @@ function _M:attackTargetWith(target, weapon, damtype, mult, force_dam)
 		target.invulnerable = 1 -- Target already hit, don't damage it twice
 		self:project({type="ball", radius=1, selffire=false}, target.x, target.y, DamageType.PHYSICAL, dam)
 		target.invulnerable = invuln
-		self:incStamina(-15)
+		self:incStamina(-8)
 		self.shattering_impact_last_turn = game.turn
+	end
+	
+	-- Damage Backlash
+	if dam > 0 and self.attr and self:attr("damage_backfire") then
+		local hurt = math.min(dam, target.life) * self.damage_backfire / 100
+		if hurt > 0 then
+			self:takeHit(hurt, self)
+		end
 	end
 
 	-- Burst on Hit
@@ -739,15 +757,15 @@ function _M:attackTargetWith(target, weapon, damtype, mult, force_dam)
 
 	-- Special effect
 	if hitted and weapon and weapon.special_on_hit and weapon.special_on_hit.fct and (not target.dead or weapon.special_on_hit.on_kill) then
-		weapon.special_on_hit.fct(weapon, self, target)
+		weapon.special_on_hit.fct(weapon, self, target, dam)
 	end
 
 	if hitted and crit and weapon and weapon.special_on_crit and weapon.special_on_crit.fct and (not target.dead or weapon.special_on_crit.on_kill) then
-		weapon.special_on_crit.fct(weapon, self, target)
+		weapon.special_on_crit.fct(weapon, self, target, dam)
 	end
 
 	if hitted and weapon and weapon.special_on_kill and weapon.special_on_kill.fct and target.dead then
-		weapon.special_on_kill.fct(weapon, self, target)
+		weapon.special_on_kill.fct(weapon, self, target, dam)
 	end
 
 	if hitted and crit and not target.dead and self:knowTalent(self.T_BACKSTAB) and not target:attr("stunned") and rng.percent(self:callTalent(self.T_BACKSTAB, "getStunChance")) then
@@ -797,7 +815,7 @@ function _M:attackTargetWith(target, weapon, damtype, mult, force_dam)
 	end
 
 	-- Counter Attack!
-	if not hitted and not target.dead and not evaded and not target:attr("stunned") and not target:attr("dazed") and not target:attr("stoned") and target:knowTalent(target.T_COUNTER_ATTACK) and self:isNear(target.x,target.y, 1) then --Adjacency check
+	if not hitted and not target.dead and target:knowTalent(target.T_COUNTER_ATTACK) and not target:attr("stunned") and not target:attr("dazed") and not target:attr("stoned") and target:knowTalent(target.T_COUNTER_ATTACK) and self:isNear(target.x,target.y, 1) then --Adjacency check
 		local cadam = target:callTalent(target.T_COUNTER_ATTACK,"checkCounterAttack")
 		if cadam then
 			game.logSeen(self, "%s counters the attack!", target.name:capitalize())
@@ -812,7 +830,7 @@ function _M:attackTargetWith(target, weapon, damtype, mult, force_dam)
 	end
 
 	-- Defensive Throw!
-	if not hitted and not target.dead and not evaded and not target:attr("stunned") and not target:attr("dazed") and not target:attr("stoned") and target:knowTalent(target.T_DEFENSIVE_THROW) and target:isNear(self.x,self.y,1) then
+	if not hitted and not target.dead and target:knowTalent(target.T_DEFENSIVE_THROW) and not target:attr("stunned") and not target:attr("dazed") and not target:attr("stoned") and target:isNear(self.x,self.y,1) then
 		local t = target:getTalentFromId(target.T_DEFENSIVE_THROW)
 		t.do_throw(target, self, t)
 	end
@@ -925,6 +943,12 @@ function _M:attackTargetWith(target, weapon, damtype, mult, force_dam)
 
 	self.turn_procs.weapon_type = nil
 	self.__global_accuracy_damage_bonus = nil
+	
+	--Life Steal
+	if weapon and weapon.lifesteal then
+		self:attr("lifesteal", -weapon.lifesteal)
+		self:attr("silent_heal", -1)
+	end
 
 	return self:combatSpeed(weapon), hitted
 end
@@ -1348,7 +1372,7 @@ function _M:combatStatLimit(stat, limit, low, high)
 end
 
 --- Gets the damage
-function _M:combatDamage(weapon)
+function _M:combatDamage(weapon, adddammod)
 	weapon = weapon or self.combat or {}
 
 	local sub_cun_to_str = false
@@ -1361,6 +1385,11 @@ function _M:combatDamage(weapon)
 		if self.use_psi_combat and stat == "str" then stat = "wil" end
 		if self.use_psi_combat and stat == "dex" then stat = "cun" end
 		totstat = totstat + self:getStat(stat) * mod
+	end
+	if adddammod then
+		for stat, mod in pairs(adddammod) do
+			totstat = totstat + self:getStat(stat) * mod
+		end
 	end
 	if self.use_psi_combat then
 		if self:knowTalent(self.T_GREATER_TELEKINETIC_GRASP) then
@@ -1383,7 +1412,7 @@ function _M:combatDamage(weapon)
 
 	local power = math.max((weapon.dam or 1), 1)
 	power = (math.sqrt(power / 10) - 1) * 0.5 + 1
-	--print(("[COMBAT DAMAGE] power(%f) totstat(%f) talent_mod(%f)"):format(power, totstat, talented_mod))
+--	print(("[COMBAT DAMAGE] power(%f) totstat(%f) talent_mod(%f)"):format(power, totstat, talented_mod))
 	return self:rescaleDamage(0.3*(self:combatPhysicalpower(nil, weapon) + totstat) * power * talented_mod)
 end
 
@@ -1594,8 +1623,8 @@ function _M:physicalCrit(dam, weapon, target, atk, def, add_chance, crit_power_a
 
 	chance = util.bound(chance, 0, 100)
 
-	print("[PHYS CRIT %]", chance)
-	if rng.percent(chance) then
+	print("[PHYS CRIT %]", self.turn_procs.auto_phys_crit and 100 or chance)
+	if self.turn_procs.auto_phys_crit or rng.percent(chance) then
 		if target:hasEffect(target.EFF_OFFGUARD) then
 			crit_power_add = crit_power_add + 0.1
 		end
@@ -1612,6 +1641,8 @@ function _M:physicalCrit(dam, weapon, target, atk, def, add_chance, crit_power_a
 		crit = true
 
 		if self:knowTalent(self.T_EYE_OF_THE_TIGER) then self:triggerTalent(self.T_EYE_OF_THE_TIGER, nil, "physical") end
+
+		self:fireTalentCheck("callbackOnCrit", "physical", dam, chance, target)
 	end
 	return dam, crit
 end
@@ -1630,8 +1661,8 @@ function _M:spellCrit(dam, add_chance, crit_power_add)
 		crit_power_add = crit_power_add + self:callTalent(self.T_SHADOWSTRIKE,"getMultiplier")
 	end
 
-	print("[SPELL CRIT %]", chance)
-	if rng.percent(chance) then
+	print("[SPELL CRIT %]", self.turn_procs.auto_spell_crit and 100 or chance)
+	if self.turn_procs.auto_spell_crit or rng.percent(chance) then
 		self.turn_procs.is_crit = "spell"
 		self.turn_procs.crit_power = (1.5 + crit_power_add + (self.combat_critical_power or 0) / 100)
 		dam = dam * (1.5 + crit_power_add + (self.combat_critical_power or 0) / 100)
@@ -1660,6 +1691,8 @@ function _M:spellCrit(dam, add_chance, crit_power_add)
 		end
 
 		if self:knowTalent(self.T_EYE_OF_THE_TIGER) then self:triggerTalent(self.T_EYE_OF_THE_TIGER, nil, "spell") end
+
+		self:fireTalentCheck("callbackOnCrit", "spell", dam, chance)
 	end
 	return dam, crit
 end
@@ -1678,8 +1711,8 @@ function _M:mindCrit(dam, add_chance, crit_power_add)
 		crit_power_add = crit_power_add + self:callTalent(self.T_SHADOWSTRIKE,"getMultiplier")
 	end
 
-	print("[MIND CRIT %]", chance)
-	if rng.percent(chance) then
+	print("[MIND CRIT %]", self.turn_procs.auto_mind_crit and 100 or chance)
+	if self.turn_procs.auto_mind_crit or rng.percent(chance) then
 		self.turn_procs.is_crit = "mind"
 		self.turn_procs.crit_power = (1.5 + crit_power_add + (self.combat_critical_power or 0) / 100)
 		dam = dam * (1.5 + crit_power_add + (self.combat_critical_power or 0) / 100)
@@ -1692,6 +1725,8 @@ function _M:mindCrit(dam, add_chance, crit_power_add)
 
 		if self:knowTalent(self.T_EYE_OF_THE_TIGER) then self:triggerTalent(self.T_EYE_OF_THE_TIGER, nil, "mind") end
 		if self:knowTalent(self.T_LIVING_MUCUS) then self:callTalent(self.T_LIVING_MUCUS, "on_crit") end
+
+		self:fireTalentCheck("callbackOnCrit", "mind", dam, chance)
 	end
 	return dam, crit
 end
@@ -2217,26 +2252,36 @@ end
 -- Starts the grapple
 function _M:startGrapple(target)
 	-- pulls boosted grapple effect from the clinch talent if known
+	local grappledParam = {src = self, apply_power = 1, silence = 0, power = 1, slow = 0, reduction = 0}
+	local grappleParam = {sharePct = 0, drain = 0, trgt = target }
+	local duration = 5
 	if self:knowTalent(self.T_CLINCH) then
 		local t = self:getTalentFromId(self.T_CLINCH)
-		power = t.getPower(self, t)
+		if self:knowTalent(self.T_CRUSHING_HOLD) then
+			local t2 = self:getTalentFromId(self.T_CRUSHING_HOLD)
+			grappledParam = t2.getBonusEffects(self, t2) -- get the 4 bonus parameters first
+		end
+		local power = self:physicalCrit(t.getPower(self, t), nil, target, self:combatAttack(), target:combatDefense())
+		grappledParam["power"] = power -- damage/turn set by Clinch
 		duration = t.getDuration(self, t)
-		hitbonus = self:getTalentLevel(t)/2
-	else
-		power = 5
-		duration = 4
-		hitbonus = 0
+
+		grappleParam["drain"] = t.getDrain(self, t) -- stamina/turn set by Clinch
+		grappleParam["sharePct"] = t.getSharePct(self, t) -- damage shared with grappled set by Clinch
+
 	end
+	-- oh for the love of god why didn't I rewrite this entire structure
+	grappledParam["src"] = self
+	grappledParam["apply_power"] = self:combatPhysicalpower()
 	-- Breaks the grapple before reapplying
 	if self:hasEffect(self.EFF_GRAPPLING) then
 		self:removeEffect(self.EFF_GRAPPLING, true)
-		target:setEffect(target.EFF_GRAPPLED, duration, {src=self, power=power}, true)
-		self:setEffect(self.EFF_GRAPPLING, duration, {trgt=target}, true)
+		target:setEffect(target.EFF_GRAPPLED, duration, grappledParam, true)
+		self:setEffect(self.EFF_GRAPPLING, duration, grappleParam, true)
 		return true
 	elseif target:canBe("pin") then
-		target:setEffect(target.EFF_GRAPPLED, duration, {src=self, power=power, apply_power=self:combatPhysicalpower()})
+		target:setEffect(target.EFF_GRAPPLED, duration, grappledParam)
 		target:crossTierEffect(target.EFF_GRAPPLED, self:combatPhysicalpower())
-		self:setEffect(self.EFF_GRAPPLING, duration, {trgt=target})
+		self:setEffect(self.EFF_GRAPPLING, duration, grappleParam)
 		return true
 	else
 		game.logSeen(target, "%s resists the grapple!", target.name:capitalize())

@@ -1,5 +1,5 @@
 -- ToME - Tales of Maj'Eyal
--- Copyright (C) 2009, 2010, 2011, 2012, 2013 Nicolas Casalini
+-- Copyright (C) 2009 - 2014 Nicolas Casalini
 --
 -- This program is free software: you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -110,7 +110,7 @@ newEntity{ base = "BASE_NPC_GHOUL", define_as = "ROTTING_TITAN",
 	resolvers.nice_tile{image="invis.png", add_mos = {{image="npc/undead_ghoul_rotting_titan.png", display_h=2, display_y=-1}}},
 	desc = [[This gigantic mass of flesh and stone moves slowly, the ground rumbling with each step it takes. Its body seems to constantly pulsate and reform. Massive stones at the end of each limb form massive blunt weapons.]],
 	level_range = {45, nil}, exp_worth = 2,
-	rarity = 40,
+	rarity = 25,
 	max_life = resolvers.rngavg(150,200), life_rating = 40,
 	combat_armor = 40, combat_def = 10,
 	ai_state = { talent_in=2 },
@@ -125,8 +125,10 @@ newEntity{ base = "BASE_NPC_GHOUL", define_as = "ROTTING_TITAN",
 	ai = "tactical",
 	ai_tactic = resolvers.tactic"melee",
 	autolevel="warriormage",
-
-	can_pass = {pass_wall=70}, --So AI knows to try and pass walls.
+	
+	on_added_to_level = function(self)
+		self.can_pass = {pass_wall=70} --Added after birth so it doesn't spawn inside a wall.
+	end,
 
 	stats = { str=40, dex=20, mag=24, con=25 },
 	resists = {all = 25, [DamageType.PHYSICAL]=15, [DamageType.ARCANE]=-50, [DamageType.FIRE]=-20},
@@ -138,15 +140,17 @@ newEntity{ base = "BASE_NPC_GHOUL", define_as = "ROTTING_TITAN",
 	combat_atk=40,
 	combat_spellpower=25,
 	
+	inc_damage = { [DamageType.PHYSICAL] = 15 },
+	
 	disarm_immune=1, --Since disarming him would be, well, DISARMING him.
 
 	on_move = function(self)
-			if rng.percent(20) then
-				game.logSeen(self, "The ground shakes as %s steps!", self.name:capitalize())
-				local tg = {type="ball", range=0, selffire=false, radius=3, no_restrict=true}
-				local DamageType = require "engine.DamageType"
-				self:project(tg, self.x, self.y, DamageType.PHYSKNOCKBACK, {dam=24, dist=1})
-				self:doQuake(tg, self.x, self.y)
+		if rng.percent(35) then
+			game.logSeen(self, "The ground shakes as %s steps!", self.name:capitalize())
+			local tg = {type="ball", range=0, selffire=false, radius=4, no_restrict=true}
+			local DamageType = require "engine.DamageType"
+			--self:project(tg, self.x, self.y, DamageType.PHYSKNOCKBACK, {dam=24, dist=5})
+			self:doQuake(tg, self.x, self.y)
 		end
 		self:project({type="ball", range=0, selffire=false, radius=1}, self.x, self.y, engine.DamageType.DIG, 1)
 	end,
@@ -180,7 +184,7 @@ newEntity{ base = "BASE_NPC_GHOST", define_as = "GLACIAL_LEGION",
 	resolvers.nice_tile{image="invis.png", add_mos = {{image="npc/undead_ghost_glacial_legion.png", display_h=2, display_y=-1}}},
 	desc = [[A massive, shifting, ethereal form floats in the air around an orb of frozen blood. Vapor pools on the floor beneath it.]],
 	level_range = {45, nil}, exp_worth = 2,
-	rarity = 40,
+	rarity = 25,
 	size_category=5,
 	rank = 3.5,
 	max_life = resolvers.rngavg(90,100), life_rating = 18,
@@ -188,34 +192,36 @@ newEntity{ base = "BASE_NPC_GHOST", define_as = "GLACIAL_LEGION",
 	ai = "tactical", ai_state = { talent_in=1, },
 	ai_tactic = resolvers.tactic"ranged",
 	stats = { str=13, dex=15, mag=45, con=14 },
-	combat_spellpower=40,
+	combat_spellpower = 100,
 
 	resists = {all = -10, [DamageType.FIRE] = -100, [DamageType.LIGHT] = 30, [DamageType.COLD] = 100},
 	combat_armor = 0, combat_def = resolvers.mbonus(10, 10),
 	--stealth = resolvers.mbonus(40, 10),
 
-	combat = { dam=50, atk=50, apr=100, dammod={mag=1.1} },
+	combat = { dam=50, atk=90, apr=100, dammod={mag=1.1} },
 	melee_project = {[DamageType.COLD]=resolvers.mbonus(15, 25)},
 	on_melee_hit = {[DamageType.COLD]=resolvers.mbonus(15, 5)},
+	
+	inc_damage = { [DamageType.COLD] = 25 },
 
 	on_move = function(self)
-			local DamageType = require "engine.DamageType"
-			local duration = 7
-			local radius = 0
-			local dam = 25
-			-- Add a lasting map effect
-			game.level.map:addEffect(self,
-				self.x, self.y, duration,
-				engine.DamageType.ICE, 25,
-				radius,
-				5, nil,
-				engine.Entity.new{alpha=100, display='', color_br=30, color_bg=60, color_bb=200},
-				function(e)
-					e.radius = e.radius
-					return true
-				end,
-				false
-			)
+		local DamageType = require "engine.DamageType"
+		local duration = 9
+		local radius = 0
+		local dam = 100
+		-- Add a lasting map effect
+		game.level.map:addEffect(self,
+			self.x, self.y, duration,
+			engine.DamageType.ICE, dam,
+			radius,
+			5, nil,
+			engine.Entity.new{alpha=100, display='', color_br=30, color_bg=60, color_bb=200},
+			function(e)
+				e.radius = e.radius 
+				return true
+			end,
+			false
+		)
 	end,
 
 	resolvers.talents{
@@ -223,13 +229,12 @@ newEntity{ base = "BASE_NPC_GHOST", define_as = "GLACIAL_LEGION",
 		[Talents.T_FREEZE]={base=5, every=4, max=10},
 		[Talents.T_ICE_STORM]={base=4, every=6, max=8},
 		[Talents.T_ICE_SHARDS]={base=5, every=5, max=9},
-		[Talents.T_ARCANE_POWER]={base=4, every=3, max = 11},
 		[Talents.T_SHATTER]={base=3, every=6, max=8},
 		[Talents.T_UTTERCOLD]={base=3, every=7, max = 5},
 		[Talents.T_FROZEN_GROUND]={base=4, every=6, max = 6},
 		[Talents.T_CHILL_OF_THE_TOMB]={base=5, every=5, max=10},
 		[Talents.T_SPELLCRAFT]={base=3, every=7, max=8},
-		[Talents.T_MANAFLOW]={base=5, every=4, max = 12},
+		--[Talents.T_MANAFLOW]={base=5, every=4, max = 12},
 		[Talents.T_FROST_HANDS]={base=3, every=7, max=8},
 	},
 	resolvers.drops{chance=100, nb=3, {tome_drops="boss"} },
@@ -240,10 +245,10 @@ newEntity{ base = "BASE_NPC_GHOST", define_as = "GLACIAL_LEGION",
 newEntity{ base = "BASE_NPC_BONE_GIANT", define_as = "HEAVY_SENTINEL",
 	allow_infinite_dungeon = true,
 	name = "Heavy Sentinel", color=colors.ORANGE, unique=true,
-	desc = [[A towering creature, made from the bones of countless bodies. An aura of flame bellows from within its chest.]],
+	desc = [[A towering creature, made from the bones of countless bodies. An aura of flame billows from within its chest.]],
 	resolvers.nice_tile{image="invis.png", add_mos = {{image="npc/undead_giant_heavy_sentinel.png", display_h=2, display_y=-1}}},
 	level_range = {45, nil}, exp_worth = 2,
-	rarity = 40,
+	rarity = 25,
 	rank = 3.5,
 	ai = "tactical",
 	size=5,
@@ -251,12 +256,12 @@ newEntity{ base = "BASE_NPC_BONE_GIANT", define_as = "HEAVY_SENTINEL",
 	combat_armor = 20, combat_def = 35,
 	life_rating = 28,
 	
-	combat_atk=30,
-	combat_spellpower=15,
+	combat_atk = 60,
+	combat_spellpower=35,
 	
 	stats = { str=28, dex=60, mag=20, con=20 },
 	
-	combat = { dam=resolvers.levelup(60, 1, 2), atk=resolvers.levelup(70, 1, 1), apr=20, dammod={str=1.2}, damtype=engine.DamageType.FIRE, convert_damage={[engine.DamageType.PHYSICAL]=50}},
+	combat = { dam=resolvers.levelup(60, 1, 2), atk=resolvers.levelup(110, 1, 1), apr=20, dammod={str=1.2}, damtype=engine.DamageType.FIRE, convert_damage={[engine.DamageType.PHYSICAL]=50}},
 	
 	melee_project = {[DamageType.FIRE]=resolvers.mbonus(15, 25)},
 	on_melee_hit = {[DamageType.FIRE]=resolvers.mbonus(15, 5)},
@@ -268,12 +273,10 @@ newEntity{ base = "BASE_NPC_BONE_GIANT", define_as = "HEAVY_SENTINEL",
 		[Talents.T_SKELETON_REASSEMBLE]=5,
 		[Talents.T_ARCANE_POWER]={base=3, every=3, max = 6},
 		[Talents.T_FLAME]={base=3, every=4, max = 8},
-		[Talents.T_FLAMESHOCK]={base=2, every=6, max = 7},
-		[Talents.T_MANAFLOW]={base=5, every=5, max = 10},
+		[Talents.T_FLAMESHOCK]={base=3, every=6, max = 7},
 		[Talents.T_INFERNO]={base=2, every=5, max = 6},
 		[Talents.T_BURNING_WAKE]={base=1, every=4, max = 5},
 		[Talents.T_WILDFIRE]={base=3, every=7, max=5},
-		--[Talents.T_GOLEM_MOLTEN_SKIN]={base=3, every=6, max=6},
 		[Talents.T_CLEANSING_FLAMES]={base=2, every=6, max = 5},
 		[Talents.T_ARCANE_COMBAT]=3,
 		[Talents.T_SPELLCRAFT]={base=3, every=7, max=7},
@@ -291,20 +294,25 @@ newEntity{ base = "BASE_NPC_VAMPIRE", unique=true, define_as="ARCH_ZEPHYR",
 	resolvers.nice_tile{image="invis.png", add_mos = {{image="npc/undead_vampire_arch_zephyr.png", display_h=2, display_y=-1}}},
 	desc=[[The robes of this ancient vampire billow with intense winds. Bolts of lightning arc along its body. In its hand it holds a bow, electricity streaking across it.]],
 	level_range = {45, nil}, exp_worth = 1,
-	rarity = 40,
+	rarity = 25,
 	autolevel="warriormage",
 	stats = { str=24, dex=40, mag=24, con=20 },
 	max_life = resolvers.rngavg(100,120), life_rating=25,
 	combat_armor = 15, combat_def = 15,
 	rank = 3.5,
-	mana_regen=6,
-
-	movement_speed=1.5,
+	mana_regen = 20, --Maintain Thunderstorm
 	
-	combat_atk = 40,
-	combat_spellpower = 40,
+	body = { INVEN = 10, MAINHAND=1, OFFHAND=1, BODY=1, QUIVER=1 },
 
-	ai = "tactical", ai_state = { talent_in=4, },
+	movement_speed=1.75,
+	
+	combat_atk = 120,
+	combat_spellpower = 60,
+	
+	ranged_project = {[DamageType.LIGHTNING] = resolvers.mbonus(30, 30)},
+
+	ai = "tactical", ai_state = { talent_in=3, },
+	ai_tactic = resolvers.tactic"ranged",
 	resolvers.equip{ {type="weapon", subtype="longbow", defined="STORM_FURY", random_art_replace={chance=50}, autoreq=true, force_drop=true}, {type="ammo", subtype="arrow", autoreq=true} },
 
 	resists = { [DamageType.LIGHTNING] = 100, [DamageType.PHYSICAL] = -20, [DamageType.LIGHT] = 30,  },
@@ -322,7 +330,7 @@ newEntity{ base = "BASE_NPC_VAMPIRE", unique=true, define_as="ARCH_ZEPHYR",
 
 		[Talents.T_SHOOT]=1, -- If possible, add talent that lets it temporarily fire lightning instead of arrows.
 		[Talents.T_RELOAD]=1,
-		[Talents.T_BOW_MASTERY]={base=3, every=10},
+		[Talents.T_BOW_MASTERY]={base=4, every=10},
 		[Talents.T_DUAL_ARROWS]={base=3, every=6, max=8},
 		[Talents.T_PINNING_SHOT]={base=2, every=6, max=4},
 		[Talents.T_CRIPPLING_SHOT]={base=2, every=6, max=7},
@@ -336,31 +344,36 @@ newEntity{ base = "BASE_NPC_WIGHT",
 	allow_infinite_dungeon = true,
 	name = "Void Spectre", color=colors.RED, unique=true,
 	resolvers.nice_tile{image="invis.png", add_mos = {{image="npc/undead_wight_void_spectre.png", display_h=2, display_y=-1}}},
-	desc=[[Intense Arcane energy whirls in the air around this ethereal form. ]],
+	desc=[[Intense Arcane energy whirls in the air around this ethereal form.]],
 	level_range = {45, nil}, exp_worth = 2,
 	life_rating=16,
-	rarity = 40,
+	rarity = 25,
 	rank = 3.5,
 	max_life = resolvers.rngavg(200,300),
 	max_mana = resolvers.rngavg(800,1200),
-	mana_regen = 5,
+	mana_regen = 100, --RAW ARCANE POWER
 	combat_armor = 12, combat_def = 30, combat_atk=30,
+	combat_spellpower = resolvers.mbonus(90, 30),
 	
-		combat = { dam=resolvers.mbonus(40, 20), atk=20, apr=15, damtype=DamageType.ARCANE },
+	arcane_cooldown_divide = 4, --Aether Avatar ++
+	inc_damage = { [DamageType.ARCANE] = 30 },
 	
-		resists = { [DamageType.COLD] = 30, [DamageType.FIRE] = 30, [DamageType.LIGHTNING] = 30, [DamageType.PHYSICAL] = 0, [DamageType.LIGHT] = 0, [DamageType.ARCANE] = 100},
+	combat = { dam=resolvers.mbonus(40, 20), atk=20, apr=15, damtype=DamageType.ARCANE },
+	
+	resists = { [DamageType.COLD] = 30, [DamageType.FIRE] = 30, [DamageType.LIGHTNING] = 30, [DamageType.PHYSICAL] = 0, [DamageType.LIGHT] = 0, [DamageType.ARCANE] = 100},
 
 	ai = "tactical",
+	ai_tactic = resolvers.tactic"ranged",
 	resolvers.talents{ [Talents.T_FLAMESHOCK]={base=3, every=5, max=7}, [Talents.T_LIGHTNING]={base=4, every=5, max=8}, [Talents.T_GLACIAL_VAPOUR]={base=3, every=5, max=7}, [Talents.T_STRIKE]={base=3, every=5, max=7},
 		[Talents.T_ARCANE_POWER]={base=6, every=2, max=12},
 		[Talents.T_MANATHRUST]={base=6, every=4, max=10},
 		[Talents.T_ARCANE_VORTEX]={base=4, every=4, max=7},
 		[Talents.T_SPELLCRAFT]=5,
 		[Talents.T_AETHER_BEAM]={base=6, every=7, max=9},
-		[Talents.T_AETHER_BREACH]={base=3, every=6, max=6},
-		[Talents.T_HEAL]={base=2, every=6, max=6},
+		[Talents.T_AETHER_BREACH]={base=4, every=6, max=8},
+		[Talents.T_HEAL]={base=3, every=6, max=6},
 		[Talents.T_SHIELDING]={base=3, every=6, max=6},
-		[Talents.T_ARCANE_SHIELD]={base=2, every=5, max=5},
+		[Talents.T_ARCANE_SHIELD]={base=3, every=5, max=5},
 		[Talents.T_PURE_AETHER]={base=3, every=7, max=5},
 		[Talents.T_PHASE_DOOR]=10,
 	},

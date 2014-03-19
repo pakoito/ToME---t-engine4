@@ -1,5 +1,5 @@
 -- ToME - Tales of Maj'Eyal
--- Copyright (C) 2009, 2010, 2011, 2012, 2013 Nicolas Casalini
+-- Copyright (C) 2009 - 2014 Nicolas Casalini
 --
 -- This program is free software: you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -30,7 +30,7 @@ newEntity{ base = "BASE_HEAVY_BOOTS", define_as = "PHYSSAVE_BOOTS",
 	color = colors.YELLOW,
 	encumber = 1,
 	rarity = 300,
-	desc = [[Fine boots that increase your physical save by 10.]],
+	desc = [[Fine boots that increase your Physical Save by 10.]],
 	cost = 100,
 	wielder = {
 		combat_physresist = 10,
@@ -48,7 +48,7 @@ newEntity{ base = "BASE_AMULET", define_as = "MINDPOWER_AMULET",
 	color = colors.YELLOW,
 	encumber = 1,
 	rarity = 300,
-	desc = [[A beautiful amulet that increases your mindpower by 3.]],
+	desc = [[A beautiful amulet that increases your Mindpower by 3.]],
 	cost = 100,
 	wielder = {
 		combat_mindpower = 3,

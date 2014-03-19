@@ -1,5 +1,5 @@
 -- ToME - Tales of Maj'Eyal
--- Copyright (C) 2009, 2010, 2011, 2012, 2013 Nicolas Casalini
+-- Copyright (C) 2009 - 2014 Nicolas Casalini
 --
 -- This program is free software: you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -82,7 +82,7 @@ newEntity{ define_as = "NORGAN",
 	name = "Norgan",
 	display = "@", color=colors.UMBER,
 	faction = "iron-throne",
-	desc = [[Norgan and you are the sole survivors of the Reknor expedition, your duty is to make sure the news come back to the Iron Council.]],
+	desc = [[Norgan and you are the sole survivors of the Reknor expedition; your duty is to make sure the news makes it back to the Iron Council.]],
 	level_range = {1, nil},
 	max_life = 120, life_rating = 12, fixed_rating = true,
 	rank = 3,

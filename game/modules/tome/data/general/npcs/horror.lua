@@ -1,5 +1,5 @@
 -- ToME - Tales of Maj'Eyal
--- Copyright (C) 2009, 2010, 2011, 2012, 2013 Nicolas Casalini
+-- Copyright (C) 2009 - 2014 Nicolas Casalini
 --
 -- This program is free software: you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -559,6 +559,7 @@ newEntity{ base = "BASE_NPC_HORROR",
 
 	on_move = function(self)
 			local DamageType = require "engine.DamageType"
+			local MapEffect = require "engine.MapEffect"
 			local duration = 10
 			local radius = 0
 			local dam = 25
@@ -568,7 +569,7 @@ newEntity{ base = "BASE_NPC_HORROR",
 				engine.DamageType.SLIME, 25,
 				radius,
 				5, nil,
-				engine.Entity.new{alpha=100, display='', color_br=25, color_bg=140, color_bb=40},
+				MapEffect.new{color_br=25, color_bg=140, color_bb=40, effect_shader="shader_images/retch_effect.png"},
 				function(e)
 					e.radius = e.radius
 					return true
@@ -901,14 +902,12 @@ newEntity{ base="BASE_NPC_HORROR", define_as = "GRGGLCK_TENTACLE",
 	end,
 }
 
-
---MUHUHAHAHAHAHAHA
 newEntity{ base = "BASE_NPC_HORROR",
 	name = "Ak'Gishil", color=colors.GREY, unique = true,
-	desc = "This blade horror has grown in power dramatically, and become a nexus of temporal energy. Rifts in space open around it constantly, summoning and banishing blades before vanishing as quickly as they appear.",
+	desc = "This Blade Horror has been infused with intense temporal magic, causing its power to increase dramatically. Rifts in space open around it constantly, summoning and banishing blades before vanishing as quickly as they appear.",
 	resolvers.nice_tile{tall=1},
 	level_range = {30, nil}, exp_worth = 2,
-	rarity = 50,
+	rarity = 45,
 	rank = 3.5,
 	levitate=1,
 	max_psi= 320,
@@ -918,14 +917,18 @@ newEntity{ base = "BASE_NPC_HORROR",
 	max_life = resolvers.rngavg(150, 180),
 	life_rating = 32,
 	life_regen = 0.25,
+	global_speed_base = 1.2,
 	combat_armor = 30, combat_def = 18,
 	is_akgishil = true,
+	can_spawn = 1,
+	psionic_shield_override = 1,
 	
 	resolvers.drops{chance=100, nb=1, {defined="BLADE_RIFT"} },
 	
 	ai = "tactical", ai_state = { ai_move="move_complex", talent_in=2, ally_compassion=0 },
 		
-	on_melee_hit = {[DamageType.PHYSICALBLEED]=resolvers.mbonus(32, 5)},
+	on_melee_hit = {[DamageType.PHYSICALBLEED]=resolvers.mbonus(12, 5)},
+	melee_project = {[DamageType.PHYSICALBLEED]=resolvers.mbonus(32, 5)},
 	combat = { dam=resolvers.levelup(resolvers.rngavg(20,28), 1, 1.5), physspeed = 0.25,atk=resolvers.levelup(24, 1.2, 1.2), apr=4, dammod={wil=0.3, cun=0.15}, damtype=engine.DamageType.PHYSICALBLEED, },
 	--combat_physspeed = 4, --Crazy fast attack rate
 	
@@ -936,9 +939,12 @@ newEntity{ base = "BASE_NPC_HORROR",
 	end,
 
 	on_act = function(self)
-		if self.blades > 3 or not rng.percent(18) then return end
+		if not self:attr("can_spawn") then return end
+		if self.blades > 4 or not rng.percent(28/(self.blades+1)) then return end
+		self.can_spawn = nil
 		self.blades = self.blades + 1
-			self:forceUseTalent(self.T_ANIMATE_BLADE, {ignore_cd=true, force_level=1})
+		self:forceUseTalent(self.T_ANIMATE_BLADE, {ignore_cd=true, ignore_energy=true, force_level=1})
+		self.can_spawn = 1
 	end,
 	
 	resolvers.talents{
@@ -949,6 +955,9 @@ newEntity{ base = "BASE_NPC_HORROR",
 		[Talents.T_PSIONIC_PULL]={base=5, every=3, max=7},
 		[Talents.T_KINETIC_AURA]={base=4, every=3, max=8},
 		[Talents.T_KINETIC_SHIELD]={base=5, every=2, max=9},
+		[Talents.T_THERMAL_SHIELD]={base=3, every=2, max=9},
+		[Talents.T_CHARGED_SHIELD]={base=3, every=2, max=9},
+		[Talents.T_ABSORPTION_MASTERY]=6,
 		[Talents.T_KINETIC_LEECH]={base=3, every=3, max=5},
 		--TEMPORAL
 		[Talents.T_STATIC_HISTORY]={base=1, every=4, max=5},
@@ -956,28 +965,32 @@ newEntity{ base = "BASE_NPC_HORROR",
 		[Talents.T_WEAPON_FOLDING]={base=1, every=4, max=5},
 		[Talents.T_RETHREAD]={base=2, every=4, max=5},
 		[Talents.T_DIMENSIONAL_STEP]={base=3, every=4, max=5},
+		
+		[Talents.T_THROUGH_THE_CROWD]=1,
 	},
 	resolvers.sustains_at_birth(),
 }
 
 newEntity{ base="BASE_NPC_HORROR", define_as = "ANIMATED_BLADE",
+	resolvers.nice_tile{tall=1},
 	type = "construct", subtype = "weapon", image="object/magical_animated_sword.png",
 	name = "Animated Sword",
 	color = colors.GREY,
 	desc = [[Time seems to warp and bend around this floating weapon.]],
 	level_range = {30, nil}, exp_worth = 0,
-	max_life = 75, life_rating = 3,
+	max_life = 75, life_rating = 4, fixed_rating=true,
 	rank = 2,
 	no_breath = 1,
 	size_category = 2,
 
-	negative_status_immune = 1,
+	negative_status_effect_immune = 1,
+	body = { INVEN = 10, MAINHAND=1 },
 	
 	resolvers.equip{
 		{type="weapon", subtype="longsword", ego_chance = 100, autoreq=true},
 	},
 	
-	resists = {[DamageType.MIND] = 75, [DamageType.TEMPORAL] = 30,},
+	resists = {[DamageType.MIND] = 75, [DamageType.TEMPORAL] = 30, all=10},
 
 	autolevel = "warrior",
 	ai = "dumb_talented_simple", ai_state = { talent_in=3, ai_move="move_astar" },
@@ -990,7 +1003,7 @@ newEntity{ base="BASE_NPC_HORROR", define_as = "ANIMATED_BLADE",
 	},
 	
 	on_added_to_level = function(self)
-		self:teleportRandom(self.x, self.y, 3)
+		self:teleportRandom(self.x, self.y, 7)
 		game.logSeen(self, "A rift opens, spawning a free floating blade!")
 		game.level.map:addEffect(self,
 			self.x, self.y, 3,
@@ -1024,12 +1037,14 @@ newEntity{ base="BASE_NPC_HORROR", define_as = "DISTORTED_BLADE",
 	color = colors.GREY,
 	desc = [[This floating weapon shifts and shimmers, time and space warping and bending as it moves. It appears to vibrate, as if it may explode at any moment.]],
 	level_range = {30, nil}, exp_worth = 0,
-	max_life = 100, life_rating = 6,
+	max_life = 100, life_rating = 10,
 	rank = 3.5,
 	no_breath = 1,
 	size_category = 2,
 
-	negative_status_immune = 1,
+	negative_status_effect_immune = 1,
+	
+	body = { INVEN = 10, MAINHAND=1 },
 	
 	resolvers.equip{
 		{type="weapon", subtype="longsword", define_as="RIFT_SWORD", autoreq=true},
@@ -1037,20 +1052,22 @@ newEntity{ base="BASE_NPC_HORROR", define_as = "DISTORTED_BLADE",
 	
 	resolvers.drops{chance=100, nb=1, {defined="RIFT_SWORD"} },
 	
-	resists = {[DamageType.MIND] = 75, [DamageType.TEMPORAL] = 40,},
+	resists = {[DamageType.MIND] = 75, [DamageType.TEMPORAL] = 40, all=15,},
 
 	autolevel = "warrior",
 	ai = "dumb_talented_simple", ai_state = { talent_in=3, ai_move="move_astar" },
 	
 	resolvers.talents{
 		[Talents.T_SWAP]={base=1, every=4, max=4},
-		[Talents.T_WEAPON_COMBAT]={base=1, every=8, max=5},
-		[Talents.T_WEAPONS_MASTERY]={base=4, every=4, max=6},
+		[Talents.T_WEAPON_COMBAT]={base=3, every=8, max=8},
+		[Talents.T_WEAPONS_MASTERY]={base=4, every=4, max=7},
 		[Talents.T_DIMENSIONAL_STEP]={base=2, every=4, max=5},
+		[Talents.T_WEAPON_FOLDING]={base=2, every=4, max=5},
+		[Talents.T_TEMPORAL_WAKE]={base=2, every=4, max=5},
 	},
 	
 	on_added_to_level = function(self)
-		self:teleportRandom(self.x, self.y, 3)
+		self:teleportRandom(self.x, self.y, 10)
 		game.logSeen(self, "A rift opens, a blade emerging. It does not look like the others.")
 		game.level.map:addEffect(self,
 			self.x, self.y, 5,
@@ -1071,6 +1088,7 @@ newEntity{ base="BASE_NPC_HORROR", define_as = "DISTORTED_BLADE",
 	end,
 
 	on_act = function(self)
+		self.paradox = self.paradox + 20
 		if self.summoner and self.summoner:attr("dead") then
 			self:die()
 			game.logSeen(self, "#AQUAMARINE#With the horror's death the chaotic blade clatters to the ground!")

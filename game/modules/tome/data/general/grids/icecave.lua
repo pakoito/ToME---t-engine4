@@ -1,5 +1,5 @@
 -- ToME - Tales of Maj'Eyal
--- Copyright (C) 2009, 2010, 2011, 2012, 2013 Nicolas Casalini
+-- Copyright (C) 2009 - 2014 Nicolas Casalini
 --
 -- This program is free software: you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -78,7 +78,7 @@ newEntity{
 newEntity{ base = "ICECAVE_DOOR", define_as = "ICECAVE_DOOR_HORIZ", z=3, image = "terrain/icecave/icecave_door1.png", add_displays = {class.new{image="terrain/icecave/icecavewall_8_2.png", z=18, display_y=-1}}, door_opened = "ICECAVE_DOOR_HORIZ_OPEN"}
 newEntity{ base = "ICECAVE_DOOR_OPEN", define_as = "ICECAVE_DOOR_HORIZ_OPEN", image = "terrain/icecave/icecave_floor_1_01.png", add_mos={{image="terrain/icecave/icecave_door1_open_backg.png"}}, add_displays = {class.new{image="terrain/icecave/icecave_door1_open.png", z=17}, class.new{image="terrain/icecave/icecavewall_8_2.png", z=18, display_y=-1}}, door_closed = "ICECAVE_DOOR_HORIZ"}
 newEntity{ base = "ICECAVE_DOOR", define_as = "ICECAVE_DOOR_VERT", image = "terrain/icecave/icecave_floor_1_01.png", add_displays = {class.new{image="terrain/icecave/icecave_door1_vert.png", z=17}, class.new{image="terrain/icecave/icecave_door1_vert_north.png", z=18, display_y=-1}}, door_opened = "ICECAVE_DOOR_OPEN_VERT", dig = "ICECAVE_DOOR_OPEN_VERT"}
-newEntity{ base = "ICECAVE_DOOR_OPEN", define_as = "ICECAVE_DOOR_OPEN_VERT", z=3, image = "terrain/icecave/icecave_floor_1_01.png", add_mos={{image="terrain/icecave/icecave_door1_open_vert_backg.png"}}, add_displays = {class.new{image="terrain/icecave/icecave_door1_open_vert.png", z=17}, class.new{image="terrain/icecave/icecave_door1_open_vert_north.png", z=18, display_y=-1}}, door_closed = "ICECAVE_DOOR_VERT"}
+newEntity{ base = "ICECAVE_DOOR_OPEN", define_as = "ICECAVE_DOOR_OPEN_VERT", z=3, image = "terrain/icecave/icecave_floor_1_01.png", add_mos={{image="terrain/icecave/icecave_door1_open_vert_backg.png"}}, add_displays = {class.new{image="terrain/icecave/icecave_door1_open_vert.png", z=17, add_mos={{image="terrain/icecave/icecave_door1_open_vert_north_backg.png", display_y=-1}}}, class.new{image="terrain/icecave/icecave_door1_open_vert_north.png", z=18, display_y=-1}}, door_closed = "ICECAVE_DOOR_VERT"}
 
 -----------------------------------------
 -- Cavy exits
@@ -105,7 +105,7 @@ newEntity{
 newEntity{
 	define_as = "ICECAVE_LADDER_UP_WILDERNESS",
 	type = "floor", subtype = "icecave",
-	name = "ladder to worldmap", image = "terrain/icecave/icecave_floor_1_01.png", add_displays = {class.new{image="terrain/icecave/icecave_stairs_up_2_01.png"}},
+	name = "ladder to worldmap", image = "terrain/icecave/icecave_floor_1_01.png", add_displays = {class.new{image="terrain/icecave/icecave_stairs_exit_1_01.png"}},
 	display = '<', color_r=255, color_g=255, color_b=0,
 	notice = true,
 	change_level = 1,

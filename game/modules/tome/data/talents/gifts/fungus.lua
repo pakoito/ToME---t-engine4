@@ -1,5 +1,5 @@
 -- ToME - Tales of Maj'Eyal
--- Copyright (C) 2009, 2010, 2011, 2012, 2013 Nicolas Casalini
+-- Copyright (C) 2009 - 2014 Nicolas Casalini
 --
 -- This program is free software: you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -74,14 +74,14 @@ newTalent{
 	require = gifts_req3,
 	points = 5,
 	mode = "passive",
-	getEq = function(self, t) return util.bound(math.ceil(self:getTalentLevel(t) / 2), 1, 4) end,
+	getEq = function(self, t) return self:combatTalentScale(t, 0.5, 2.5, 0.5, 0.5) end,
 	getTurn = function(self, t) return util.bound(50 + self:combatTalentMindDamage(t, 5, 500) / 10, 50, 160) end,
 	info = function(self, t)
 		local eq = t.getEq(self, t)
 		local turn = t.getTurn(self, t)
 		return ([[Your fungus can reach into the primordial ages of the world, granting you ancient instincts.
 		Each time a regeneration effect is used on you, you gain %d%% of a turn.
-		Also, regeneration effects on you will decrease your equilibrium by %d each turn.
+		Also, regeneration effects on you will decrease your equilibrium by %0.1f each turn.
 		The turn gain increases with your Mindpower.]]):
 		format(turn, eq)
 	end,

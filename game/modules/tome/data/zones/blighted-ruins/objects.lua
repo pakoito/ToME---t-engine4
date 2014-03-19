@@ -1,5 +1,5 @@
 -- ToME - Tales of Maj'Eyal
--- Copyright (C) 2009, 2010, 2011, 2012, 2013 Nicolas Casalini
+-- Copyright (C) 2009 - 2014 Nicolas Casalini
 --
 -- This program is free software: you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -30,7 +30,7 @@ newEntity{ define_as = "CLOAK_DECEPTION",
 	name = "Cloak of Deception",
 	display = ")", color=colors.DARK_GREY,
 	encumber = 1,
-	desc = [[A black cloak, with subtle illusion enchantments woven in its very fabric.]],
+	desc = [[A black cloak, with subtle illusion enchantments woven into its very fabric.]],
 
 	wielder = {
 		combat_spellpower = 5,

@@ -1,5 +1,5 @@
 -- ToME - Tales of Maj'Eyal
--- Copyright (C) 2009, 2010, 2011, 2012, 2013 Nicolas Casalini
+-- Copyright (C) 2009 - 2014 Nicolas Casalini
 --
 -- This program is free software: you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -53,7 +53,7 @@ newEntity{ base = "BASE_NPC_POINT_ZERO_TOWN", define_as = "DEFENDER_OF_REALITY",
 	female = resolvers.rngtable{false, true},
 	subtype = resolvers.rngtable{"human", "shalore"},
 	shader = "moving_transparency", shader_args = {a_min=0.2, a_max=0.8},
-	desc = [[A stern-looking guardian, ever vigilant from the threats of the paradox.]],
+	desc = [[A stern-looking guardian, ever vigilant against the threats of the paradox.]],
 	level_range = {1, nil}, exp_worth = 1,
 	rarity = false,
 	max_life = 400,
@@ -78,7 +78,7 @@ newEntity{
 	type = "elemental", subtype = "void",
 	blood_color = colors.DARK_GREY,
 	display = "E", color=colors.DARK_GREY,
-	desc = [[Losgoroth are mighty void elementals, native to the void between the stars, they are rarely seen on the planet's surface.]],
+	desc = [[Losgoroth are mighty void elementals, native to the void between the stars; they are rarely seen on the planet's surface.]],
 
 	combat = { dam=resolvers.levelup(resolvers.mbonus(40, 15), 1, 1.2), atk=15, apr=15, dammod={mag=0.8}, damtype=DamageType.ARCANE },
 
@@ -130,7 +130,7 @@ newEntity{ base = "BASE_NPC_POINT_ZERO_TOWN", define_as = "ZEMEKKYS",
 	name = "Zemekkys, Grand Keeper of Reality", color=colors.VIOLET,
 	image = "npc/humanoid_elf_high_chronomancer_zemekkys.png",
 	subtype = "shalore",
-	desc = [[A timeless elf stands before you. Even though his age is impossible to sense you feel he has seen many things.]],
+	desc = [[A timeless elf stands before you. Even though his age is impossible to determine, you feel he has seen many things.]],
 	level_range = {50, nil}, exp_worth = 1,
 	rarity = false,
 	max_life = 2000, life_rating = 20,
@@ -202,7 +202,7 @@ newEntity{ define_as = "TEMPORAL_DEFILER",
 	name = "Temporal Defiler",
 	display = "h", color=colors.VIOLET,
 	resolvers.nice_tile{image="invis.png", add_mos = {{image="npc/horror_temporal_temporal_defiler.png", display_h=2, display_y=-1}}},
-	desc = [[A huge slender metallic monstrosity with long claws in place of fingers, and razor-sharp teeth., it seems to seek something here.]],
+	desc = [[A huge, slender, metallic monstrosity with long claws in place of fingers, and razor-sharp teeth. It seems to seek something here.]],
 	level_range = {50, nil}, exp_worth = 0.1,
 	max_life = 1500, life_rating = 35, fixed_rating = true,
 	stats = { str=20, dex=10, cun=8, mag=10, con=20 },

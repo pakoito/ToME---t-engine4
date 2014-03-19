@@ -1,5 +1,5 @@
 -- ToME - Tales of Maj'Eyal
--- Copyright (C) 2009, 2010, 2011, 2012, 2013 Nicolas Casalini
+-- Copyright (C) 2009 - 2014 Nicolas Casalini
 --
 -- This program is free software: you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -145,7 +145,7 @@ newEntity{ base = "BASE_NPC_TELUGOROTH",
 -- telu vorta = time storm
 newEntity{ base = "BASE_NPC_TELUGOROTH",
 	name = "teluvorta", color=colors.DARK_KHAKI,
-	desc = [[Time and space collapse in upon this erratically moving time elemental.]],
+	desc = [[Time and space collapse in upon this erratically-moving time elemental.]],
 	level_range = {12, nil}, exp_worth = 1,
 	rarity = 4,
 	max_life = resolvers.rngavg(50,70),

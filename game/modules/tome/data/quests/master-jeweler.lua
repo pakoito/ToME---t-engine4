@@ -1,5 +1,5 @@
 -- ToME - Tales of Maj'Eyal
--- Copyright (C) 2009, 2010, 2011, 2012, 2013 Nicolas Casalini
+-- Copyright (C) 2009 - 2014 Nicolas Casalini
 --
 -- This program is free software: you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -83,7 +83,12 @@ summon_limmir = function(self, who)
 	local limmir = game.zone:makeEntityByName(game.level, "actor", "LIMMIR")
 	limmir.limmir_target = {x=42, y=11}
 	limmir.limmir_target2 = {x=24, y=25}
+	limmir.no_inventory_access = true
+	limmir.remove_from_party_on_death = true
+	limmir.no_party_ai = true
 	game.zone:addEntity(game.level, limmir, "actor", 45, 1)
+
+	game.party:addMember(limmir, {type="quest", title="Limmir (Quest)", temporary_level = true})
 end
 
 ritual_end = function(self)

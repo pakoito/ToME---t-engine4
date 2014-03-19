@@ -1,5 +1,5 @@
 -- TE4 - T-Engine 4
--- Copyright (C) 2009, 2010, 2011, 2012, 2013 Nicolas Casalini
+-- Copyright (C) 2009 - 2014 Nicolas Casalini
 --
 -- This program is free software: you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -27,9 +27,15 @@ end
 
 function colors.simple(c) return {c.r, c.g, c.b} end
 
+function colors.unpack(c) return c.r, c.g, c.b end
+
 function colors.hex1(hex)
 	local r, g, b = tonumber("0x"..hex:sub(1, 2)), tonumber("0x"..hex:sub(3, 4)), tonumber("0x"..hex:sub(5, 6))
 	return {r / 255, g / 255, b / 255}
+end
+
+function colors.hex1unpack(hex)
+	return tonumber("0x"..hex:sub(1, 2)), tonumber("0x"..hex:sub(3, 4)), tonumber("0x"..hex:sub(5, 6))
 end
 
 defineColor('BLACK', 0, 0, 0)

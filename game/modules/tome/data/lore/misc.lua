@@ -1,5 +1,5 @@
 -- ToME - Tales of Maj'Eyal
--- Copyright (C) 2009, 2010, 2011, 2012, 2013 Nicolas Casalini
+-- Copyright (C) 2009 - 2014 Nicolas Casalini
 --
 -- This program is free software: you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -663,12 +663,17 @@ newLore{
 	lore = [[Dirge of the Naloren
 
 There once was a village
-the Nalore held dear
+the Nalore held dear,
 but when Ol' Walrog came t'pillage,
-they did quiver in fear.
+they cowered in fear.
 
-So remember the tale
-of dead Old Shellsea,
-for Ol' Walrog sent the gale,
-that ended Old Shellsea.]]
+He trampled their men
+and their babes newly born,
+and seeing it finished,
+he summoned a storm.
+
+So remember old Shellsea
+as she was in the past,
+for Ol' Walrog sent the gale
+that drowned her at last.]]
 }

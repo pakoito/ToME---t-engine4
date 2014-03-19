@@ -1,5 +1,5 @@
 -- TE4 - T-Engine 4
--- Copyright (C) 2009, 2010, 2011, 2012, 2013 Nicolas Casalini
+-- Copyright (C) 2009 - 2014 Nicolas Casalini
 --
 -- This program is free software: you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -54,6 +54,7 @@ function _M:generate(lev, old_lev)
 
 	-- Rooms around it
 	local nb_rooms = rng.range(self.nb_rooms[1], self.nb_rooms[2])
+	local rooms = {}
 	for i = 0, nb_rooms - 1 do
 		local angle = math.rad(i * 360 / nb_rooms)
 
@@ -61,14 +62,17 @@ function _M:generate(lev, old_lev)
 		local rx = math.floor(cx + math.cos(angle) * self.map.w / 2 * range)
 		local ry = math.floor(cy + math.sin(angle) * self.map.h / 2 * range)
 		print("Side octoroom", rx, ry, range)
-		self:makePod(rx, ry, rng.float(self.arms_radius[1], self.arms_radius[2]) * ((self.map.w / 2) + (self.map.h / 2)) / 2, 2 + i, self)
+		rooms[#rooms+1] = self:makePod(rx, ry, rng.float(self.arms_radius[1], self.arms_radius[2]) * ((self.map.w / 2) + (self.map.h / 2)) / 2, 2 + i, self)
 		spots[#spots+1] = {x=rx, y=ry, type="room", subtype="side"}
 
 		self:tunnel(rx, ry, cx, cy, 2 + i)
 	end
 
-	-- Always starts at 1, 1
-	return self:makeStairsInside(lev, old_lev, self.spots)
+	if self.data.edge_entrances then
+		return self:makeStairsSides(lev, old_lev, self.data.edge_entrances, rooms, spots)
+	else
+		return self:makeStairsInside(lev, old_lev, spots)
+	end
 end
 
 --- Create the stairs inside the level

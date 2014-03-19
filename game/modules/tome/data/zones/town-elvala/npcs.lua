@@ -1,5 +1,5 @@
 -- ToME - Tales of Maj'Eyal
--- Copyright (C) 2009, 2010, 2011, 2012, 2013 Nicolas Casalini
+-- Copyright (C) 2009 - 2014 Nicolas Casalini
 --
 -- This program is free software: you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -65,7 +65,7 @@ newEntity{ base = "BASE_NPC_ELVALA_TOWN",
 
 newEntity{ base = "BASE_NPC_ELVALA_TOWN",
 	name = "shalore rune master", color=colors.RED,
-	desc = [[A tall elf, his skin covered in runes.]],
+	desc = [[A tall Elf, his skin covered in runes.]],
 	level_range = {1, nil}, exp_worth = 1,
 	rarity = 3,
 	max_life = resolvers.rngavg(50,60),

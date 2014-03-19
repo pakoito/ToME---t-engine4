@@ -1,5 +1,5 @@
 -- ToME - Tales of Maj'Eyal
--- Copyright (C) 2009, 2010, 2011, 2012, 2013 Nicolas Casalini
+-- Copyright (C) 2009 - 2014 Nicolas Casalini
 --
 -- This program is free software: you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -87,7 +87,7 @@ newEntity{ name = "halfling slinger",
 	ai = "tactical", ai_state = { ai_move = "move_complex", talent_in = 1 },
 
 	stats = { str=10, dex=15, cun=15, con=8 },
-	desc = [[A halfling slinger. He seems adept at combat.]],
+	desc = [[A Halfling slinger. He seems adept at combat.]],
 	level_range = {6, 20}, exp_worth = 1,
 	rarity = false,
 	max_life = resolvers.rngavg(100,110),
@@ -139,7 +139,7 @@ newEntity{ name = "arcane blade",
 	ai = "tactical", ai_state = { ai_move = "move_complex", talent_in = 1 },
 
 	stats = { str=20, dex=20, mag=8, con=16 },
-	desc = [[A human Arcane Blade. His body shows multiple scars from battle.]],
+	desc = [[A Human Arcane Blade. His body shows multiple scars from battle.]],
 	level_range = {6, 21}, exp_worth = 2,
 	rarity = false,
 	max_life = resolvers.rngavg(100,130),

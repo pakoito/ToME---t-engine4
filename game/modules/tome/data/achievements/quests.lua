@@ -1,5 +1,5 @@
 -- ToME - Tales of Maj'Eyal
--- Copyright (C) 2009, 2010, 2011, 2012, 2013 Nicolas Casalini
+-- Copyright (C) 2009 - 2014 Nicolas Casalini
 --
 -- This program is free software: you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -297,7 +297,7 @@ newAchievement{
 	name = "Thralless", id = "RING_BLOOD_FREED",
 	show = "full",
 	mode = "player",
-	desc = [[Freed at least 30 enthralled slaves in the slavers compound.]],
+	desc = [[Freed at least 30 enthralled slaves in the slavers' compound.]],
 	can_gain = function(self)
 		self.nb = (self.nb or 0) + 1
 		if self.nb >= 30 then return true end

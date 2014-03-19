@@ -1,5 +1,5 @@
 -- ToME - Tales of Maj'Eyal
--- Copyright (C) 2009, 2010, 2011, 2012, 2013 Nicolas Casalini
+-- Copyright (C) 2009 - 2014 Nicolas Casalini
 --
 -- This program is free software: you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -60,7 +60,7 @@ newEntity{ base="BASE_NPC_CANINE", define_as = "WITHERING_THING",
 	unique = true,
 	name = "The Withering Thing", tint=colors.PURPLE,
 	color=colors.VIOLET,
-	desc = [[This deformed beast might have been a wolf before, but now it is just.. terrible.]],
+	desc = [[This deformed beast might have been a wolf before, but now it is just... terrible.]],
 	killer_message = "and corrupted into a pile of writhing worms",
 	level_range = {7, nil}, exp_worth = 2,
 	max_life = 100, life_rating = 15, fixed_rating = true,
@@ -101,7 +101,7 @@ newEntity{ define_as = "DREAMING_ONE",
 	unique = true,
 	name = "The Dreaming One", tint=colors.PURPLE,
 	color=colors.VIOLET, image = "npc/seed_of_dreams.png",
-	desc = [[This strange globe of blue light seems to be alive and asleep. Nothing about it moves yet you can feel the crushing power of its dreams assaulting your mind.]],
+	desc = [[This strange globe of blue light seems to be alive and asleep. Nothing about it moves, yet you can feel the crushing power of its dreams assaulting your mind.]],
 	killer_message = "and absorbed into nightmares forever",
 	level_range = {7, nil}, exp_worth = 2,
 	max_life = 70, life_rating = 10, fixed_rating = true,

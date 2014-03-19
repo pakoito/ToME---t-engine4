@@ -1,5 +1,5 @@
 -- ToME - Tales of Maj'Eyal
--- Copyright (C) 2009, 2010, 2011, 2012, 2013 Nicolas Casalini
+-- Copyright (C) 2009 - 2014 Nicolas Casalini
 --
 -- This program is free software: you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -65,7 +65,7 @@ newTalent{
 		if not x or not y then return nil end
 
 		-- Compute damage
-		local dam = self:combatDamage(combat)
+		local dam = self:combatDamage(combat, {mag=0.2})
 		local damrange = self:combatDamageRange(combat)
 		dam = rng.range(dam, dam * damrange)
 		dam = self:spellCrit(dam)
@@ -80,7 +80,8 @@ newTalent{
 		local damagemod = t.getDamageMod(self, t)
 		return ([[Channel raw mana through your staff, projecting a bolt of your staff's damage type, doing %d%% staff damage.
 		The bolt will only hurt hostile targets, and pass safely through friendly ones.
-		This attack always has a 100%% chance to hit, and ignores the target's Armour.]]):
+		This attack always has a 100%% chance to hit, and ignores the target's Armour.
+		When projecting a bolt with your staff its damage modifier is increased by 20%%.]]):
 		format(damagemod * 100)
 	end,
 }
@@ -159,9 +160,9 @@ newTalent{
 		local x, y, target = self:getTarget(tg)
 		if not x or not y or not target then return nil end
 		if core.fov.distance(self.x, self.y, x, y) > 1 then return nil end
-		if self:getTalentLevel(t) >= 5 then self.combat_atk = self.combat_atk + 1000 end
+		if self:getTalentLevel(t) >= 5 then self.turn_procs.auto_melee_hit = true end
 		local speed, hit = self:attackTargetWith(target, weapon.combat, nil, t.getDamage(self, t))
-		if self:getTalentLevel(t) >= 5 then self.combat_atk = self.combat_atk - 1000 end
+		if self:getTalentLevel(t) >= 5 then self.turn_procs.auto_melee_hit = nil end
 		
 		-- Try to stun !
 		if hit then

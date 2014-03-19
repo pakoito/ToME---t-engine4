@@ -1,5 +1,5 @@
 -- ToME - Tales of Maj'Eyal
--- Copyright (C) 2009, 2010, 2011, 2012, 2013 Nicolas Casalini
+-- Copyright (C) 2009 - 2014 Nicolas Casalini
 --
 -- This program is free software: you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -375,10 +375,13 @@ function _M:getTextualDesc(compare_with, use_actor)
 		local added = 0
 		local add = false
 		ret:add(text)
+		local outformatres
+		if type(outformat) == "function" then outformatres = outformat()
+		else outformatres = outformat:format(((item1[field] or 0) + (add_table[field] or 0)) * mod) end
 		if isinversed then
-			ret:add(((item1[field] or 0) + (add_table[field] or 0)) > 0 and {"color","RED"} or {"color","LIGHT_GREEN"}, outformat:format(((item1[field] or 0) + (add_table[field] or 0)) * mod), {"color", "LAST"})
+			ret:add(((item1[field] or 0) + (add_table[field] or 0)) > 0 and {"color","RED"} or {"color","LIGHT_GREEN"}, outformatres, {"color", "LAST"})
 		else
-			ret:add(((item1[field] or 0) + (add_table[field] or 0)) < 0 and {"color","RED"} or {"color","LIGHT_GREEN"}, outformat:format(((item1[field] or 0) + (add_table[field] or 0)) * mod), {"color", "LAST"})
+			ret:add(((item1[field] or 0) + (add_table[field] or 0)) < 0 and {"color","RED"} or {"color","LIGHT_GREEN"}, outformatres, {"color", "LAST"})
 		end
 		if item1[field] then
 			add = true
@@ -393,10 +396,13 @@ function _M:getTextualDesc(compare_with, use_actor)
 				added = added + 1
 				add = true
 				if items[i][infield][field] ~= (item1[field] or 0) then
+					local outformatres
+					if type(outformat) == "function" then outformatres = outformat()
+					else outformatres = outformat:format(((item1[field] or 0) - items[i][infield][field]) * mod) end
 					if isdiffinversed then
-						ret:add(items[i][infield][field] < (item1[field] or 0) and {"color","RED"} or {"color","LIGHT_GREEN"}, outformat:format(((item1[field] or 0) - items[i][infield][field]) * mod), {"color", "LAST"})
+						ret:add(items[i][infield][field] < (item1[field] or 0) and {"color","RED"} or {"color","LIGHT_GREEN"}, outformatres, {"color", "LAST"})
 					else
-						ret:add(items[i][infield][field] > (item1[field] or 0) and {"color","RED"} or {"color","LIGHT_GREEN"}, outformat:format(((item1[field] or 0) - items[i][infield][field]) * mod), {"color", "LAST"})
+						ret:add(items[i][infield][field] > (item1[field] or 0) and {"color","RED"} or {"color","LIGHT_GREEN"}, outformatres, {"color", "LAST"})
 					end
 				else
 					ret:add("-")
@@ -478,7 +484,7 @@ function _M:getTextualDesc(compare_with, use_actor)
 		end
 	end
 
-	local desc_combat = function(combat, compare_with, field, add_table)
+	local desc_combat = function(combat, compare_with, field, add_table, is_fake_add)
 		add_table = add_table or {}
 		add_table.dammod = add_table.dammod or {}
 		combat = combat[field] or {}
@@ -533,7 +539,7 @@ function _M:getTextualDesc(compare_with, use_actor)
 		compare_fields(combat, compare_with, field, "atk", "%+d", "Accuracy: ", 1, false, false, add_table)
 		compare_fields(combat, compare_with, field, "apr", "%+d", "Armour Penetration: ", 1, false, false, add_table)
 		compare_fields(combat, compare_with, field, "physcrit", "%+.1f%%", "Physical crit. chance: ", 1, false, false, add_table)
-		compare_fields(combat, compare_with, field, "physspeed", "%.0f%%", "Attack speed: ", 100, false, true, add_table)
+		compare_fields(combat, compare_with, field, "physspeed", function() return ("%.0f%%"):format(100/((is_fake_add and 1 or 0) + (combat.physspeed or 1))) end, "Attack speed: ", 100, false, true, add_table)
 
 		compare_fields(combat, compare_with, field, "block", "%+d", "Block value: ", 1, false, false, add_table)
 
@@ -647,10 +653,16 @@ function _M:getTextualDesc(compare_with, use_actor)
 		elseif found then
 			desc:add({"color","RED"}, "When used from stealth a simple attack with it will not break stealth.", {"color","LAST"}, true)
 		end
+		
+		if combat.crushing_blow then
+			desc:add({"color", "YELLOW"}, "Crushing Blows: ", {"color", "LAST"}, "Damage dealt by this weapon is increased by half your critical multiplier, if doing so would kill the target.", true)
+		end
 
 		compare_fields(combat, compare_with, field, "travel_speed", "%+d%%", "Travel speed: ", 100, false, false, add_table)
 
 		compare_fields(combat, compare_with, field, "phasing", "%+d%%", "Damage Shield penetration (this weapon only): ", 1, false, false, add_table)
+		
+		compare_fields(combat, compare_with, field, "lifesteal", "%+d%%", "Lifesteal (this weapon only): ", 1, false, false, add_table)
 
 		if combat.tg_type and combat.tg_type == "beam" then
 			desc:add({"color","YELLOW"}, ("Shots beam through all targets."), {"color","LAST"}, true)
@@ -961,6 +973,7 @@ function _M:getTextualDesc(compare_with, use_actor)
 		end
 
 		compare_fields(w, compare_with, field, "combat_critical_power", "%+.2f%%", "Critical mult.: ")
+		compare_fields(w, compare_with, field, "ignore_direct_crits", "%-.2f%%", "Reduces incoming crit damage: ")
 		compare_fields(w, compare_with, field, "combat_crit_reduction", "%-d%%", "Reduces opponents crit chance: ")
 
 		compare_fields(w, compare_with, field, "disarm_bonus", "%+d", "Trap disarming bonus: ")
@@ -1016,6 +1029,7 @@ function _M:getTextualDesc(compare_with, use_actor)
 		compare_fields(w, compare_with, field, "die_at", "%+.2f life", "Only die when reaching: ", 1, true, true)
 		compare_fields(w, compare_with, field, "max_life", "%+.2f", "Maximum life: ")
 		compare_fields(w, compare_with, field, "max_mana", "%+.2f", "Maximum mana: ")
+		compare_fields(w, compare_with, field, "max_soul", "%+.2f", "Maximum souls: ")
 		compare_fields(w, compare_with, field, "max_stamina", "%+.2f", "Maximum stamina: ")
 		compare_fields(w, compare_with, field, "max_hate", "%+.2f", "Maximum hate: ")
 		compare_fields(w, compare_with, field, "max_psi", "%+.2f", "Maximum psi: ")
@@ -1057,6 +1071,8 @@ function _M:getTextualDesc(compare_with, use_actor)
 		compare_fields(w, compare_with, field, "damage_shield_penetrate", "%+d%%", "Damage Shield penetration: ")
 
 		compare_fields(w, compare_with, field, "projectile_evasion", "%+d%%", "Deflect projectiles away: ")
+		compare_fields(w, compare_with, field, "evasion", "%+d%%", "Chance to avoid attacks: ")
+		compare_fields(w, compare_with, field, "cancel_damage_chance", "%+d%%", "Chance to avoid any damage: ")
 
 		compare_fields(w, compare_with, field, "defense_on_teleport", "%+d", "Defense after a teleport: ")
 		compare_fields(w, compare_with, field, "resist_all_on_teleport", "%+d%%", "Resist all after a teleport: ")
@@ -1068,10 +1084,19 @@ function _M:getTextualDesc(compare_with, use_actor)
 
 		compare_fields(w, compare_with, field, "nature_summon_max", "%+d", "Max wilder summons: ")
 		compare_fields(w, compare_with, field, "nature_summon_regen", "%+.2f", "Life regen bonus (wilder-summons): ")
+		
+		compare_fields(w, compare_with, field, "shield_dur", "%+d", "Damage Shield Duration: ")
+		compare_fields(w, compare_with, field, "shield_factor", "%+d%%", "Damage Shield Power: ")
+		
+		compare_fields(w, compare_with, field, "iceblock_pierce", "%+d%%", "Ice block penetration: ")
 
 		compare_fields(w, compare_with, field, "slow_projectiles", "%+d%%", "Slows Projectiles: ")
 
 		compare_fields(w, compare_with, field, "paradox_reduce_fails", "%+d", "Reduces paradox failures(equivalent to willpower): ")
+
+		compare_fields(w, compare_with, field, "damage_backfire", "%+d%%", "Damage Backlash: ", nil, true)
+		
+		compare_fields(w, compare_with, field, "resist_unseen", "%-d%%", "Reduce all damage from unseen attackers: ")
 
 		if w.undead then
 			desc:add("The wearer is treated as an undead.", true)
@@ -1090,11 +1115,11 @@ function _M:getTextualDesc(compare_with, use_actor)
 		end
 
 		if w.blind_fight then
-			desc:add({"color", "YELLOW"}, "Blind-Fight:", {"color", "LAST"}, "This item allows the wearer to attack unseen targets without any penalties.", true)
+			desc:add({"color", "YELLOW"}, "Blind-Fight: ", {"color", "LAST"}, "This item allows the wearer to attack unseen targets without any penalties.", true)
 		end
 		
 		if w.lucid_dreamer then
-			desc:add({"color", "YELLOW"}, "Lucid-Dreamer:", {"color", "LAST"}, "This item allows the wearer to act while sleeping.", true)
+			desc:add({"color", "YELLOW"}, "Lucid Dreamer: ", {"color", "LAST"}, "This item allows the wearer to act while sleeping.", true)
 		end
 
 		if w.no_breath then
@@ -1127,7 +1152,7 @@ function _M:getTextualDesc(compare_with, use_actor)
 		if (w and w.combat or can_combat_unarmed) and (use_actor:knowTalent(use_actor.T_EMPTY_HAND) or use_actor:attr("show_gloves_combat")) then
 			desc:add({"color","YELLOW"}, "When used to modify unarmed attacks:", {"color", "LAST"}, true)
 			compare_tab = { dam=1, atk=1, apr=0, physcrit=0, physspeed =0.6, dammod={str=1}, damrange=1.1 }
-			desc_combat(w, compare_unarmed, "combat", compare_tab)
+			desc_combat(w, compare_unarmed, "combat", compare_tab, true)
 		end
 	end
 	local can_combat = false
@@ -1204,7 +1229,7 @@ function _M:getTextualDesc(compare_with, use_actor)
 	if self.alchemist_bomb or self.type == "gem" and use_actor:knowTalent(Talents.T_CREATE_ALCHEMIST_GEMS) then
 		local a = self.alchemist_bomb
 		if not a then
-			a = game.zone.object_list["ALCHEMIST_GEM_"..self.name:upper()]
+			a = game.zone.object_list["ALCHEMIST_GEM_"..self.name:gsub(" ", "_"):upper()]
 			if a then a = a.alchemist_bomb end
 		end
 		if a then
@@ -1214,7 +1239,13 @@ function _M:getTextualDesc(compare_with, use_actor)
 			if a.mana then desc:add(("Mana regain %d"):format(a.mana), true) end
 			if a.daze then desc:add(("%d%% chance to daze for %d turns"):format(a.daze.chance, a.daze.dur), true) end
 			if a.stun then desc:add(("%d%% chance to stun for %d turns"):format(a.stun.chance, a.stun.dur), true) end
-			if a.splash then desc:add(("Additional %d %s damage"):format(a.splash.dam, DamageType:get(DamageType[a.splash.type]).name), true) end
+			if a.splash then
+				if a.splash.desc then
+					desc:add(a.splash.desc, true)
+				else
+					desc:add(("Additional %d %s damage"):format(a.splash.dam, DamageType:get(DamageType[a.splash.type]).name), true)
+				end
+			end
 			if a.leech then desc:add(("Life regen %d%% of max life"):format(a.leech), true) end
 		end
 	end
@@ -1310,7 +1341,7 @@ function _M:getUseDesc(use_actor)
 	local ret = tstring{}
 	local reduce = 100 - util.bound(use_actor:attr("use_object_cooldown_reduce") or 0, 0, 100)
 	local usepower = function(power) return math.ceil(power * reduce / 100) end
-	if self.use_power then
+	if self.use_power and not self.use_power.hidden then
 		if self.show_charges then
 			ret = tstring{{"color","YELLOW"}, ("It can be used to %s, with %d charges out of %d."):format(util.getval(self.use_power.name, self), math.floor(self.power / usepower(self.use_power.power)), math.floor(self.max_power / usepower(self.use_power.power))), {"color","LAST"}}
 		elseif self.talent_cooldown then

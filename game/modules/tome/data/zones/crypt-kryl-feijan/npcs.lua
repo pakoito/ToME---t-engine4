@@ -1,5 +1,5 @@
 -- ToME - Tales of Maj'Eyal
--- Copyright (C) 2009, 2010, 2011, 2012, 2013 Nicolas Casalini
+-- Copyright (C) 2009 - 2014 Nicolas Casalini
 --
 -- This program is free software: you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -83,7 +83,7 @@ newEntity{ define_as = "MELINDA",
 	display = "@", color=colors.LIGHT_BLUE,
 	image = "terrain/woman_naked_altar.png",
 	resolvers.generic(function(e) if engine.Map.tiles.nicer_tiles then e.display_w = 2 end end),
-	desc = [[A female human with twisted sigils scored into her naked flesh. Her wrists and ankles are sore and hurt by ropes and chains. You can discern great beauty beyond the stains of blood covering her skin.]],
+	desc = [[A female Human with twisted sigils scored into her naked flesh. Her wrists and ankles are sore and hurt by ropes and chains. You can discern great beauty beyond the stains of blood covering her skin.]],
 	autolevel = "tank",
 	ai = "summoned", ai_real = "move_complex", ai_state = { ai_target="target_player", talent_in=4, },
 	stats = { str=8, dex=7, mag=8, con=12 },

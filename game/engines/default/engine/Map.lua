@@ -1,5 +1,5 @@
 -- TE4 - T-Engine 4
--- Copyright (C) 2009, 2010, 2011, 2012, 2013 Nicolas Casalini
+-- Copyright (C) 2009 - 2014 Nicolas Casalini
 --
 -- This program is free software: you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -96,6 +96,18 @@ function _M:setViewPort(x, y, w, h, tile_w, tile_h, fontname, fontsize, allow_ba
 	self.zoom = 1
 
 	if otw ~= self.tile_w or oth ~= self.tile_h then print("[MAP] Reseting tiles caches") self:resetTiles() end
+end
+
+--- Setup a fbo/shader pair to display map effects
+-- If not set this just uses plain quads
+function _M:enableFBORenderer(shader)
+	if not shader or not core.display.fboSupportsTransparency then self.fbo = nil return end
+	self.fbo = core.display.newFBO(self.viewport.width, self.viewport.height)
+	if not self.fbo then return end
+
+	local Shader = require "engine.Shader"
+	self.fbo_shader = Shader.new(shader)
+	if not self.fbo_shader.shad then self.fbo = nil return end
 end
 
 --- Sets the map viewport padding, for scrolling purposes (defaults to 0)
@@ -200,6 +212,8 @@ end
 --- Serialization
 function _M:save()
 	return class.save(self, {
+		fbo_shader = true,
+		fbo = true,
 		_check_entities = true,
 		_check_entities_store = true,
 		_map = true,
@@ -521,14 +535,14 @@ end
 -- @param y the coord where to start drawing, if null it uses self.display_y
 -- @param nb_keyframes the number of keyframes elapsed since last draw
 -- @param always_show tell the map code to force display unseed entities as remembered (used for smooth FOV shading)
-function _M:display(x, y, nb_keyframe, always_show)
+function _M:display(x, y, nb_keyframe, always_show, prevfbo)
 	nb_keyframes = nb_keyframes or 1
 	local ox, oy = self.display_x, self.display_y
 	self.display_x, self.display_y = x or self.display_x, y or self.display_y
 
 	self._map:toScreen(self.display_x, self.display_y, nb_keyframe, always_show, self.changed)
 	self:displayParticles(nb_keyframe)
-	self:displayEffects()
+	self:displayEffects(prevfbo)
 
 	self.display_x, self.display_y = ox, oy
 
@@ -972,8 +986,12 @@ function _M:addEffect(src, x, y, duration, damtype, dam, radius, dir, angle, ove
 
 	local grids
 
+	-- Custom grids
+	if type(angle) == "table" then
+		grids = angle
+		angle = nil
 	-- Handle any angle
-	if type(dir) == "table" then
+	elseif type(dir) == "table" then
 		grids = core.fov.beam_any_angle_grids(x, y, radius, angle, dir.source_x or src.x or x, dir.source_y or src.y or y, dir.delta_x, dir.delta_y, true)
 	-- Handle balls
 	elseif dir == 5 then
@@ -1012,20 +1030,45 @@ function _M:addEffect(src, x, y, duration, damtype, dam, radius, dir, angle, ove
 end
 
 --- Display the overlay effects, called by self:display()
-function _M:displayEffects()
+function _M:displayEffects(prevfbo)
 	local sx, sy = self._map:getScroll()
 	for i, e in ipairs(self.effects) do
 		-- Dont bother with obviously out of screen stuff
 		if e.overlay and e.x + e.radius >= self.mx and e.x - e.radius < self.mx + self.viewport.mwidth and e.y + e.radius >= self.my and e.y - e.radius < self.my + self.viewport.mheight then
 			local s = self.tilesEffects:get(e.overlay.display, e.overlay.color_r, e.overlay.color_g, e.overlay.color_b, e.overlay.color_br, e.overlay.color_bg, e.overlay.color_bb, e.overlay.image, e.overlay.alpha)
 
-			-- Now display each grids
-			for lx, ys in pairs(e.grids) do
-				for ly, _ in pairs(ys) do
-					if self.seens(lx, ly) then
-						s:toScreen(self.display_x + sx + (lx - self.mx) * self.tile_w * self.zoom, self.display_y + sy + (ly - self.my) * self.tile_h * self.zoom, self.tile_w * self.zoom, self.tile_h * self.zoom)
+			-- If we dont have a special fbo/shader or no shader image to use, just display with simple quads
+			if not self.fbo or not e.overlay.effect_shader then
+				-- Now display each grids
+				for lx, ys in pairs(e.grids) do
+					for ly, _ in pairs(ys) do
+						if self.seens(lx, ly) then
+							s:toScreen(self.display_x + sx + (lx - self.mx) * self.tile_w * self.zoom, self.display_y + sy + (ly - self.my) * self.tile_h * self.zoom, self.tile_w * self.zoom, self.tile_h * self.zoom)
+						end
 					end
 				end
+			-- We have a fbo/shader pair, so we display everything inside it and apply the shader to get nice borders and such
+			else
+				if not e.overlay.effect_shader_tex then
+					e.overlay.effect_shader_tex = Tiles:loadImage(e.overlay.effect_shader):glTexture()
+				end
+
+				self.fbo:use(true, 0, 0, 0, 0)
+				-- Now display each grids
+				for lx, ys in pairs(e.grids) do
+					for ly, _ in pairs(ys) do
+						if self.seens(lx, ly) then
+							s:toScreen((lx - self.mx) * self.tile_w * self.zoom, (ly - self.my) * self.tile_h * self.zoom, self.tile_w * self.zoom, self.tile_h * self.zoom)
+						end
+					end
+				end
+				self.fbo:use(false, prevfbo)
+				e.overlay.effect_shader_tex:bind(1, false)
+				self.fbo_shader.shad:use(true)
+				self.fbo_shader.shad:uniTileSize(self.tile_w, self.tile_h)
+				self.fbo_shader.shad:uniScrollOffset(0, 0)
+				self.fbo:toScreen(self.display_x + sx, self.display_y + sy, self.viewport.width, self.viewport.height, self.fbo_shader.shad, 1, 1, 1, 1, true)
+				self.fbo_shader.shad:use(false)
 			end
 		end
 	end

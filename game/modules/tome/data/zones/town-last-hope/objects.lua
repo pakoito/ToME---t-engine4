@@ -1,5 +1,5 @@
 -- ToME - Tales of Maj'Eyal
--- Copyright (C) 2009, 2010, 2011, 2012, 2013 Nicolas Casalini
+-- Copyright (C) 2009 - 2014 Nicolas Casalini
 --
 -- This program is free software: you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -24,7 +24,7 @@ newEntity{ base = "BASE_LORE",
 	define_as = "FOUNDATION_NOTE"..i,
 	subtype = "last hope foundation", unique=true, no_unique_lore=true, not_in_stores=false,
 	name = "The Diaries of King Toknor the Brave ("..i..")", lore="last-hope-foundation-note-"..i,
-	desc = [[A part of the history of Last Hope, and king Toknor the Brave.]],
+	desc = [[A part of the history of Last Hope, and King Toknor the Brave.]],
 	rarity = false,
 	encumberance = 0,
 	cost = 2,
@@ -48,7 +48,7 @@ newEntity{ base = "BASE_LORE",
 	define_as = "SOUTHSPAR_NOTE"..i,
 	subtype = "southspar", unique=true, no_unique_lore=true, not_in_stores=false,
 	name = "the Pale King part "..(i==1 and "one" or "two"), lore="southspar-note-"..i,
-	desc = [[A study into Southspar's most unusual ruler.]],
+	desc = [[A study of Southspar's most unusual ruler.]],
 	rarity = false,
 	encumberance = 0,
 	cost = 2,

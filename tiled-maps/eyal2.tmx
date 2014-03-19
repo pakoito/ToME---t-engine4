@@ -741,6 +741,12 @@
     <property name="type" value="&quot;world-encounter&quot;"/>
    </properties>
   </object>
+  <object name="Orc Breeding Pit quest" x="4645" y="1637" width="728" height="406">
+   <properties>
+    <property name="subtype" value="&quot;orc-breeding-pits&quot;"/>
+    <property name="type" value="&quot;world-encounter&quot;"/>
+   </properties>
+  </object>
  </objectgroup>
  <objectgroup name="addSpot#world-encounters" width="170" height="100">
   <object name="Random Zone" x="296" y="256" width="50" height="55">
@@ -950,6 +956,12 @@
   <object name="Sludgenest" x="1703" y="166" width="21" height="20">
    <properties>
     <property name="subtype" value="&quot;sludgenest&quot;"/>
+    <property name="type" value="&quot;world-encounter&quot;"/>
+   </properties>
+  </object>
+  <object name="Breeding pits Spawn" x="5190" y="1894" width="17" height="19">
+   <properties>
+    <property name="subtype" value="&quot;orc-breeding-pits-spawn&quot;"/>
     <property name="type" value="&quot;world-encounter&quot;"/>
    </properties>
   </object>

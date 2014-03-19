@@ -1,5 +1,5 @@
 -- ToME - Tales of Maj'Eyal
--- Copyright (C) 2009, 2010, 2011, 2012, 2013 Nicolas Casalini
+-- Copyright (C) 2009 - 2014 Nicolas Casalini
 --
 -- This program is free software: you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -435,7 +435,7 @@ newTalent{
 			no_breath = 1,
 			disarm_immune = 1,
 			never_move = 1,
-			no_drops = true, -- remove to drop the weapon
+			--no_drops = true, -- remove to drop the weapon
 
 			resolvers.talents{
 				[Talents.T_WEAPON_COMBAT]={base=1, every=10},
@@ -504,6 +504,6 @@ newTalent{
 		local duration = t.getDuration(self, t)
 		local attackSpeed = 100/t.getAttackSpeed(self, t)
 
-		return ([[Instill a part of your living curse into a weapon in your inventory, and toss it nearby. This nearly impervious sentry will attack all nearby enemies for %d turns. When the curse ends, the weapon will crumble to dust, worn through by your hatred. Attack Speed: %d%%]]):format(duration, attackSpeed)
+		return ([[Instill a part of your living curse into a weapon in your inventory, and toss it nearby. This nearly impervious sentry will attack all nearby enemies for %d turns. When the curse ends, the weapon will drop to the ground. Attack Speed: %d%%]]):format(duration, attackSpeed)
 	end,
 }

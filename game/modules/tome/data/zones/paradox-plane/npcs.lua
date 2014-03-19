@@ -1,5 +1,5 @@
 -- ToME - Tales of Maj'Eyal
--- Copyright (C) 2009, 2010, 2011, 2012, 2013 Nicolas Casalini
+-- Copyright (C) 2009 - 2014 Nicolas Casalini
 --
 -- This program is free software: you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -27,7 +27,7 @@ newEntity{ define_as = "EPOCH",
 	type = "elemental", subtype = "temporal", unique = true,
 	name = "Epoch",
 	display = "E", color=colors.VIOLET,
-	desc = [[A huge being composed of sparking blue and yellow energy stands before you.  It shifts and flows as it moves; at once erratic and graceful.]],
+	desc = [[A huge being composed of sparking blue and yellow energy stands before you.  It shifts and flows as it moves, at once erratic and graceful.]],
 	level_range = {12, nil}, exp_worth = 2,
 	max_life = 200, life_rating = 17, fixed_rating = true,
 	max_stamina = 85,

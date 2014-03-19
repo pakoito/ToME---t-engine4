@@ -1,5 +1,5 @@
 -- ToME - Tales of Maj'Eyal
--- Copyright (C) 2009, 2010, 2011, 2012, 2013 Nicolas Casalini
+-- Copyright (C) 2009 - 2014 Nicolas Casalini
 --
 -- This program is free software: you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -110,7 +110,7 @@ newEntity{ base = "BASE_NPC_MUMMY",
 newEntity{ base = "BASE_NPC_MUMMY",
 	allow_infinite_dungeon = true,
 	name = "animated mummy wrappings", color=colors.SLATE, display='[', image="object/mummy_wrappings.png",
-	desc = [[An animated set of mummy wrappings, without a corpse inside... It seems like it cannot move.]],
+	desc = [[An animated set of mummy wrappings, without a corpse inside; it seems like it cannot move.]],
 	level_range = {7, nil}, exp_worth = 1,
 	rarity = 4,
 	max_life = resolvers.rngavg(20,40), life_rating=4,

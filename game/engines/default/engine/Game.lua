@@ -1,5 +1,5 @@
 -- TE4 - T-Engine 4
--- Copyright (C) 2009, 2010, 2011, 2012, 2013 Nicolas Casalini
+-- Copyright (C) 2009 - 2014 Nicolas Casalini
 --
 -- This program is free software: you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -20,6 +20,7 @@
 require "engine.class"
 require "engine.Mouse"
 require "engine.DebugConsole"
+local tween = require "tween"
 local Shader = require "engine.Shader"
 
 --- Represent a game
@@ -154,8 +155,10 @@ function _M:display(nb_keyframes)
 		self.flyers:display(nb_keyframes)
 	end
 
-	if not self.suppressDialogs then
-		for i, d in ipairs(self.dialogs) do
+	if not self.suppressDialogs and #self.dialogs then
+		local last = self.dialogs[#self.dialogs]
+		for i = last and last.__show_only and #self.dialogs or 1, #self.dialogs do
+			local d = self.dialogs[i]
 			d:display()
 			d:toScreen(d.display_x, d.display_y, nb_keyframes)
 		end
@@ -181,6 +184,9 @@ function _M:display(nb_keyframes)
 		else self._timers_cb = nil end
 		for _, cb in ipairs(exec) do cb() end
 	end
+
+	-- Update tweening engine
+	if nb_keyframes > 0 then tween.update(nb_keyframes) end
 end
 
 --- Register a timer

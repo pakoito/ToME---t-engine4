@@ -1,5 +1,5 @@
 -- ToME - Tales of Maj'Eyal
--- Copyright (C) 2009, 2010, 2011, 2012, 2013 Nicolas Casalini
+-- Copyright (C) 2009 - 2014 Nicolas Casalini
 --
 -- This program is free software: you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -25,7 +25,7 @@ newLore{
 	id = "fearscape-entry",
 	category = "fearscape",
 	name = "a fearsome sight",
-	lore = [[You stand in a field of fire, the flames dancing back and forth like hell-spawned corn waving in the wind. It licks your feet, your skin, your face, and writhes around in tiny shapes which tear across your flesh and crawl down your throat. It burns and blazes through your body, and crazed thoughts fill your mind. This is Goedalath they tell you, the Fearscape, and you have no rightful place here.
+	lore = [[You stand in a field of fire, the flames dancing back and forth like blaze-spawned corn waving in the wind. It licks your feet, your skin, your face, and writhes around in tiny shapes which tear across your flesh and crawl down your throat. It burns and blazes through your body, and crazed thoughts fill your mind. This is Goedalath they tell you, the Fearscape, and you have no rightful place here.
 
 In the distance you see looming, demonic shapes of absolute darkness, towering above the blazing land like wardens of doom. The sky is black, but above your head hangs a round world that you recognise as Eyal. Across the burning plains gather armies of fiendish figures, and glowing eyes turn up with hateful glowers to your home world. Suddenly both you and it and seem small and frail. As the flames fill your body with pain your only thought is of escape.]],
 }

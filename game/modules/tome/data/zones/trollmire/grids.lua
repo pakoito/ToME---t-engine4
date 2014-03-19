@@ -1,5 +1,5 @@
 -- ToME - Tales of Maj'Eyal
--- Copyright (C) 2009, 2010, 2011, 2012, 2013 Nicolas Casalini
+-- Copyright (C) 2009 - 2014 Nicolas Casalini
 --
 -- This program is free software: you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -19,6 +19,7 @@
 
 load("/data/general/grids/basic.lua")
 load("/data/general/grids/forest.lua")
+load("/data/general/grids/autumn_forest.lua")
 load("/data/general/grids/water.lua")
 
 local grass_editer = { method="borders_def", def="grass"}
@@ -55,7 +56,18 @@ newEntity{
 	nice_tiler = { method="replace", base={"BOGTREE", 100, 1, 20}},
 	shader = "water",
 }
-for i = 1, 20 do newEntity{ base="BOGTREE", define_as = "BOGTREE"..i, image = "terrain/water_grass_5_1.png", add_displays = class:makeTrees("terrain/tree_alpha", 13, 9)} end
+for i = 1, 20 do
+	newEntity(class:makeNewTrees({base="BOGTREE", define_as = "BOGTREE"..i, image = "terrain/water_grass_5_1.png"}, {
+		{"small_willow", {"shadow", "trunk", "foliage_bare"}},
+		{"small_willow_moss", {"shadow", "trunk", "foliage_bare"}},
+		{"willow", {tall=-1, "shadow", "trunk", "foliage_bare"}},
+		{"willow_moss", {tall=-1, "shadow", "trunk", "foliage_bare"}},
+		{"small_willow", {"shadow", "trunk", "foliage_spring"}},
+		{"small_willow_moss", {"shadow", "trunk", "foliage_spring"}},
+		{"willow", {tall=-1, "shadow", "trunk", "foliage_spring"}},
+		{"willow_moss", {tall=-1, "shadow", "trunk", "foliage_spring"}},
+	}, 1))
+end
 
 newEntity{ base="WATER_BASE",
 	define_as = "BOGWATER",

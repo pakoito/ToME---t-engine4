@@ -1,5 +1,5 @@
 -- ToME - Tales of Maj'Eyal
--- Copyright (C) 2009, 2010, 2011, 2012, 2013 Nicolas Casalini
+-- Copyright (C) 2009 - 2014 Nicolas Casalini
 --
 -- This program is free software: you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -27,6 +27,61 @@ for def, e in pairs(game.state:getWorldArtifacts()) do
 end
 
 -- This file describes artifacts not bound to a special location, they can be found anywhere
+
+newEntity{ base = "BASE_GEM", 
+	power_source = {arcane=true},
+	unique = true,
+	unided_name = "windy gem",
+	name = "Windborne Azurite", subtype = "blue",
+	color = colors.BLUE, image = "object/artifact/windborn_azurite.png",
+	level_range = {18, 40},
+	desc = [[Air currents swirl around this bright blue jewel.]],
+	rarity = 240,
+	cost = 200,
+	identified = false,
+	material_level = 4,
+	wielder = {
+		inc_stats = {[Stats.STAT_DEX] = 8, [Stats.STAT_CUN] = 8 },
+		inc_damage = {[DamageType.LIGHTNING] = 20 },
+		cancel_damage_chance = 8, -- add to tooltip
+		damage_affinity={
+			[DamageType.LIGHTNING] = 20,
+		},
+		movement_speed = 0.2,
+	},
+	imbue_powers = {
+		inc_stats = {[Stats.STAT_DEX] = 8, [Stats.STAT_CUN] = 8 },
+		inc_damage = {[DamageType.LIGHTNING] = 20 },
+		cancel_damage_chance = 8,
+		damage_affinity={
+			[DamageType.LIGHTNING] = 20,
+		},
+		movement_speed = 0.15,
+	},
+}
+
+-- Low base values because you can stack affinity and resist
+-- The 3rd type is pretty meaningless balance-wise.  Magic debuffs hardly matter.  The real advantage is the affinity.
+newEntity{ base = "BASE_INFUSION",
+	name = "Primal Infusion", unique=true, image = "object/artifact/tree_of_life.png",
+	desc = [[This wild infusion has evolved.]],
+	unided_name = "pulsing infusion",
+	level_range = {15, 40},
+	rarity = 300,
+	cost = 300,
+	material_level = 3,
+
+	inscription_kind = "protect",
+	inscription_data = {
+		cooldown = 18,
+		dur = 6,
+		power = 10,
+		use_stat_mod = 0.1, 
+		what = {physical=true, mental=true, magical=true},
+	},
+	inscription_talent = "INFUSION:_PRIMAL",
+}
+
 newEntity{ base = "BASE_STAFF",
 	power_source = {arcane=true},
 	unique = true,
@@ -61,149 +116,6 @@ newEntity{ base = "BASE_STAFF",
 		learn_talent = {[Talents.T_COMMAND_STAFF] = 1},
 	},
 	talent_on_spell = { {chance=10, talent=Talents.T_IMPENDING_DOOM, level=1}},
-}
-
-newEntity{ base = "BASE_STAFF",
-	power_source = {arcane=true},
-	unique = true,
-	name = "Penitence",
-	flavor_name = "starstaff",
-	unided_name = "glowing staff", image = "object/artifact/staff_penitence.png",
-	level_range = {10, 18},
-	color=colors.VIOLET,
-	rarity = 200,
-	desc = [[A powerful staff sent in secret to Angolwen by the Shaloren, to aid their fighting of the plagues following the Spellblaze.]],
-	cost = 200,
-	material_level = 2,
-
-	require = { stat = { mag=24 }, },
-	combat = {
-		--sentient = "penitent", -- commented out for now...  how many sentient staves do we need?
-		dam = 15,
-		apr = 4,
-		dammod = {mag=1.2},
-		damtype = DamageType.NATURE, -- Note this is odd for a staff; it's intentional and it's also why the damage type can't be changed.  Blight on this staff would be sad :(
-	},
-	wielder = {
-		combat_spellpower = 15,
-		combat_spellcrit = 10,
-		resists = {
-			[DamageType.BLIGHT] = 30,
-		},
-		damage_affinity={
-			[DamageType.NATURE] = 20,
-		},
-	},
-	max_power = 60, power_regen = 1,
-	use_power = { name = "cure diseases and poisons", power = 10,
-		use = function(self, who)
-			local target = who
-			local effs = {}
-			local known = false
-
-			-- Go through all spell effects
-			for eff_id, p in pairs(target.tmp) do
-				local e = target.tempeffect_def[eff_id]
-				if e.subtype.disease or e.subtype.poison then
-					effs[#effs+1] = {"effect", eff_id}
-				end
-			end
-
-			for i = 1, 3 + math.floor(who:getMag() / 10) do
-				if #effs == 0 then break end
-				local eff = rng.tableRemove(effs)
-
-				if eff[1] == "effect" then
-					target:removeEffect(eff[2])
-					known = true
-				end
-			end
-			game.logSeen(who, "%s is cured of diseases and poisons!", who.name:capitalize())
-			return {id=true, used=true}
-		end
-	},
-	on_wear = function(self, who)
-		if who.descriptor and who.descriptor.subrace == "Shalore" then
-			local Stats = require "engine.interface.ActorStats"
-			local DamageType = require "engine.DamageType"
-
-			self:specialWearAdd({"wielder","resists"}, { [engine.DamageType.BLIGHT] = 10})
-			self:specialWearAdd({"wielder","disease_immune"}, 0.5)
-			game.logPlayer(who, "#DARK_GREEN#You feel the cleansing power of Penitence attune to you.")
-		end
-	end,
-}
-
-newEntity{ base = "BASE_STAFF",
-	power_source = {arcane=true},
-	unique = true,
-	name = "Lost Staff of Archmage Tarelion", image = "object/artifact/staff_lost_staff_archmage_tarelion.png",
-	unided_name = "shining staff",
-	flavor_name = "magestaff",
-	level_range = {37, 50},
-	color=colors.VIOLET,
-	rarity = 250,
-	desc = [[Archmage Tarelion travelled the world in his youth. But the world is not a nice place and it seems he had to run fast.]],
-	cost = 400,
-	material_level = 5,
-
-	require = { stat = { mag=48 }, },
-	modes = {"fire", "cold", "lightning", "arcane"},
-	combat = {
-		is_greater = true,
-		dam = 30,
-		apr = 4,
-		dammod = {mag=1.5},
-		damtype = DamageType.ARCANE,
-	},
-	wielder = {
-		inc_stats = { [Stats.STAT_WIL] = 7, [Stats.STAT_MAG] = 8 },
-		max_mana = 40,
-		combat_spellpower = 40,
-		combat_spellcrit = 25,
-		inc_damage = { [DamageType.ARCANE] = 30, [DamageType.FIRE] = 30, [DamageType.COLD] = 30, [DamageType.LIGHTNING] = 30,  },
-		silence_immune = 0.4,
-		mana_on_crit = 12,
-		talent_cd_reduction={
-			[Talents.T_ICE_STORM] = 2,
-			[Talents.T_FIREFLASH] = 2,
-			[Talents.T_CHAIN_LIGHTNING] = 2,
-			[Talents.T_ARCANE_VORTEX] = 2,
-		},
-		learn_talent = {[Talents.T_COMMAND_STAFF] = 1,},
-	},
-}
-
-newEntity{ base = "BASE_STAFF",
-	power_source = {arcane=true},
-	unique = true,
-	name = "Bolbum's Big Knocker", image = "object/artifact/staff_bolbums_big_knocker.png",
-	unided_name = "thick staff",
-	level_range = {20, 35},
-	color=colors.UMBER,
-	rarity = 220,
-	desc = [[A thick staff with a heavy knob on the end.  It was said to be used by the grand alchemist Bolbum in the Age of Allure.  Much renowned is the fear of his students for their master, and the high rate of cranial injuries amongst them.  Bolbum died with seven daggers in his back and his much-cursed staff went missing after.]],
-	cost = 300,
-	material_level = 3,
-
-	require = { stat = { mag=38 }, },
-	combat = {
-		dam = 64,
-		apr = 10,
-		dammod = {mag=1.4},
-		damtype = DamageType.PHYSICAL,
-	},
-	wielder = {
-		combat_atk = 7,
-		combat_spellpower = 12,
-		combat_spellcrit = 18,
-		inc_damage={
-			[DamageType.PHYSICAL] = 20,
-		},
-		talents_types_mastery = {
-			["spell/staff-combat"] = 0.2,
-		}
-	},
 }
 
 newEntity{ base = "BASE_RING",
@@ -263,9 +175,13 @@ newEntity{ base = "BASE_RING",
 	rarity = 250,
 	cost = 500,
 	material_level = 4,
-
+	special_desc = function(self) return "Will bring you back from death, but only once!" end,
 	wielder = {
 		inc_stats = { [Stats.STAT_LCK] = 10, },
+		die_at = -100,
+		combat_physresist = 10,
+		combat_mentalresist = 10,
+		combat_spellresist = 10,
 	},
 	one_shot_life_saving = true,
 }
@@ -294,38 +210,6 @@ newEntity{ base = "BASE_RING",
 }
 
 newEntity{ base = "BASE_AMULET",
-	power_source = {arcane=true},
-	unique = true,
-	name = "Spellblaze Echoes", color = colors.DARK_GREY, image = "object/artifact/amulet_spellblaze_echoes.png",
-	unided_name = "deep black amulet",
-	desc = [[This ancient charm still retains a distant echo of the destruction wrought by the Spellblaze]],
-	level_range = {30, 39},
-	rarity = 290,
-	cost = 500,
-	material_level = 4,
-
-	wielder = {
-		combat_armor = 6,
-		combat_def = 6,
-		combat_spellpower = 8,
-		combat_spellcrit = 6,
-		spellsurge_on_crit = 15,
-	},
-	max_power = 60, power_regen = 1,
-	use_power = { name = "unleash a destructive wail", power = 60,
-		use = function(self, who)
-			who:project({type="ball", range=0, selffire=false, radius=3}, who.x, who.y, engine.DamageType.DIG, 1)
-			who:project({type="ball", range=0, selffire=false, radius=3}, who.x, who.y, engine.DamageType.DIG, 1)
-			who:project({type="ball", range=0, selffire=false, radius=3}, who.x, who.y, engine.DamageType.DIG, 1)
-			who:project({type="ball", range=0, selffire=false, radius=3}, who.x, who.y, engine.DamageType.DIG, 1)
-			who:project({type="ball", range=0, selffire=false, radius=3}, who.x, who.y, engine.DamageType.PHYSICAL, 250 + who:getMag() * 3)
-			game.logSeen(who, "%s uses the %s!", who.name:capitalize(), self:getName())
-			return {id=true, used=true}
-		end
-	},
-}
-
-newEntity{ base = "BASE_AMULET",
 	power_source = {technique=true},
 	unique = true,
 	name = "Feathersteel Amulet", color = colors.WHITE, image = "object/artifact/feathersteel_amulet.png",
@@ -341,39 +225,6 @@ newEntity{ base = "BASE_AMULET",
 		avoid_pressure_traps = 1,
 		movement_speed = 0.2,
 	},
-}
-
-newEntity{ base = "BASE_AMULET",
-	power_source = {technique=true},
-	unique = true,
-	name = "Daneth's Neckguard", color = colors.STEEL_BLUE, image = "object/artifact/daneths_neckguard.png",
-	unided_name = "a thick steel gorget",
-	desc = [[A thick steel gorget designed to protect its wearer from fatal attacks to the neck.  This particular gorget was worn by the Halfling General Daneth Tendermourn during the pyre wars, and judging by the marks along its surface may have saved the General's life on more than one occasion.]],
-	level_range = {20, 30},
-	rarity = 300,
-	cost = 300,
-	encumber = 2,
-	material_level = 2,
-	wielder = {
-		combat_armor = 10,
-		fatigue = 2,
-		inc_stats = {
-			[Stats.STAT_STR] = 6,
-			[Stats.STAT_CON] = 6,
-		},
-	},
-	max_power = 60, power_regen = 1,
-	use_talent = { id = Talents.T_JUGGERNAUT, level = 2, power = 30 },
-	on_wear = function(self, who)
-		if who.descriptor and who.descriptor.race == "Halfling" then
-			local Talents = require "engine.interface.ActorStats"
-
-			self:specialWearAdd({"wielder", "talents_types_mastery"}, { ["technique/battle-tactics"] = 0.2 })
-			self:specialWearAdd({"wielder","combat_armor"}, 5)
-			self:specialWearAdd({"wielder","combat_crit_reduction"}, 10)
-			game.logPlayer(who, "#LIGHT_BLUE#You feel invincible!")
-		end
-	end,
 }
 
 newEntity{ base = "BASE_AMULET", define_as = "SET_GARKUL_TEETH",
@@ -496,44 +347,6 @@ newEntity{ base = "BASE_LITE",
 	use_talent = { id = Talents.T_BLOOD_GRASP, level = 3, power = 10 },
 }
 
-newEntity{ base = "BASE_LITE",
-	power_source = {nature=true, antimagic=true},
-	unique = true,
-	name = "Guidance", image = "object/artifact/guidance.png",
-	unided_name = "a softly glowing crystal",
-	level_range = {38, 50},
-	color = colors.YELLOW,
-	encumber = 1,
-	rarity = 300,
-	desc = [[Said to have once belonged to Inquisitor Marcus Dunn during the Spellhunt this fist sized quartz crystal glows constantly with a soft white light and was rumoured to be a great aid in meditation, helping focus the mind, body, and soul of the owner as well as protecting them from the foulest of magics.
-It seems somebody well versed in antimagic could use it to its fullest potential.]],
-	cost = 100,
-	material_level = 5,
-
-	wielder = {
-		lite = 4,
-		inc_stats = { [Stats.STAT_WIL] = 6, [Stats.STAT_CUN] = 6,},
-		combat_physresist = 6,
-		combat_mentalresist = 6,
-		combat_spellresist = 6,
-		talents_types_mastery = { ["wild-gift/call"] = 0.2, ["wild-gift/antimagic"] = 0.1, },
-		resists_cap = { [DamageType.BLIGHT] = 10, },
-		resists = { [DamageType.BLIGHT] = 20, },
-	},
-	on_wear = function(self, who)
-		if who:attr("forbid_arcane") then
-			local Stats = require "engine.interface.ActorStats"
-			local DamageType = require "engine.DamageType"
-
-			self:specialWearAdd({"wielder","inc_stats"}, { [Stats.STAT_WIL] = 6, [Stats.STAT_CUN] = 6, })
-			self:specialWearAdd({"wielder","combat_physresist"}, 6)
-			self:specialWearAdd({"wielder","combat_spellresist"}, 6)
-			self:specialWearAdd({"wielder","combat_mentalresist"}, 6)
-			game.logPlayer(who, "#LIGHT_BLUE#You feel a great hero guiding you!")
-		end
-	end,
-}
-
 newEntity{
 	power_source = {nature=true},
 	unique = true,
@@ -558,151 +371,6 @@ newEntity{
 		end
 		return {used=true, id=true, destroy=true}
 	end},
-}
-
-newEntity{ base = "BASE_LONGBOW",
-	power_source = {nature=true},
-	name = "Thaloren-Tree Longbow", unided_name = "glowing elven-wood longbow", unique=true, image = "object/artifact/thaloren_tree_longbow.png",
-	desc = [[In the aftermath of the Spellblaze, the Thaloren had to defend their forests against foes and fires alike. Many of the trees died despite the efforts of the Elves to save them. Their wood was fashioned into a bow to be wielded against the darkness.]],
-	level_range = {40, 50},
-	rarity = 200,
-	require = { stat = { dex=36 }, },
-	cost = 800,
-	material_level = 5,
-	combat = {
-		range = 10,
-		physspeed = 0.7,
-		apr = 12,
-	},
-	wielder = {
-		inc_damage={ [DamageType.PHYSICAL] = 12, },
-		lite = 1,
-		inc_stats = { [Stats.STAT_DEX] = 5, [Stats.STAT_WIL] = 4,  },
-		ranged_project={[DamageType.LIGHT] = 30},
-	},
-	on_wear = function(self, who)
-		if who.descriptor and who.descriptor.subrace == "Thalore" then
-			local Stats = require "engine.interface.ActorStats"
-			local DamageType = require "engine.DamageType"
-
-			self:specialWearAdd({"wielder","resists"}, { [engine.DamageType.DARKNESS] = 20, [DamageType.NATURE] = 20,} )
-			self:specialWearAdd({"wielder","combat_def"}, 12)
-			game.logPlayer(who, "#DARK_GREEN#You understand this bow-and its connection to nature-in a way few can.")
-		end
-	end,
-}
-
-newEntity{ base = "BASE_LONGBOW",
-	power_source = {arcane=true, nature=true},
-	name = "Corpsebow", unided_name = "rotting longbow", unique=true, image = "object/artifact/bow_corpsebow.png",
-	desc = [[A lost artifact of the Age of Dusk, the Corpsebow is filled with a lingering essence of that era's terrible plagues. Those struck by arrows fired from its rotten string find themselves afflicted by echoes of ancient sickness.]],
-	level_range = {10, 20},
-	rarity = 200,
-	require = { stat = { dex=16 }, },
-	cost = 50,
-	material_level = 2,
-	combat = {
-		range = 7,
-		physspeed = 0.8,
-	},
-	wielder = {
-		disease_immune = 0.5,
-		ranged_project = {[DamageType.CORRUPTED_BLOOD] = 15},
-		inc_damage={ [DamageType.BLIGHT] = 10, },
-		talent_cd_reduction={
-			[Talents.T_CYST_BURST] = 2,
-		},
-	},
-	on_wear = function(self, who)
-		if who.descriptor and who.descriptor.race == "Undead" then
-			local Stats = require "engine.interface.ActorStats"
-			local DamageType = require "engine.DamageType"
-
-			self:specialWearAdd({"combat","ranged_project"}, {[DamageType.DRAINLIFE]=20})
-			game.logPlayer(who, "#DARK_BLUE#You feel a kindred spirit in this bow...")
-		end
-	end,
-}
-
-newEntity{ base = "BASE_SLING",
-	power_source = {technique=true},
-	unique = true,
-	name = "Eldoral Last Resort", image = "object/artifact/sling_eldoral_last_resort.png",
-	unided_name = "well-made sling",
-	desc = [[A sling with an inscription on its handle: 'May the wielder be granted cunning in his fight against the darkness'.]],
-	level_range = {15, 25},
-	rarity = 200,
-	require = { stat = { dex=26 }, },
-	cost = 350,
-	material_level = 3,
-	combat = {
-		range = 10,
-		physspeed = 0.7,
-	},
-	wielder = {
-		inc_stats = { [Stats.STAT_DEX] = 4, [Stats.STAT_CUN] = 3,  },
-		inc_damage={ [DamageType.PHYSICAL] = 15 },
-		talent_cd_reduction={[Talents.T_STEADY_SHOT]=1, [Talents.T_EYE_SHOT]=2},
-	},
-}
-
-newEntity{ base = "BASE_LONGSWORD",
-	power_source = {arcane=true},
-	unique = true,
-	name = "Spellblade", image = "object/artifact/weapon_spellblade.png",
-	unided_name = "glowing long sword",
-	level_range = {40, 45},
-	color=colors.AQUAMARINE,
-	rarity = 250,
-	desc = [[Mages sometimes have funny ideas. Archmage Varil once learned how to handle a sword and found he preferred wielding it instead of his staff.]],
-	on_id_lore = "spellblade",
-	cost = 1000,
-
-	require = { stat = { mag=28, str=28, dex=28 }, },
-	material_level = 5,
-	combat = {
-		dam = 50,
-		apr = 2,
-		physcrit = 5,
-		dammod = {str=1},
-	},
-	wielder = {
-		lite = 1,
-		combat_spellpower = 20,
-		combat_spellcrit = 9,
-		inc_damage={
-			[DamageType.PHYSICAL] = 18,
-			[DamageType.FIRE] = 18,
-			[DamageType.LIGHT] = 18,
-		},
-		inc_stats = { [Stats.STAT_MAG] = 4, [Stats.STAT_STR] = 4, },
-	},
-}
-
-newEntity{ base = "BASE_GREATSWORD",
-	power_source = {nature=true, technique=true},
-	unique = true,
-	name = "Genocide",
-	unided_name = "pitch black blade", image = "object/artifact/weapon_sword_genocide.png",
-	level_range = {25, 35},
-	color=colors.GRAY,
-	rarity = 300,
-	desc = [[Farian was King Toknor's captain, and fought by his side in the great Battle of Last Hope.  However, when he returned after the battle to find his hometown burnt in an orcish pyre, a madness overtook him.  The desire for vengeance made him quit the army and strike out on his own, lightly armoured and carrying nought but his sword.  Most thought him dead until the reports came back of a fell figure tearing through the orcish encampments, slaughtering all before him and mercilessly butchering the corpses after.  It is said his blade drank the blood of 100 orcs each day until finally all of Maj'Eyal was cleared of their presence.  When the final orc was slain and no more were to be found, Farian at the last turned the blade on himself and stuck it through his chest.  Those nearby said his body shook with convulsions as he did so, though they could not tell whether he was laughing or crying.]],
-	cost = 400,
-	require = { stat = { str=40, wil=20 }, },
-	material_level = 3,
-	combat = {
-		dam = 42,
-		apr = 4,
-		physcrit = 18,
-		dammod = {str=1.2},
-	},
-	wielder = {
-		stamina_regen = 1,
-		life_regen = 0.5,
-		inc_stats = { [Stats.STAT_STR] = 7, [Stats.STAT_DEX] = 7 },
-		esp = {["humanoid/orc"]=1},
-	},
 }
 
 newEntity{ base = "BASE_LEATHER_BOOT",
@@ -798,7 +466,7 @@ newEntity{ base = "BASE_SHIELD",
 	unique = true,
 	name = "Black Mesh", image = "object/artifact/shield_mesh.png",
 	unided_name = "pile of tendrils",
-	desc = [[Black, interwoven tendrils form this mesh that can be used as shield. It reacts visibly to your touch, clinging to your arm and engulfing it in a warm, black mass.]],
+	desc = [[Black, interwoven tendrils form this mesh that can be used as a shield. It reacts visibly to your touch, clinging to your arm and engulfing it in a warm, black mass.]],
 	color = colors.BLACK,
 	level_range = {15, 30},
 	rarity = 270,
@@ -868,7 +536,7 @@ newEntity{
 	display = "*", color=colors.DARK_GREY,
 	encumber = 2,
 	not_in_stores = true,
-	desc = [[Dry and dusty to the touch, it still seems to retain some of shadow of life.]],
+	desc = [[Dry and dusty to the touch, it still seems to retain some shadow of life.]],
 
 	carrier = {
 		lite = -2,
@@ -943,43 +611,6 @@ newEntity{ base = "BASE_HELM",
 newEntity{ base = "BASE_KNIFE",
 	power_source = {technique=true},
 	unique = true,
-	name = "Orc Feller", image = "object/artifact/dagger_orc_feller.png",
-	unided_name = "shining dagger",
-	desc = [[During the invasion of Eldoral the Halfling Rogue Herah is said to have slain over one hundred orcs while defending a group of refugees.]],
-	level_range = {40, 50},
-	rarity = 300,
-	require = { stat = { dex=44 }, },
-	cost = 550,
-	material_level = 5,
-	combat = {
-		dam = 45,
-		apr = 11,
-		physcrit = 18,
-		dammod = {dex=0.55,str=0.35},
-	},
-	wielder = {
-		lite = 1,
-		inc_damage={
-			[DamageType.PHYSICAL] = 10,
-			[DamageType.LIGHT] = 8,
-		},
-		pin_immune = 0.5,
-		inc_stats = { [Stats.STAT_DEX] = 5, [Stats.STAT_CUN] = 4, },
-		esp = {["humanoid/orc"]=1},
-	},
-	on_wear = function(self, who)
-		if who.descriptor and who.descriptor.race == "Halfling" then
-			local Stats = require "engine.interface.ActorStats"
-
-			self:specialWearAdd({"wielder","inc_stats"}, {  [Stats.STAT_CUN] = 6, [Stats.STAT_LCK] = 25, })
-			game.logPlayer(who, "#LIGHT_BLUE#Herah's guile and luck is with you, her successor!")
-		end
-	end,
-}
-
-newEntity{ base = "BASE_KNIFE",
-	power_source = {technique=true},
-	unique = true,
 	name = "Silent Blade", image = "object/artifact/dagger_silent_blade.png",
 	unided_name = "shining dagger",
 	desc = [[A thin, dark dagger that seems to meld seamlessly into the shadows.]],
@@ -1004,7 +635,7 @@ newEntity{ base = "BASE_KNIFE", define_as = "ART_PAIR_MOON",
 	unique = true,
 	name = "Moon", image = "object/artifact/dagger_moon.png",
 	unided_name = "crescent blade",
-	desc = [[A viciously curved blade that a folk story says is made from a material that originates from the moon.  Devouring the light abound, it fades.]],
+	desc = [[A viciously curved blade that a folk story says is made from a material that originates from the moon.  Devouring the light around it, it fades.]],
 	level_range = {20, 30},
 	rarity = 200,
 	require = { stat = { dex=24, cun=24 }, },
@@ -1078,9 +709,11 @@ newEntity{ base = "BASE_RING",
 	rarity = 200,
 	cost = 500,
 	material_level = 5,
-
 	wielder = {
 		inc_stats = { [Stats.STAT_STR] = 3, [Stats.STAT_DEX] = 3, [Stats.STAT_CON] = 3, },
+		combat_apr = 15,
+		combat_dam = 10,
+		combat_physcrit = 5,
 		talents_types_mastery = {
 			["technique/2hweapon-cripple"] = 0.3,
 			["technique/2hweapon-offense"] = 0.3,
@@ -1088,6 +721,7 @@ newEntity{ base = "BASE_RING",
 			["technique/archery-sling"] = 0.3,
 			["technique/archery-training"] = 0.3,
 			["technique/archery-utility"] = 0.3,
+			["technique/archery-excellence"] = 0.3,
 			["technique/combat-techniques-active"] = 0.3,
 			["technique/combat-techniques-passive"] = 0.3,
 			["technique/combat-training"] = 0.3,
@@ -1098,32 +732,11 @@ newEntity{ base = "BASE_RING",
 			["technique/warcries"] = 0.3,
 			["technique/superiority"] = 0.3,
 			["technique/thuggery"] = 0.3,
-		},
-	},
-}
-
-newEntity{ base = "BASE_GREATMAUL",
-	power_source = {technique=true, arcane=true},
-	unique = true,
-	name = "Voratun Hammer of the Deep Bellow", color = colors.LIGHT_RED, image = "object/artifact/voratun_hammer_of_the_deep_bellow.png",
-	unided_name = "flame scorched voratun hammer",
-	desc = [[The legendary hammer of the Dwarven master smiths. For ages it was used to forge powerful weapons with searing heat until it became highly powerful by itself.]],
-	level_range = {38, 50},
-	rarity = 250,
-	require = { stat = { str=48 }, },
-	cost = 650,
-	material_level = 5,
-	combat = {
-		dam = 82,
-		apr = 7,
-		physcrit = 4,
-		dammod = {str=1.2},
-		talent_on_hit = { [Talents.T_FLAMESHOCK] = {level=3, chance=10} },
-		melee_project={[DamageType.FIRE] = 30},
-	},
-	wielder = {
-		inc_damage={
-			[DamageType.PHYSICAL] = 15,
+			["technique/pugilism"] = 0.3,
+			["technique/unarmed-discipline"] = 0.3,
+			["technique/unarmed-training"] = 0.3,
+			["technique/grappling"] = 0.3,
+			["technique/finishing-moves"] = 0.3,
 		},
 	},
 }
@@ -1158,7 +771,7 @@ newEntity{ base = "BASE_MACE",
 	unique = true,
 	name = "Crooked Club", color = colors.GREEN, image = "object/artifact/weapon_crooked_club.png",
 	unided_name = "weird club",
-	desc = [[An oddly twisted club with a hefty weight on the end.]],
+	desc = [[An oddly twisted club with a hefty weight on the end. There's something very strange about it.]],
 	level_range = {12, 20},
 	rarity = 192,
 	require = { stat = { str=20 }, },
@@ -1169,43 +782,13 @@ newEntity{ base = "BASE_MACE",
 		apr = 4,
 		physcrit = 10,
 		dammod = {str=1},
-		melee_project={[DamageType.RANDOM_CONFUSION] = 14},
+		melee_project={[DamageType.RANDOM_CONFUSION_PHYS] = 14},
+		talent_on_hit = { T_BATTLE_CALL = {level=1, chance=10},},
+		burst_on_crit = {
+			[DamageType.PHYSKNOCKBACK] = 20,
+		},
 	},
 	wielder = {combat_atk=12,},
-}
-
-newEntity{ base = "BASE_MACE",
-	power_source = {nature=true, antimagic=true},
-	unique = true,
-	name = "Nature's Vengeance", color = colors.BROWN, image = "object/artifact/mace_natures_vengeance.png",
-	unided_name = "thick wooden mace",
-	desc = [[This thick-set mace was used by the Spellhunter Vorlan, who crafted it from the wood of an ancient oak that was uprooted during the Spellblaze.  Many were the wizards and witches felled by this weapon, brought to justice for the crimes they committed against nature.]],
-	level_range = {20, 34},
-	rarity = 340,
-	require = { stat = { str=42 } },
-	cost = 350,
-	material_level = 3,
-	combat = {
-		dam = 40,
-		apr = 4,
-		physcrit = 9,
-		dammod = {str=1},
-		melee_project={[DamageType.RANDOM_SILENCE] = 10, [DamageType.NATURE] = 18},
-	},
-	wielder = {combat_atk=6},
-
-	max_power = 25, power_regen = 1,
-	use_talent = { id = Talents.T_RUSH, level = 3, power = 15 },
-	on_wear = function(self, who)
-		if who:attr("forbid_arcane") then
-			local Stats = require "engine.interface.ActorStats"
-			local DamageType = require "engine.DamageType"
-
-			self:specialWearAdd({"wielder","resists"}, { all = 4 })
-
-			game.logPlayer(who, "#LIGHT_BLUE#You feel nature defending you.")
-		end
-	end,
 }
 
 newEntity{ base = "BASE_CLOTH_ARMOR",
@@ -1221,7 +804,7 @@ newEntity{ base = "BASE_CLOTH_ARMOR",
 	wielder = {
 		combat_def = 10,
 		combat_armor = 15,
-		combat_armor_hardiness = 40,
+		combat_armor_hardiness = 30,
 		inc_stats = { [Stats.STAT_CON] = 5, [Stats.STAT_WIL] = 4, },
 		combat_mindpower = 10,
 		combat_mindcrit = 5,
@@ -1357,39 +940,30 @@ newEntity{ base = "BASE_GAUNTLETS",
 	},
 }
 
-newEntity{ base = "BASE_GAUNTLETS",
-	power_source = {psionic=true, technique=true},
-	define_as = "GAUNTLETS_SCORPION",
+newEntity{ base = "BASE_GREATMAUL",
+	power_source = {technique=true, arcane=true},
 	unique = true,
-	name = "Fists of the Desert Scorpion", color = colors.STEEL_BLUE, image = "object/artifact/scorpion_gauntlets.png",
-	unided_name = "viciously spiked gauntlets",
-	desc = [[These wickedly spiked gauntlets belonged to an orc captain in the Age of Pyre who conquered the western sands, using them as a base to lay raids on Elvala to the south.  Known as The Scorpion, he seemed unconquerable in battle, able to pull enemies towards him with vicious mental force and lay down lethal blows on them.  Often a flurry of these yellow and black gauntlets would be the last thing great Shaloren mages would see before having the life crushed from them.
-
-Finally The Scorpion was defeated by the alchemist Nessylia, who went to face the fiendish orc alone.  The captain pulled the elf towards him with a brutish cackle, but before he could batter the life from her flesh she tore off her robes, revealing eighty incendiary bombs strapped to her flesh.  With a spark from her fingers she triggered an explosion that could be seen for miles around.  To this day Nessylia is still remembered in song for the sacrifice of her immortal life to protect her people.]],
-	level_range = {20, 40},
-	rarity = 300,
-	cost = 1000,
-	material_level = 3,
+	name = "Voratun Hammer of the Deep Bellow", color = colors.LIGHT_RED, image = "object/artifact/voratun_hammer_of_the_deep_bellow.png",
+	unided_name = "flame scorched voratun hammer",
+	desc = [[The legendary hammer of the Dwarven master smiths. For ages it was used to forge powerful weapons with searing heat until it became highly powerful by itself.]],
+	level_range = {38, 50},
+	rarity = 250,
+	require = { stat = { str=48 }, },
+	cost = 650,
+	material_level = 5,
+	combat = {
+		dam = 82,
+		apr = 7,
+		physcrit = 4,
+		dammod = {str=1.2},
+		talent_on_hit = { [Talents.T_FLAMESHOCK] = {level=3, chance=10} },
+		melee_project={[DamageType.FIRE] = 30},
+	},
 	wielder = {
-		inc_stats = { [Stats.STAT_STR] = 3, [Stats.STAT_WIL] = 3, [Stats.STAT_CUN] = 3, },
-		inc_damage = { [DamageType.PHYSICAL] = 8 },
-		combat_mindpower=3,
-		combat_armor = 4,
-		combat_def = 8,
-		disarm_immune = 0.4,
-		talents_types_mastery = { ["psionic/grip"] = 0.2, ["technique/grappling"] = 0.2},
-		combat = {
-			dam = 24,
-			apr = 10,
-			physcrit = 10,
-			physspeed = 0.15,
-			dammod = {dex=0.4, str=-0.6, cun=0.4,},
-			damrange = 0.3,
-			talent_on_hit = { T_BITE_POISON = {level=3, chance=20}, T_PERFECT_CONTROL = {level=1, chance=5}, T_QUICK_AS_THOUGHT = {level=3, chance=5}, T_IMPLODE = {level=1, chance=5} },
+		inc_damage={
+			[DamageType.PHYSICAL] = 15,
 		},
 	},
-	max_power = 24, power_regen = 1,
-	use_talent = { id = Talents.T_MINDHOOK, level = 4, power = 16 },
 }
 
 newEntity{ base = "BASE_GLOVES",
@@ -1473,27 +1047,6 @@ newEntity{ base = "BASE_CLOAK",
 	},
 	max_power = 60, power_regen = 1,
 	use_talent = { id = Talents.T_PHASE_DOOR, level = 2, power = 30 },
-}
-
-newEntity{ base = "BASE_CLOAK",
-	power_source = {arcane=true},
-	unique = true,
-	name = "Wind's Whisper", image="object/artifact/cloak_winds_whisper.png",
-	unided_name = "flowing light cloak",
-	desc = [[When the enchanter Razeen was cornered by Spellhunters near the Daikara mountain pass she wrapped her cloak about her and fled down a narrow ravine.  The hunters fired volley after volley of arrows at her, but by miracle or magic they all missed.  Razeen was able to escape and flee to the hidden city in the west.]],
-	level_range = {15, 25},
-	rarity = 400,
-	cost = 250,
-	material_level = 3,
-	wielder = {
-		inc_stats = { [Stats.STAT_DEX] = 3, },
-		combat_def = 4,
-		combat_ranged_def = 12,
-		silence_immune = 0.3,
-		projectile_evasion = 25,
-	},
-	max_power = 50, power_regen = 1,
-	use_talent = { id = Talents.T_EVASION, level = 2, power = 50 },
 }
 
 newEntity{ base = "BASE_CLOTH_ARMOR",
@@ -1609,7 +1162,7 @@ newEntity{ base = "BASE_WIZARD_HAT", define_as = "SET_TEMPORAL_FEZ",
 	unique = true,
 	name = "Un'fezan's Cap",
 	unided_name = "red stylish hat",
-	desc = [[This fez once belonged to a traveler, it always seems to be found lying around in odd locations.
+	desc = [[This fez once belonged to a traveler; it always seems to be found lying around in odd locations.
 #{italic}#Fezzes are cool.#{normal}#]],
 	color = colors.BLUE, image = "object/artifact/fez.png",
 	moddable_tile = "special/fez",
@@ -1648,120 +1201,6 @@ newEntity{ base = "BASE_WIZARD_HAT", define_as = "SET_TEMPORAL_FEZ",
 	end,
 }
 
-newEntity{ base = "BASE_GEM", define_as = "GEM_TELOS",
-	power_source = {arcane=true},
-	unique = true,
-	unided_name = "scintillating white crystal",
-	name = "Telos's Staff Crystal", subtype = "multi-hued", image = "object/artifact/telos_staff_crystal.png",
-	color = colors.WHITE,
-	level_range = {35, 45},
-	desc = [[A closer look at this pure white crystal reveals that it is really a plethora of colors swirling and scintillating.]],
-	rarity = 240,
-	identified = false,
-	cost = 200,
-	material_level = 5,
-	carrier = {
-		lite = 2,
-	},
-	wielder = {
-		inc_stats = { [Stats.STAT_STR] = 5, [Stats.STAT_DEX] = 5, [Stats.STAT_MAG] = 5, [Stats.STAT_WIL] = 5, [Stats.STAT_CUN] = 5, [Stats.STAT_CON] = 5, },
-		lite = 2,
-		confusion_immune = 0.3,
-		fear_immune = 0.3,
-		resists={[DamageType.MIND] = 30,},
-	},
-	imbue_powers = {
-		inc_stats = { [Stats.STAT_STR] = 5, [Stats.STAT_DEX] = 5, [Stats.STAT_MAG] = 5, [Stats.STAT_WIL] = 5, [Stats.STAT_CUN] = 5, [Stats.STAT_CON] = 5, },
-		lite = 2,
-		confusion_immune = 0.3,
-		fear_immune = 0.3,
-		resists={[DamageType.MIND] = 30,},
-	},
-
-	max_power = 1, power_regen = 1,
-	use_power = { name = "combine with a staff", power = 1, use = function(self, who, gem_inven, gem_item)
-		who:showInventory("Fuse with which staff?", who:getInven("INVEN"), function(o) return o.type == "weapon" and o.subtype == "staff" and not o.egoed and not o.unique end, function(o, item)
-			local voice = game.zone:makeEntityByName(game.level, "object", "VOICE_TELOS")
-			if voice then
-				local oldname = o:getName{do_color=true}
-
-				-- Remove the gem
-				who:removeObject(gem_inven, gem_item)
-				who:sortInven(gem_inven)
-
-				-- Change the staff
-				voice.modes = o.modes
-				voice.flavor_name = o.flavor_name
-				voice.combat = o.combat
-				voice.combat.dam = math.floor(voice.combat.dam * 1.4)
-				voice.combat.sentient = "telos"
-				voice.wielder.inc_damage[voice.combat.damtype] = voice.combat.dam
-				voice:identify(true)
-				o:replaceWith(voice)
-				who:sortInven()
-
-				who.changed = true
-				game.logPlayer(who, "You fix the crystal on the %s and create the %s.", oldname, o:getName{do_color=true})
-			else
-				game.logPlayer(who, "The fusing fails!")
-			end
-		end)
-		return {id=true, used=true}
-	end },
-}
-
--- The staff that goes with the crystal above, it will not be generated randomly it is created by the crystal
-newEntity{ base = "BASE_STAFF", define_as = "VOICE_TELOS",
-	power_source = {arcane=true},
-	unique = true,
-	name = "Voice of Telos",
-	unided_name = "scintillating white staff", image="object/artifact/staff_voice_of_telos.png",
-	color = colors.VIOLET,
-	rarity = false,
-	desc = [[A closer look at this pure white staff reveals that it is really a plethora of colors swirling and scintillating.]],
-	cost = 500,
-	material_level = 5,
-
-	require = { stat = { mag=45 }, },
-	-- This is replaced by the creation process
-	combat = { dam = 1, damtype = DamageType.ARCANE, },
-	wielder = {
-		combat_spellpower = 30,
-		combat_spellcrit = 15,
-		max_mana = 100,
-		inc_stats = { [Stats.STAT_MAG] = 6, [Stats.STAT_WIL] = 5, [Stats.STAT_CUN] = 4 },
-		lite = 1,
-		inc_damage = {},
-		damage_affinity = { [DamageType.ARCANE] = 5, [DamageType.BLIGHT] = 5, [DamageType.COLD] = 5, [DamageType.DARKNESS] = 5, [DamageType.ACID] = 5, [DamageType.LIGHT] = 5, [DamageType.LIGHTNING] = 5, [DamageType.FIRE] = 5, },
-		learn_talent = {[Talents.T_COMMAND_STAFF] = 1},
-	},
-}
-
-newEntity{ base = "BASE_ROD",
-	power_source = {arcane=true},
-	unided_name = "glowing rod",
-	name = "Gwai's Burninator", color=colors.LIGHT_RED, unique=true, image = "object/artifact/wand_gwais_burninator.png",
-	desc = [[Gwai, a Pyromanceress that lived during the Spellhunt, was cornered by group of mage hunters. She fought to her last breath and is said to have killed at least ten people with this wand before she fell.]],
-	cost = 600,
-	rarity = 220,
-	level_range = {25, 35},
-	elec_proof = true,
-	add_name = false,
-
-	material_level = 3,
-
-	max_power = 75, power_regen = 1,
-	use_power = { name = "shoot a cone of fire", power = 50,
-		use = function(self, who)
-			local tg = {type="cone", range=0, radius=5}
-			local x, y = who:getTarget(tg)
-			if not x or not y then return nil end
-			who:project(tg, x, y, engine.DamageType.FIRE, 300 + who:getMag() * 2, {type="flame"})
-			return {id=true, used=true}
-		end
-	},
-}
-
 newEntity{ base = "BASE_BATTLEAXE",
 	power_source = {technique=true},
 	unique = true,
@@ -1797,69 +1236,11 @@ newEntity{ base = "BASE_BATTLEAXE",
 	end,
 }
 
-newEntity{ base = "BASE_BATTLEAXE",
-	power_source = {technique=true},
-	unique = true,
-	unided_name = "viciously sharp battle axe",
-	name = "Drake's Bane", image = "object/artifact/axe_drakes_bane.png",
-	color = colors.RED,
-	desc = [[The killing of Kroltar, mightiest of wyrms, took seven months and the lives of 20,000 dwarven warriors.  Finally the beast was worn down and mastersmith Gruxim, standing atop the bodies of his fallen comrades, was able slit its throat with this axe crafted purely for the purpose of penetrating the wyrm's hide.]],
-	require = { stat = { str=45 }, },
-	rarity = 300,
-	cost = 400,
-	level_range = {20, 35},
-	material_level = 3,
-	combat = {
-		dam = 52,
-		apr = 21,
-		physcrit = 2,
-		dammod = {str=1.2},
-		inc_damage_type = {dragon=25},
-	},
-	wielder = {
-		inc_stats = { [Stats.STAT_STR] = 6, },
-		stun_immune = 0.2,
-		knockback_immune = 0.4,
-		combat_physresist = 9,
-	},
-}
-
-newEntity{ base = "BASE_WARAXE",
-	power_source = {technique=true, nature=true},
-	unique = true,
-	name = "Blood-Letter", image = "object/artifact/weapon_axe_blood_letter.png",
-	unided_name = "glacial hatchet",
-	desc = [[A hand axe carved out of the most frozen parts of the northern wasteland.]],
-	level_range = {25, 35},
-	rarity = 235,
-	require = { stat = { str=40, dex=24 }, },
-	cost = 330,
-	metallic = false,
-	material_level = 3,
-	wielder = {
-		combat_armor = 20,
-		resists_pen = {
-			[DamageType.COLD] = 20,
-		},
-		talent_on_hit = { [Talents.T_ICE_BREATH] = {level=2, chance=15} },
-	},
-	combat = {
-		dam = 33,
-		apr = 4.5,
-		physcrit = 7,
-		dammod = {str=1},
-		convert_damage = {
-			[DamageType.ICE] = 50,
-		},
-	},
-}
-
-
 newEntity{ base = "BASE_WHIP",
 	power_source = {nature=true},
 	unided_name = "metal whip",
 	name = "Scorpion's Tail", color=colors.GREEN, unique = true, image = "object/artifact/whip_scorpions_tail.png",
-	desc = [[A long whip of linked metal joints finished with a viciously sharp barb leaking venomous poison.]],
+	desc = [[A long whip of linked metal joints finished with a viciously sharp barb leaking terrible venom.]],
 	require = { stat = { dex=28 }, },
 	cost = 150,
 	rarity = 340,
@@ -1877,62 +1258,6 @@ newEntity{ base = "BASE_WHIP",
 		combat_atk = 10,
 		see_invisible = 9,
 		see_stealth = 9,
-	},
-}
-
-newEntity{ base = "BASE_LEATHER_BELT",
-	power_source = {nature=true},
-	unique = true,
-	name = "Rope Belt of the Thaloren", image = "object/artifact/rope_belt_of_the_thaloren.png",
-	unided_name = "short length of rope",
-	desc = [[The simplest of belts, worn for centuries by Nessilla Tantaelen as she tended to her people and forests. Some of her wisdom and power have settled permanently into its fibers.]],
-	color = colors.LIGHT_RED,
-	level_range = {20, 30},
-	rarity = 200,
-	cost = 450,
-	material_level = 2,
-	wielder = {
-		inc_stats = { [Stats.STAT_CUN] = 7, [Stats.STAT_WIL] = 8, },
-		combat_mindpower = 12,
-		talents_types_mastery = { ["wild-gift/harmony"] = 0.2 },
-	},
-	on_wear = function(self, who)
-		if who.descriptor and who.descriptor.subrace == "Thalore" then
-			local Stats = require "engine.interface.ActorStats"
-			local DamageType = require "engine.DamageType"
-
-			self:specialWearAdd({"wielder","resists"}, { [engine.DamageType.MIND] = 20,} )
-			self:specialWearAdd({"wielder","combat_mentalresist"}, 15)
-			game.logPlayer(who, "#DARK_GREEN#Nessilla's belt seems to come alive as you put it on.")
-		end
-	end,
-}
-
-newEntity{ base = "BASE_LEATHER_BELT",
-	power_source = {arcane=true},
-	unique = true,
-	name = "Neira's Memory", image = "object/artifact/neira_memory.png",
-	unided_name = "crackling belt",
-	desc = [[Ages ago this belt was worn by Linaniil herself in her youth, using its power she shielded herself from the Spellblaze rain of fire, but naught could she do for her sister Neira.]],
-	color = colors.GOLD,
-	level_range = {20, 30},
-	rarity = 200,
-	cost = 450,
-	material_level = 3,
-	wielder = {
-		inc_stats = { [Stats.STAT_CUN] = 2, [Stats.STAT_WIL] = 5, },
-		confusion_immune = 0.3,
-		stun_immune = 0.3,
-		mana_on_crit = 3,
-	},
-	max_power = 20, power_regen = 1,
-	use_power = { name = "generate a personal shield", power = 20,
-		use = function(self, who)
-			who:setEffect(who.EFF_DAMAGE_SHIELD, 10, {power=100 + who:getMag(250)})
-			game:playSoundNear(who, "talents/arcane")
-			game.logSeen(who, "%s invokes the memory of Neira!", who.name:capitalize())
-			return {id=true, used=true}
-		end
 	},
 }
 
@@ -2026,7 +1351,7 @@ newEntity{ base = "BASE_LIGHT_ARMOR",
 	unique = true,
 	name = "Skin of Many", image = "object/artifact/robe_skin_of_many.png",
 	unided_name = "stitched skin armour",
-	desc = [[The stitched-together skin of many creatures. Some eyes and mouths still decorate the robe, and some still live, screaming in tortured agony.]],
+	desc = [[The stitched-together skins of many creatures. Some eyes and mouths still decorate the robe, and some still live, screaming in tortured agony.]],
 	color = colors.BROWN,
 	level_range = {12, 22},
 	rarity = 200,
@@ -2051,48 +1376,6 @@ newEntity{ base = "BASE_LIGHT_ARMOR",
 			self:specialWearAdd({"wielder","confusion_immune"}, 0.3)
 			self:specialWearAdd({"wielder","fear_immune"}, 0.3)
 			game.logPlayer(who, "#DARK_BLUE#The skin seems pleased to be worn by the unliving, and grows silent.")
-		end
-	end,
-}
-
-newEntity{ base = "BASE_LIGHT_ARMOR",
-	power_source = {nature=true, antimagic=true},
-	unique = true,
-	name = "Nature's Blessing", image = "object/artifact/armor_natures_blessing.png",
-	unided_name = "supple leather armour entwined with willow bark",
-	desc = [[Worn by Protector Ardon, who first formed the Ziguranth during the mage wars between the Humans and the Halflings.  This armour is infused with the powers of nature, and protected against the disruptive forces of magic.]],
-	color = colors.BROWN,
-	level_range = {15, 30},
-	rarity = 350,
-	require = { stat = { str=20 }, {wil=20} },
-	cost = 350,
-	material_level = 2,
-	wielder = {
-		inc_stats = { [Stats.STAT_WIL] = 3, [Stats.STAT_CON] = 4 },
-
-		combat_armor = 6,
-		combat_def = 8,
-		combat_def_ranged = 4,
-
-		life_regen = 1,
-		fatigue = 8,
-		stun_immune = 0.25,
-		healing_factor = 0.2,
-		combat_spellresist = 18,
-
-		resists = {
-			[DamageType.NATURE] = 20,
-			[DamageType.ARCANE] = 25,
-		},
-
-		talents_types_mastery = { ["wild-gift/antimagic"] = 0.2},
-	},
-	on_wear = function(self, who)
-		if who:attr("forbid_arcane") then
-			local Stats = require "engine.interface.ActorStats"
-
-			self:specialWearAdd({"wielder","combat_spellresist"}, 20)
-			game.logPlayer(who, "#DARK_GREEN#You feel especially blessed.")
 		end
 	end,
 }
@@ -2164,40 +1447,6 @@ newEntity{ base = "BASE_HEAVY_ARMOR", define_as = "SCALE_MAIL_KROLTAR",
 		self:specialSetAdd({"wielder","fatigue"}, -8)
 		self:specialSetAdd({"wielder","combat_def"}, 10)
 	end,
-}
-
-newEntity{ base = "BASE_MASSIVE_ARMOR",
-	power_source = {technique=true},
-	unique = true,
-	name = "Plate Armor of the King", image = "object/artifact/plate_armor_of_the_king.png",
-	unided_name = "suit of gleaming voratun plate",
-	desc = [[Beautifully detailed with images of King Toknor's defence of Last Hope. Despair fills the hearts of even the blackest villains at the sight of it.]],
-	color = colors.WHITE,
-	level_range = {45, 50},
-	rarity = 390,
-	require = { stat = { str=48 }, },
-	cost = 800,
-	material_level = 5,
-	wielder = {
-		inc_stats = { [Stats.STAT_WIL] = 9, },
-		resists = {
-			[DamageType.ACID] = 25,
-			[DamageType.ARCANE] = 10,
-			[DamageType.FIRE] = 25,
-			[DamageType.BLIGHT] = 25,
-			[DamageType.DARKNESS] = 25,
-		},
-		max_stamina = 60,
-		combat_def = 15,
-		combat_armor = 20,
-		stun_immune = 0.3,
-		knockback_immune = 0.3,
-		combat_mentalresist = 25,
-		combat_spellresist = 25,
-		combat_physresist = 15,
-		lite = 1,
-		fatigue = 26,
-	},
 }
 
 newEntity{ base = "BASE_MASSIVE_ARMOR",
@@ -2288,7 +1537,7 @@ newEntity{ base = "BASE_MACE",
 		apr = 5,
 		physcrit = 2.5,
 		dammod = {str=1},
-		special_on_hit = {desc="10% chance to shimer to a different hue and gain powers", fct=function(combat, who, target)
+		special_on_hit = {desc="10% chance to shimmer to a different hue and gain powers", on_kill=1, fct=function(combat, who, target)
 			if not rng.percent(10) then return end
 			local o, item, inven_id = who:findInAllInventoriesBy("define_as", "URESLAK_FEMUR")
 			if not o or not who:getInven(inven_id).worn then return end
@@ -2299,7 +1548,7 @@ newEntity{ base = "BASE_MACE",
 			o.combat.damtype = b.damtype
 			o.wielder = b.wielder
 			who:onWear(o, true)
-			game.logSeen(who, "#GOLD#Ureslak's Femur glows and shimers!")
+			game.logSeen(who, "#GOLD#Ureslak's Femur glows and shimmers!")
 		end },
 	},
 	ureslak_bonuses = {
@@ -2342,8 +1591,7 @@ newEntity{ base = "BASE_MACE",
 
 newEntity{ base = "BASE_WARAXE",
 	power_source = {psionic=true},
-	unique = true,
-	rarity = false, unided_name = "razor sharp war axe",
+	unique = true, unided_name = "razor sharp war axe",
 	name = "Razorblade, the Cursed Waraxe", color = colors.LIGHT_BLUE, image = "object/artifact/razorblade_the_cursed_waraxe.png",
 	desc = [[This mighty axe can cleave through armour like the sharpest swords, yet hit with all the impact of a heavy club.
 It is said the wielder will slowly grow mad. This, however, has never been proven - no known possessor of this item has lived to tell the tale.]],
@@ -2371,7 +1619,7 @@ newEntity{ base = "BASE_LONGSWORD", define_as = "ART_PAIR_TWSWORD",
 	unique = true,
 	name = "Sword of Potential Futures", image = "object/artifact/sword_of_potential_futures.png",
 	unided_name = "under-wrought blade",
-	desc = [[Legend has it this blade is one of a pair; twin blades forged in the earliest of days of the Wardens. To an untrained wielder it is less than perfect; to a Warden, it represents the untapped potential of time.]],
+	desc = [[Legend has it this blade is one of a pair: twin blades forged in the earliest of days of the Wardens. To an untrained wielder it is less than perfect; to a Warden, it represents the untapped potential of time.]],
 	level_range = {20, 30},
 	rarity = 250,
 	require = { stat = { str=24, mag=24 }, },
@@ -2418,7 +1666,7 @@ newEntity{ base = "BASE_KNIFE", define_as = "ART_PAIR_TWDAG",
 	unique = true,
 	name = "Dagger of the Past", image = "object/artifact/dagger_of_the_past.png",
 	unided_name = "rusted blade",
-	desc = [[Legend has it this blade is one of a pair; twin blades forged in the earliest of days of the Wardens. To an untrained wielder it is less than perfect; to a Warden, it represents the opportunity to learn from the mistakes of the past.]],
+	desc = [[Legend has it this blade is one of a pair: twin blades forged in the earliest of days of the Wardens. To an untrained wielder it is less than perfect; to a Warden, it represents the opportunity to learn from the mistakes of the past.]],
 	level_range = {20, 30},
 	rarity = 250,
 	require = { stat = { dex=24, mag=24 }, },
@@ -2448,7 +1696,7 @@ newEntity{ base = "BASE_KNIFE", define_as = "ART_PAIR_TWDAG",
 	},
 	set_list = { {"define_as","ART_PAIR_TWSWORD"} },
 	on_set_complete = function(self, who)
-		self.combat.special_on_hit = {desc="10% chance to return the target to a much youger state", fct=function(combat, who, target)
+		self.combat.special_on_hit = {desc="10% chance to return the target to a much younger state", fct=function(combat, who, target)
 			if not rng.percent(10) then return end
 			target:setEffect(target.EFF_TURN_BACK_THE_CLOCK, 3, {power=10})
 		end}
@@ -2459,49 +1707,6 @@ newEntity{ base = "BASE_KNIFE", define_as = "ART_PAIR_TWDAG",
 		self.combat.special_on_hit = nil
 	end,
 }
-
-newEntity{ base = "BASE_LONGSWORD",
-	power_source = {nature=true, antimagic=true},
-	unique = true,
-	name = "Witch-Bane", color = colors.LIGHT_STEEL_BLUE, image = "object/artifact/sword_witch_bane.png",
-	unided_name = "an ivory handled voratun longsword",
-	desc = [[A thin voratun blade with an ivory handle wrapped in purple cloth.  The weapon is nearly as legendary as its former owner, Marcus Dunn, and was thought to have been destroyed after Marcus was slain near the end of the Spellhunt.
-It seems somebody well versed in antimagic could use it to its fullest potential.]],
-	level_range = {38, 50},
-	rarity = 250,
-	require = { stat = { str=48 }, },
-	cost = 650,
-	material_level = 5,
-	combat = {
-		dam = 42,
-		apr = 4,
-		physcrit = 20,
-		dammod = {str=1},
-		melee_project = { [DamageType.MANABURN] = 50 },
-	},
-	wielder = {
-		talent_cd_reduction={
-			[Talents.T_AURA_OF_SILENCE] = 2,
-			[Talents.T_MANA_CLASH] = 2,
-		},
-		resists = {
-			all = 10,
-			[DamageType.PHYSICAL] = - 10,
-		},
-	},
-	on_wear = function(self, who)
-		if who:attr("forbid_arcane") then
-			local Stats = require "engine.interface.ActorStats"
-			local DamageType = require "engine.DamageType"
-			local Talents = require "engine.interface.ActorTalents"
-
-			self:specialWearAdd({"combat", "talent_on_hit"}, { [Talents.T_MANA_CLASH] = {level=1, chance=25}  })
-			self:specialWearAdd({"wielder","inc_stats"}, { [Stats.STAT_WIL] = 6, [Stats.STAT_CUN] = 6, })
-			game.logPlayer(who, "#LIGHT_BLUE#You feel a great hero watching over you!")
-		end
-	end,
-}
-
 
 newEntity{ base = "BASE_GAUNTLETS",
 	power_source = {arcane=true},
@@ -2596,7 +1801,7 @@ newEntity{ base = "BASE_DIGGER",
 	unique = true,
 	name = "Pick of Dwarven Emperors", color = colors.GREY, image = "object/artifact/pick_of_dwarven_emperors.png",
 	unided_name = "crude iron pickaxe",
-	desc = [[This ancient pickaxe was used to pass down dwarven legends from one generation to the next.  Every bit of the head and shaft are covered in runes that recount the stories of the dwarven people.]],
+	desc = [[This ancient pickaxe was used to pass down dwarven legends from one generation to the next. Every bit of the head and shaft is covered in runes that recount the stories of the dwarven people.]],
 	level_range = {40, 50},
 	rarity = 290,
 	cost = 150,
@@ -2621,87 +1826,6 @@ newEntity{ base = "BASE_DIGGER",
 
 			game.logPlayer(who, "#LIGHT_BLUE#You feel the whisper of your ancestors as you wield this pickaxe!")
 		end
-	end,
-}
-
--- Channelers set
--- Note that this staff can not be channeled.  All of it's flavor is arcane, lets leave it arcane
-newEntity{ base = "BASE_STAFF", define_as = "SET_STAFF_CHANNELERS",
-	power_source = {arcane=true},
-	unique = true,
-	name = "Staff of Arcane Supremacy",
-	unided_name = "silver-runed staff",
-	flavor_name = "magestaff",
-	level_range = {20, 40},
-	color=colors.BLUE, image = "object/artifact/staff_of_arcane_supremacy.png",
-	rarity = 300,
-	desc = [[A long slender staff, made of ancient dragon-bone, with runes emblazoned all over its surface in bright silver.
-It hums faintly, as if great power is locked within, yet alone it seems incomplete.]],
-	cost = 200,
-	material_level = 3,
-	require = { stat = { mag=24 }, },
-	combat = {
-		dam = 20,
-		apr = 4,
-		dammod = {mag=1.5},
-		damtype = DamageType.ARCANE,
-	},
-	wielder = {
-		combat_spellpower = 20,
-		inc_damage={
-			[DamageType.ARCANE] = 20,
-		},
-		talent_cd_reduction = {
-			[Talents.T_MANATHRUST] = 1,
-		},
-		talents_types_mastery = {
-			["spell/arcane"]=0.2,
-		},
-	},
-	max_power = 20, power_regen = 1,
-	use_talent = { id = Talents.T_ARCANE_SUPREMACY, level = 3, power = 20 },
-	set_list = { {"define_as", "SET_HAT_CHANNELERS"} },
-	on_set_complete = function(self, who)
-		self:specialSetAdd({"wielder","max_mana"}, 100)
-		game.logSeen(who, "#STEEL_BLUE#You feel a swell of arcane energy.")
-	end,
-}
-
-newEntity{ base = "BASE_WIZARD_HAT", define_as = "SET_HAT_CHANNELERS",
-	power_source = {arcane=true},
-	unique = true,
-	name = "Hat of Arcane Understanding",
-	unided_name = "silver-runed hat",
-	desc = [[A traditional pointed wizard's hat, made of fine purple elven-silk and decorated with bright silver runes. You sense it has been passed from ancient times, and has been born on the heads of great mages.
-Touching the cloth you feel a sense of knowledge and power from bygone ages, yet it is partly sealed away, waiting for a trigger to release it.]],
-	color = colors.BLUE, image = "object/artifact/wizard_hat_of_arcane_understanding.png",
-	level_range = {20, 40},
-	rarity = 300,
-	cost = 100,
-	material_level = 3,
-	wielder = {
-		combat_def = 2,
-		mana_regen = 2,
-		resists = {
-			[DamageType.ARCANE] = 20,
-		},
-		talent_cd_reduction = {
-			[Talents.T_DISRUPTION_SHIELD] = 10,
-		},
-		talents_types_mastery = {
-			["spell/meta"]=0.2,
-		},
-	},
-	max_power = 40, power_regen = 1,
-	set_list = { {"define_as", "SET_STAFF_CHANNELERS"} },
-	on_set_complete = function(self, who)
-		local Talents = require "engine.interface.ActorTalents"
-		self.use_talent = { id = Talents.T_METAFLOW, level = 3, power = 40 }
-		game.party:learnLore("channelers-set")
-	end,
-	on_set_broken = function(self, who)
-		self.use_talent = nil
-		game.logPlayer(who, "#STEEL_BLUE#The arcane energies surrounding you dissipate.")
 	end,
 }
 
@@ -2854,7 +1978,7 @@ newEntity{ base = "BASE_SHOT",
 		physcrit = 10,
 		dammod = {dex=0.7, cun=0.5},
 		damtype = DamageType.FIRE,
-		special_on_hit = {desc="sets off a powerful explosion", fct=function(combat, who, target)
+		special_on_hit = {desc="sets off a powerful explosion", on_kill=1, fct=function(combat, who, target)
 			local tg = {type="ball", range=0, radius=3, selffire=false}
 			local grids = who:project(tg, target.x, target.y, engine.DamageType.FIREKNOCKBACK, {dist=3, dam=40 + who:getMag()*0.6 + who:getCun()*0.6})
 			game.level.map:particleEmitter(target.x, target.y, tg.radius, "ball_fire", {radius=tg.radius})
@@ -2981,8 +2105,8 @@ newEntity{ base = "BASE_MINDSTAR",
 		},
 		inc_stats = { [Stats.STAT_WIL] = 6, [Stats.STAT_CUN] = 3, },
 	},
-	max_power = 75, power_regen = 1,
-	use_talent = { id = Talents.T_WAYIST, level = 1, power = 75 },
+	max_power = 60, power_regen = 1,
+	use_talent = { id = Talents.T_WAYIST, level = 1, power = 60 },
 	on_wear = function(self, who)
 		if who.descriptor and who.descriptor.race == "Yeek" then
 			local Talents = require "engine.interface.ActorStats"
@@ -3020,7 +2144,7 @@ newEntity{ base = "BASE_MINDSTAR",
 		damtype = DamageType.MIND,
 	},
 	wielder = {
-		combat_mindpower = 14,
+		combat_mindpower = 15,
 		combat_mindcrit = 8,
 		combat_mentalresist = 25,
 		max_psi = 20,
@@ -3033,9 +2157,11 @@ newEntity{ base = "BASE_MINDSTAR",
 		},
 		inc_stats = { [Stats.STAT_WIL] = 8,},
 	},
+	max_power = 25, power_regen = 1,
+	use_talent = { id = Talents.T_RESONANCE_FIELD, level = 3, power = 25 },
 }
 
-newEntity{ base = "BASE_STAFF",
+newEntity{ base = "BASE_STAFF", define_as = "SET_SCEPTRE_LICH",
 	power_source = {arcane=true},
 	unique = true,
 	name = "Sceptre of the Archlich",
@@ -3079,6 +2205,11 @@ newEntity{ base = "BASE_STAFF",
 			game.logPlayer(who, "#LIGHT_BLUE#You feel the power of the sceptre flow over your undead form!")
 		end
 	end,
+	set_list = { {"define_as", "SET_LICH_RING"} },
+	on_set_complete = function(self, who)
+	end,
+	on_set_broken = function(self, who)
+	end,
 }
 
 newEntity{ base = "BASE_MINDSTAR",
@@ -3089,7 +2220,7 @@ newEntity{ base = "BASE_MINDSTAR",
 	level_range = {27, 34},
 	color=colors.GREEN, image = "object/artifact/oozing_heart.png",
 	rarity = 250,
-	desc = [[This mindstar oozes a thick, sticky liquid. Magic seems to die around it.]],
+	desc = [[This mindstar oozes a thick, caustic liquid. Magic seems to die around it.]],
 	cost = 85,
 	require = { stat = { wil=36 }, },
 	material_level = 4,
@@ -3106,6 +2237,7 @@ newEntity{ base = "BASE_MINDSTAR",
 		combat_spellresist=15,
 		inc_damage={
 			[DamageType.NATURE] = 18,
+			[DamageType.ACID] = 15,
 		},
 		resists={
 			[DamageType.ARCANE] = 12,
@@ -3254,9 +2386,7 @@ newEntity{ base = "BASE_MINDSTAR",
 	end,
 	act = function(self)
 		self:useEnergy()
-		if self.power < self.max_power then
-			self.power=self.power + 1
-		end
+		self:regenPower()
 		if not self.worn_by then return end
 		if game.level and not game.level:hasEntity(self.worn_by) and not self.worn_by.player then self.worn_by = nil return end
 		if self.worn_by:attr("dead") then return end
@@ -3398,6 +2528,7 @@ newEntity{ base = "BASE_LEATHER_BELT",
 		inc_stats = { [Stats.STAT_LCK] = 8, [Stats.STAT_DEX] = 12, [Stats.STAT_CUN] = 10,},
 		slow_projectiles = 30,
 		combat_def_ranged = 20,
+		projectile_evasion = 15,
 	},
 	max_power = 30, power_regen = 1,
 	use_talent = { id = Talents.T_EVASION, level = 4, power = 30 },
@@ -3533,9 +2664,9 @@ newEntity{ base = "BASE_WHIP",
 		damtype=DamageType.MIND,
 	},
 	wielder = {
-		combat_mindpower = 8,
+		combat_mindpower = 10,
 		combat_mindcrit = 3,
-		talent_on_hit = { [Talents.T_MINDLASH] = {level=1, chance=10} },
+		talent_on_hit = { [Talents.T_MINDLASH] = {level=1, chance=18} },
 	},
 	max_power = 10, power_regen = 1,
 	use_power = { name = "strike all targets in a line", power = 10,
@@ -3564,17 +2695,17 @@ newEntity{ base = "BASE_GREATSWORD",
 	level_range = {32, 40},
 	color=colors.DARKRED,
 	rarity = 300,
-	desc = [[This massive, flame coated greatsword was stolen from a mighty demon countless years ago, by the hero Kestin Highfin. It constantly seeks to drain and incinerate.]],
+	desc = [[This massive, flame-coated greatsword was stolen by the adventurer Kestin Highfin, during the Age of Dusk. It originally belonged to a demon named Frond'Ral the Red.  It roars with vile flames and its very existence seems to be a blight upon the lands.]],
 	cost = 400,
 	require = { stat = { str=40 }, },
 	material_level = 4,
 	combat = {
-		dam = 64,
+		dam = 68,
 		apr = 5,
 		physcrit = 10,
-		dammod = {str=1.2},
-		convert_damage={[DamageType.FIREBURN] = 50,},
-		melee_project={[DamageType.DRAINLIFE] = 25},
+		dammod = {str=1.25},
+		convert_damage={[DamageType.FIREBURN] = 50, [DamageType.BLIGHT] = 10,},
+		lifesteal = 8, --Won't affect the burn damage, so it gets to have a bit more
 	},
 	wielder = {
 		resists = {
@@ -3751,7 +2882,7 @@ newEntity{ base = "BASE_LONGSWORD", define_as="CORPUS",
 			if not rng.percent(o.combat.physcrit*0.8) or o.combat.physcrit < 30 then return end
 			o.summon(o, who)
 		end},
-		special_on_crit = {desc="grows in power", fct=function(combat, who, target)
+		special_on_crit = {desc="grows in power", on_kill=1, fct=function(combat, who, target)
 			local o, item, inven_id = who:findInAllInventoriesBy("define_as", "CORPUS")
 			if not o or not who:getInven(inven_id).worn then return end
 			who:onTakeoff(o, true)
@@ -3833,11 +2964,11 @@ newEntity{ base = "BASE_LONGSWORD",
 		dam = 47,
 		apr = 20,
 		physcrit = 7,
-		dammod = {str=0.8,wil=0.2},
+		dammod = {str=1,wil=0.1},
 		damage_convert = {[DamageType.MIND]=20,},
 		special_on_hit = {desc="torments the target with many mental effects", fct=function(combat, who, target)
 			if not who:checkHit(who:combatMindpower(), target:combatMentalResist()*0.9) then return end
-			target:setEffect(target.EFF_WEAKENED_MIND, 2, {power=18})
+			target:setEffect(target.EFF_WEAKENED_MIND, 2, {power=0, save=20})
 			if not rng.percent(40) then return end
 			local eff = rng.table{"stun", "malign", "agony", "confusion", "silence",}
 			if not target:canBe(eff) then return end
@@ -3849,7 +2980,7 @@ newEntity{ base = "BASE_LONGSWORD",
 			elseif eff == "silence" then target:setEffect(target.EFF_SILENCED, 3, {})
 			end
 		end},
-		special_on_kill = {desc="reduces loss of mental save", fct=function(combat, who, target)
+		special_on_kill = {desc="reduces mental save penalty", fct=function(combat, who, target)
 			local o, item, inven_id = who:findInAllInventoriesBy("define_as", "ANIMA")
 			if not o or not who:getInven(inven_id).worn then return end
 			if o.wielder.combat_mentalresist >= 0 then return end
@@ -3879,8 +3010,7 @@ newEntity{ base = "BASE_LONGSWORD",
 				local target = game.level.map(px, py, engine.Map.ACTOR)
 				if not target then return end
 				if not rng.percent(20) then return end
-				if not who:checkHit(who:combatMindpower(), target:combatMentalResist()) then return end
-				target:setEffect(target.EFF_WEAKENED_MIND, 2, {power=5})
+				target:setEffect(target.EFF_WEAKENED_MIND, 2, {power=0, save=5})
 				who:logCombat(target, "Anmalice focuses its mind-piercing eye on #Target#!")
 			end)
 	end,
@@ -3892,7 +3022,7 @@ newEntity{ base = "BASE_LONGSWORD",
 			game.logPlayer(who, "#CRIMSON#The tentacles release your arm, sated.")
 		else
 			game.logPlayer(who, "#CRIMSON#As you tear the tentacles from your arm, horrible images enter your mind!")
-			who:setEffect(who.EFF_WEAKENED_MIND, 15, {power=25})
+			who:setEffect(who.EFF_WEAKENED_MIND, 15, {power=0, save=25})
 			who:setEffect(who.EFF_AGONY, 5, { src=who, damage=15, mindpower=40, range=10, minPercent=10, duration=5})
 		end
 		self.wielder.combat_mentalresist = -30
@@ -3921,12 +3051,12 @@ newEntity{ base = "BASE_LONGSWORD", define_as="MORRIGOR",
 		apr = 12,
 		physcrit = 7,
 		dammod = {str=0.6, mag=0.6},
-		special_on_hit = {desc="deal magical damage", fct=function(combat, who, target)
+		special_on_hit = {desc="deal bonus arcane and darkness damage", fct=function(combat, who, target)
 			local tg = {type="ball", range=1, radius=0, selffire=false}
 			who:project(tg, target.x, target.y, engine.DamageType.ARCANE, who:getMag()*0.5)
 			who:project(tg, target.x, target.y, engine.DamageType.DARKNESS, who:getMag()*0.5)
 		end},
-		special_on_kill = {desc="swallows the victim's soul, gaining a new power until unequipped", fct=function(combat, who, target)
+		special_on_kill = {desc="swallows the victim's soul, gaining a new power", fct=function(combat, who, target)
 			local o, item, inven_id = who:findInAllInventoriesBy("define_as", "MORRIGOR")
 			if o.use_talent then return end
 			local got_talent = false
@@ -3944,7 +3074,7 @@ newEntity{ base = "BASE_LONGSWORD", define_as="MORRIGOR",
 				o.use_talent = {}
 				o.use_talent.id = t.id
 				o.use_talent.power = (who:getTalentCooldown(t) or 5)
-				o.use_talent.level = 1
+				o.use_talent.level = 3
 				o.power = 1
 				o.max_power = (who:getTalentCooldown(t) or 5)
 				o.power_regen = 1
@@ -3966,7 +3096,7 @@ newEntity{ base = "BASE_WHIP", define_as = "HYDRA_BITE",
 	unique = true,
 	name = "Hydra's Bite", color = colors.LIGHT_RED, image = "object/artifact/hydras_bite.png",
 	unided_name = "triple headed flail",
-	desc = [[This three headed stralite flail strikes with the power of a hydra. With each attack it lashes out, hitting everyone around you.]],
+	desc = [[This three-headed stralite flail strikes with the power of a hydra. With each attack it lashes out, hitting everyone around you.]],
 	level_range = {32, 40},
 	rarity = 250,
 	require = { stat = { str=40 }, },
@@ -4011,7 +3141,7 @@ newEntity{ base = "BASE_WHIP", define_as = "HYDRA_BITE",
 		end},
 	},
 	wielder = {
-		inc_damage={[DamageType.NATURE]=8,[DamageType.ACID]=8,[DamageType.LIGHTNING]=8,},
+		inc_damage={[DamageType.NATURE]=12, [DamageType.ACID]=12, [DamageType.LIGHTNING]=12,},
 
 	},
 }
@@ -4023,7 +3153,7 @@ newEntity{ base = "BASE_GAUNTLETS",
 	name = "Spellhunt Remnants", color = colors.GREY, image = "object/artifact/spellhunt_remnants.png",
 	unided_name = "rusted voratun gauntlets",
 	desc = [[These once brilliant voratun gauntlets have fallen into a deep decay. Originally used in the spellhunt, they were often used to destroy arcane artifacts, curing the world of their influence.]],
-	level_range = {1, 25}, --Relevent at all levels, though of course mat level 1 limits it to early game.
+	level_range = {1, 25}, --Relevant at all levels, though of course mat level 1 limits it to early game.
 	rarity = 450, -- But rare to make it not ALWAYS appear.
 	cost = 1000,
 	material_level = 1,
@@ -4051,7 +3181,7 @@ newEntity{ base = "BASE_GAUNTLETS",
 		who:onTakeoff(self, true)
 		self.wielder=nil
 		if level==2 then -- LEVEL 2
-		self.desc = [[These once brilliant voratun gauntlets appear heavily decayed. Originally used in the spellhunt, it was often used to destroy arcane artifacts, curing the world of their influence.]]
+		self.desc = [[These once brilliant voratun gauntlets appear heavily decayed. Originally used in the spellhunt, they were often used to destroy arcane artifacts, ridding the world of their influence.]]
 		self.wielder={
 			combat_mindpower=6,
 			combat_mindcrit=2,
@@ -4070,7 +3200,7 @@ newEntity{ base = "BASE_GAUNTLETS",
 			},
 		}
 		elseif  level==3 then -- LEVEL 3
-		self.desc = [[These voratun gauntlets appear to have suffered considerable damage. Originally used in the spellhunt, it was often used to destroy arcane artifacts, curing the world of their influence.]]
+		self.desc = [[These voratun gauntlets appear to have suffered considerable damage. Originally used in the spellhunt, they were often used to destroy arcane artifacts, ridding the world of their influence.]]
 		self.wielder={
 			combat_mindpower=8,
 			combat_mindcrit=3,
@@ -4089,7 +3219,7 @@ newEntity{ base = "BASE_GAUNTLETS",
 			},
 		}
 		elseif  level==4 then -- LEVEL 4
-		self.desc = [[These voratun gauntlets shine brightly beneath a thin layer of wear. Originally used in the spellhunt, it was often used to destroy arcane artifacts, curing the world of their influence.]]
+		self.desc = [[These voratun gauntlets shine brightly beneath a thin layer of wear. Originally used in the spellhunt, they were often used to destroy arcane artifacts, ridding the world of their influence.]]
 		self.wielder={
 			combat_mindpower=10,
 			combat_mindcrit=4,
@@ -4108,7 +3238,7 @@ newEntity{ base = "BASE_GAUNTLETS",
 			},
 		}
 		elseif  level==5 then -- LEVEL 5
-		self.desc = [[These brilliant voratun gauntlets shine with an almost otherworldly glow. Originally used in the spellhunt, it was often used to destroy arcane artifacts, curing the world of their influence. You feel proud of having fulfilled this ancient duty.]]
+		self.desc = [[These brilliant voratun gauntlets shine with an almost otherworldly glow. Originally used in the spellhunt, they were often used to destroy arcane artifacts, ridding the world of their influence. You feel proud of having fulfilled this ancient duty.]]
 		self.wielder={
 			combat_mindpower=12,
 			combat_mindcrit=5,
@@ -4196,7 +3326,7 @@ newEntity{ base = "BASE_GAUNTLETS",
 newEntity{ base = "BASE_LONGBOW",
 	power_source = {arcane=true},
 	name = "Merkul's Second Eye", unided_name = "sleek stringed bow", unique=true, image = "object/artifact/merkuls_second_eye.png",
-	desc = [[This bow is said to be the tool of an infamous dwarven spy, rumours said it allowed him to "steal" the eyes of his enemies. Adversaries struck were left alive, only to unknowingly divulge their secrets to his unwavering sight.]],
+	desc = [[This bow is said to have been the tool of an infamous dwarven spy. Rumours say it allowed him to "steal" the eyes of his enemies. Adversaries struck were left alive, only to unknowingly divulge their secrets to his unwavering sight.]],
 	level_range = {20, 38},
 	rarity = 250,
 	require = { stat = { dex=24 }, },
@@ -4211,38 +3341,6 @@ newEntity{ base = "BASE_LONGBOW",
 	wielder = {
 		lite = 2,
 		ranged_project = {[DamageType.ARCANE] = 25},
-	},
-}
-
-newEntity{ base = "BASE_AMULET", --Thanks Grayswandir!
-	power_source = {arcane=true},
-	unique = true,
-	name = "Mirror Shards",
-	unided_name = "mirror lined chain", image = "object/artifact/mirror_shards.png",
-	desc = [[Said to have been created by a powerful mage after his home was destroyed by a mob following the Spellblaze. Though he fled, his possessions were crushed, burned, and smashed. When he returned to the ruins, he made this amulet from the remains of his shattered mirror.]],
-	color = colors.LIGHT_RED,
-	level_range = {18, 30},
-	rarity = 220,
-	cost = 350,
-	material_level = 3,
-	wielder = {
-		inc_damage={
-			[DamageType.LIGHT] = 12,
-		},
-		resists={
-			[DamageType.LIGHT] = 25,
-		},
-		lite=1,
-		on_melee_hit = {[DamageType.RANDOM_BLIND]=10},
-	},
-	max_power = 24, power_regen = 1,
-	use_power = { name = "create a reflective shield (50% reflection rate)", power = 24,
-		use = function(self, who)
-			who:setEffect(who.EFF_DAMAGE_SHIELD, 5, {power=150 + who:getMag(100)*2, reflect=50})
-			game:playSoundNear(who, "talents/arcane")
-			game.logSeen(who, "%s forges a reflective barrier!", who.name:capitalize())
-			return {id=true, used=true}
-		end
 	},
 }
 
@@ -4264,7 +3362,7 @@ newEntity{ base = "BASE_SHIELD",
 		physcrit = 4.5,
 		dammod = {str=1},
 		damtype = DamageType.LIGHT,
-		special_on_hit = {desc="releases a burst of light", fct=function(combat, who, target)
+		special_on_hit = {desc="releases a burst of light", on_kill=1, fct=function(combat, who, target)
 			local tg = {type="ball", range=0, radius=1, selffire=false}
 			local grids = who:project(tg, target.x, target.y, engine.DamageType.LITE_LIGHT, 30 + who:getWil()*0.5)
 			game.level.map:particleEmitter(target.x, target.y, tg.radius, "ball_light", {radius=tg.radius})
@@ -4339,8 +3437,8 @@ newEntity{ base = "BASE_LEATHER_BOOT",
 			[DamageType.PHYSICAL] = 5,
 		},
 	},
-	max_power = 18, power_regen = 1,
-	use_talent = { id = Talents.T_TELEKINETIC_LEAP, level = 4, power = 15 },
+	max_power = 20, power_regen = 1,
+	use_talent = { id = Talents.T_TELEKINETIC_LEAP, level = 3, power = 20 },
 }
 
 newEntity{ base = "BASE_CLOTH_ARMOR", --Thanks Grayswandir!
@@ -4377,23 +3475,30 @@ newEntity{ base = "BASE_WHIP", --Thanks Grayswandir!
 	require = { stat = { dex=14 }, },
 	cost = 150,
 	rarity = 325,
-	level_range = {4, 12},
+	level_range = {40, 50},
 	metallic = false,
-	material_level = 1,
+	material_level = 5,
 	combat = {
-		dam = 19,
+		dam = 55,
 		apr = 8,
-		physcrit = 5,
+		physcrit = 9,
 		dammod = {dex=1},
-		melee_project={[DamageType.BLEED] = 15},
+		melee_project={[DamageType.BLEED] = 30},
 		burst_on_crit = {
-			[DamageType.BLEED] = 20,
+			[DamageType.BLEED] = 50,
 		},
-		talent_on_hit = { [Talents.T_BONE_GRAB] = {level=1, chance=20} },
+		talent_on_hit = { [Talents.T_BONE_GRAB] = {level=3, chance=10}, [Talents.T_BONE_SPEAR] = {level=4, chance=20} },
+		
 	},
-	max_power = 24, power_regen = 1,
-	use_talent = { id = Talents.T_BONE_NOVA, level = 2, power = 24 },
-	talent_on_spell = { {chance=10, talent=Talents.T_BONE_SPEAR, level=2} },
+	wielder = {
+		combat_def = 12,
+		combat_spellpower = 4,
+		combat_physspeed = 0.1,
+		talents_types_mastery = { ["corruption/bone"] = 0.25, },
+	},
+	max_power = 20, power_regen = 1,
+	use_talent = { id = Talents.T_BONE_NOVA, level = 4, power = 20 },
+	talent_on_spell = { {chance=10, talent=Talents.T_BONE_SPEAR, level=4} },
 }
 
 newEntity{ base = "BASE_MINDSTAR",
@@ -4402,7 +3507,7 @@ newEntity{ base = "BASE_MINDSTAR",
 	name = "Core of the Forge", image = "object/artifact/core_of_the_forge.png",
 	unided_name = "fiery mindstar",
 	level_range = {38, 50},
-	color=colors.RED, image = "object/artifact/nexus_of_the_way.png",
+	color=colors.RED,
 	rarity = 350,
 	desc = [[This blazing hot mindstar beats rhythmically, releasing a burst of heat with each strike.]],
 	cost = 280,
@@ -4416,7 +3521,7 @@ newEntity{ base = "BASE_MINDSTAR",
 		damtype = DamageType.DREAMFORGE,
 	},
 	wielder = {
-		combat_mindpower = 14,
+		combat_mindpower = 15,
 		combat_mindcrit = 8,
 		combat_atk=10,
 		combat_dam=10,
@@ -4480,12 +3585,6 @@ newEntity{ base = "BASE_LEATHER_BOOT", --Thanks Grayswandir!
 
 			-- Check LOS
 			local rad = 2
-			if not who:hasLOS(x, y) and rng.percent(35 + (game.level.map.attrs(who.x, who.y, "control_teleport_fizzle") or 0)) then
-				game.logPlayer(who, "The targeted phase door fizzles and works randomly!")
-				x, y = who.x, who.y
-				rad = tg.range
-			end
-
 			game.level.map:particleEmitter(who.x, who.y, 1, "teleport")
 			who:teleportRandom(x, y, rad)
 			game.level.map:particleEmitter(who.x, who.y, 1, "teleport")
@@ -4508,7 +3607,7 @@ newEntity{ base = "BASE_GREATSWORD", -- Thanks Alex!
 	require = { stat = { str=10 }, },
 	sentient=true,
 	material_level = 3,
-	special_desc = function(self) return "Attack speed improves with strength and size category." end,
+	special_desc = function(self) return "Attack speed improves with your strength and size category." end,
 	combat = {
 		dam = 48,
 		apr = 12,
@@ -4552,7 +3651,7 @@ newEntity{ base = "BASE_ARROW", --Thanks Grayswandir!
 	power_source = {arcane=true},
 	unique = true,
 	name = "Void Quiver",
-	unided_name = "etheral quiver",
+	unided_name = "ethereal quiver",
 	desc = [[An endless supply of arrows lay within this deep black quiver. Tiny white lights dot its surface.]],
 	color = colors.BLUE, image = "object/artifact/void_quiver.png",
 	level_range = {35, 50},
@@ -4566,7 +3665,7 @@ newEntity{ base = "BASE_ARROW", --Thanks Grayswandir!
 		dam = 45,
 		apr = 30, --No armor can stop the void
 		physcrit = 6,
-		dammod = {dex=0.7, str=0.5},
+		dammod = {dex=0.7, str=0.5, mag=0.1,},
 		damtype = DamageType.VOID,
 		talent_on_hit = { [Talents.T_QUANTUM_SPIKE] = {level=1, chance=10}, [Talents.T_TEMPORAL_CLONE] = {level=1, chance=5} },
 	},
@@ -4618,9 +3717,7 @@ newEntity{ base = "BASE_LITE", --Thanks Frumple!
 	end,
 	act = function(self)
 		self:useEnergy()
-		if self.power < self.max_power then -- Charge up activate event
-			self.power=self.power + 1
-		end
+		self:regenPower()
 		
 		local who=self.worn_by --Make sure you can actually act!
 		if not self.worn_by then return end
@@ -4645,9 +3742,11 @@ newEntity{ base = "BASE_LITE", --Thanks Frumple!
 		end)
 		who:project({type="ball", range=0, radius=self.wielder.lite}, who.x, who.y, engine.DamageType.LITE, 100) -- Light the space!
 		if (5 + math.floor(self.charge/20)) > self.wielder.lite and self.wielder.lite < 10 then
+			local p = self.power
 			who:onTakeoff(self, true)
 			self.wielder.lite = math.min(10, 5+math.floor(self.charge/20))
 			who:onWear(self, true)
+			self.power = p
 		end
 	end,
 	wielder = {
@@ -4690,35 +3789,6 @@ newEntity{ base = "BASE_LITE", --Thanks Frumple!
 	},
 }
 
-newEntity{ base = "BASE_KNIFE", -- Thanks Grayswandir!
-	power_source = {arcane=true},
-	unique = true,
-	name = "Spellblaze Shard", image = "object/artifact/spellblaze_shard.png",
-	unided_name = "crystalline dagger",
-	desc = [[This jagged crystal glows with an unnatural light. A strap of cloth is wrapped around one end, as a handle.]],
-	level_range = {12, 25},
-	rarity = 200,
-	require = { stat = { dex=17 }, },
-	cost = 250,
-	metallic = false,
-	material_level = 2,
-	combat = {
-		dam = 20,
-		apr = 10,
-		physcrit = 12,
-		dammod = {dex=0.45,str=0.45,},
-		melee_project={[DamageType.FIREBURN] = 10, [DamageType.DRAINLIFE] = 10,},
-		burst_on_crit = {
-			[DamageType.CORRUPTED_BLOOD] = 20,
-			[DamageType.FIRE] = 20,
-		},
-	},
-	wielder = {
-		inc_stats = {[Stats.STAT_MAG] = 5,},
-		resists = {[DamageType.BLIGHT] = 10, [DamageType.FIRE] = 10},
-	},
-}
-
 newEntity{ base = "BASE_LITE", --Thanks Grayswandir!
 	power_source = {arcane=true},
 	unique = true,
@@ -4731,8 +3801,8 @@ newEntity{ base = "BASE_LITE", --Thanks Grayswandir!
 	cost = 320,
 	material_level=3,
 	wielder = {
-		lite = 4,
-		combat_spellpower=8,
+		lite = 5,
+		combat_spellpower=10,
 		
 		inc_damage = {[DamageType.COLD]=15},
 		resists = {[DamageType.COLD]=20},
@@ -4776,7 +3846,7 @@ newEntity{ base = "BASE_LITE", --Thanks Grayswandir!
 				cut_immune = 1,
 				see_invisible = 80,
 				undead = 1,
-				will_o_wisp_dam = 100,
+				will_o_wisp_dam = 110 + who:getMag() * 2.5,
 				resolvers.talents{[Talents.T_WILL_O__THE_WISP_EXPLODE] = 1,},
 				
 				faction = who.faction,
@@ -4818,7 +3888,7 @@ newEntity{ base = "BASE_TOOL_MISC",
 		combat_mindpower=8,
 	},
 		max_power = 35, power_regen = 1,
-	use_power = { name = "call an antimagic pillar", power = 35,
+	use_power = { name = "call an antimagic pillar, but silence yourself", power = 35,
 		use = function(self, who)
 			local x, y = util.findFreeGrid(who.x, who.y, 5, true, {[engine.Map.ACTOR]=true})
 			if not x then
@@ -4831,15 +3901,16 @@ newEntity{ base = "BASE_TOOL_MISC",
 				resolvers.nice_tile{image="invis.png", add_mos = {{image="terrain/darkgreen_moonstone_01.png", display_h=2, display_y=-1}}},
 				name = "Stone Guardian",
 				type = "totem", subtype = "antimagic",
-				desc = "This massive stone pillar drips with a vicious slime. Nature's power flows through it, obliterating magic all around it..",
+				desc = "This massive stone pillar drips with a viscous slime. Nature's power flows through it, obliterating magic all around it...",
 				rank = 3,
 				blood_color = colors.GREEN,
 				display = "T", color=colors.GREEN,
 				life_rating=18,
+				combat_dam = 40,
 				combat = {
 					dam=resolvers.rngavg(50,60),
 					atk=resolvers.rngavg(50,75), apr=25,
-					dammod={wil=1.1}, physcrit = 10,
+					dammod={wil=1.2}, physcrit = 10,
 					damtype=engine.DamageType.SLIME,
 				},
 				level_range = {1, nil}, exp_worth = 0,
@@ -4853,7 +3924,7 @@ newEntity{ base = "BASE_TOOL_MISC",
 				size_category = 5,
 				blind=1,
 				esp_all=1,
-				resists={[engine.DamageType.BLIGHT] = 40, [engine.DamageType.ARCANE] = 40, [engine.DamageType.NATURE] = 70},
+				resists={all = 15, [engine.DamageType.BLIGHT] = 40, [engine.DamageType.ARCANE] = 40, [engine.DamageType.NATURE] = 70},
 				no_breath = 1,
 				cant_be_moved = 1,
 				stone_immune = 1,
@@ -4865,10 +3936,10 @@ newEntity{ base = "BASE_TOOL_MISC",
 				stun_immune = 1,
 				blind_immune = 1,
 				cut_immune = 1,
-				knockback_resist,
+				knockback_resist=1,
 				combat_mentalresist=50,
 				combat_spellresist=100,
-				on_act = function(self) self:project({type="ball", range=0, radius=5, selffire=false}, self.x, self.y, engine.DamageType.SILENCE, {dur=2, power_check=self:combatMindpower()}) end,
+				on_act = function(self) self:project({type="ball", range=0, radius=5, friendlyfire=false}, self.x, self.y, engine.DamageType.SILENCE, {dur=2, power_check=self:combatMindpower()}) end,
 				resolvers.talents{
 					[Talents.T_RESOLVE]={base=3, every=6},
 					[Talents.T_MANA_CLASH]={base=3, every=5},
@@ -4891,6 +3962,7 @@ newEntity{ base = "BASE_TOOL_MISC",
 				title="Summon",
 				orders = {target=true, leash=true, anchor=true, talents=true},
 			})
+			who:setEffect(who.EFF_SILENCED, 5, {})
 			return {id=true, used=true}
 		end
 	},
@@ -4930,16 +4002,15 @@ newEntity{ base = "BASE_TOOL_MISC",
 	unided_name = "strange jagged shape",
 	color = colors.GREY,
 	level_range = {40, 50},
-	desc = [[This jagged shape looks like a hole in space, yet is solid, though light in weight.]],
+	desc = [[This jagged shape looks like a hole in space, yet it is solid, though light in weight.]],
 	cost = 320,
 	material_level = 5,
 	wielder = {
 		resists={[DamageType.DARKNESS] = 10, [DamageType.TEMPORAL] = 10},
 		inc_damage={[DamageType.DARKNESS] = 12, [DamageType.TEMPORAL] = 12},
 		on_melee_hit={[DamageType.VOID] = 16},
-		combat_spellresist = 15,
 		inc_stats = {[Stats.STAT_MAG] = 8,},
-		combat_spellpower=3,
+		combat_spellpower=10,
 	},
 	max_power = 40, power_regen = 1,
 	use_power = { name = "release a burst of void energy", power = 20,
@@ -4954,42 +4025,6 @@ newEntity{ base = "BASE_TOOL_MISC",
 	},
 }
 
-newEntity{ base = "BASE_MASSIVE_ARMOR", -- Thanks SageAcrin!
-	power_source = {technique = true, nature = true},
-	unique = true,
-	name = "Thalore-Wood Cuirass", image = "object/artifact/thalore_wood_cuirass.png",
-	unided_name = "thick wooden plate armour",
-	desc = [[Expertly hewn from the bark of trees, this wooden armor provides excellent protection at a low weight.]],
-	color = colors.WHITE,
-	level_range = {8, 22},
-	rarity = 220,
-	require = { stat = { str=24 }, },
-	cost = 300,
-	material_level = 2,
-	encumber = 12,
-	metallic=false,
-	wielder = {
-		inc_stats = { [Stats.STAT_WIL] = 3, [Stats.STAT_DEX] = 3,},
-		combat_armor = 10,
-		combat_def = 4,
-		fatigue = 14,
-		resists = {
-			[DamageType.DARKNESS] = 18,
-			[DamageType.COLD] = 18,
-			[DamageType.NATURE] = 18,
-		},
-		healing_factor = 0.25,
-	},
-	on_wear = function(self, who)
-		if who.descriptor and who.descriptor.subrace == "Thalore" then
-			local Stats = require "engine.interface.ActorStats"
-
-			self:specialWearAdd({"wielder","fatigue"}, -14)
-			game.logPlayer(who, "#DARK_GREEN#The armor molds comfortably to one of its caretakers.")
-		end
-	end,
-}
-
 newEntity{ base = "BASE_SHIELD", --Thanks SageAcrin!
 	power_source = {nature=true},
 	unided_name = "thick coral plate",
@@ -5001,7 +4036,7 @@ newEntity{ base = "BASE_SHIELD", --Thanks SageAcrin!
 	cost = 60,
 	material_level = 1,
 	metallic = false,
-	special_desc = function(self) return "When you block an attack, there is a chance that a spray of icy cold water will spray at the target." end,
+	special_desc = function(self) return "When you block an attack, there is a chance that a blast of icy cold water will spray at the target." end,
 	special_combat = {
 		dam = 18,
 		block = 48,
@@ -5040,7 +4075,7 @@ newEntity{ base = "BASE_AMULET", --Thanks Grayswandir!
 	unique = true,
 	name = "Shard of Insanity", color = colors.DARK_GREY, image = "object/artifact/shard_of_insanity.png",
 	unided_name = "cracked black amulet",
-	desc = [[A deep red light glows from within this damaged amulet of black stone. When you touch it, you can hear voices whispering into your mind.]],
+	desc = [[A deep red light glows from within this damaged amulet of black stone. When you touch it, you can hear voices whispering within your mind.]],
 	level_range = {20, 32},
 	rarity = 290,
 	cost = 500,
@@ -5059,6 +4094,7 @@ newEntity{ base = "BASE_AMULET", --Thanks Grayswandir!
 			[DamageType.MIND] 	= 20,
 		},
 		on_melee_hit={[DamageType.RANDOM_CONFUSION] = 5},
+		melee_project={[DamageType.RANDOM_CONFUSION] = 5},
 	},
 	max_power = 30, power_regen = 1,
 	use_talent = { id = Talents.T_INNER_DEMONS, level = 4, power = 30 },
@@ -5071,7 +4107,7 @@ newEntity{ base = "BASE_SHOT", --Thanks Grayswandir!
 	name = "Pouch of the Subconscious", image = "object/artifact/pouch_of_the_subconscious.png",
 	unided_name = "familiar pouch",
 	desc = [[You find yourself constantly fighting an urge to handle this strange pouch of shot.]],
-	color = colors.RED, image = "object/artifact/star_shot.png",
+	color = colors.RED,
 	level_range = {25, 40},
 	rarity = 300,
 	cost = 110,
@@ -5084,7 +4120,8 @@ newEntity{ base = "BASE_SHOT", --Thanks Grayswandir!
 		physcrit = 10,
 		dammod = {dex=0.7, cun=0.5, wil=0.1},
 		ranged_project={
-			[DamageType.MIND] = 20,
+			[DamageType.MIND] = 25,
+			[DamageType.MINDSLOW] = 30,
 		},
 		talent_on_hit = { [Talents.T_RELOAD] = {level=1, chance=50} },
 	},
@@ -5096,7 +4133,7 @@ newEntity{ base = "BASE_SHOT", --Thanks Grayswandir!
 	name = "Wind Worn Shot", image = "object/artifact/wind_worn_shot.png",
 	unided_name = "perfectly smooth shot",
 	desc = [[These perfectly white spheres appear to have been worn down by years of exposure to strong winds.]],
-	color = colors.RED, image = "object/artifact/star_shot.png",
+	color = colors.RED,
 	level_range = {25, 40},
 	rarity = 300,
 	cost = 110,
@@ -5109,10 +4146,30 @@ newEntity{ base = "BASE_SHOT", --Thanks Grayswandir!
 		physcrit = 10,
 		travel_speed = 1,
 		dammod = {dex=0.7, cun=0.5},
-		ranged_project={
-			[DamageType.LIGHTNING] = 20,
-		},
-		talent_on_hit = { [Talents.T_TORNADO] = {level=2, chance=8} },
+		talent_on_hit = { [Talents.T_TORNADO] = {level=2, chance=10} },
+		special_on_hit = {desc="35% chance for lightning to arc to a second target", on_kill=1, fct=function(combat, who, target)
+			if not rng.percent(35) then return end
+			local tgts = {}
+			local x, y = target.x, target.y
+			local grids = core.fov.circle_grids(x, y, 5, true)
+			for x, yy in pairs(grids) do for y, _ in pairs(grids[x]) do
+				local a = game.level.map(x, y, engine.Map.ACTOR)
+				if a and a ~= target and who:reactionToward(a) < 0 then
+					tgts[#tgts+1] = a
+				end
+			end end
+
+			-- Randomly take targets
+			local tg = {type="beam", range=5, friendlyfire=false, x=target.x, y=target.y}
+			if #tgts <= 0 then return end
+			local a, id = rng.table(tgts)
+			table.remove(tgts, id)
+			local dam = 30 + (who:combatMindpower())
+
+			who:project(tg, a.x, a.y, engine.DamageType.LIGHTNING, rng.avg(1, dam, 3))
+			game.level.map:particleEmitter(x, y, math.max(math.abs(a.x-x), math.abs(a.y-y)), "lightning", {tx=a.x-x, ty=a.y-y})
+			game:playSoundNear(who, "talents/lightning")
+		end},
 	},
 }
 
@@ -5120,7 +4177,7 @@ newEntity{ base = "BASE_GREATMAUL",
 	power_source = {nature=true, antimagic=true},
 	name = "Spellcrusher", color = colors.GREEN, image = "object/artifact/spellcrusher.png",
 	unided_name = "vine coated hammer", unique = true,
-	desc = [[This large steel greatmaul has thick vines wrapped around the handle. ]],
+	desc = [[This large steel greatmaul has thick vines wrapped around the handle.]],
 	level_range = {10, 20},
 	rarity = 300,
 	require = { stat = { str=20 }, },
@@ -5196,7 +4253,7 @@ newEntity{ base = "BASE_TOOL_MISC",
 		combat_dam=3,
 	},
 	max_power = 35, power_regen = 1,
-	use_talent = { id = Talents.T_PSIONIC_PULL, level = 3, power = 18 }, --Before you ask, DG, this is a blade horror talent.
+	use_talent = { id = Talents.T_PSIONIC_PULL, level = 3, power = 18 },
 }
 
 newEntity{ base = "BASE_GREATSWORD", --Thanks Grayswandir!
@@ -5248,6 +4305,7 @@ newEntity{ base = "BASE_GLOVES", --Thanks SageAcrin /AND/ Edge2054!
 		inc_damage={[DamageType.DARKNESS] = 8, [DamageType.TEMPORAL] = 8},
 		resists_pen={[DamageType.DARKNESS] = 10, [DamageType.TEMPORAL] = 10},
 		negative_regen=0.2,
+		negative_regen_ref_mod=0.2,
 		combat = {
 			dam = 13,
 			apr = 3,
@@ -5267,7 +4325,7 @@ newEntity{ base = "BASE_GEM", --Thanks SageAcrin and Graziel!
 	name = "Prothotipe's Prismatic Eye", subtype = "multi-hued",
 	color = colors.WHITE, image = "object/artifact/prothotipes_prismatic_eye.png",
 	level_range = {18, 30},
-	desc = [[This cracked gemstone appears faded with age. It appears to have once been the eye of a golem.]],
+	desc = [[This cracked gemstone looks faded with age. It appears to have once been the eye of a golem.]],
 	rarity = 240,
 	cost = 200,
 	identified = false,
@@ -5337,18 +4395,19 @@ newEntity{ base = "BASE_TOOL_MISC", --Sorta Thanks Donkatsu!
 	unided_name = "tree shaped totem",
 	color = colors.GREEN,
 	level_range = {40, 50},
-	desc = [[This small tree shaped totem is imbued with powerful healing energies.]],
+	desc = [[This small tree-shaped totem is imbued with powerful healing energies.]],
 	cost = 320,
 	material_level = 4,
+	special_desc = function(self) return "Heals all nearby living creatures by 5 points each turn." end,
 	sentient=true,
+	use_no_energy = true,
 	wielder = {
 		resists={[DamageType.BLIGHT] = 10, [DamageType.NATURE] = 10},
 		inc_damage={[DamageType.NATURE] = 10},
-		on_melee_hit={[DamageType.NATURE] = 10},
 		talents_types_mastery = { ["wild-gift/call"] = 0.1, ["wild-gift/harmony"] = 0.1, },
 		inc_stats = {[Stats.STAT_WIL] = 7, [Stats.STAT_CON] = 6,},
 		combat_mindpower=7,
-		healing_factor=0.2,
+		healing_factor=0.25,
 	},
 	on_takeoff = function(self, who)
 		self.worn_by=nil
@@ -5365,13 +4424,21 @@ newEntity{ base = "BASE_TOOL_MISC", --Sorta Thanks Donkatsu!
 	end,
 	act = function(self)
 		self:useEnergy()
+		self:regenPower()
 		if not self.worn_by then return end
 		if game.level and not game.level:hasEntity(self.worn_by) and not self.worn_by.player then self.worn_by=nil return end
 		if self.worn_by:attr("dead") then return end
 		local who = self.worn_by
 		local blast = {type="ball", range=0, radius=2, selffire=true}
-		who:project(blast, who.x, who.y, engine.DamageType.HEALING_NATURE, 3)
+		who:project(blast, who.x, who.y, engine.DamageType.HEALING_NATURE, 5)
 	end,
+	max_power = 15, power_regen = 1,
+	use_power = { name = "take root increasing health, armor, and armor hardiness but rooting you in place", power = 10,
+		use = function(self, who)
+			who:setEffect(who.EFF_TREE_OF_LIFE, 4, {})
+			return {id=true, used=true}
+		end
+	},
 }
 
 newEntity{ base = "BASE_RING",
@@ -5406,7 +4473,7 @@ newEntity{ base = "BASE_CLOAK",
 	wielder = {
 		combat_spellpower=6,
 		combat_armor=10,
-		combat_armor_hardiness=20,
+		combat_armor_hardiness=15,
 		talents_types_mastery = {
 			["spell/earth"] = 0.2,
 			["spell/stone"] = 0.1,
@@ -5414,8 +4481,8 @@ newEntity{ base = "BASE_CLOAK",
 		inc_damage={ [DamageType.PHYSICAL] = 5,},
 		resists={ [DamageType.PHYSICAL] = 5,},
 	},
-	max_power = 50, power_regen = 1,
-	use_talent = { id = Talents.T_STONE_WALL, level = 1, power = 50 },
+	max_power = 60, power_regen = 1,
+	use_talent = { id = Talents.T_STONE_WALL, level = 1, power = 60 },
 }
 
 newEntity{ base = "BASE_LIGHT_ARMOR", --Thanks SageAcrin!
@@ -5432,10 +4499,14 @@ newEntity{ base = "BASE_LIGHT_ARMOR", --Thanks SageAcrin!
 		combat_critical_power = 20,
 		combat_def = 18,
 		combat_armor = 18,
-		combat_armor_hardiness=10,
-		healing_factor=-0.1,
-		melee_project={[DamageType.DARKNESS]=8, [DamageType.COLD]=8},
-		on_melee_hit = {[DamageType.DARKNESS]=8, [DamageType.COLD]=8},
+		combat_armor_hardiness=15,
+		inc_stats = { 
+			[Stats.STAT_MAG] = 5, 
+			[Stats.STAT_CUN] = 5, 
+			[Stats.STAT_DEX] = 5, 
+		},
+		healing_factor=-0.15,
+		on_melee_hit = {[DamageType.DARKNESS]=15, [DamageType.COLD]=15},
 		inc_stealth=10,
  		inc_damage={
 			[DamageType.DARKNESS] = 20,
@@ -5455,7 +4526,7 @@ newEntity{ base = "BASE_LIGHT_ARMOR", --Thanks SageAcrin!
 	max_power = 50, power_regen = 1,
 	use_power = { name = "turn yourself invisible for 10 turns", power = 50,
 		use = function(self, who)
-			who:setEffect(who.EFF_INVISIBILITY, 10, {power=10+who:getCun()/6, penalty=0.5, regen=true})
+			who:setEffect(who.EFF_INVISIBILITY, 10, {power=10+who:getCun()/6+who:getMag()/6, penalty=0.5, regen=true})
 			return {id=true, used=true}
 		end
 	},
@@ -5465,7 +4536,7 @@ newEntity{ base = "BASE_LIGHT_ARMOR", --Thanks SageAcrin!
 	power_source = {nature=true, antimagic=true},
 	unided_name = "gauzy green armor",
 	name = "Breath of Eyal", unique=true, image = "object/artifact/breath_of_eyal.png",
-	desc = [[This light weight armor appears to have been woven of countless sprouts, still curling and growing. When you put it on, you feel the weight of the world on your shoulders, in spite of how light it felt in your hands.]],
+	desc = [[This lightweight armor appears to have been woven of countless sprouts, still curling and growing. When you put it on, you feel the weight of the world on your shoulders, in spite of how light it feels in your hands.]],
 	level_range = {40, 50},
 	rarity = 250,
 	cost = 300,
@@ -5506,10 +4577,10 @@ newEntity{ base = "BASE_TOOL_MISC", --Thanks Alex!
 	name = "Eternity's Counter", color = colors.WHITE,
 	unided_name = "crystalline hourglass", image="object/artifact/eternities_counter.png",
 	desc = [[This hourglass of otherworldly crystal appears to be filled with countless tiny gemstones in place of sand. As they fall, you feel the flow of time change around you.]],
-	level_range = {35, 40},
+	level_range = {30, 40},
 	rarity = 300,
 	cost = 200,
-	material_level = 5,
+	material_level = 4,
 	direction=1,
 	finished=false,
 	sentient=true,
@@ -5544,9 +4615,7 @@ newEntity{ base = "BASE_TOOL_MISC", --Thanks Alex!
 	end,
 	act = function(self)
 		self:useEnergy()
-		if self.power < self.max_power then
-			self.power=self.power + 1
-		end
+		self:regenPower()
 		if not self.worn_by then return end
 		if game.level and not game.level:hasEntity(self.worn_by) and not self.worn_by.player then self.worn_by=nil return end
 		if self.worn_by:attr("dead") then return end
@@ -5555,11 +4624,11 @@ newEntity{ base = "BASE_TOOL_MISC", --Thanks Alex!
 		if self.finished == true then return end
 		who:onTakeoff(self, true)
 		
-		self.wielder.resists.all = self.wielder.resists.all + direction * 2
+		self.wielder.resists.all = self.wielder.resists.all + direction * 3
 		self.wielder.movement_speed = self.wielder.movement_speed + direction * 0.04
-		self.wielder.combat_physspeed = self.wielder.combat_physspeed - direction * 0.04
-		self.wielder.combat_spellspeed = self.wielder.combat_spellspeed - direction * 0.04
-		self.wielder.combat_mindspeed = self.wielder.combat_mindspeed - direction * 0.04
+		self.wielder.combat_physspeed = self.wielder.combat_physspeed - direction * 0.03
+		self.wielder.combat_spellspeed = self.wielder.combat_spellspeed - direction * 0.03
+		self.wielder.combat_mindspeed = self.wielder.combat_mindspeed - direction * 0.03
 		
 		if self.wielder.resists.all <= -10 then 
 			self.wielder.inc_damage.all = 10
@@ -5601,7 +4670,7 @@ newEntity{ base = "BASE_WIZARD_HAT", --Thanks SageAcrin!
 		talents_types_mastery = {
 			["cursed/punishments"]=0.2,
 		},
-		melee_project={[DamageType.RANDOM_GLOOM] = 10},
+		melee_project={[DamageType.RANDOM_GLOOM] = 30},
 		inc_damage={
 			[DamageType.DARKNESS] 	= 10,
 			[DamageType.PHYSICAL]	= 10,
@@ -5623,12 +4692,10 @@ newEntity{ base = "BASE_TOOL_MISC", --And finally, Thank you, Darkgod, for makin
 His last known words were "Somehow this feels like an ending, yet I know there is so much more to find."]],
 	cost = 350,
 	material_level = 4,
-	wielder = {
-		resists={[DamageType.PHYSICAL] = 4,},
-		inc_damage={[DamageType.PHYSICAL] = 3,},
-		
-		inc_stats = {[Stats.STAT_LCK] = 5, [Stats.STAT_CUN] = 5,},
+	wielder = {		
+		inc_stats = {[Stats.STAT_LCK] = 10, [Stats.STAT_CUN] = 5,},
 		combat_atk=12,
+		combat_apr=12,
 		combat_physresist = 10,
 		combat_spellresist = 10,
 		combat_mentalresist = 10,
@@ -5653,24 +4720,24 @@ newEntity{ base = "BASE_LEATHER_CAP",
 	cost = 200,
 	material_level=3,
 	wielder = {
-		combat_def=4,
-		inc_stats = { [Stats.STAT_WIL] = 3, [Stats.STAT_CUN] = 6, },
+		combat_def=8,
+		inc_stats = { [Stats.STAT_WIL] = 8, [Stats.STAT_CUN] = 6, },
 		blind_immune=1,
 		combat_mentalresist = 12,
-		resists = {[DamageType.BLIGHT] = 10,},
-		resists_cap = {[DamageType.BLIGHT] = 10,},
+		see_invisible = 15,
+		see_stealth = 15,
 		inc_damage={
 			[DamageType.NATURE] = 20,
 		},
+		infravision=2,
 		resists_pen={
 			[DamageType.NATURE] = 15,
 		},
 		talents_types_mastery = { ["wild-gift/moss"] = 0.1,},
 	},
-	max_power = 50, power_regen = 1,
-	use_talent = { id = Talents.T_EARTH_S_EYES, level = 2, power = 50 },
+	max_power = 35, power_regen = 1,
+	use_talent = { id = Talents.T_EARTH_S_EYES, level = 2, power = 35 },
 }
-
 
 newEntity{ base = "BASE_MINDSTAR",
 	power_source = {antimagic=true},
@@ -5678,7 +4745,7 @@ newEntity{ base = "BASE_MINDSTAR",
 	name = "Eyal's Will",
 	unided_name = "pale green mindstar",
 	level_range = {38, 50},
-	color=colors.AQUAMARINE, image = "object/artifact/eyal_will.png",
+	color=colors.AQUAMARINE, image = "object/artifact/eyals_will.png",
 	rarity = 380,
 	desc = [[This smooth green crystal flows with a light green slime in its core. Droplets occasionally form on its surface, tufts of grass growing quickly on the ground where they fall.]],
 	cost = 280,
@@ -5694,27 +4761,27 @@ newEntity{ base = "BASE_MINDSTAR",
 	wielder = {
 		combat_mindpower = 20,
 		combat_mindcrit = 9,
-		disease_immune=0.3,
 		resists={[DamageType.BLIGHT] = 25, [DamageType.NATURE] = 15},
-		on_melee_hit={[DamageType.NATURE] = 20},
 		inc_damage={
-			[DamageType.NATURE] 	= 20,
+			[DamageType.NATURE] = 20,
+			[DamageType.ACID] = 10,
 		},
 		resists_pen={
-			[DamageType.NATURE] 	= 20,
+			[DamageType.NATURE] = 20,
+			[DamageType.ACID] = 10,
 		},
-		inc_stats = { [Stats.STAT_WIL] = 6, [Stats.STAT_CUN] = 3, },
+		inc_stats = { [Stats.STAT_WIL] = 10, [Stats.STAT_CUN] = 5, },
 		learn_talent = {[Talents.T_OOZE_SPIT] = 3},
-		talents_types_mastery = { ["wild-gift/mindstar-mastery"] = 0.1, ["wild-gift/antimagic"] = 0.1,},
+		talents_types_mastery = { ["wild-gift/mindstar-mastery"] = 0.1,},
 	},
-	max_power = 60, power_regen = 1,
-	use_talent = { id = Talents.T_SLIME_WAVE, level = 3, power = 60 },
+	max_power = 30, power_regen = 1,
+	use_talent = { id = Talents.T_SLIME_WAVE, level = 3, power = 30 },
 }
 
 newEntity{ base = "BASE_CLOTH_ARMOR",
 	power_source = {nature=true},
 	unique = true,
-	name = "Evermoss Robe", color = colors.DARK_GREEN, image = "object/artifact/robe_spider_silk_robe_spydre.png",
+	name = "Evermoss Robe", color = colors.DARK_GREEN, image = "object/artifact/evermoss_robe.png",
 	unided_name = "fuzzy green robe",
 	desc = [[This thick robe is woven from a dark green moss, firmly bound and cool to the touch. It is said to have rejuvenating properties.]],
 	level_range = {30, 42},
@@ -5767,7 +4834,7 @@ newEntity{ base = "BASE_SLING",
 newEntity{ base = "BASE_ARROW",
 	power_source = {technique=true},
 	unique = true,
-	name = "The Titan's Quiver", image = "object/artifact/hornet_stingers.png",
+	name = "The Titan's Quiver", image = "object/artifact/the_titans_quiver.png",
 	unided_name = "gigantic ceramic arrows",
 	desc = [[These massive arrows are honed to a vicious sharpness, and appear to be nearly unbreakable. They seem more like spikes than any arrow you've ever seen.]],
 	color = colors.GREY,
@@ -5795,7 +4862,7 @@ newEntity{ base = "BASE_ARROW",
 
 newEntity{ base = "BASE_RING",
 	power_source = {technique=true, psionic=true},
-	name = "Inertial Twine", unique=true,
+	name = "Inertial Twine", unique=true, image = "object/artifact/inertial_twine.png",
 	desc = [[This double-helical ring seems resistant to attempts to move it. Wearing it seems to extend this property to your entire body.]],
 	unided_name = "entwined iron ring",
 	level_range = {17, 28},
@@ -5810,15 +4877,15 @@ newEntity{ base = "BASE_RING",
 		knockback_immune=1,
 		combat_armor = 5,
 	},
-	max_power = 30, power_regen = 1,
-	use_talent = { id = Talents.T_BIND, level = 2, power = 30 },
+	max_power = 28, power_regen = 1,
+	use_talent = { id = Talents.T_BIND, level = 2, power = 25 },
 }
 
 newEntity{ base = "BASE_LONGSWORD",
 	power_source = {nature=true, technique=true},
 	unique = true,
 	name = "Everpyre Blade",
-	unided_name = "flaming wooden blade", image = "object/artifact/latafayn.png",
+	unided_name = "flaming wooden blade", image = "object/artifact/everpyre_blade.png",
 	level_range = {28, 38},
 	color=colors.RED,
 	rarity = 300,
@@ -5828,7 +4895,7 @@ newEntity{ base = "BASE_LONGSWORD",
 	material_level = 4,
 	combat = {
 		dam = 38,
-		apr = 4,
+		apr = 10,
 		physcrit = 18,
 		dammod = {str=1},
 		convert_damage={[DamageType.FIRE] = 50,},
@@ -5846,8 +4913,8 @@ newEntity{ base = "BASE_LONGSWORD",
 		},
 		inc_stats = { [Stats.STAT_STR] = 7, [Stats.STAT_WIL] = 7 },
 	},
-	max_power = 30, power_regen = 1,
-	use_talent = { id = Talents.T_FIRE_BREATH, level = 2, power = 30 },
+	max_power = 25, power_regen = 1,
+	use_talent = { id = Talents.T_FIRE_BREATH, level = 2, power = 25 },
 }
 
 newEntity{ base = "BASE_STAFF",
@@ -5897,14 +4964,14 @@ newEntity{ base = "BASE_BATTLEAXE",
 	power_source = {technique=true},
 	unique = true,
 	unided_name = "gore stained battleaxe",
-	name = "Eksatin's Ultimatum", color = colors.GREY, image = "object/artifact/crude_iron_battleaxe_of_kroll.png",
-	desc = [[This gore stained battleaxe was once used by an infamously sadistic king, who took the time to personally perform each and every execution he ordered. He kept a vault of every head he ever removed, each and every one of them carefully preserved. When he was overthrown, his own head was added as the centrepiece of the vault, which was maintained as a testament to his cruelty.]],
+	name = "Eksatin's Ultimatum", color = colors.GREY, image = "object/artifact/eskatins_ultimatum.png",
+	desc = [[This gore-stained battleaxe was once used by an infamously sadistic king, who took the time to personally perform each and every execution he ordered. He kept a vault of every head he ever removed, each and every one of them carefully preserved. When he was overthrown, his own head was added as the centrepiece of the vault, which was maintained as a testament to his cruelty.]],
 	require = { stat = { str=50 }, },
 	level_range = {39, 46},
 	rarity = 300,
 	material_level = 4,
 	combat = {
-		dam = 60,
+		dam = 63,
 		apr = 25,
 		physcrit = 25,
 		dammod = {str=1.3},
@@ -5919,8 +4986,6 @@ newEntity{ base = "BASE_BATTLEAXE",
 	wielder = {
 		combat_critical_power = 25,
 	},
-	max_power = 30, power_regen = 1,
-	use_talent = { id = Talents.T_PERFECT_STRIKE, level = 2, power = 30 },
 }
 
 newEntity{ base = "BASE_CLOAK",
@@ -5935,14 +5000,14 @@ newEntity{ base = "BASE_CLOAK",
 	cost = 300,
 	material_level = 5,
 	wielder = {
-		combat_def = 13,
+		combat_def = 15,
 		combat_spellpower = 8,
 		inc_stats = { 
 			[Stats.STAT_MAG] = 8, 
-			[Stats.STAT_CUN] = 5, 
+			[Stats.STAT_CUN] = 6, 
 			[Stats.STAT_DEX] = 10, 
 		},
-		inc_damage = { [DamageType.LIGHT]= 10 },
+		inc_damage = { [DamageType.LIGHT]= 15 },
 		resists_cap = { [DamageType.LIGHT] = 10, },
 		resists = { [DamageType.LIGHT] = 20, [DamageType.DARKNESS] = 20, },
 		talents_types_mastery = {
@@ -5959,7 +5024,7 @@ newEntity{ base = "BASE_CLOAK",
 newEntity{ base = "BASE_HEAVY_BOOTS",
 	power_source = {technique=true},
 	unique = true,
-	name = "Unbreakable Greaves", image = "object/artifact/scorched_boots.png",
+	name = "Unbreakable Greaves", image = "object/artifact/unbreakable_greaves.png",
 	unided_name = "huge stony boots",
 	desc = [[These titanic boots appear to have been carved from stone. They appear weathered and cracked, but easily deflect all blows.]],
 	color = colors.DARK_GRAY,
@@ -5968,18 +5033,19 @@ newEntity{ base = "BASE_HEAVY_BOOTS",
 	cost = 200,
 	material_level = 5,
 	wielder = {
-		combat_armor = 15,
+		combat_armor = 20,
 		combat_def = 8,
 		fatigue = 12,
-		combat_physicalpower = 10,
+		combat_dam = 10,
 		inc_stats = { 
-			[Stats.STAT_STR] = 15, 
+			[Stats.STAT_STR] = 20, 
 			[Stats.STAT_CON] = 10, 
-			[Stats.STAT_DEX] = -4, 
+			[Stats.STAT_DEX] = -6, 
 		},
 		knockback_immune=1,
-		inc_damage = { [DamageType.PHYSICAL] = 10 },
-		resists = { [DamageType.PHYSICAL] = 10,  [DamageType.ACID] = 10,},
+		combat_armor_hardiness = 20,
+		inc_damage = { [DamageType.PHYSICAL] = 15 },
+		resists = { [DamageType.PHYSICAL] = 15,  [DamageType.ACID] = 15,},
 	},
 }
 
@@ -5988,8 +5054,8 @@ newEntity{ base = "BASE_LIGHT_ARMOR",
 	unique = true, sentient=true,
 	name = "The Untouchable", color = colors.BLUE, image = "object/artifact/the_untouchable.png",
 	unided_name = "tough leather coat",
-	desc = [[This rugged jacket is subject of many a rural legend. 
-Some say it was fashioned by an adventurous mage turned rogue, in times before the spellblaze, but was since lost.
+	desc = [[This rugged jacket is the subject of many a rural legend. 
+Some say it was fashioned by an adventurous mage turned rogue, in times before the Spellblaze, but was since lost.
 All manner of shady gamblers have since claimed to have worn it at one point or another. To fail, but live, is what it means to be untouchable, they said.]],
 	level_range = {20, 30},
 	rarity = 200,
@@ -6019,7 +5085,7 @@ All manner of shady gamblers have since claimed to have worn it at one point or 
 		local hp_diff = (self.wearer_hp - self.worn_by.life/self.worn_by.max_life)
 		
 		if hp_diff >= 0.2 and not self.worn_by:hasEffect(self.worn_by.EFF_DAMAGE_SHIELD) then
-			self.worn_by:setEffect(self.worn_by.EFF_DAMAGE_SHIELD, 4, {power = (hp_diff * self.worn_by.life)*2})
+			self.worn_by:setEffect(self.worn_by.EFF_DAMAGE_SHIELD, 4, {power = (hp_diff * self.worn_by.max_life)*2})
 			game.logPlayer(self.worn_by, "#LIGHT_BLUE#A barrier bursts from the leather jacket!")
 		end		
 		
@@ -6047,6 +5113,1332 @@ newEntity{ base = "BASE_TOOL_MISC",
 		healing_factor=0.1,
 		
 		learn_talent = {[Talents.T_BATTLE_TRANCE] = 1},
+	},
+}
+
+newEntity{ base = "BASE_CLOTH_ARMOR",
+	power_source = {arcane=true},
+	unique = true,
+	name = "The Calm", color = colors.GREEN, image = "object/artifact/the_calm.png",
+	unided_name = "ornate green robe",
+	desc = [[This green robe is engraved with icons showing clouds and swirling winds. Its original owner, a powerful mage named Proccala, was often revered for both his great benevolence and his intense power when it proved necessary.]],
+	level_range = {30, 40},
+	rarity = 250,
+	cost = 500,
+	material_level = 4,
+	special_desc = function(self) return "Your Lightning and Chain Lightning spells gain a 24% chance to daze, and your Thunderstorm spell gains a 12% chance to daze." end,
+	wielder = {
+		combat_spellpower = 20,
+		inc_damage = {[DamageType.LIGHTNING]=25},
+		combat_def = 15,
+		inc_stats = { [Stats.STAT_MAG] = 10, [Stats.STAT_WIL] = 8, [Stats.STAT_CUN] = 6,},
+		resists={[DamageType.LIGHTNING] = 20},
+		resists_pen = { [DamageType.LIGHTNING] = 15 },
+		slow_projectiles = 15,
+		movement_speed = 0.1,
+		lightning_daze_tempest=24,
+	},
+}
+
+newEntity{ base = "BASE_LEATHER_CAP",
+	power_source = {psionic=true},
+	unique = true,
+	name = "Omniscience", image = "object/artifact/omniscience.png",
+	unided_name = "very plain leather cap",
+	level_range = {40, 50},
+	color=colors.WHITE,
+	encumber = 1,
+	rarity = 300,
+	desc = [[This white cap is plain and dull, but as the light reflects off of its surface, you see images of faraway corners of the world in the sheen."]],
+	cost = 200,
+	material_level=5,
+	wielder = {
+		combat_def=7,
+		combat_mindpower=20,
+		combat_mindcrit=9,
+		combat_mentalresist = 25,
+		infravision=5,
+		confusion_immune=0.4,
+		resists = {[DamageType.MIND] = 15,},
+		resists_cap = {[DamageType.MIND] = 10,},
+		resists_pen = {[DamageType.MIND] = 10,},
+		max_psi=50,
+		psi_on_crit=6,
+	},
+	max_power = 30, power_regen = 1,
+	use_power = { name = "reveal the surrounding area", power = 30,
+		use = function(self, who)
+			who:magicMap(20)
+			game.logSeen(who, "%s has a sudden vision!", who.name:capitalize())
+			return {id=true, used=true}
+		end
+	},
+}
+
+newEntity{ base = "BASE_AMULET",
+	power_source = {nature=true},
+	unique = true,
+	name = "Earthen Beads", color = colors.BROWN, image = "object/artifact/earthen_beads.png",
+	unided_name = "strung clay beads",
+	desc = [[This is a string of ancient, hardened clay beads, cracked and faded with age. It was used by Wilders in ancient times, in an attempt to enhance their connection with Nature.]],
+	level_range = {10, 20},
+	rarity = 200,
+	cost = 100,
+	material_level = 2,
+	metallic = false,
+	special_desc = function(self) return "Enhances the effectiveness of Meditation by 20%" end,
+	wielder = {
+		combat_mindpower = 5,
+		enhance_meditate=0.2,
+		inc_stats = { [Stats.STAT_WIL] = 4,},
+		life_regen=0.2,
+		damage_affinity={
+			[DamageType.NATURE] = 15,
+		},
+	},
+	max_power = 40, power_regen = 1,
+	use_talent = { id = Talents.T_NATURE_TOUCH, level = 2, power = 40 },
+}
+
+newEntity{ base = "BASE_GAUNTLETS",
+	power_source = {arcane=true, nature=true}, --Perhaps it is of Dwarven make :)
+	unique = true,
+	name = "Hand of the World-Shaper", color = colors.BROWN, image = "object/artifact/hand_of_the_worldshaper.png",
+	unided_name = "otherworldly stone gauntlets",
+	desc = [[These heavy stone gauntlets make the very ground beneath you bend and warp as they move.]],
+	level_range = {40, 50},
+	rarity = 300,
+	cost = 800,
+	material_level = 5,
+	wielder = {
+		inc_stats = { [Stats.STAT_STR] = 6, [Stats.STAT_MAG] = 6 },
+		inc_damage = { [DamageType.PHYSICAL] = 12 },
+		resists = { [DamageType.PHYSICAL] = 10 },
+		resists_pen = { [DamageType.PHYSICAL] = 15 },
+		combat_spellpower=10,
+		combat_spellcrit = 10,
+		combat_armor = 12,
+		talents_types_mastery = {
+			["spell/earth"] = 0.1,
+			["spell/stone"] = 0.2,
+			["wild-gift/sand-drake"] = 0.1,
+		},
+		combat = {
+			dam = 38,
+			apr = 10,
+			physcrit = 7,
+			physspeed = 0.2,
+			dammod = {dex=0.4, str=-0.6, cun=0.4, mag=0.1 },
+			talent_on_hit = { T_EARTHEN_MISSILES = {level=5, chance=15},},
+			damrange = 0.3,
+			burst_on_hit = {
+			[DamageType.GRAVITY] = 50,
+			},
+			burst_on_crit = {
+			[DamageType.GRAVITYPIN] = 30,
+			},
+		},
+	},
+	max_power = 30, power_regen = 1,
+	use_talent = { id = Talents.T_EARTHQUAKE, level = 4, power = 30 },
+}
+
+newEntity{ base = "BASE_CLOAK",
+	power_source = {psionic=true},
+	unique = true,
+	name = "Guise of the Hated", image = "object/artifact/guise_of_the_hated.png",
+	unided_name = "gloomy black cloak",
+	desc = [[Forget the moons, the starry sky,
+The warm and greeting sheen of sun,
+The rays of light will never reach inside,
+The heart which wishes that it be unseen.]],
+	level_range = {40, 50},
+	color = colors.BLACK,
+	rarity = 370,
+	cost = 300,
+	material_level = 5,
+	wielder = {
+		combat_def = 14,
+		combat_mindpower = 8,
+		combat_mindcrit = 4,
+		combat_physcrit = 4,
+		inc_stealth=12,
+		combat_mentalresist = 10,
+		hate_per_kill = 5,
+		hate_per_crit = 5,
+		inc_stats = { 
+			[Stats.STAT_WIL] = 8, 
+			[Stats.STAT_CUN] = 6, 
+			[Stats.STAT_DEX] = 4, 
+		},
+		inc_damage = { all = 4 },
+		resists = {[DamageType.DARKNESS] = 10, [DamageType.MIND] = 10,},
+		talents_types_mastery = {
+			["cursed/gloom"] = 0.1,
+			["cursed/darkness"] = 0.1,
+		},
+		on_melee_hit={[DamageType.MIND] = 30},
+	},
+	max_power = 18, power_regen = 1,
+	use_talent = { id = Talents.T_CREEPING_DARKNESS, level = 4, power = 18 },
+}
+
+newEntity{ base = "BASE_KNIFE", --Thanks FearCatalyst/FlarePusher!
+	power_source = {arcane=true},
+	unique = true,
+	name = "Spelldrinker", image = "object/artifact/spelldrinker.png",
+	unided_name = "eerie black dagger",
+	desc = [[Countless mages have fallen victim to the sharp sting of this blade, betrayed by those among them with greed for ever greater power.
+Passed on and on, this blade has developed a thirst of its own.]],
+	level_range = {20, 30},
+	rarity = 250,
+	require = { stat = { dex=30 }, },
+	cost = 300,
+	material_level = 3,
+	combat = {
+		dam = 27,
+		apr = 8,
+		physcrit = 9,
+		dammod = {str=0.45, dex=0.55, mag=0.05},
+		talent_on_hit = { T_DISPERSE_MAGIC = {level=1, chance=15},},
+		special_on_hit = {desc="steals up to 50 mana from the target", fct=function(combat, who, target)
+			local manadrain = util.bound(target:getMana(), 0, 50)
+			target:incMana(-manadrain)
+			who:incMana(manadrain)
+			local tg = {type="ball", range=10, radius=0, selffire=false}
+			who:project(tg, target.x, target.y, engine.DamageType.ARCANE, manadrain)
+		end},
+	},
+	wielder = {
+		inc_stats = {[Stats.STAT_MAG] = 6, [Stats.STAT_CUN] = 6,},
+		combat_spellresist=12,
+		resists={
+			[DamageType.ARCANE] = 12,
+		},
+	},
+}
+
+newEntity{ base = "BASE_AMULET",
+	power_source = {arcane=true},
+	unique = true,
+	name = "Frost Lord's Chain",
+	unided_name = "ice coated chain", image = "object/artifact/frost_lords_chain.png",
+	desc = [[This impossibly cold chain of frost-coated metal radiates a strange and imposing aura.]],
+	color = colors.LIGHT_RED,
+	level_range = {40, 50},
+	rarity = 220,
+	cost = 350,
+	material_level = 5,
+	special_desc = function(self) return "Gives all your cold damage a 20% chance to freeze the target." end,
+	wielder = {
+		combat_spellpower=12,
+		inc_damage={
+			[DamageType.COLD] = 12,
+		},
+		resists={
+			[DamageType.COLD] = 25,
+		},
+		stun_immune = 0.3,
+		on_melee_hit = {[DamageType.COLD]=10},
+		cold_freezes = 20,
+		iceblock_pierce=20,
+		learn_talent = {[Talents.T_SHIV_LORD] = 2},
+	},
+}
+
+newEntity{ base = "BASE_LONGSWORD", --Thanks BadBadger?
+	power_source = {arcane=true},
+	unique = true,
+	name = "Twilight's Edge", image = "object/artifact/twilights_edge.png",
+	unided_name = "shining long sword",
+	level_range = {32, 42},
+	color=colors.GREY,
+	rarity = 250,
+	desc = [[The blade of this sword seems to have been forged of a mixture of voratun and stralite, resulting in a blend of swirling light and darkness.]],
+	cost = 800,
+	require = { stat = { str=35,}, },
+	material_level = 4,
+	combat = {
+		dam = 47,
+		apr = 7,
+		physcrit = 12,
+		dammod = {str=1},
+		special_on_crit = {desc="release a burst of light and dark damage (scales with Magic)", on_kill=1, fct=function(combat, who, target)
+			local tg = {type="ball", range=10, radius=2, selffire=false}
+			who:project(tg, target.x, target.y, engine.DamageType.LIGHT, 40 + who:getMag()*0.6)
+			who:project(tg, target.x, target.y, engine.DamageType.DARKNESS, 40 + who:getMag()*0.6)
+			game.level.map:particleEmitter(target.x, target.y, tg.radius, "shadow_flash", {radius=tg.radius})
+		end},
+	},
+	wielder = {
+		lite = 1,
+		combat_spellpower = 12,
+		combat_spellcrit = 4,
+		inc_damage={
+			[DamageType.DARKNESS] = 18,
+			[DamageType.LIGHT] = 18,
+		},
+		inc_stats = { [Stats.STAT_MAG] = 4, [Stats.STAT_STR] = 4, [Stats.STAT_CUN] = 4, },
+	},
+}
+
+newEntity{ base = "BASE_RING",
+	power_source = {psionic=true},
+	name = "Mnemonic", unique=true, image = "object/artifact/mnemonic.png",
+	desc = [[As long as you wear this ring, you will never forget who you are.]],
+	unided_name = "familiar ring",
+	level_range = {40, 50},
+	rarity = 250,
+	cost = 300,
+	material_level = 5,
+	special_desc = function(self) return "When using a mental talent, gives a 10% chance to lower the current cooldowns of up to three of your wild gift, psionic, or cursed talents by three turns." end,
+	wielder = {
+		combat_mentalresist = 20,
+		combat_mindpower = 12,
+		inc_stats = {[Stats.STAT_WIL] = 8,},
+		resists={[DamageType.MIND] = 25,},
+		confusion_immune=0.4,
+		talents_types_mastery = {
+			["psionic/mentalism"]=0.2,
+		},
+		psi_regen=0.5,	
+	},
+	max_power = 30, power_regen = 1,
+	use_talent = { id = Talents.T_MENTAL_SHIELDING, level = 2, power = 30 },
+	talent_on_mind = { {chance=10, talent=Talents.T_MENTAL_REFRESH, level=1}},
+}
+
+newEntity{ base = "BASE_LONGSWORD",
+	power_source = {arcane=true, technique=true},
+	unique = true,
+	name = "Acera",
+	unided_name = "corroded sword", image = "object/artifact/acera.png",
+	level_range = {25, 35},
+	color=colors.GREEN,
+	rarity = 300,
+	desc = [[This warped, blackened sword drips acid from its countless pores.]],
+	cost = 400,
+	require = { stat = { str=40 }, },
+	material_level = 3,
+	combat = {
+		dam = 33,
+		apr = 4,
+		physcrit = 10,
+		dammod = {str=1},
+		burst_on_crit = {
+			[DamageType.ACID_CORRODE] = 40,
+		},
+		melee_project={[DamageType.ACID] = 12},
+	},
+	wielder = {
+		inc_damage={ [DamageType.ACID] = 15,},
+		resists={[DamageType.ACID] = 15,},
+		resists_pen={[DamageType.PHYSICAL] = 10,}, --Burns right through your pathetic physical resists
+		combat_physcrit = 10,
+		combat_spellcrit = 10,
+	},
+	max_power = 30, power_regen = 1,
+	use_talent = { id = Talents.T_CORROSIVE_WORM, level = 4, power = 30 },
+}
+
+newEntity{ base = "BASE_GREATSWORD",
+	power_source = {technique=true},
+	define_as = "DOUBLESWORD",
+	name = "Borosk's Hate", unique=true, image="object/artifact/borosks_hate.png",
+	unided_name = "double-bladed sword", color=colors.GREY,
+	desc = [[This impressive looking sword features two massive blades aligned in parallel. They seem weighted remarkably well.]],
+	require = { stat = { str=35 }, },
+	level_range = {40, 50},
+	rarity = 240,
+	cost = 280,
+	material_level = 5,
+	running=false,
+	combat = {
+		dam = 60,
+		apr = 22,
+		physcrit = 10,
+		dammod = {str=1.2},
+		special_on_hit = {desc="25% chance to strike the target again", fct=function(combat, who, target)
+			local o, item, inven_id = who:findInAllInventoriesBy("define_as", "DOUBLESWORD")
+			if not o or not who:getInven(inven_id).worn then return end
+			if o.running == true then return end
+			if not rng.percent(25) then return end
+			o.running=true
+			who:attackTarget(target, engine.DamageType.PHYSICAL, 1,  true)
+			o.running=false
+		end},
+	},
+	wielder = {
+		inc_stats = { [Stats.STAT_STR] = 10, [Stats.STAT_DEX] = 5, },
+		talents_types_mastery = {
+			["technique/2hweapon-cripple"] = 0.2,
+		},
+	},
+}
+
+newEntity{ base = "BASE_LONGSWORD",
+	power_source = {technique=true, psionic=true}, define_as = "BUTCHER",
+	name = "Butcher", unique=true, image="object/artifact/butcher.png",
+	unided_name = "blood drenched shortsword", color=colors.CRIMSON,
+	desc = [["Be it corruption, madness or eccentric boredom, the halfling butcher by the name of Caleb once took to eating his kin instead of cattle. His spree was never ended and nobody knows where he disappeared to. Only the blade remained, stuck fast in bloodied block. Beneath, a carving said "This was fun, let's do it again some time."]],
+	require = { stat = { str=40 }, },
+	level_range = {36, 48},
+	rarity = 250,
+	cost = 300,
+	material_level = 5,
+	sentient=true,
+	running=false,
+	special_desc = function(self) return ("Enter Rampage if HP falls under 20%% (Shared 30 turn cooldown)") end,
+	combat = {
+		dam = 48,
+		apr = 12,
+		physcrit = 10,
+		dammod = {str=1},
+		special_on_hit = {desc="Attempt to devour a low HP enemy, striking again and possibly killing instantly.", fct=function(combat, who, target)
+			local Talents = require "engine.interface.ActorTalents"
+			local o, item, inven_id = who:findInAllInventoriesBy("define_as", "BUTCHER")
+			if not o or not who:getInven(inven_id).worn then return end
+			if target.life / target.max_life > 0.15 or o.running==true then return end
+			local Talents = require "engine.interface.ActorTalents"
+			o.running=true
+			if target:canBe("instakill") then
+				who:forceUseTalent(Talents.T_SWALLOW, {ignore_cd=true, ignore_energy=true, force_target=target, force_level=4, ignore_ressources=true})
+			end
+			o.running=false
+		end},
+		special_on_kill = {desc="Enter a Rampage (Shared 30 turn cooldown).", fct=function(combat, who, target)
+			local Talents = require "engine.interface.ActorTalents"
+			local o, item, inven_id = who:findInAllInventoriesBy("define_as", "BUTCHER")
+			if not o or not who:getInven(inven_id).worn then return end
+			if o.power < o.max_power then return end
+			who:forceUseTalent(Talents.T_RAMPAGE, {ignore_cd=true, ignore_energy=true, force_level=2, ignore_ressources=true})
+			o.power = 0
+		end},
+	},
+	wielder = {
+		inc_stats = { [Stats.STAT_CUN] = 7, [Stats.STAT_STR] = 10, [Stats.STAT_WIL] = 10, },
+		talents_types_mastery = {
+			["cursed/rampage"] = 0.2,
+			["cursed/slaughter"] = 0.2,
+		},
+		combat_atk = 18,
+	},
+	max_power = 30, power_regen = 1,
+	use_power = { name = "", power = 30, hidden = true, use = function(self, who) return end},
+	on_wear = function(self, who)
+		self.worn_by = who
+	end,
+	on_takeoff = function(self)
+		self.worn_by = nil
+	end,
+	act = function(self)
+		self:useEnergy()
+		self:regenPower()
+		if not self.worn_by then return end
+		local who=self.worn_by
+		if game.level and not game.level:hasEntity(who) and not who.player then self.worn_by = nil return end
+		if who.life/who.max_life < 0.2 and self.power == self.max_power then
+			local Talents = require "engine.interface.ActorTalents"
+			who:forceUseTalent(Talents.T_RAMPAGE, {ignore_cd=true, ignore_energy=true, force_level=2, ignore_ressources=true})
+			self.power=0
+		end
+	end,
+}
+
+newEntity{ base = "BASE_CLOAK",
+	power_source = {arcane=true},
+	unique = true,
+	name = "Ethereal Embrace", image = "object/artifact/ethereal_embrace.png",
+	unided_name = "wispy purple cloak",
+	desc = [[This cloak waves and bends with shimmering light, reflecting the depths of space and the heart of the Aether.]],
+	level_range = {30, 40},
+	rarity = 400,
+	cost = 250,
+	material_level = 4,
+	wielder = {
+		combat_spellcrit = 6,
+		combat_def = 10,
+		inc_stats = { 
+			[Stats.STAT_MAG] = 8, 
+		},
+		talents_types_mastery = {
+			["spell/arcane"] = 0.2,
+			["spell/nightfall"] = 0.2,
+			["spell/aether"] = 0.1,
+		},
+		spellsurge_on_crit = 5,
+		inc_damage={ [DamageType.ARCANE] = 15, [DamageType.DARKNESS] = 15, },
+		resists={ [DamageType.ARCANE] = 12, [DamageType.DARKNESS] = 12,},
+		shield_factor=15,
+		shield_dur=1,
+	},
+	max_power = 28, power_regen = 1,
+	use_talent = { id = Talents.T_AETHER_BREACH, level = 2, power = 28 },
+}
+
+newEntity{ base = "BASE_HEAVY_BOOTS",
+	power_source = {psionic=true},
+	unique = true,
+	name = "Boots of the Hunter", image = "object/artifact/boots_of_the_hunter.png",
+	unided_name = "well-worn boots",
+	desc = [[These cracked boots are caked with a thick layer of mud. It isn't clear who they previously belonged to, but they've clearly seen extensive use.]],
+	color = colors.BLACK,
+	level_range = {30, 40},
+	rarity = 240,
+	cost = 280,
+	material_level = 4,
+	use_no_energy = true,
+	wielder = {
+		combat_armor = 12,
+		combat_def = 2,
+		combat_dam = 12,
+		combat_apr = 15,
+		fatigue = 8,
+		combat_mentalresist = 10,
+		combat_spellresist = 10,
+		max_life = 80,
+		stun_immune=0.4,
+		talents_types_mastery = {
+			["cursed/predator"] = 0.2,
+			["cursed/endless-hunt"] = 0.2,
+			["cunning/trapping"] = 0.2,
+		},
+	},
+	max_power = 32, power_regen = 1,
+	use_power = { name = "boost movement speed by 300% for 4 turns (does not use a turn)", power = 32,
+	use = function(self, who)
+		game:onTickEnd(function() who:setEffect(who.EFF_HUNTER_SPEED, 5, {power=300}) end)
+		return {id=true, used=true}
+	end
+	},
+}
+
+newEntity{ base = "BASE_GLOVES",
+	power_source = {nature=true},
+	unique = true,
+	name = "Sludgegrip", color = colors.GREEN, image = "object/artifact/sludgegrip.png",
+	unided_name = "slimy gloves",
+	desc = [[These gloves are coated with a thick, green liquid.]],
+	level_range = {1, 10},
+	rarity = 190,
+	cost = 70,
+	material_level = 1,
+	wielder = {
+		inc_stats = { [Stats.STAT_WIL] = 4, [Stats.STAT_CUN] = 4,},
+		resists = { [DamageType.NATURE]= 10, },
+		inc_damage = { [DamageType.NATURE]= 5, },
+		combat_mindpower=2,
+		poison_immune=0.2,
+		talents_types_mastery = {
+			["wild-gift/slime"] = 0.2,
+		},		
+		combat = {
+			dam = 6,
+			apr = 7,
+			physcrit = 4,
+			dammod = {dex=0.4, str=-0.6, cun=0.4 },
+			talent_on_hit = { T_SLIME_SPIT = {level=1, chance=35} },
+			convert_damage = { [DamageType.SLIME] = 40,},
+		},
+	},
+}
+
+newEntity{ base = "BASE_RING", define_as = "SET_LICH_RING",
+	power_source = {arcane=true},
+	unique = true,
+	name = "Ring of the Archlich", image = "object/artifact/ring_of_the_archlich.png",
+	unided_name = "dusty, cracked ring",
+	desc = [[This ring is filled with an overwhelming, yet restrained, power. It lashes, grasps from its metal prison, seatching for life to snuff out. You alone are unharmed.
+Perhaps it feels all the death you will bring to others in the near future.]],
+	color = colors.DARK_GREY,
+	level_range = {30, 40},
+	cost = 170,
+	rarity = 280,
+	material_level = 4,
+	wielder = {
+		max_soul = 3,
+		combat_spellpower=8,
+		combat_spellresist=8,
+		inc_damage={[DamageType.DARKNESS] = 10, [DamageType.COLD] = 10, },
+		poison_immune=0.25,
+		cut_immune=0.25,
+		resists={ [DamageType.COLD] = 10, [DamageType.DARKNESS] = 10,},
+	},
+	max_power = 40, power_regen = 1,
+	set_list = { {"define_as", "SET_SCEPTRE_LICH"} },
+	on_set_complete = function(self, who)
+		game.logPlayer(who, "#DARK_GREY#Your ring releases a burst of necromantic energy!")
+		self:specialSetAdd({"wielder","combat_spellpower"}, 10)
+		self.use_talent = { id = "T_IMPENDING_DOOM", level = 2, power = 40 }
+		self:specialSetAdd({"wielder","inc_damage"}, { [engine.DamageType.DARKNESS] = 14 })
+		self:specialSetAdd({"wielder","resists"}, { [engine.DamageType.DARKNESS] = 5 })
+	end,
+	on_set_broken = function(self, who)
+		game.logPlayer(who, "#DARK_GREY#Your ring's power fades away.")
+		self.use_talent = nil
+	end,
+}
+
+newEntity{ base = "BASE_TOOL_MISC",
+	power_source = {arcane = true},
+	unique=true, rarity=240,
+	type = "charm", subtype="wand",
+	name = "Lightbringer's Rod", image = "object/artifact/lightbringers_rod.png",
+	unided_name = "bright wand",
+	color = colors.GOLD,
+	level_range = {20, 30},
+	desc = [[This gold-tipped wand shines with an unnatural sheen.]],
+	cost = 320,
+	material_level = 3,
+	wielder = {
+		resists={[DamageType.DARKNESS] = 12, [DamageType.LIGHT] = 12},
+		inc_damage={[DamageType.LIGHT] = 10},
+		on_melee_hit={[DamageType.LIGHT] = 18},
+		combat_spellresist = 15,
+		lite=2,
+	},
+		max_power = 35, power_regen = 1,
+	use_power = { name = "summon a shining orb", power = 35,
+		use = function(self, who)
+			local tg = {type="bolt", nowarning=true, range=5, nolock=true}
+			local tx, ty, target = who:getTarget(tg)
+			if not tx or not ty then return nil end
+			local _ _, _, _, tx, ty = who:canProject(tg, tx, ty)
+			target = game.level.map(tx, ty, engine.Map.ACTOR)
+			if target == who then target = nil end
+			local x, y = util.findFreeGrid(tx, ty, 5, true, {[engine.Map.ACTOR]=true})
+			if not x then
+				game.logPlayer(self, "Not enough space to invoke!")
+				return
+			end
+			local Talents = require "engine.interface.ActorTalents"
+			local NPC = require "mod.class.NPC"
+			local m = NPC.new{
+				resolvers.nice_tile{image="invis.png", add_mos = {{image="npc/undead_ghost_will_o__the_wisp.png", display_h=1, display_y=0}}},
+				name = "Lightbringer",
+				type = "orb", subtype = "light",
+				desc = "A shining orb.",
+				rank = 1,
+				blood_color = colors.YELLOW,
+				display = "T", color=colors.YELLOW,
+				life_rating=10,
+				combat = {
+					dam=resolvers.rngavg(50,60),
+					atk=resolvers.rngavg(50,75), apr=25,
+					dammod={mag=1}, physcrit = 10,
+					damtype=engine.DamageType.LIGHT,
+				},
+				level_range = {1, nil}, exp_worth = 0,
+				silent_levelup = true,
+				combat_armor=30,
+				combat_armor_hardiness=30,
+				autolevel = "caster",
+				ai = "summoned", ai_real = "dumb_talented_simple", ai_state = { talent_in=1, },
+				never_move=1,
+				stats = { str=14, dex=18, mag=20, con=12, wil=20, cun=20, },
+				size_category = 2,
+				lite=10,
+				blind=1,
+				esp_all=1,
+				resists={[engine.DamageType.LIGHT] = 100, [engine.DamageType.DARKNESS] = 100},
+				no_breath = 1,
+				cant_be_moved = 1,
+				stone_immune = 1,
+				confusion_immune = 1,
+				fear_immune = 1,
+				teleport_immune = 1,
+				disease_immune = 1,
+				poison_immune = 1,
+				stun_immune = 1,
+				blind_immune = 1,
+				cut_immune = 1,
+				knockback_resist=1,
+				combat_physresist=50,
+				combat_spellresist=100,
+				on_act = function(self) self:project({type="ball", range=0, radius=5, friendlyfire=false}, self.x, self.y, engine.DamageType.LITE_LIGHT, self:getMag()) end,
+				
+				faction = who.faction,
+				summoner = who, summoner_gain_exp=true,
+				summon_time=15,
+			}
+
+			m:resolve()
+			game.zone:addEntity(game.level, m, "actor", x, y)
+			m.remove_from_party_on_death = true,
+			game.party:addMember(m, {
+				control=false,
+				type="summon",
+				title="Summon",
+				orders = {target=true, leash=true, anchor=true, talents=true},
+			})
+			return {id=true, used=true}
+		end
+	},
+}
+
+newEntity{ base = "BASE_SHIELD",
+	power_source = {arcane=true},
+	unique = true,
+	unided_name = "handled hole in space",
+	name = "Temporal Rift", image = "object/artifact/temporal_rift.png",
+	desc = [[Some mad Chronomancer appears to have affixed a handle to this hole in spacetime. It looks highly effective, in its own strange way.]],
+	color = colors.LIGHT_GREY,
+	rarity = 300,
+	level_range = {35, 45},
+	require = { stat = { str=40 }, },
+	cost = 400,
+	material_level = 5,
+	special_combat = {
+		dam = 50,
+		block = 325,
+		physcrit = 4.5,
+		dammod = {str=1, mag=0.2},
+		damtype = DamageType.TEMPORAL,
+		talent_on_hit = { [Talents.T_TURN_BACK_THE_CLOCK] = {level=3, chance=25} },
+	},
+	wielder = {
+		combat_armor = 4,
+		combat_def = 8,
+		combat_def_ranged = 10,
+		fatigue = 0,
+		combat_spellpower=12,
+		combat_spellresist = 20,
+		resists = {[DamageType.TEMPORAL] = 30},
+		learn_talent = { [Talents.T_BLOCK] = 5, },
+		flat_damage_armor = {all=20},
+		slow_projectiles = 50,
+	},
+}
+
+newEntity{ base = "BASE_ARROW",
+	power_source = {technique=true},
+	unique = true,
+	name = "Arkul's Seige Arrows", image = "object/artifact/arkuls_seige_arrows.png",
+	unided_name = "gigantic spiral arrows",
+	desc = [[These titanic double-helical arrows seem to have been designed more for knocking down towers than for use in regular combat. They'll no doubt make short work of most foes.]],
+	color = colors.GREY,
+	level_range = {42, 50},
+	rarity = 400,
+	cost = 400,
+	material_level = 5,
+	require = { stat = { dex=20, str=30 }, },
+	special_desc = function(self) return "25% of all damage splashes in a radius of 1 around the target." end,
+	combat = {
+		capacity = 14,
+		dam = 68,
+		apr = 100,
+		physcrit = 10,
+		dammod = {dex=0.5, str=0.7},
+		siege_impact=0.25,		
+	},
+}
+
+newEntity{ base = "BASE_LONGSWORD", --For whatever artists draws this: it's a rapier.
+	power_source = {technique=true},
+	unique = true,
+	name = "Punae's Blade",
+	unided_name = "thin blade", image = "object/artifact/punaes_blade.png",
+	level_range = {28, 38},
+	color=colors.GREY,
+	rarity = 300,
+	desc = [[This very thin sword cuts through the air with ease, allowing remarkably quick movement.]],
+	cost = 400,
+	require = { stat = { str=30 }, },
+	material_level = 4,
+	combat = {
+		dam = 46,
+		apr = 4,
+		physcrit = 10,
+		dammod = {str=1},
+	},
+	wielder = {
+		evasion=10,
+		combat_physcrit = 10,
+		combat_physspeed = 0.1,
+	},
+}
+
+newEntity{ base = "BASE_CLOTH_ARMOR", --Thanks SageAcrin!
+	power_source = {psionic=true},
+	unique = true,
+	name = "Crimson Robe", color = colors.RED, image = "object/artifact/crimson_robe.png",
+	unided_name = "blood-stained robe",
+	desc = [[This robe was formerly owned by Callister the Psion, a powerful Psionic that pioneered many Psionic abilities. After his wife was murdered, Callister became obsessed with finding her killer, using his own hatred as a fuel for new and disturbing arts. After forcing the killer to torture himself to death, Callister walked the land, forcing any he found to kill themselves - his way of releasing them from the world's horrors. One day, he simply disappeared. This robe, soaked in blood, was the only thing he left behind.]],
+	level_range = {40, 50},
+	rarity = 230,
+	cost = 350,
+	material_level = 5,
+	special_desc = function(self) return "Increases your solipsism threshold by 20% (if you have one). If you do, also grants 15% global speed when worn." end,
+	wielder = {
+		combat_def=12,
+		inc_stats = { [Stats.STAT_WIL] = 10, [Stats.STAT_CUN] = 10, },
+		combat_mindpower = 20,
+		combat_mindcrit = 9,
+		psi_regen=0.2,
+		psi_on_crit = 4,
+		hate_on_crit = 4, 
+		hate_per_kill = 2,
+		resists_pen={all = 20},
+		on_melee_hit={[DamageType.MIND] = 35, [DamageType.RANDOM_GLOOM] = 10},
+		melee_project={[DamageType.MIND] = 35, [DamageType.RANDOM_GLOOM] = 10},
+		talents_types_mastery = { ["psionic/solipsism"] = 0.1, ["psionic/focus"] = 0.2, ["cursed/slaughter"] = 0.2, ["cursed/punishments"] = 0.2,},
+	},
+	on_wear = function(self, who)
+		if who:attr("solipsism_threshold") then
+			self:specialWearAdd({"wielder","solipsism_threshold"}, 0.2)
+			self:specialWearAdd({"wielder","global_speed_add"}, 0.15)
+			game.logPlayer(who, "#RED#You feel yourself lost in the aura of the robe.")
+		end
+	end,
+	talent_on_mind  = { {chance=8, talent=Talents.T_HATEFUL_WHISPER, level=2}, {chance=8, talent=Talents.T_AGONY, level=2}  },
+}
+
+newEntity{ base = "BASE_RING", --Thanks Alex!
+	power_source = {arcane=true},
+	name = "Exiler", unique=true, image = "object/artifact/exiler.png",
+	desc = [[The chronomancer known as Solith was renowned across all of Eyal. He always seemed to catch his enemies alone.
+In the case of opponents who weren't alone, he had to improvise.]],
+	unided_name = "insignia ring",
+	level_range = {40, 50},
+	rarity = 250,
+	cost = 300,
+	material_level = 5,
+	wielder = {
+		combat_spellpower = 10,
+		paradox_reduce_fails = 20,
+		talent_cd_reduction={
+			[Talents.T_TIME_SKIP]=1,
+		},
+		inc_damage={ [DamageType.TEMPORAL] = 15, [DamageType.PHYSICAL] = 10, },
+		resists={ [DamageType.TEMPORAL] = 15,},
+		melee_project={ [DamageType.TEMPORAL] = 15,},
+		talents_types_mastery = {
+ 			["chronomancy/timetravel"] = 0.2,
+ 		},
+	},
+	talent_on_spell = { {chance=10, talent="T_RETHREAD", level = 2} },
+	max_power = 32, power_regen = 1,
+	use_power = { name = "deal temporal damage to summons, and if they survive, remove them from time", power = 32,
+		use = function(self, who)
+			local Talents = require "engine.interface.ActorTalents"
+			local tg = {type="ball", range=5, radius=2}
+			local x, y = who:getTarget(tg)
+			if not x or not y then return nil end
+			who:project(tg, x, y, function(px, py) 
+			local target = game.level.map(px, py, engine.Map.ACTOR)
+			if not target then return end
+			if target.summoner then
+			who:forceUseTalent(Talents.T_TIME_SKIP, {ignore_cd=true, ignore_energy=true, force_target=target, force_level=2, ignore_ressources=true})
+			end
+			end)
+			return {id=true, used=true}
+		end
+	},
+}
+
+newEntity{ base = "BASE_SHIELD",
+	power_source = {arcane=true},
+	unique = true,
+	name = "Piercing Gaze", image = "object/artifact/piercing_gaze.png",
+	unided_name = "stone-eyed shield",
+	desc = [[This gigantic shield has a stone eye embedded in it.]],
+	color = colors.BROWN,
+	level_range = {30, 40},
+	rarity = 270,
+	--require = { stat = { str=28 }, },
+	cost = 400,
+	material_level = 4,
+	metallic = false,
+	special_desc = function(self) return "When you block an attack, there is a 30% chance of petrifying the attacker." end,
+	special_combat = {
+		dam = 40,
+		block = 180,
+		physcrit = 5,
+		dammod = {str=1},
+	},
+	wielder = {
+		combat_armor = 25,
+		combat_def = 5,
+		combat_def_ranged = 10,
+		fatigue = 12,
+		learn_talent = { [Talents.T_BLOCK] = 4, },
+		resists = { [DamageType.PHYSICAL] = 10, [DamageType.ACID] = 10, [DamageType.LIGHTNING] = 10, [DamageType.FIRE] = 10,},
+	},
+	on_block = function(self, who, src, type, dam, eff)
+		if rng.percent(30) then
+			if not src then return end
+			game.logSeen(src, "The eye locks onto %s, freezing it in place!", src.name:capitalize())
+			if src:canBe("stun") and src:canBe("stone") and src:canBe("instakill") then
+				src:setEffect(who.EFF_STONED, 5, {})
+			end
+		end
+	end,
+}
+
+-- No longer hits your own projectiles
+-- Hopefully fixed LUA errors with DamageType require
+-- Significant rescaling.  Base damage cut by 50%, crit by 5%.  The reason these hilariously bad numbers happened was derping and not accounting for the awesomeness of the 100% dex scaling.  APR is still extremely high.
+-- Proc chance is now 100% up from 25%.  No matter how I test this--even at 100% and 500% global action speed--it is often a pain in the ass to get procs just to test.  This is supposed to be one of the main features of the item. 
+newEntity{ base = "BASE_KNIFE", --Shibari's #1
+	power_source = {nature=true},
+	unique = true,
+	name = "Shantiz the Stormblade",
+	unided_name = "thin stormy blade", image = "object/artifact/shantiz_the_stromblade.png",
+	level_range = {18, 33},
+	material_level = 3,
+	rarity = 300,
+	desc = [[This surreal dagger crackles with the intensity of a vicious storm.]],
+	cost = 400,
+	color=colors.BLUE,
+	require = { stat = { dex=30}},
+	combat = {
+		dam = 15,
+		apr = 20,
+		physcrit = 10,
+		dammod = {dex=1},
+		special_on_hit = {desc="Causes lightning to strike and destroy any projectiles in a radius of 10, dealing damage and dazing enemies in a radius of 5 around them.", on_kill=1, fct=function(combat, who, target)
+			local grids = core.fov.circle_grids(who.x, who.y, 10, true)
+			for x, yy in pairs(grids) do for y, _ in pairs(grids[x]) do
+				local i = 0
+				local p = game.level.map(x, y, engine.Map.PROJECTILE+i)
+				while p do
+					local DamageType = require "engine.DamageType" -- I don't entirely follow why this is necessary
+					if p.src and (p.src == who) then return end -- Keep Arcane Blade procs from hitting them since the projectile is still on top of them.
+					if p.name then 
+						game.logPlayer(who, "#GREEN#Lightning strikes the " .. p.name .. "!")
+					else
+						game.logPlayer(who, "#GREEN#Shantiz strikes down a projectile!")
+					end
+					
+					p:terminate(x, y)
+					game.level:removeEntity(p, true)
+					p.dead = true
+					game.level.map:particleEmitter(x, y, 5, "ball_lightning_beam", {radius=5, tx=x, ty=y})
+				   
+					local tg = {type="ball", radius=5, selffire=false}
+					local dam = 4*who:getDex() -- no more crit or base damage.  no real reason, just like it better.
+
+					who:project(tg, x, y, DamageType.LIGHTNING, dam)
+				   
+					who:project(tg, x, y, function(tx, ty)
+							local target = game.level.map(tx, ty, engine.Map.ACTOR)
+							if not target or target == who then return end
+							target:setEffect(target.EFF_DAZED, 3, {apply_power=who:combatAttack()})
+					end)
+   
+					i = i + 1
+					p = game.level.map(x, y, engine.Map.PROJECTILE+i)
+				end end end    
+			return          
+			end
+		},
+	},
+	wielder = {
+		inc_stats = { [Stats.STAT_DEX] = 20 },
+		slow_projectiles = 40, 
+		quick_weapon_swap = 1, 
+	},
+}
+
+newEntity{ base = "BASE_KNIFE",
+	power_source = {technique=true},
+	unique = true,
+	name = "Swordbreaker", image = "object/artifact/swordbreaker.png",
+	unided_name = "hooked blade",
+	desc = [[This ordinary blade is made of fine, sturdy voratun and outfitted with jagged hooks along the edge. This simple appearance belies a great power - the hooked maw of this dagger broke many a blade and the stride of many would-be warriors.]],
+	level_range = {20, 30},
+	rarity = 250,
+	require = { stat = { dex=10, cun=10 }, },
+	cost = 300,
+	material_level = 3,
+	special_desc = function(self) return "Can block like a shield, potentially disarming the enemy." end,
+	combat = {
+		dam = 25,
+		apr = 20,
+		physcrit = 15,
+		physspeed = 0.9,
+		dammod = {dex=0.5,cun=0.5},
+		special_on_crit = {desc="Breaks enemy weapon.", fct=function(combat, who, target)
+			target:setEffect(target.EFF_SUNDER_ARMS, 5, {power=5+(who:combatPhysicalpower()*0.33), apply_power=who:combatPhysicalpower()})
+		end},
+	},
+	wielder = {
+		combat_def = 15,
+		disarm_immune=0.5,
+		combat_physresist = 15,
+		inc_stats = { 
+			[Stats.STAT_DEX] = 8, 
+			[Stats.STAT_CUN] = 8, 
+		},
+		combat_armor_hardiness = 20,
+		learn_talent = { [Talents.T_DAGGER_BLOCK] = 1, },
+	},
+}
+
+newEntity{ base = "BASE_SHIELD",
+	power_source = {arcane=true},
+	unique = true,
+	name = "Shieldsmaiden", image = "object/artifact/shieldmaiden.png",
+	unided_name = "icy shield",
+	desc = [["Myths tell of shieldsmaidens, a tribe of warrior women from the northern wastes of Maj'Eyal. Their martial prowess and beauty drew the fascination of swaths of admirers, yet all unrequited. So began the saying, that a shieldsmaiden's heart is as cold and unbreakable as her shield."]],
+	color = colors.BROWN,
+	level_range = {36, 48},
+	rarity = 270,
+	require = { stat = { str=28 }, },
+	cost = 400,
+	material_level = 5,
+	metallic = false,
+	special_desc = function(self) return "Granted talent can block up to 1 instance of damage each 10 turns." end,
+	special_combat = {
+		dam = 48,
+		block = 150,
+		physcrit = 8,
+		dammod = {str=1},
+		damtype = DamageType.ICE,
+		talent_on_hit = { [Talents.T_ICE_SHARDS] = {level=3, chance=15} },
+	},
+	wielder = {
+		combat_armor = 20,
+		combat_def = 5,
+		combat_def_ranged = 12,
+		fatigue = 10,
+		learn_talent = { [Talents.T_BLOCK] = 4, [Talents.T_SHIELDSMAIDEN_AURA] = 1,  },
+		resists = { [DamageType.COLD] = 25, [DamageType.FIRE] = 25,},
+	},
+}
+
+-- Thanks to Naghyal's Beholder code for the basic socket skeleton
+newEntity{ base = "BASE_GREATMAUL",
+	power_source = {arcane=true}, -- Should really make this only arcane for some gems
+	unique = true,
+	color = colors.BLUE,
+	name = "Tirakai's Maul",
+	desc = [[This massive hammer is formed from a thick mass of strange crystalline growths. In the side of the hammer itself you see an empty slot; it looks like a gem of your own could easily fit inside it.]],
+	gemDesc = "None", -- Defined by the elemental properties and used by special_desc
+	special_desc = function(self)
+	-- You'll want to color this and such
+		if not self.Gem then return ("No gem") end
+		return ("%s: %s"):format(self.Gem.name:capitalize(), self.gemDesc or ("Write a description for this gem's properties!"))
+	end,	
+	cost = 1000,
+	material_level = 1, -- Changes to gem material level on socket
+	evel_range = {1, 15},
+	rarity = 280,
+	combat = {
+		dam = 10,
+		apr = 7,
+		physcrit = 4,
+		damrange=1.3,
+		dammod = {str=1.2},
+	},
+	max_power = 1, power_regen = 1,
+	use_power = { name = "imbue the hammer with a gem of your choice", power = 0,
+		use = function(self, who)
+			local DamageType = require "engine.DamageType"
+			local Stats = require "engine.interface.ActorStats"
+			local d
+			d = who:showInventory("Use which gem?", who:getInven("INVEN"), function(gem) return gem.type == "gem" and gem.imbue_powers and gem.material_level end, 
+				function(gem, gem_item)
+				who:onTakeoff(self)
+				local name_old=self.name
+				local old_hotkey
+				for i, v in pairs(who.hotkey) do
+					if v[2]==name_old then
+						old_hotkey=i
+					end
+				end
+				
+				-- Recycle the old gem
+				local old_gem=self.Gem
+				if old_gem then
+					who:addObject(who:getInven("INVEN"), old_gem)
+					game.logPlayer(who, "You remove your %s.", old_gem:getName{do_colour=true, no_count=true})
+				end
+				
+				if gem then
+	
+					-- The Blank Slate.  This is a horrible method of changing modes, but it is the easiest to avoid fucking up.  This doesn't do much better than just making a static table for every element but its much easier to work with.
+					self.Gem = nil
+					self.Gem = gem
+					self.gemDesc = "Describe all the goddamn colors.  NOW."
+					
+					self.sentient = false
+					self.act = mod.class.Object.act
+					
+					self.talent_on_spell = nil
+					
+					self.material_level=gem.material_level
+					local scalingFactor = self.material_level 
+					
+					self.combat = {
+						dam = (14 * scalingFactor),
+						apr = (3 * scalingFactor),
+						physcrit = (2.5 * scalingFactor),
+						dammod = {str=1.2},
+						damrange = 1.3,
+					}
+							
+					self.wielder = {
+						inc_stats = {[Stats.STAT_MAG] = (2 * scalingFactor), [Stats.STAT_CUN] = (2 * scalingFactor), [Stats.STAT_DEX] = (2 * scalingFactor),},
+					}
+					
+					who:removeObject(who:getInven("INVEN"), gem_item)
+
+					-- Each element merges its effect into the combat/wielder tables (or anything else) after the base stats are scaled
+					-- You can modify damage and such here too but you should probably make static tables instead of merging
+					if gem.subtype =="black" then -- Acid
+						self.combat.damtype = DamageType.ACID
+						table.mergeAdd(self.wielder, {inc_damage = { [DamageType.ACID] = 4 * scalingFactor} }, true)
+						
+						self.combat.burst_on_crit = {[DamageType.ACID_DISARM] = 12 * scalingFactor,}
+						self.gemDesc = "Acid"
+					end
+					if gem.subtype =="blue" then  -- Lightning
+						self.combat.damtype = DamageType.LIGHTNING
+						table.mergeAdd(self.wielder, {
+							inc_damage = { [DamageType.LIGHTNING] = 4 * scalingFactor} 
+						
+							}, true)
+						self.combat.burst_on_crit = {[DamageType.LIGHTNING_DAZE] = 12 * scalingFactor,}
+						self.gemDesc = "Lightning"
+					end
+					if gem.subtype =="green" then  -- Nature
+						self.combat.damtype = DamageType.NATURE
+						table.mergeAdd(self.wielder, {
+							inc_damage = { [DamageType.NATURE] = 4 * scalingFactor} 
+							
+							}, true)
+						self.combat.burst_on_crit = {[DamageType.SPYDRIC_POISON] = 12 * scalingFactor,}
+						self.gemDesc = "Nature"
+					end
+					if gem.subtype =="red" then  -- Fire					
+						self.combat.damtype = DamageType.FIRE
+						table.mergeAdd(self.wielder, {
+							inc_damage = { [DamageType.FIRE] = 4 * scalingFactor}, 
+						}, true)
+						self.combat.burst_on_crit = {[DamageType.FLAMESHOCK] = 12 * scalingFactor,}
+						self.gemDesc = "Fire"
+					end
+					if gem.subtype =="violet" then -- Arcane
+						self.combat.damtype = DamageType.ARCANE
+						table.mergeAdd(self.wielder, {
+							inc_damage = { [DamageType.ARCANE] = 4 * scalingFactor} 
+							
+						}, true)
+						self.combat.burst_on_crit = {[DamageType.ARCANE_SILENCE] = 12 * scalingFactor,}
+						self.gemDesc = "Arcane"
+					end
+					if gem.subtype =="white" then  -- Cold
+						self.combat.damtype = DamageType.COLD
+						table.mergeAdd(self.wielder, {
+							inc_damage = { [DamageType.COLD] = 4 * scalingFactor} 
+							
+						}, true)
+						self.combat.burst_on_crit = {[DamageType.ICE] = 12 * scalingFactor,}
+						self.gemDesc = "Cold"
+					end
+					if gem.subtype =="yellow" then -- Light
+						self.combat.damtype = DamageType.LIGHT
+						table.mergeAdd(self.wielder, {
+							inc_damage = { [DamageType.LIGHT] = 4 * scalingFactor} 
+							
+						}, true)	
+						self.combat.burst_on_crit = {[DamageType.LIGHT_BLIND] = 12 * scalingFactor,}
+						self.gemDesc = "Light"
+					end
+					if gem.subtype == "multi-hued"  then -- Some but not all artifacts, if you want to do artifact specific effects make conditionals by name, don't use this
+						table.mergeAdd(self.combat, {convert_damage = {[DamageType.COLD] = 25, [DamageType.FIRE] = 25, [DamageType.LIGHTNING] = 25, [DamageType.ARCANE] = 25,} }, true)
+						table.mergeAdd(self.wielder, {
+							inc_damage = { all = 2 * scalingFactor},
+							resists_pen = { all = 2 * scalingFactor},
+							}, true)	
+							self.gemDesc = "Unique"							
+					end
+					if gem.subtype == "demonic"  then -- Goedalath Rock
+						self.combat.damtype = DamageType.SHADOWFLAME
+						table.mergeAdd(self.wielder, {
+							inc_damage = { [DamageType.FIRE] = 3 * scalingFactor, [DamageType.DARKNESS] = 3 * scalingFactor,},
+							resists_pen = { all = 2 * scalingFactor},
+							}, true)	
+							self.gemDesc = "Demonic"							
+					end
+					game.logPlayer(who, "You imbue your %s with %s.", self:getName{do_colour=true, no_count=true}, gem:getName{do_colour=true, no_count=true})
+
+					--self.name = (gem.name .. " of Divinity")
+					
+					table.mergeAdd(self.wielder, gem.imbue_powers, true)
+					
+				end
+				if gem.talent_on_spell then
+					self.talent_on_spell = self.talent_on_spell or {}
+					table.append(self.talent_on_spell, gem.talent_on_spell)
+				end
+				who:onWear(self)
+				for i, v in pairs(who.hotkey) do
+					if v[2]==name_old then
+						v[2]=self.name
+					end
+					if v[2]==self.name and old_hotkey and i~=old_hotkey then
+						who.hotkey[i] = nil
+					end
+				end
+				d.used_talent=true
+				game:unregisterDialog(d)
+				return true
+			end)
+			return {id=true, used=true}
+		end
+	},
+	on_wear = function(self, who)
+
+		return true
+	end,
+	wielder = {
+	-- Stats only from gems
+	},
+}
+
+newEntity{ base = "BASE_GLOVES", define_as = "SET_GLOVE_DESTROYER",
+	power_source = {arcane=true, technique=true},
+	unique = true,
+	name = "Fist of the Destroyer", color = colors.RED, image = "object/artifact/fist_of_the_destroyer.png",
+	unided_name = "vile gauntlets",
+	desc = [[These terrible looking gloves glow with untold power.]],
+	level_range = {40, 50},
+	rarity = 300,
+	cost = 800,
+	material_level = 5,
+	special_desc = function(self)
+		local num=4
+		if self.set_complete then
+			num=6
+		end
+		return ("Increases all damage by %d%% of current vim \nCurrent Bonus: %d%%"):format(num, num*0.01*(game.player:getVim() or 0)) 
+	end,
+	wielder = {
+		inc_stats = { [Stats.STAT_STR] = 9, [Stats.STAT_MAG] = 9, [Stats.STAT_CUN] = 3, },
+		demonblood_dam=0.04,
+		max_vim = 25,
+		combat_def = 8,
+		stun_immune = 0.2,
+		talents_types_mastery = { ["corruption/shadowflame"] = 0.2, ["corruption/vim"] = 0.2,},
+		combat = {
+			dam = 35,
+			apr = 15,
+			physcrit = 10,
+			physspeed = 0,
+			dammod = {dex=0.4, str=-0.6, cun=0.4, mag=0.2,},
+			damrange = 0.3,
+			talent_on_hit = { T_DRAIN = {level=2, chance=8}, T_SOUL_ROT = {level=3, chance=12}, T_BLOOD_GRASP = {level=3, chance=10}},
+		},
+	},
+	max_power = 12, power_regen = 1,
+	use_talent = { id = Talents.T_DARKFIRE, level = 5, power = 12 },
+	set_list = { {"define_as", "SET_ARMOR_MASOCHISM"} },
+	on_set_complete = function(self, who)
+		game.logPlayer(who, "#STEEL_BLUE#The fist and the mangled clothing glow ominously!")
+		self:specialSetAdd({"wielder","demonblood_dam"}, 0.02)
+		self:specialSetAdd({"wielder","inc_damage"}, { [engine.DamageType.FIRE] = 15, [engine.DamageType.DARKNESS] = 15, all = 5 })
+	end,
+	on_set_broken = function(self, who)
+		game.logPlayer(who, "#STEEL_BLUE#The ominous glow dies down.")
+	end,
+}
+
+newEntity{ base = "BASE_LIGHT_ARMOR", define_as = "SET_ARMOR_MASOCHISM",
+	power_source = {arcane=true, technique=true},
+	unique = true,
+	name = "Masochism", color = colors.RED, image = "object/artifact/masochism.png",
+	unided_name = "mangled clothing",
+	desc = [[Stolen flesh,
+	Stolen pain,
+	To give it up,
+	Is to live again.]],
+	level_range = {40, 50},
+	rarity = 300,
+	cost = 800,
+	material_level = 5,
+	special_desc = function(self)
+		local num=7
+		if self.set_complete then
+			num=10
+		end
+		return ("Reduces all damage by %d%% of current vim or 50%% of the damage, whichever is lower; but at the cost of vim equal to 5%% of the damage blocked. \nCurrent Bonus: %d"):format(num, num*0.01*(game.player:getVim() or 0)) 
+	end,
+	wielder = {
+		inc_stats = {[Stats.STAT_MAG] = 9, [Stats.STAT_CUN] = 3, },
+		combat_spellpower = 10,
+		demonblood_def=0.07,
+		max_vim = 25,
+		disease_immune = 1,
+		combat_physresist = 10,
+		combat_mentalresist = 10,
+		combat_spellresist = 10,
+		on_melee_hit={[DamageType.DRAIN_VIM] = 25},
+		melee_project={[DamageType.DRAIN_VIM] = 25},
+		talents_types_mastery = { ["corruption/sanguisuge"] = 0.2, ["corruption/blood"] = 0.2,},
+	},
+	max_power = 12, power_regen = 1,
+	use_talent = { id = Talents.T_BLOOD_GRASP, level = 5, power = 12 },
+	set_list = { {"define_as", "SET_GLOVE_DESTROYER"} },
+	on_set_complete = function(self, who)
+		self:specialSetAdd({"wielder","demonblood_def"}, 0.03)
+		self:specialSetAdd({"wielder","resists"}, { [engine.DamageType.FIRE] = 15, [engine.DamageType.DARKNESS] = 15, all = 5 })
+	end,
+	on_set_broken = function(self, who)
+	end,
+}
+
+newEntity{ base = "BASE_GREATMAUL",
+	power_source = {technique=true},
+	unique = true,
+	name = "Obliterator", color = colors.UMBER, image = "object/artifact/obliterator.png",
+	unided_name = "titanic maul",
+	desc = [[This massive hammer strikes with an impact that could shatter bones.]],
+	level_range = {23, 30},
+	rarity = 270,
+	require = { stat = { str=40 }, },
+	cost = 250,
+	material_level = 3,
+	combat = {
+		dam = 48,
+		apr = 10,
+		physcrit = 0,
+		dammod = {str=1.2},
+		crushing_blow=1,
+	},
+	wielder = {
+		combat_critical_power = 10,
+	},
+}
+
+newEntity{ base = "BASE_HELM",
+	power_source = {technique=true},
+	unique = true,
+	name = "Yaldan Baoth", image = "object/artifact/yaldan_baoth.png",
+	unided_name = "obscuring helm",
+	desc = [[The golden bascinet crown, affiliated with Veluca of Yaldan. King of the mythical city of Yaldan, that was struck from the face of Eyal by the arrogance of its people. Lone survivor of his kin, he spent his last years wandering the early world, teaching man to stand against the darkness. With his dying words, "Fear no evil", the crown was passed onto his successor.]],
+	level_range = {28, 39,},
+	rarity = 240,
+	cost = 700,
+	material_level = 4,
+	wielder = {
+		combat_armor = 6,
+		fatigue = 4,
+		resist_unseen = 25,
+		sight = -2,
+		inc_stats = { [Stats.STAT_WIL] = 10, [Stats.STAT_CON] = 7, },
+		inc_damage={
+			[DamageType.LIGHT] = 10,
+		},
+		resists={
+			[DamageType.LIGHT] = 10,
+			[DamageType.DARKNESS] = 15,
+		},
+		resists_cap={
+			[DamageType.DARKNESS] = 10,
+		},
+		blind_fight = 1,
 	},
 }
 --[=[

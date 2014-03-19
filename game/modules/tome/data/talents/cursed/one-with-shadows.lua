@@ -1,5 +1,5 @@
 -- ToME - Tales of Middle-Earth
--- Copyright (C) 2009, 2010, 2011, 2012, 2013 Nicolas Casalini
+-- Copyright (C) 2009 - 2014 Nicolas Casalini
 --
 -- This program is free software: you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -129,7 +129,10 @@ newTalent{
 		self:setEffect(self.EFF_SHADOW_DECOY, 4, {power=t.getPower(self, t)})
 		self:forceUseTalent(t.id, {ignore_energy=true})
 
-		if self.player then self:setEmote(Emote.new("Fools, you never killed me; that was only my shadow!", 45)) end
+		if self.player then
+			self:setEmote(Emote.new("Fools, you never killed me; that was only my shadow!", 45))
+			world:gainAchievement("AVOID_DEATH", self)
+		end
 		return true
 	end,
 	activate = function(self, t)

@@ -1,5 +1,5 @@
 -- ToME - Tales of Maj'Eyal
--- Copyright (C) 2009, 2010, 2011, 2012, 2013 Nicolas Casalini
+-- Copyright (C) 2009 - 2014 Nicolas Casalini
 --
 -- This program is free software: you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -197,7 +197,7 @@ newTalent{
 			ai_target = {actor=nil},
 			ai = "summoned", ai_real = "tactical",
 			name = "Forgery of Haze ("..self.name..")",
-			desc = [[A dark shadowy shape whose form resembles you.]],
+			desc = [[A dark shadowy shape whose form resembles yours.]],
 		})
 		m:removeAllMOs()
 		m.make_escort = nil

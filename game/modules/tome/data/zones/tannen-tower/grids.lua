@@ -1,5 +1,5 @@
 -- ToME - Tales of Maj'Eyal
--- Copyright (C) 2009, 2010, 2011, 2012, 2013 Nicolas Casalini
+-- Copyright (C) 2009 - 2014 Nicolas Casalini
 --
 -- This program is free software: you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -30,7 +30,7 @@ newEntity{
 	notice = true,
 	always_remember = true,
 	show_tooltip = true,
-	desc = [[This portal seems to be connected with Last Hope, you could probably use it to go back.]],
+	desc = [[This portal seems to be connected with Last Hope; you could probably use it to go back.]],
 
 	on_move = function(self, x, y, who)
 		if who == game.player then

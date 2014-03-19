@@ -1,5 +1,5 @@
 -- ToME - Tales of Maj'Eyal
--- Copyright (C) 2009, 2010, 2011, 2012, 2013 Nicolas Casalini
+-- Copyright (C) 2009 - 2014 Nicolas Casalini
 --
 -- This program is free software: you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -29,7 +29,7 @@ newEntity{
 	rarity = 5,
 	metallic = true,
 	combat = { talented = "mace", damrange = 1.5, physspeed = 1, sound = {"actions/melee", pitch=0.6, vol=1.2}, sound_miss = {"actions/melee", pitch=0.6, vol=1.2} },
-	desc = [[Massive two-handed maul.]],
+	desc = [[Massive two-handed mauls.]],
 	twohanded = true,
 	ego_bonus_mult = 0.2,
 	randart_able = "/data/general/objects/random-artifacts/melee.lua",

@@ -1,5 +1,5 @@
 -- ToME - Tales of Maj'Eyal
--- Copyright (C) 2009, 2010, 2011, 2012, 2013 Nicolas Casalini
+-- Copyright (C) 2009 - 2014 Nicolas Casalini
 --
 -- This program is free software: you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -51,7 +51,7 @@ newEntity{
 
 newEntity{ base = "BASE_NPC_NAGA",
 	name = "naga myrmidon", color=colors.DARK_UMBER, image="npc/naga_myrmidon.png",
-	desc = [[Before you stands a tall figure - a very tall figure, propped high by a thick serpent's tail in place of where his legs should rightly be. His torso is human-like, with bulging muscles beneath fitted armour, and large hands gripping a fiercely sharp trident. He glares at you with dark intensity, like a wolf about to pounce on unsuspecting prey.]],
+	desc = [[Before you stands a tall figure -- a very tall figure, propped high by a thick serpent's tail in place of where his legs should rightly be. His torso is human-like, with bulging muscles beneath fitted armour, and large hands gripping a fiercely sharp trident. He glares at you with dark intensity, like a wolf about to pounce on unsuspecting prey.]],
 	level_range = {30, nil}, exp_worth = 1,
 	rarity = 1,
 	max_life = resolvers.rngavg(120,150), life_rating = 16,
@@ -97,7 +97,7 @@ newEntity{ base = "BASE_NPC_NAGA",
 
 newEntity{ base = "BASE_NPC_NAGA",
 	name = "naga psyren", color=colors.YELLOW, image="npc/naga_psyren.png",
-	desc = [[Such a mix of enchanting beauty and reviling horror you have never before seen combined. Above, a beautiful, ethereal woman, of scant form and entrancing grace. Below, the thick, smooth scales of a snake, its stretched tail gently waving back and forth in the air behind her. The movement is eye-catching and hypnotic, and whilst you watch a mysterious smile plays across her seductive lips.]],
+	desc = [[Such a mix of enchanting beauty and revolting horror you have never before seen combined. Above, a beautiful, ethereal woman, of scant form and entrancing grace. Below, the thick, smooth scales of a snake, its stretched tail gently waving back and forth in the air behind her. The movement is eye-catching and hypnotic, and whilst you watch a mysterious smile plays across her seductive lips.]],
 	level_range = {36, nil}, exp_worth = 1,
 	rarity = 4,
 	rank = 3,

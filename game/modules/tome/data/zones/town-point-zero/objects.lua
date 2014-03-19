@@ -1,5 +1,5 @@
 -- ToME - Tales of Maj'Eyal
--- Copyright (C) 2009, 2010, 2011, 2012, 2013 Nicolas Casalini
+-- Copyright (C) 2009 - 2014 Nicolas Casalini
 --
 -- This program is free software: you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -25,7 +25,7 @@ local Talents = require "engine.interface.ActorTalents"
 newEntity{ base = "BASE_TOOL_MISC",
 	power_source = {arcane=true},
 	define_as = "TIME_SHARD",
-	desc = [[An iridescent shard of violet crystal.  Its light ebbs and flows, sometimes fast and sometimes slow, keeping track with the chaotic streams of time itself.  It makes you feel both old and young, a newborn child and an ancient being, your flesh simply one instance in a thousand refractions of a single timeless and eternal soul.]],
+	desc = [[An iridescent shard of violet crystal.  Its light ebbs and flows, sometimes fast and sometimes slow, keeping pace with the chaotic streams of time itself.  It makes you feel both old and young, a newborn child and an ancient being, your flesh simply one instance in a thousand refractions of a single timeless and eternal soul.]],
 	unique = true,
 	name = "Shard of Crystalized Time", color = colors.YELLOW,
 	unided_name = "glowing shard", image = "object/artifact/time_shard.png",

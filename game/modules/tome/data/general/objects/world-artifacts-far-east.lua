@@ -1,5 +1,5 @@
 -- ToME - Tales of Maj'Eyal
--- Copyright (C) 2009, 2010, 2011, 2012, 2013 Nicolas Casalini
+-- Copyright (C) 2009 - 2014 Nicolas Casalini
 --
 -- This program is free software: you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -159,7 +159,7 @@ newEntity{ base = "BASE_GEM",
 	power_source = {arcane=true},
 	unique = true,
 	unided_name = "unearthly black stone",
-	name = "Goedalath Rock", subtype = "black", image = "object/artifact/goedalath_rock.png",
+	name = "Goedalath Rock", subtype = "demonic", image = "object/artifact/goedalath_rock.png",
 	color = colors.PURPLE,
 	level_range = {42, 50},
 	desc = [[A small rock that seems from beyond this world, vibrating with a fierce energy.  It feels warped and terrible and evil... and yet oh so powerful.]],
@@ -228,9 +228,9 @@ newEntity{ base = "BASE_LONGSWORD", define_as = "BLOODEDGE",
 	unique = true,
 	name = "Blood-Edge", image = "object/artifact/sword_blood_edge.png",
 	unided_name = "red crystalline sword",
-	level_range = {35, 42},
+	level_range = {36, 48},
 	color=colors.RED,
-	rarity = 270,
+	rarity = 260,
 	desc = [[This deep red sword weeps blood continuously. It was born in the labs of the orcish corrupter Hurik, who sought to make a crystal that would house his soul after death. But his plans were disrupted by a band of sun paladins, and though most died purging his keep of dread minions, their leader Raasul fought through to Hurik's lab, sword in hand. There the two did battle, blade against blood magic, till both fell to the floor with weeping wounds. The orc with his last strength crawled towards his fashioned phylactery, hoping to save himself, but Raasul saw his plans and struck the crystal with his light-bathed sword. It shattered, and in the sudden impulse of energies the steel, crystal and blood were fused into one.
 Now the broken fragments of Raasul's soul are trapped in this terrible artifact, his mind warped beyond all sanity by decades of imprisonment. Only the taste of blood calls him forth, his soul stealing the lifeblood of others to take on physical form again, that he may thrash and wail against the living.]],
 	cost = 1000,
@@ -248,15 +248,15 @@ Now the broken fragments of Raasul's soul are trapped in this terrible artifact,
 		max_vim = 25,
 	},
 
-	max_power = 28, power_regen = 1,
-	use_talent = { id = Talents.T_BLEEDING_EDGE, level = 4, power = 28 },
+	max_power = 20, power_regen = 1,
+	use_talent = { id = Talents.T_BLEEDING_EDGE, level = 4, power = 20 },
 	combat = {
-		dam = 44,
-		apr = 4,
-		physcrit = 5,
-		dammod = {str=0.55, mag=0.5},
+		dam = 46,
+		apr = 7,
+		physcrit = 6,
+		dammod = {str=1, mag=0.1},
 		convert_damage = {[DamageType.BLIGHT] = 50},
-
+		lifesteal=5,
 		special_on_hit = {desc="15% chance to animate a bleeding foe's blood", fct=function(combat, who, target)
 			if not rng.percent(15) then return end
 			local cut = false
@@ -280,7 +280,7 @@ Now the broken fragments of Raasul's soul are trapped in this terrible artifact,
 				type = "undead", subtype = "blood",
 				display = "L",
 				name = "animated blood", color=colors.RED,
-				resolvers.nice_tile{image="invis.png", add_mos = {{image="npc/undead_lich_blood_lich.png", display_h=1, display_y=0}}},
+				resolvers.nice_tile{image="invis.png", add_mos = {{image="npc/undead_horror_animated_blood.png", display_h=1, display_y=0}}},
 				desc = "A haze of blood, vibrant and pulsing through the air, possessed by a warped and cracked soul. Every now and then a scream or wail of agony garbles through it, telling of the mindless suffering undergone by its possessor.",
 				body = { INVEN = 10, MAINHAND=1, OFFHAND=1, },
 				rank = 3,

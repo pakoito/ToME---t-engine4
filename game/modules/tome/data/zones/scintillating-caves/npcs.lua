@@ -1,5 +1,5 @@
 -- ToME - Tales of Maj'Eyal
--- Copyright (C) 2009, 2010, 2011, 2012, 2013 Nicolas Casalini
+-- Copyright (C) 2009 - 2014 Nicolas Casalini
 --
 -- This program is free software: you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -73,7 +73,7 @@ newEntity{ base="BASE_NPC_CRYSTAL", define_as = "SPELLBLAZE_SIMULACRUM",
 	name = "Spellblaze Simulacrum", display = "g", image = "npc/spellblaze_simulacrum.png",
 	resolvers.nice_tile{image="invis.png", add_mos = {{image="npc/spellblaze_simulacrum.png", display_h=2, display_y=-1}}},
 	color=colors.VIOLET,
-	desc = [[A formation of purple crystal, but where the others could only be described as polyhedral, this construct seems to strangely resemble... you, if you were several orders of magnitude larger.]],
+	desc = [[A formation of purple crystal, but where the others could only be described as polyhedral, this construct seems to strangely resemble... you, if you were much, much larger.]],
 	killer_message = "and vaporised into nothingness",
 	level_range = {35, nil}, exp_worth = 3,
 	max_life = 300, life_rating = 25, fixed_rating = true,

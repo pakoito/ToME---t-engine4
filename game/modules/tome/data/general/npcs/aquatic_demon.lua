@@ -1,5 +1,5 @@
 -- ToME - Tales of Maj'Eyal
--- Copyright (C) 2009, 2010, 2011, 2012, 2013 Nicolas Casalini
+-- Copyright (C) 2009 - 2014 Nicolas Casalini
 --
 -- This program is free software: you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -60,7 +60,7 @@ newEntity{ base = "BASE_NPC_AQUATIC_DEMON",
 
 newEntity{ base = "BASE_NPC_AQUATIC_DEMON",
 	name = "Walrog", color=colors.DARK_SEA_GREEN, unique=true,
-	desc = "Walrog, the lord of Water",
+	desc = "Walrog, the lord of Water, is fearsome to behold. The water writhes around him as if trying to escape, making his form indistinct. He does not seem surprised to see you.",
 	resolvers.nice_tile{image="invis.png", add_mos = {{image="npc/aquatic_demon_walrog.png", display_h=2, display_y=-1}}},
 	level_range = {20, 30}, exp_worth = 1,
 	rarity = 50,

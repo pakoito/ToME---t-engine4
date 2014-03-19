@@ -1,5 +1,5 @@
 -- TE4 - T-Engine 4
--- Copyright (C) 2009, 2010, 2011, 2012, 2013 Nicolas Casalini
+-- Copyright (C) 2009 - 2014 Nicolas Casalini
 --
 -- This program is free software: you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -86,7 +86,7 @@ function _M:get(char, fr, fg, fb, br, bg, bb, image, alpha, do_outline, allow_ti
 		local s = self.repo[char][fgidx][bgidx]
 		return s[1], s[2], s[3], s[4], s[5]
 	else
-		local s, sw, sh
+		local s, sw, sh, w, h
 		local is_image = false
 		if (self.use_images or not dochar) and image and #image > 4 then
 			if allow_tileset and self.texture then
@@ -118,7 +118,7 @@ function _M:get(char, fr, fg, fb, br, bg, bb, image, alpha, do_outline, allow_ti
 		end
 
 		if self.texture then
-			local w, h = s:getSize()
+			w, h = s:getSize()
 			s, sw, sh = s:glTexture()
 			sw, sh = w / sw, h / sh
 			if not is_image and do_outline then
@@ -130,12 +130,13 @@ function _M:get(char, fr, fg, fb, br, bg, bb, image, alpha, do_outline, allow_ti
 			end
 		else
 			sw, sh = s:getSize()
+			w, h = sw, sh
 		end
 
 		self.repo[char] = self.repo[char] or {}
 		self.repo[char][fgidx] = self.repo[char][fgidx] or {}
-		self.repo[char][fgidx][bgidx] = {s, sw, sh}
-		return s, sw, sh
+		self.repo[char][fgidx][bgidx] = {s, sw, sh, w, h}
+		return s, sw, sh, w, h
 	end
 end
 

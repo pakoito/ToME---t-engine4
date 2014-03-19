@@ -1,5 +1,5 @@
 -- ToME - Tales of Maj'Eyal
--- Copyright (C) 2009, 2010, 2011, 2012, 2013 Nicolas Casalini
+-- Copyright (C) 2009 - 2014 Nicolas Casalini
 --
 -- This program is free software: you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -31,19 +31,39 @@ newTalent{
 	equilibrium = 0,
 	cooldown = 20,
 	no_energy = true,
-	tactical = { BUFF = 2 },
+	tactical = { BUFF = 2, EQUILIBRIUM = 2,
+		ATTACKAREA = function(self, t)
+			if self:getTalentLevel(t)>=4 then return {NATURE = 1 } end
+		end
+	},
 	getDur = function(self, t) return math.floor(self:combatTalentLimit(t, 20, 4, 6.5)) end, -- Limit < 20
 	getDamage = function(self, t) return self:combatTalentMindDamage(t, 5, 90) end,
-	getEqui = function(self, t) return self:combatTalentMindDamage(t, 2, 10) end,
-	trigger = function(self, t, x, y, rad) 
-		game.level.map:addEffect(self,
-			x, y, t.getDur(self, t),
-			DamageType.MUCUS, {dam=t.getDamage(self, t), equi=t.getEqui(self, t)},
-			rad,
-			5, nil,
-			{type="mucus"},
-			nil, true
-		)
+	-- note meditation recovery: local pt = 2 + self:combatTalentMindDamage(t, 20, 120) / 10 = O(<1)
+	getEqui = function(self, t) return self:combatTalentMindDamage(t, 2, 8) end,
+	-- Called by MUCUS effect in mod.data.timed_effects.physical.lua
+	trigger = function(self, t, x, y, rad, eff) -- avoid stacking on map tile
+		local oldmucus = eff and eff[x] and eff[x][y] -- get previous mucus at this spot
+		if not oldmucus or oldmucus.duration <= 0 then -- make new mucus
+			local mucus=game.level.map:addEffect(self,
+				x, y, t.getDur(self, t),
+				DamageType.MUCUS, {dam=t.getDamage(self, t), self_equi=t.getEqui(self, t), equi=1, bonus_level = 0},
+				rad,
+				5, nil,
+				{type="mucus"},
+				nil, true
+			)
+			if eff then
+				eff[x] = eff[x] or {}
+				eff[x][y]=mucus
+			end
+		else
+			if oldmucus.duration > 0 then -- Enhance existing mucus
+				oldmucus.duration = oldmucus.duration + 1
+				oldmucus.dam.bonus_level = oldmucus.dam.bonus_level + 1
+				oldmucus.dam.self_equi = oldmucus.dam.self_equi + 1
+				oldmucus.dam.dam = t.getDamage(self, t) * (1+ self:combatTalentScale(oldmucus.dam.bonus_level, 0.25, 0.7))
+			end
+		end
 	end,
 	action = function(self, t)
 		local dur = t.getDur(self, t)
@@ -54,13 +74,13 @@ newTalent{
 		local dur = t.getDur(self, t)
 		local dam = t.getDamage(self, t)
 		local equi = t.getEqui(self, t)
-		return ([[You start to create mucus where you walk or stand for %d turns.
-		Mucus will poison all foes crossing it, dealing %0.2f nature damage every turn for 5 turn (stacking).
-		Any friendly creature walking the mucus will restore equilibrium by %d per turn.
-		Mucus will disappear after %d turns.
-		At level 4 the mucus will grow in a radius 1.
-		Damage and equilibrium regen increase with Mindpower.]]):
-		format(dur, damDesc(self, DamageType.NATURE, dam), equi, dur)
+		return ([[For %d turns, you lay down mucus where you walk or stand.
+		The mucus is placed automatically every turn and lasts %d turns.
+		At talent level 4 or greater, the mucus will expand to a radius 1 area from where it is placed.
+		Your mucus will poison all foes crossing it, dealing %0.1f nature damage every turn for 5 turns (stacking).
+		In addition, each turn, you will restore %0.1f Equilibrium while in your own mucus, and other friendly creatures in your mucus will restore 1 Equilibrium both for you and for themselves.
+		The Poison damage and Equilibrium regeneration increase with Mindpower, and laying down more mucus in the same spot will intensify its effects and extend its duration by 1 turn.]]):
+		format(dur, dur, damDesc(self, DamageType.NATURE, dam), equi)
 	end,
 }
 
@@ -83,7 +103,9 @@ newTalent{
 		if not x or not y then return nil end
 
 		local grids, px, py = self:project(tg, x, y, DamageType.ACID, self:mindCrit(t.getDamage(self, t)))
-		if self:knowTalent(self.T_MUCUS) then self:callTalent(self.T_MUCUS, nil, px, py, tg.radius) end
+		if self:knowTalent(self.T_MUCUS) then
+			self:callTalent(self.T_MUCUS, nil, px, py, tg.radius, self:hasEffect(self.EFF_MUCUS))
+		end
 		game.level.map:particleEmitter(px, py, tg.radius, "acidflash", {radius=tg.radius, tx=px, ty=py})
 
 		local tgts = {}
@@ -120,9 +142,9 @@ newTalent{
 	end,
 	info = function(self, t)
 		local dam = t.getDamage(self, t)
-		return ([[You call upon nature to turn the ground into an acidic explosion in a radius %d, dealing %0.2f acid damage to all creatures and creating mucus under it.
-		Also if you have any Mucus Oozes active they will, if in line of sight, instantly throw a slime spit (at reduced power) at one of the target hit by the splash.
-		Damage will increase with Mindpower.]]):
+		return ([[Calling upon nature, you cause the ground to erupt in an radius %d acidic explosion, dealing %0.1f acid damage to all creatures and creating mucus in the area.
+		Any Mucus Oozes you have active will, if in line of sight, instantly spit slime (at reduced power) at one of the targets hit by the splash.
+		The damage increases with your Mindpower.]]):
 		format(self:getTalentRadius(t), damDesc(self, DamageType.ACID, dam))
 	end,
 }
@@ -161,7 +183,8 @@ newTalent{
 	mode = "passive",
 	getMax = function(self, t) return math.floor(math.max(1, self:combatStatScale("cun", 0.5, 5))) end,
 	getChance = function(self, t) return self:combatLimit(self:combatTalentMindDamage(t, 5, 300), 50, 12.6, 26, 32, 220) end, -- Limit < 50% --> 12.6 @ 36, 32 @ 220
-
+	getSummonTime = function(self, t) return math.floor(self:combatTalentScale(t, 6, 10)) end,
+	-- by MUCUS damage type in mod.data.damage_types.lua
 	spawn = function(self, t)
 		local notok, nb, sumlim = checkMaxSummon(self, true, 1, "is_mucus_ooze")
 		if notok or nb > t.getMax(self, t) or not self:canBe("summon") then return end
@@ -181,6 +204,7 @@ newTalent{
 			type = "vermin", subtype = "oozes",
 			display = "j", color=colors.GREEN, image = "npc/vermin_oozes_green_ooze.png",
 			name = "mucus ooze",
+			faction = self.faction,
 			desc = "It's made from mucus and it's oozing.",
 			sound_moam = {"creatures/jelly/jelly_%d", 1, 3},
 			sound_die = {"creatures/jelly/jelly_die_%d", 1, 2},
@@ -208,7 +232,7 @@ newTalent{
 			combat = { dam=5, atk=0, apr=5, damtype=DamageType.POISON },
 
 			summoner = self, summoner_gain_exp=true, wild_gift_summon=true, is_mucus_ooze = true,
-			summon_time = math.floor(self:combatTalentScale(t, 6, 10)),
+			summon_time = t.getSummonTime(self, t),
 			max_summon_time = math.floor(self:combatTalentScale(t, 6, 10)),
 		}
 		m:learnTalent(m.T_MUCUS_OOZE_SPIT, true, self:getTalentLevelRaw(t))
@@ -232,12 +256,13 @@ newTalent{
 
 	end,
 	info = function(self, t)
-		return ([[Your mucus is brought to near sentience. Each turn there is a %d%% chance that a random spot of your mucus will spawn a Mucus Ooze.
-		Mucus Oozes will attack any of your foes by spitting slime at them.
-		You may have up to %d Oozes active at any time (based on your Cunning).
-		Any time you deal a mental critical, all your Mucus Oozes' remaining time will increase by 2.
-		The effect will increase with your Mindpower.]]):
-		format(t.getChance(self, t), t.getMax(self, t))
+		return ([[Your mucus is brought to near sentience.
+		Each turn, there is a %d%% chance that a random spot of your mucus will spawn a Mucus Ooze.
+		Mucus Oozes last %d turns and will attack any of your foes by spitting slime at them.
+		You may have up to %d Mucus Oozes active at any time (based on your Cunning).
+		Any time you deal a mental critical, the remaining time on all of your Mucus Oozes will increase by 2.
+		The spawn chance increases with your Mindpower.]]):
+		format(t.getChance(self, t), t.getSummonTime(self, t), t.getMax(self, t))
 	end,
 }
 
@@ -283,10 +308,9 @@ newTalent{
 	info = function(self, t)
 		local nb = t.getNb(self, t)
 		local energy = t.getEnergy(self, t)
-		return ([[You temporarily merge with your mucus, cleasing you from %d physical or magical effects.
-		You can then reappear on any tile in sight that is also covered by mucus.
-		This takes %d%% of a turn to do.
-		Only works when standing over mucus.]]):
+		return ([[You temporarily merge with your mucus, cleasing yourself of %d physical or magical effects.
+		You can then reemerge on any tile within sight and range that is also covered by mucus.
+		This is quick, requiring only %d%% of a turn to perform, but you must be in contact with your mucus.]]):
 		format(nb, (energy) * 100)
 	end,
 }

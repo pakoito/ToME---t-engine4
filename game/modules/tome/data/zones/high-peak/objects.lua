@@ -1,5 +1,5 @@
 -- ToME - Tales of Maj'Eyal
--- Copyright (C) 2009, 2010, 2011, 2012, 2013 Nicolas Casalini
+-- Copyright (C) 2009 - 2014 Nicolas Casalini
 --
 -- This program is free software: you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -31,7 +31,7 @@ newEntity{ define_as = "STAFF_ABSORPTION_AWAKENED", base="BASE_STAFF",
 	display = "\\", color=colors.VIOLET, image = "object/artifact/staff_absorption.png",
 	encumber = 7,
 	plot=true,
-	desc = [[Carved with runes of power, this staff seems to have been made long ago. Yet it bears no signs of tarnishment.
+	desc = [[Carved with runes of power, this staff seems to have been made long ago, yet it bears no signs of tarnish.
 Light around it seems to dim and you can feel its tremendous power simply by touching it.
 The Sorcerers seem to have awakened its power.
 #{italic}#"And lo they came to Amakthel himself, and thousands were killed in the assault on his throne, and three of the Godslayers were broken beneath his feet. But Falion with his dying breath pierced the great god on his knee with the icy sword Arkil, and seeing his opportunity Caldizar, leader of the Godslayers, advanced with the Staff of Absorption and struck a terrifying blow against Amakthel. So fell the greatest of the gods by the hands of his own children, and his face was forced into the dust."#{normal}#]],
@@ -111,7 +111,7 @@ newEntity{ define_as = "PEARL_LIFE_DEATH",
 	display = "*", color=colors.WHITE, image = "object/artifact/pearl_of_life.png",
 	encumber = 2,
 	plot=true,
-	desc = [[A pearl, three times a normal sized one, that glitters in infinite colours, with slight patterns ever shifting away.]],
+	desc = [[A pearl, three times the size of a normal pearl, that glitters in infinite colours, with slight patterns ever shifting away.]],
 
 	carrier = {
 		lite = 1,

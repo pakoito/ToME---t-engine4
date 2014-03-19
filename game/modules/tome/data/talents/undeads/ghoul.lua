@@ -1,5 +1,5 @@
 -- ToME - Tales of Maj'Eyal
--- Copyright (C) 2009, 2010, 2011, 2012, 2013 Nicolas Casalini
+-- Copyright (C) 2009 - 2014 Nicolas Casalini
 --
 -- This program is free software: you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -101,7 +101,7 @@ newTalent{
 			DamageType.RETCH, dam,
 			radius,
 			5, nil,
-			engine.Entity.new{alpha=100, display='', color_br=30, color_bg=180, color_bb=60},
+			MapEffect.new{color_br=30, color_bg=180, color_bb=60, effect_shader="shader_images/retch_effect.png"},
 			nil, self:spellFriendlyFire()
 		)
 		game:playSoundNear(self, "talents/cloud")

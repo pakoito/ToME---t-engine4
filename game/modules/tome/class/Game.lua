@@ -1,5 +1,5 @@
 -- ToME - Tales of Maj'Eyal
--- Copyright (C) 2009, 2010, 2011, 2012, 2013 Nicolas Casalini
+-- Copyright (C) 2009 - 2014 Nicolas Casalini
 --
 -- This program is free software: you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -408,18 +408,28 @@ function _M:computeAttachementSpotsFromTable(ta)
 end
 
 function _M:computeAttachementSpots()
+	local t = {}
 	if fs.exists(Tiles.prefix.."attachements.lua") then
 		print("Loading tileset attachements from ", Tiles.prefix.."attachements.lua")
 		local f, err = loadfile(Tiles.prefix.."attachements.lua")
 		if not f then print("Loading tileset attachements error", err)
 		else
-			local t = {}
 			setfenv(f, t)
 			local ok, err = pcall(f)
 			if not ok then print("Loading tileset attachements error", err) end
-			self:computeAttachementSpotsFromTable(t)
 		end		
 	end
+	for _, file in ipairs(fs.list(Tiles.prefix)) do if file:find("^attachements%-.+.lua$") then
+		print("Loading tileset attachements from ", Tiles.prefix..file)
+		local f, err = loadfile(Tiles.prefix..file)
+		if not f then print("Loading tileset attachements error", err)
+		else
+			setfenv(f, t)
+			local ok, err = pcall(f)
+			if not ok then print("Loading tileset attachements error", err) end
+		end		
+	end end
+	self:computeAttachementSpotsFromTable(t)
 end
 
 function _M:setupDisplayMode(reboot, mode)
@@ -493,7 +503,7 @@ function _M:setupDisplayMode(reboot, mode)
 		end
 		self:setupMiniMap()
 
-		self:createFBOs()
+		self:createFBOs()		
 	end
 end
 
@@ -504,6 +514,13 @@ function _M:createFBOs()
 	self.fbo = core.display.newFBO(Map.viewport.width, Map.viewport.height)
 	if self.fbo then
 		self.fbo_shader = Shader.new("main_fbo")
+		self.posteffects = {
+			wobbling = Shader.new("main_fbo/wobbling"),
+			underwater = Shader.new("main_fbo/underwater"),
+			motionblur = Shader.new("main_fbo/motionblur"),
+			blur = Shader.new("main_fbo/blur"),
+		}
+		self.posteffects_use = { self.fbo_shader.shad }
 		if not self.fbo_shader.shad then self.fbo = nil self.fbo_shader = nil end 
 		self.fbo2 = core.display.newFBO(Map.viewport.width, Map.viewport.height)
 	end
@@ -517,6 +534,8 @@ function _M:createFBOs()
 	else core.particles.defineFramebuffer(nil) end
 
 	if self.target then self.target:enableFBORenderer("ui/targetshader.png", "target_fbo") end
+
+	Map:enableFBORenderer("target_fbo")
 
 --	self.mm_fbo = core.display.newFBO(200, 200)
 --	if self.mm_fbo then self.mm_fbo_shader = Shader.new("mm_fbo") if not self.mm_fbo_shader.shad then self.mm_fbo = nil self.mm_fbo_shader = nil end end
@@ -875,6 +894,16 @@ function _M:changeLevelReal(lev, zone, params)
 			for i = 0, self.level.map.w - 1 do for j = 0, self.level.map.h - 1 do
 				local idx = i + j * self.level.map.w
 				if self.level.map.map[idx][Map.TERRAIN] and self.level.map.map[idx][Map.TERRAIN].change_zone == left_zone.short_name then
+					list[#list+1] = {i, j}
+				end
+			end end
+			if #list > 0 then x, y = unpack(rng.table(list)) end
+		elseif params.auto_level_stair then
+			-- Dirty but quick
+			local list = {}
+			for i = 0, self.level.map.w - 1 do for j = 0, self.level.map.h - 1 do
+				local idx = i + j * self.level.map.w
+				if self.level.map.map[idx][Map.TERRAIN] and not self.level.map.map[idx][Map.TERRAIN].change_zone and self.level.map.map[idx][Map.TERRAIN].change_level == old_lev - self.level.level then
 					list[#list+1] = {i, j}
 				end
 			end end
@@ -1356,7 +1385,7 @@ function _M:displayMap(nb_keyframes)
 		if self.fbo then
 			self.fbo:use(true)
 				if self.level.data.background then self.level.data.background(self.level, 0, 0, nb_keyframes) end
-				map:display(0, 0, nb_keyframes, config.settings.tome.smooth_fov)
+				map:display(0, 0, nb_keyframes, config.settings.tome.smooth_fov, self.fbo)
 				if self.level.data.foreground then self.level.data.foreground(self.level, 0, 0, nb_keyframes) end
 				if self.level.data.weather_particle then self.state:displayWeather(self.level, self.level.data.weather_particle, nb_keyframes) end
 				if self.level.data.weather_shader then self.state:displayWeatherShader(self.level, self.level.data.weather_shader, map.display_x, map.display_y, nb_keyframes) end
@@ -1370,13 +1399,13 @@ function _M:displayMap(nb_keyframes)
 			self.fbo2:use(false, self.full_fbo)
 
 			_2DNoise:bind(1, false)
-			self.fbo2:toScreen(map.display_x, map.display_y, map.viewport.width, map.viewport.height, self.fbo_shader.shad)
+			self.fbo2:postEffects(self.fbo, self.full_fbo, map.display_x, map.display_y, map.viewport.width, map.viewport.height, unpack(self.posteffects_use))
 			if self.target then self.target:display(nil, nil, self.full_fbo, nb_keyframes) end
 
 		-- Basic display; no FBOs
 		else
 			if self.level.data.background then self.level.data.background(self.level, map.display_x, map.display_y, nb_keyframes) end
-			map:display(nil, nil, nb_keyframes, config.settings.tome.smooth_fov)
+			map:display(nil, nil, nb_keyframes, config.settings.tome.smooth_fov, nil)
 			if self.target then self.target:display(nil, nil, self.full_fbo, nb_keyframes) end
 			if self.level.data.foreground then self.level.data.foreground(self.level, map.display_x, map.display_y, nb_keyframes) end
 			if self.level.data.weather_particle then self.state:displayWeather(self.level, self.level.data.weather_particle, nb_keyframes) end
@@ -1507,7 +1536,8 @@ function _M:setupCommands()
 			print("===============")
 		end end,
 		[{"_g","ctrl"}] = function() if config.settings.cheat then
---do return end
+			error("for johnny0, with love :)")
+do return end
 			local f, err = loadfile("/data/general/events/glimmerstone.lua")
 			print(f, err)
 			setfenv(f, setmetatable({level=self.level, zone=self.zone}, {__index=_G}))
@@ -1658,7 +1688,7 @@ do return end
 				else
 					-- Do not unpause, the player is allowed first move on next level
 					if e.change_level_check and e:change_level_check(self.player) then return end
-					self:changeLevel(e.change_zone and e.change_level or self.level.level + e.change_level, e.change_zone, {keep_old_lev=e.keep_old_lev, force_down=e.force_down, auto_zone_stair=e.change_zone_auto_stairs, temporary_zone_shift_back=e.change_level_shift_back})
+					self:changeLevel(e.change_zone and e.change_level or self.level.level + e.change_level, e.change_zone, {keep_old_lev=e.keep_old_lev, force_down=e.force_down, auto_zone_stair=e.change_zone_auto_stairs, auto_level_stair=e.change_level_auto_stairs, temporary_zone_shift_back=e.change_level_shift_back})
 				end
 			else
 				self.log("There is no way out of this level here.")

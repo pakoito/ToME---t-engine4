@@ -1,5 +1,5 @@
 -- TE4 - T-Engine 4
--- Copyright (C) 2009, 2010, 2011, 2012, 2013 Nicolas Casalini
+-- Copyright (C) 2009 - 2014 Nicolas Casalini
 --
 -- This program is free software: you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -32,6 +32,13 @@ function math.round(v, mult, num)
 	num = num or 1000000
 	v, mult = v*num, mult*num
 	return v >= 0 and math.floor((v + mult/2)/mult) * mult/num or math.ceil((v - mult/2)/mult) * mult/num
+end
+
+function math.scale(i, imin, imax, dmin, dmax)
+	local bi = i - imin
+	local bm = imax - imin
+	local dm = dmax - dmin
+	return bi * dm / bm + dmin
 end
 
 function lpeg.anywhere (p)

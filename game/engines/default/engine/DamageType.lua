@@ -1,5 +1,5 @@
 -- TE4 - T-Engine 4
--- Copyright (C) 2009, 2010, 2011, 2012, 2013 Nicolas Casalini
+-- Copyright (C) 2009 - 2014 Nicolas Casalini
 --
 -- This program is free software: you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -62,12 +62,16 @@ function _M:newDamageType(t)
 		end
 	end
 
-	table.insert(self.dam_def, t)
-	self[t.type] = #self.dam_def
+	self.dam_def[t.type] = t
+	self[t.type] = t.type
 end
 
 function _M:get(id)
 	assert(_M.dam_def[id], "damage type "..tostring(id).." used but undefined")
+	return _M.dam_def[id]
+end
+
+function _M:exists(id)
 	return _M.dam_def[id]
 end
 

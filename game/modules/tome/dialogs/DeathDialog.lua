@@ -1,5 +1,5 @@
 -- ToME - Tales of Maj'Eyal
--- Copyright (C) 2009, 2010, 2011, 2012, 2013 Nicolas Casalini
+-- Copyright (C) 2009 - 2014 Nicolas Casalini
 --
 -- This program is free software: you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -18,6 +18,7 @@
 -- darkgod@te4.org
 
 require "engine.class"
+local Shader = require "engine.Shader"
 local Dialog = require "engine.ui.Dialog"
 local Textzone = require "engine.ui.Textzone"
 local Separator = require "engine.ui.Separator"
@@ -29,7 +30,8 @@ module(..., package.seeall, class.inherit(Dialog))
 
 function _M:init(actor)
 	self.actor = actor
-	Dialog.init(self, "Death!", 500, 300)
+	self.ui = "deathbox"
+	Dialog.init(self, "You have #LIGHT_RED#died#LAST#!", 500, 600)
 
 	actor:saveUUID()
 
@@ -37,8 +39,7 @@ function _M:init(actor)
 	if self.dont_show then return end
 	if not config.settings.cheat then game:saveGame() end
 
-	local text = [[You have #LIGHT_RED#died#LAST#!
-Death in ToME is usually permanent, but if you have a means of resurrection it will be proposed in the menu below.
+	local text = [[Death in #{bold}#Tales of Maj'Eyal#{normal}# is usually permanent, but if you have a means of resurrection it will be proposed in the menu below.
 You can dump your character data to a file to remember her/him forever, or you can exit and try once again to survive in the wilds!
 ]]
 
@@ -46,20 +47,40 @@ You can dump your character data to a file to remember her/him forever, or you c
 		self.c_achv = Textzone.new{width=self.iw, scrollbar=true, height=100, text="#LIGHT_GREEN#During your game you#WHITE#:\n* "..table.concat(game.party.on_death_show_achieved, "\n* ")}
 	end
 
+	self:setTitleShadowShader(Shader.default.textoutline and Shader.default.textoutline.shad, 1.5)
 	self.c_desc = Textzone.new{width=self.iw, auto_height=true, text=text}
-	self.c_list = List.new{width=self.iw, nb_items=#self.list, list=self.list, fct=function(item) self:use(item) end}
+	self.c_desc:setTextShadow(1)
+	self.c_desc:setShadowShader(Shader.default.textoutline and Shader.default.textoutline.shad, 1.2)
+
+	self.c_list = List.new{width=self.iw, nb_items=#self.list, list=self.list, fct=function(item) self:use(item) end, select=function(item) self.cur_item = item end}
+
+	self.graphical_options = {
+		blood_life = {
+			available   = self:getUITexture("ui/active_blood_life.png"),
+			unavailable = self:getUITexture("ui/inactive_blood_life.png"),
+		},
+		consume = {
+			available   = self:getUITexture("ui/active_consume.png"),
+			unavailable = self:getUITexture("ui/inactive_consume.png"),
+		},
+		skeleton = {
+			available   = self:getUITexture("ui/active_skeleton.png"),
+			unavailable = self:getUITexture("ui/inactive_skeleton.png"),
+		},
+	}
+
 
 	if self.c_achv then
 		self:loadUI{
 			{left=0, top=0, ui=self.c_desc},
 			{left=0, top=self.c_desc.h, ui=self.c_achv},
-			{left=5, top=self.c_desc.h+self.c_achv.h, padding_h=10, ui=Separator.new{dir="vertical", size=self.iw - 10}},
+			{left=5, top=self.c_desc.h+self.c_achv.h, padding_h=10, ui=Separator.new{ui="deathbox", dir="vertical", size=self.iw - 10}},
 			{left=0, bottom=0, ui=self.c_list},
 		}
 	else
 		self:loadUI{
 			{left=0, top=0, ui=self.c_desc},
-			{left=5, top=self.c_desc.h, padding_h=10, ui=Separator.new{dir="vertical", size=self.iw - 10}},
+			{left=5, top=self.c_desc.h, padding_h=10, ui=Separator.new{ui="deathbox", dir="vertical", size=self.iw - 10}},
 			{left=0, bottom=0, ui=self.c_list},
 		}
 	end
@@ -230,6 +251,7 @@ function _M:use(item)
 		self:restoreResources(self.actor)
 		world:gainAchievement("UNSTOPPABLE", actor)
 		self.actor:check("on_resurrect", "blood_life")
+		game:saveGame()
 	elseif act == "lichform" then
 		local t = self.actor:getTalentFromId(self.actor.T_LICHFORM)
 
@@ -240,6 +262,7 @@ function _M:use(item)
 		t.becomeLich(self.actor, t)
 		self.actor:updateModdableTile()
 		self.actor:check("on_resurrect", "lichform")
+		game:saveGame()
 	elseif act == "easy_mode" then
 		self:eidolonPlane()
 	elseif act == "skeleton" then
@@ -251,6 +274,7 @@ function _M:use(item)
 		self:restoreResources(self.actor)
 		world:gainAchievement("UNSTOPPABLE", actor)
 		self.actor:check("on_resurrect", "skeleton")
+		game:saveGame()
 	elseif act:find("^consume") then
 		local inven, item, o = item.inven, item.item, item.object
 		self.actor:removeObject(inven, item)
@@ -261,11 +285,13 @@ function _M:use(item)
 		self:restoreResources(self.actor)
 		world:gainAchievement("UNSTOPPABLE", actor)
 		self.actor:check("on_resurrect", "consume", o)
+		game:saveGame()
 	end
 end
 
 function _M:generateList()
 	local list = {}
+	self.possible_items = {}
 	local allow_res = true
 
 	-- Pause the game
@@ -298,8 +324,9 @@ function _M:generateList()
 		local consumenb = 1
 		self.actor:inventoryApplyAll(function(inven, item, o)
 			if o.one_shot_life_saving and (not o.slot or inven.worn) then
-				list[#list+1] = {name="Resurrect by consuming "..o:getName{do_colour=true}, action="consume"..consumenb, inven=inven, item=item, object=o}
+				list[#list+1] = {name="Resurrect by consuming "..o:getName{do_colour=true}, action="consume"..consumenb, inven=inven, item=item, object=o, is_consume=true}
 				consumenb = consumenb + 1
+				self.possible_items.consume = true
 			end
 		end)
 	end
@@ -311,4 +338,23 @@ function _M:generateList()
 	list[#list+1] = {name="Exit to main menu", action="exit", subaction="none"}
 
 	self.list = list
+	for _, item in ipairs(list) do self.possible_items[item.action] = true end
+end
+
+function _M:innerDisplayBack(x, y, nb_keyframes, tx, ty)
+	x = x + self.frame.ox1
+	y = y + self.frame.oy1
+
+	if self.possible_items.blood_life then
+		local d = self.graphical_options.blood_life[self.cur_item and self.cur_item.action == "blood_life" and "available" or "unavailable"]
+		d.t:toScreenFull(x + self.frame.w - d.w, y, d.w, d.h, d.tw, d.th, 1, 1, 1, 1)
+	end
+	if self.possible_items.consume then
+		local d = self.graphical_options.consume[self.cur_item and self.cur_item.is_consume and "available" or "unavailable"]
+		d.t:toScreenFull(x, y, d.w, d.h, d.tw, d.th, 1, 1, 1, 1)
+	end
+	if self.possible_items.skeleton then
+		local d = self.graphical_options.skeleton[self.cur_item and self.cur_item.action == "skeleton" and "available" or "unavailable"]
+		d.t:toScreenFull(x, y + self.frame.h - d.h, d.w, d.h, d.tw, d.th, 1, 1, 1, 1)
+	end
 end

@@ -1,5 +1,5 @@
 -- ToME - Tales of Maj'Eyal
--- Copyright (C) 2009, 2010, 2011, 2012, 2013 Nicolas Casalini
+-- Copyright (C) 2009 - 2014 Nicolas Casalini
 --
 -- This program is free software: you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -41,6 +41,18 @@ newEntity{
 	nice_editer = grasswm_editer,
 }
 
+local treesdef = {
+	{"small_elm", {"shadow", "trunk", "foliage_summer"}},
+	{"small_elm", {"shadow", "trunk", "foliage_summer"}},
+	{"elm", {tall=-1, "shadow", "trunk", "foliage_summer"}},
+	{"elm", {tall=-1, "shadow", "trunk", "foliage_summer"}},
+	{"light_pine", {tall=-1, "shadow", "trunk", {"foliage_%02d",1,4}}},
+	{"light_small_wider_pine", {"shadow", "trunk", {"foliage_%02d",1,4}}},
+	{"light_small_narrow_pine", {"shadow", "trunk", {"foliage_%02d",1,4}}},
+	{"cypress", {tall=-1, "shadow", "trunk", {"foliage_%02d",1,4}}},
+	{"small_cypress", {tall=-1, "shadow", "trunk", {"foliage_%02d",1,4}}},
+	{"tiny_cypress", {"shadow", "trunk", {"foliage_%02d",1,4}}},
+}
 
 newEntity{
 	define_as = "TREE",
@@ -56,7 +68,9 @@ newEntity{
 	nice_tiler = { method="replace", base={"TREE", 100, 1, 30}},
 	nice_editer = grass_editer,
 }
-for i = 1, 30 do newEntity{ base="TREE", define_as = "TREE"..i, image = "terrain/grass.png", add_displays = class:makeTrees("terrain/tree_alpha", 14, 9)} end
+for i = 1, 30 do
+	newEntity(class:makeNewTrees({base="TREE", define_as = "TREE"..i, image = "terrain/grass.png"}, treesdef))
+end
 
 newEntity{
 	define_as = "HARDTREE",
@@ -72,7 +86,9 @@ newEntity{
 	nice_tiler = { method="replace", base={"HARDTREE", 100, 1, 30}},
 	nice_editer = grass_editer,
 }
-for i = 1, 30 do newEntity{ base="HARDTREE", define_as = "HARDTREE"..i, image = "terrain/grass.png", add_displays = class:makeTrees("terrain/tree_alpha", 14, 9) } end
+for i = 1, 30 do
+	newEntity(class:makeNewTrees({base="HARDTREE", define_as = "HARDTREE"..i, image = "terrain/grass.png"}, treesdef))
+end
 
 newEntity{
 	define_as = "FLOWER",
@@ -136,6 +152,7 @@ newEntity{
 	change_level = 1,
 	change_zone = "wilderness",
 	nice_editer = grass_editer,
+	shader = "tree",
 }
 
 newEntity{

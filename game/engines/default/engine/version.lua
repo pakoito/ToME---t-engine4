@@ -1,5 +1,5 @@
 -- TE4 - T-Engine 4
--- Copyright (C) 2009, 2010, 2011, 2012, 2013 Nicolas Casalini
+-- Copyright (C) 2009 - 2014 Nicolas Casalini
 --
 -- This program is free software: you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -18,7 +18,7 @@
 -- darkgod@te4.org
 
 -- Engine Version
-engine.version = {1,1,3,"te4",17}
+engine.version = {1,2,0,"te4",17}
 engine.require_c_core = engine.version[5]
 engine.version_id = ("%s-%d_%d.%d.%d"):format(engine.version[4], engine.require_c_core, engine.version[1], engine.version[2], engine.version[3])
 

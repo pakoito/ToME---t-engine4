@@ -1,5 +1,5 @@
 -- ToME - Tales of Maj'Eyal
--- Copyright (C) 2009, 2010, 2011, 2012, 2013 Nicolas Casalini
+-- Copyright (C) 2009 - 2014 Nicolas Casalini
 --
 -- This program is free software: you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -51,8 +51,8 @@ else
 		name = "Norgos, the Frozen",
 		display = "q", color=colors.VIOLET,
 		resolvers.nice_tile{image="invis.png", add_mos = {{image="npc/animal_bear_norgos_the_frozen.png", display_h=2, display_y=-1}}},
-		desc = [[This ancient bear long guarded the western side of the forest, but as of late he started growing mad, attacking even the thaloren.
-It seems to have fallen prey to the shivgoroth invading the area. Dead and frozen it seems like a statue, animated by the elementals.]],
+		desc = [[This ancient bear long guarded the western side of the forest, but as of late he started growing mad, attacking even the Thaloren.
+It seems to have fallen prey to the shivgoroth invading the area. Dead and frozen, it seems like a statue, animated by the elementals.]],
 		killer_message = "and was turned into icicles",
 		level_range = {7, nil}, exp_worth = 2,
 		max_life = 200, life_rating = 17, fixed_rating = true, life_regen = 0,
@@ -96,7 +96,7 @@ newEntity{ base="BASE_NPC_BEAR", define_as = "NORGOS",
 	name = "Norgos, the Guardian",
 	display = "q", color=colors.VIOLET,
 	resolvers.nice_tile{image="invis.png", add_mos = {{image="npc/animal_bear_norgos_the_guardian.png", display_h=2, display_y=-1}}},
-	desc = [[This ancient bear long guarded the western side of the forest, but as of late he started growing mad, attacking even the thaloren.]],
+	desc = [[This ancient bear long guarded the western side of the forest, but as of late he started growing mad, attacking even the Thaloren.]],
 	killer_message = "and was feasted upon by wolves",
 	level_range = {7, nil}, exp_worth = 2,
 	max_life = 200, life_rating = 17, fixed_rating = true,

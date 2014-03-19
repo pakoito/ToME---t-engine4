@@ -1,5 +1,5 @@
 -- ToME - Tales of Maj'Eyal
--- Copyright (C) 2009, 2010, 2011, 2012, 2013 Nicolas Casalini
+-- Copyright (C) 2009 - 2014 Nicolas Casalini
 --
 -- This program is free software: you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -18,6 +18,7 @@
 -- darkgod@te4.org
 
 local layout = game.state:alternateZoneTier1(short_name, {"FLOODED", 1})
+-- layout="DEFAULT"
 if layout == "FLOODED" then
 
 return {
@@ -35,8 +36,8 @@ return {
 	tier1_escort = 2,
 	persistent = "zone",
 	-- Apply a greenish tint to all the map
-	color_shown = {0.8, 1, 0.6, 1},
-	color_obscure = {0.8*0.6, 1*0.6, 0.6*0.6, 0.6},
+--	color_shown = {0.8, 1, 0.6, 1},
+--	color_obscure = {0.8*0.6, 1*0.6, 0.6*0.6, 0.6},
 	ambient_music = "Rainy Day.ogg",
 	min_material_level = function() return game.state:isAdvanced() and 3 or 1 end,
 	max_material_level = function() return game.state:isAdvanced() and 4 or 2 end,

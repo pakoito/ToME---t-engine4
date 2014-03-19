@@ -1,5 +1,5 @@
 -- ToME - Tales of Maj'Eyal
--- Copyright (C) 2009, 2010, 2011, 2012, 2013 Nicolas Casalini
+-- Copyright (C) 2009 - 2014 Nicolas Casalini
 --
 -- This program is free software: you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -64,7 +64,7 @@ newEntity{ base = "BASE_NPC_COLD_DRAKE",
 
 newEntity{ base = "BASE_NPC_COLD_DRAKE", define_as = "NPC_COLD_DRAKE",
 	name = "cold drake", color=colors.SLATE, display="D",
-	desc = [[A mature cold drake, armed with a deadly breath weapon and nasty claws.]],
+	desc = [[A mature cold drake, armed with deadly breath and nasty claws.]],
 	level_range = {14, nil}, exp_worth = 1,
 	rarity = 3,
 	max_life = resolvers.rngavg(100,110),
@@ -88,7 +88,7 @@ newEntity{ base = "BASE_NPC_COLD_DRAKE", define_as = "NPC_COLD_DRAKE",
 
 newEntity{ base = "BASE_NPC_COLD_DRAKE",
 	name = "ice wyrm", color=colors.AQUAMARINE, display="D",
-	desc = [[An old and powerful cold drake, armed with a deadly breath weapon and nasty claws.]],
+	desc = [[An old and powerful cold drake, armed with deadly breath and nasty claws.]],
 	resolvers.nice_tile{image="invis.png", add_mos = {{image="npc/dragon_cold_ice_wyrm.png", display_h=2, display_y=-1}}},
 	level_range = {25, nil}, exp_worth = 1,
 	rarity = 5,

@@ -6,13 +6,12 @@
 */
 
 extern "C" {
-#include "lua.h"
-#include "lauxlib.h"
-#include "lualib.h"
-#include "tSDL.h"
-#include "physfs.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include "web-external.h"
 }
 #include "web.h"
+#include "web-internal.h"
 
 #include <Awesomium/WebCore.h>
 #include <Awesomium/BitmapSurface.h>
@@ -20,151 +19,14 @@ extern "C" {
 #include <Awesomium/STLHelpers.h>
 #include "gl_texture_surface.h"
 
-/**********************************************************************
- ******************** Duplicated since we are independant *************
- **********************************************************************/
-static void auxiliar_newclass(lua_State *L, const char *classname, const luaL_Reg *func);
-static void auxiliar_add2group(lua_State *L, const char *classname, const char *group);
-static void auxiliar_setclass(lua_State *L, const char *classname, int objidx);
-static void *auxiliar_checkclass(lua_State *L, const char *classname, int objidx);
-static void *auxiliar_checkgroup(lua_State *L, const char *groupname, int objidx);
-static void *auxiliar_getclassudata(lua_State *L, const char *groupname, int objidx);
-static void *auxiliar_getgroupudata(lua_State *L, const char *groupname, int objidx);
-static int auxiliar_checkboolean(lua_State *L, int objidx);
-static int auxiliar_tostring(lua_State *L);
-
-/*-------------------------------------------------------------------------*\
-* Creates a new class with given methods
-* Methods whose names start with __ are passed directly to the metatable.
-\*-------------------------------------------------------------------------*/
-static void auxiliar_newclass(lua_State *L, const char *classname, const luaL_Reg *func) {
-    luaL_newmetatable(L, classname); /* mt */
-    /* create __index table to place methods */
-    lua_pushstring(L, "__index");    /* mt,"__index" */
-    lua_newtable(L);                 /* mt,"__index",it */
-    /* put class name into class metatable */
-    lua_pushstring(L, "class");      /* mt,"__index",it,"class" */
-    lua_pushstring(L, classname);    /* mt,"__index",it,"class",classname */
-    lua_rawset(L, -3);               /* mt,"__index",it */
-    /* pass all methods that start with _ to the metatable, and all others
-     * to the index table */
-    for (; func->name; func++) {     /* mt,"__index",it */
-        lua_pushstring(L, func->name);
-        lua_pushcfunction(L, func->func);
-        lua_rawset(L, func->name[0] == '_' ? -5: -3);
-    }
-    lua_rawset(L, -3);               /* mt */
-    lua_pop(L, 1);
-}
-
-/*-------------------------------------------------------------------------*\
-* Prints the value of a class in a nice way
-\*-------------------------------------------------------------------------*/
-static int auxiliar_tostring(lua_State *L) {
-    char buf[32];
-    if (!lua_getmetatable(L, 1)) goto error;
-    lua_pushstring(L, "__index");
-    lua_gettable(L, -2);
-    if (!lua_istable(L, -1)) goto error;
-    lua_pushstring(L, "class");
-    lua_gettable(L, -2);
-    if (!lua_isstring(L, -1)) goto error;
-    sprintf(buf, "%p", lua_touserdata(L, 1));
-    lua_pushfstring(L, "%s: %s", lua_tostring(L, -1), buf);
-    return 1;
-error:
-    lua_pushstring(L, "invalid object passed to 'auxiliar.c:__tostring'");
-    lua_error(L);
-    return 1;
-}
-
-/*-------------------------------------------------------------------------*\
-* Insert class into group
-\*-------------------------------------------------------------------------*/
-static void auxiliar_add2group(lua_State *L, const char *classname, const char *groupname) {
-    luaL_getmetatable(L, classname);
-    lua_pushstring(L, groupname);
-    lua_pushboolean(L, 1);
-    lua_rawset(L, -3);
-    lua_pop(L, 1);
-}
-
-/*-------------------------------------------------------------------------*\
-* Make sure argument is a boolean
-\*-------------------------------------------------------------------------*/
-static int auxiliar_checkboolean(lua_State *L, int objidx) {
-    if (!lua_isboolean(L, objidx))
-        luaL_typerror(L, objidx, lua_typename(L, LUA_TBOOLEAN));
-    return lua_toboolean(L, objidx);
-}
-
-/*-------------------------------------------------------------------------*\
-* Return userdata pointer if object belongs to a given class, abort with
-* error otherwise
-\*-------------------------------------------------------------------------*/
-static void *auxiliar_checkclass(lua_State *L, const char *classname, int objidx) {
-    void *data = auxiliar_getclassudata(L, classname, objidx);
-    if (!data) {
-        char msg[45];
-        sprintf(msg, "%.35s expected", classname);
-        luaL_argerror(L, objidx, msg);
-    }
-    return data;
-}
-
-/*-------------------------------------------------------------------------*\
-* Return userdata pointer if object belongs to a given group, abort with
-* error otherwise
-\*-------------------------------------------------------------------------*/
-static void *auxiliar_checkgroup(lua_State *L, const char *groupname, int objidx) {
-    void *data = auxiliar_getgroupudata(L, groupname, objidx);
-    if (!data) {
-        char msg[45];
-        sprintf(msg, "%.35s expected", groupname);
-        luaL_argerror(L, objidx, msg);
-    }
-    return data;
-}
-
-/*-------------------------------------------------------------------------*\
-* Set object class
-\*-------------------------------------------------------------------------*/
-static void auxiliar_setclass(lua_State *L, const char *classname, int objidx) {
-    luaL_getmetatable(L, classname);
-    if (objidx < 0) objidx--;
-    lua_setmetatable(L, objidx);
-}
-
-/*-------------------------------------------------------------------------*\
-* Get a userdata pointer if object belongs to a given group. Return NULL
-* otherwise
-\*-------------------------------------------------------------------------*/
-static void *auxiliar_getgroupudata(lua_State *L, const char *groupname, int objidx) {
-    if (!lua_getmetatable(L, objidx))
-        return NULL;
-    lua_pushstring(L, groupname);
-    lua_rawget(L, -2);
-    if (lua_isnil(L, -1)) {
-        lua_pop(L, 2);
-        return NULL;
-    } else {
-        lua_pop(L, 2);
-        return lua_touserdata(L, objidx);
-    }
-}
-
-/*-------------------------------------------------------------------------*\
-* Get a userdata pointer if object belongs to a given class. Return NULL
-* otherwise
-\*-------------------------------------------------------------------------*/
-static void *auxiliar_getclassudata(lua_State *L, const char *classname, int objidx) {
-    lua_checkstack(L, 2);
-    return luaL_checkudata(L, objidx, classname);
-}
-
-/**********************************************************************
- **********************************************************************
- **********************************************************************/
+void *(*web_mutex_create)();
+void (*web_mutex_destroy)(void *mutex);
+void (*web_mutex_lock)(void *mutex);
+void (*web_mutex_unlock)(void *mutex);
+unsigned int (*web_make_texture)(int w, int h);
+void (*web_del_texture)(unsigned int tex);
+void (*web_texture_update)(unsigned int tex, int w, int h, const void* buffer);
+static void (*web_key_mods)(bool *shift, bool *ctrl, bool *alt, bool *meta);
 
 using namespace Awesomium;
 
@@ -176,37 +38,20 @@ static WebSession *web_session = NULL;
 static PhysfsDataSource *web_data_source = NULL;
 
 typedef struct {
-	lua_State *L;
 	WebJShandler *listener;
 	int methods_ref;
 } web_js_type;
 
-typedef struct {
-	WebView *view;
-	JSObject *te4core;
-	web_js_type *js;
-	int w, h;
-	bool closed;
-} web_view_type;
+class WebListener;
 
-class WebDownloader;
-
-typedef struct {
-	WebDownloader *d;
-	lua_State *L;
-	int on_request_ref;
-	int on_update_ref;
-	int on_finish_ref;
-	bool closed;
-} web_downloader_type;
-
-static char *webstring_to_buf(WebString *wstr, size_t *flen) {
+static char *webstring_to_buf(const WebString &wstr, size_t *flen) {
 	char *buf;
 	unsigned int len = 0;
-	len = wstr->ToUTF8(NULL, 0);
+	len = wstr.ToUTF8(NULL, 0);
 	buf = (char*)malloc(len + 1);
-	wstr->ToUTF8(buf, len);	
-	*flen = (size_t)len;
+	wstr.ToUTF8(buf, len);	
+	buf[len] = '\0';
+	if (flen) *flen = (size_t)len;
 	return buf;
 }
 
@@ -214,434 +59,356 @@ class WebJShandler : public JSMethodHandler {
 public:
 	web_js_type *js;
 	virtual void OnMethodCall(WebView* caller, unsigned int remote_object_id, const WebString& method_name, const JSArray& args) {
-		web_js_type *js = this->js;
-		size_t lfctname;
-		char *fctname = webstring_to_buf((WebString*)&method_name, &lfctname);
-		printf("method call %s\n", fctname);
-
-		lua_rawgeti(js->L, LUA_REGISTRYINDEX, js->methods_ref);
-		lua_pushlstring(js->L, fctname, lfctname);
-		lua_rawget(js->L, -2);
-		lua_pcall(js->L, 0, 0, 0);
-		free(fctname);
 	}
 
 	virtual JSValue OnMethodCallWithReturnValue(WebView* caller, unsigned int remote_object_id, const WebString& method_name, const JSArray& args) {
-		web_js_type *js = this->js;
-		size_t lfctname;
-		char *fctname = webstring_to_buf((WebString*)&method_name, &lfctname);
-		printf("method call %s\n", fctname);
-
-		lua_rawgeti(js->L, LUA_REGISTRYINDEX, js->methods_ref);
-		lua_pushlstring(js->L, fctname, lfctname);
-		lua_rawget(js->L, -2);
-		lua_pcall(js->L, 0, 0, 0);
-		free(fctname);
 	}
 };
 
-class WebDownloader : public WebViewListener::Download {
+class WebListener : 
+	public WebViewListener::View,
+	public WebViewListener::Download,
+	public WebViewListener::Load
+{
+private:
+	int handlers;
 public:
-	web_downloader_type *d;
-	WebDownloader() {}
-	void OnRequestDownload(WebView* caller, int download_id, const WebURL& url, const WebString& suggested_filename, const WebString& mime_type) {
-		web_downloader_type *d = this->d;
-		if (d->closed) return;
+	WebListener(int handlers) { this->handlers = handlers; }
 
-		size_t slen; char *sbuf = webstring_to_buf((WebString*)&suggested_filename, &slen);
-		size_t mlen; char *mbuf = webstring_to_buf((WebString*)&mime_type, &mlen);
-		WebString rurl = url.spec();
-		size_t ulen; char *ubuf = webstring_to_buf((WebString*)&rurl, &ulen);
+	virtual void OnChangeTitle(Awesomium::WebView* caller, const Awesomium::WebString& title) {
+		char *cur_title = webstring_to_buf(title, NULL);
+		WebEvent *event = new WebEvent();
+		event->kind = TE4_WEB_EVENT_TITLE_CHANGE;
+		event->handlers = handlers;
+		event->data.title = cur_title;
+		push_event(event);
+	}
 
-		lua_rawgeti(d->L, LUA_REGISTRYINDEX, d->on_request_ref);
-		lua_pushnumber(d->L, download_id);
-		lua_pushlstring(d->L, ubuf, ulen);
-		lua_pushlstring(d->L, sbuf, slen);
-		lua_pushlstring(d->L, mbuf, mlen);
-		lua_pcall(d->L, 4, 0, 0);
-		free(sbuf);
-		free(mbuf);
-		free(ubuf);
+	virtual void OnChangeAddressBar(Awesomium::WebView* caller, const Awesomium::WebURL& url) {
+	}
+
+	virtual void OnChangeTooltip(Awesomium::WebView* caller, const Awesomium::WebString& tooltip) {
+	}
+
+	virtual void OnChangeTargetURL(Awesomium::WebView* caller, const Awesomium::WebURL& url) {
+	}
+
+	virtual void OnChangeCursor(Awesomium::WebView* caller, Awesomium::Cursor cursor) {
+	}
+
+	virtual void OnChangeFocus(Awesomium::WebView* caller, Awesomium::FocusedElementType focused_type) {
+	}
+
+	virtual void OnAddConsoleMessage(Awesomium::WebView* caller, const Awesomium::WebString& message, int line_number, const Awesomium::WebString& source) {
+	}
+
+	virtual void OnShowCreatedWebView(Awesomium::WebView* caller, Awesomium::WebView* new_view, const Awesomium::WebURL& opener_url, const Awesomium::WebURL& target_url, const Awesomium::Rect& initial_pos, bool is_popup) {
+		new_view->Destroy();
+
+		WebString rurl = target_url.spec();
+		char *url = webstring_to_buf(rurl, NULL);
+
+		WebEvent *event = new WebEvent();
+		event->kind = TE4_WEB_EVENT_REQUEST_POPUP_URL;
+		event->handlers = handlers;
+		event->data.popup.url = url;
+		event->data.popup.w = initial_pos.width;
+		event->data.popup.h = initial_pos.height;
+		push_event(event);
+
+		printf("[WEB] stopped popup to %s (%dx%d), pushing event...\n", url, event->data.popup.w, event->data.popup.h);
+	}
+
+	void OnRequestDownload(WebView* caller, int download_id, const WebURL& wurl, const WebString& suggested_filename, const WebString& mime_type) {
+		WebString rurl = wurl.spec();
+		const char *mime = webstring_to_buf(mime_type, NULL);
+		const char *url = webstring_to_buf(rurl, NULL);
+		const char *name = webstring_to_buf(suggested_filename, NULL);
+		printf("[WEB] Download request [name: %s] [mime: %s] [url: %s]\n", name, mime, url);
+
+		WebEvent *event = new WebEvent();
+		event->kind = TE4_WEB_EVENT_DOWNLOAD_REQUEST;
+		event->handlers = handlers;
+		event->data.download_request.url = url;
+		event->data.download_request.name = name;
+		event->data.download_request.mime = mime;
+		event->data.download_request.id = download_id;
+		push_event(event);
 	}
 	void OnUpdateDownload(WebView* caller, int download_id, int64 total_bytes, int64 received_bytes, int64 current_speed) {
-		web_downloader_type *d = this->d;
-		if (d->closed) return;
-
-		lua_rawgeti(d->L, LUA_REGISTRYINDEX, d->on_update_ref);
-		lua_pushnumber(d->L, received_bytes);
-		lua_pushnumber(d->L, total_bytes);
-		lua_pushnumber(d->L, current_speed);
-		lua_pcall(d->L, 3, 0, 0);
+		WebEvent *event = new WebEvent();
+		event->kind = TE4_WEB_EVENT_DOWNLOAD_UPDATE;
+		event->handlers = handlers;
+		event->data.download_update.id = download_id;
+		event->data.download_update.got = received_bytes;
+		event->data.download_update.total = total_bytes;
+		event->data.download_update.percent = 100 * ((double)received_bytes / (double)total_bytes);
+		event->data.download_update.speed = current_speed;
+		push_event(event);
 	}
 	void OnFinishDownload(WebView* caller, int download_id, const WebURL& url, const WebString& saved_path) {
-		web_downloader_type *d = this->d;
-		if (d->closed) return;
+		WebEvent *event = new WebEvent();
+		event->kind = TE4_WEB_EVENT_DOWNLOAD_FINISH;
+		event->handlers = handlers;
+		event->data.download_finish.id = download_id;
+		push_event(event);
+	}
 
-		WebString rurl = url.spec();
-		size_t ulen; char *ubuf = webstring_to_buf((WebString*)&rurl, &ulen);
-		size_t plen; char *pbuf = webstring_to_buf((WebString*)&saved_path, &plen);
+	/// This event occurs when the page begins loading a frame.
+	virtual void OnBeginLoadingFrame(Awesomium::WebView* caller, int64 frame_id, bool is_main_frame, const Awesomium::WebURL& wurl, bool is_error_page) {
+		WebString rurl = wurl.spec();
+		const char *url = webstring_to_buf(rurl, NULL);
 
-		lua_rawgeti(d->L, LUA_REGISTRYINDEX, d->on_finish_ref);
-		lua_pushlstring(d->L, ubuf, ulen);
-		lua_pushlstring(d->L, pbuf, plen);
-		lua_pcall(d->L, 2, 0, 0);
+		WebEvent *event = new WebEvent();
+		event->kind = TE4_WEB_EVENT_LOADING;
+		event->handlers = handlers;
+		event->data.loading.url = url;
+		event->data.loading.status = 0;
+		push_event(event);
+	}
+
+	/// This event occurs when a frame fails to load. See error_desc
+	/// for additional information.
+	virtual void OnFailLoadingFrame(Awesomium::WebView* caller, int64 frame_id, bool is_main_frame, const Awesomium::WebURL& wurl, int error_code, const Awesomium::WebString& error_desc) {
+		WebString rurl = wurl.spec();
+		const char *url = webstring_to_buf(rurl, NULL);
+
+		WebEvent *event = new WebEvent();
+		event->kind = TE4_WEB_EVENT_LOADING;
+		event->handlers = handlers;
+		event->data.loading.url = url;
+		event->data.loading.status = -1;
+		push_event(event);
+	}
+
+	/// This event occurs when the page finishes loading a frame.
+	/// The main frame always finishes loading last for a given page load.
+	virtual void OnFinishLoadingFrame(Awesomium::WebView* caller, int64 frame_id, bool is_main_frame, const Awesomium::WebURL& wurl) {
+
+	}
+
+	/// This event occurs when the DOM has finished parsing and the
+	/// window object is available for JavaScript execution.
+	virtual void OnDocumentReady(Awesomium::WebView* caller, const Awesomium::WebURL& wurl) {
+		WebString rurl = wurl.spec();
+		const char *url = webstring_to_buf(rurl, NULL);
+
+		WebEvent *event = new WebEvent();
+		event->kind = TE4_WEB_EVENT_LOADING;
+		event->handlers = handlers;
+		event->data.loading.url = url;
+		event->data.loading.status = 1;
+		push_event(event);
 	}
 };
 
 class PhysfsDataSource : public DataSource {
 public:
 	virtual void OnRequest(int request_id, const WebString& path) {
-		size_t plen;
-		char *rpath = webstring_to_buf((WebString*)&path, &plen);
-		PHYSFS_file *f = PHYSFS_openRead(rpath);
-		if (!f) {
-			printf("WebViewAsset read: %s (%d)\n", rpath, plen);
-			printf(" => not found\n");
-			SendResponse(request_id, 0, NULL, WSLit("text/html"));
-			return;
-		}
-		size_t len = PHYSFS_fileLength(f);
-		size_t rlen = len;
-		size_t pos = 0;
-		char *buf = (char*)malloc(sizeof(char)*len);
-		while (rlen) {
-			size_t r = PHYSFS_read(f, buf + pos, sizeof(char), rlen);
-			rlen -= r;
-			pos += r;
-		}
-
-		const char *mime = "text/html";
-		if (plen >= 3 && !strcmp(rpath + plen - 3, ".js")) mime = "text/javascript";
-		SendResponse(request_id, len, (unsigned char*)buf, WSLit(mime));
-		free((void*)buf);
 	}
 };
 
-static int lua_web_new(lua_State *L) {
-	int w = luaL_checknumber(L, 1);
-	int h = luaL_checknumber(L, 2);
-	size_t urllen;
-	const char* url = luaL_checklstring(L, 3, &urllen);
 
-	web_view_type *view = (web_view_type*)lua_newuserdata(L, sizeof(web_view_type));
-	auxiliar_setclass(L, "web{view}", -1);
-	view->view = web_core->CreateWebView(w, h, web_session, kWebViewType_Offscreen);
+class WebViewOpaque {
+public:
+	WebView *view;
+	WebListener *listener;
+	JSObject *te4core;
+	web_js_type *js;
+};
+
+void te4_web_new(web_view_type *view, const char *url, int w, int h) {
+	size_t urllen = strlen(url);
+	
+	WebViewOpaque *opaque = new WebViewOpaque();
+	view->opaque = (void*)opaque;
+
+	opaque->view = web_core->CreateWebView(w, h, web_session, kWebViewType_Offscreen);
+	opaque->listener = new WebListener(view->handlers);
+	opaque->view->set_view_listener(opaque->listener);
+	opaque->view->set_download_listener(opaque->listener);
+	opaque->view->set_load_listener(opaque->listener);
+	opaque->te4core = NULL;
+	opaque->js = NULL;
 	view->w = w;
 	view->h = h;
-	view->te4core = NULL;
-	view->js = NULL;
 	view->closed = false;
 
 	WebURL lurl(WebString::CreateFromUTF8(url, urllen));
-	view->view->LoadURL(lurl);
-	view->view->SetTransparent(true);
-
-	return 1;
+	opaque->view->LoadURL(lurl);
+	opaque->view->SetTransparent(true);
+	printf("Created webview: %s\n", url);
 }
 
-static int lua_web_close(lua_State *L) {
-	web_view_type *view = (web_view_type*)auxiliar_checkclass(L, "web{view}", 1);
+bool te4_web_close(web_view_type *view) {
+	WebViewOpaque *opaque = (WebViewOpaque*)view->opaque;
 	if (!view->closed) {
-		view->view->Destroy();
+		opaque->view->Destroy();
+		delete opaque->listener;
 		view->closed = true;
-		if (view->js) {
-			luaL_unref(L, LUA_REGISTRYINDEX, view->js->methods_ref);
-			delete view->js->listener;
-			free(view->js);
+		if (opaque->js) {
+			delete opaque->js->listener;
+			free(opaque->js);
 		}
-		if (view->te4core) delete view->te4core;
+		if (opaque->te4core) delete opaque->te4core;
 		printf("Destroyed webview\n");
+		return true;
 	}
-	return 0;
+	return false;
 }
 
-static int lua_web_toscreen(lua_State *L) {
-	web_view_type *view = (web_view_type*)auxiliar_checkclass(L, "web{view}", 1);
-	if (view->closed) return 0;
+bool te4_web_toscreen(web_view_type *view, int *w, int *h, unsigned int *tex) {
+	WebViewOpaque *opaque = (WebViewOpaque*)view->opaque;
+	if (view->closed) return false;
 
-	const GLTextureSurface* surface = static_cast<const GLTextureSurface*> (view->view->surface());
+	const GLTextureSurface* surface = static_cast<const GLTextureSurface*> (opaque->view->surface());
+	if (!surface) return false;
+	unsigned int t = surface->GetTexture();
 
-	if (surface) {
-		int x = luaL_checknumber(L, 2);
-		int y = luaL_checknumber(L, 3);
-		int w = surface->width();
-		int h = surface->height();
-		if (lua_isnumber(L, 4)) w = lua_tonumber(L, 4);
-		if (lua_isnumber(L, 5)) h = lua_tonumber(L, 5);
-		float r = 1, g = 1, b = 1, a = 1;
-
-		glBindTexture(GL_TEXTURE_2D, surface->GetTexture());
-
-		GLfloat texcoords[2*4] = {
-			0, 0,
-			0, 1,
-			1, 1,
-			1, 0,
-		};
-		GLfloat colors[4*4] = {
-			r, g, b, a,
-			r, g, b, a,
-			r, g, b, a,
-			r, g, b, a,
-		};
-		glColorPointer(4, GL_FLOAT, 0, colors);
-		glTexCoordPointer(2, GL_FLOAT, 0, texcoords);
-
-		GLfloat vertices[2*4] = {
-			x, y,
-			x, y + h,
-			x + w, y + h,
-			x + w, y,
-		};
-		glVertexPointer(2, GL_FLOAT, 0, vertices);
-
-		glDrawArrays(GL_QUADS, 0, 4);
-	}
-
-	return 0;
+	*tex = t;
+	*w = (*w < 0) ? view->w : *w;
+	*h = (*h < 0) ? view->h : *h;
+	return true;
 }
 
-static int lua_web_loading(lua_State *L) {
-	web_view_type *view = (web_view_type*)auxiliar_checkclass(L, "web{view}", 1);
-	if (view->closed) return 0;
-
-	lua_pushboolean(L, view->view->IsLoading());
-	return 1;
+bool te4_web_loading(web_view_type *view) {
+	WebViewOpaque *opaque = (WebViewOpaque*)view->opaque;
+	if (view->closed) return false;
+	return opaque->view->IsLoading();
 }
 
-static int lua_web_title(lua_State *L) {
-	web_view_type *view = (web_view_type*)auxiliar_checkclass(L, "web{view}", 1);
-	if (view->closed) return 0;
+void te4_web_focus(web_view_type *view, bool focus) {
+	WebViewOpaque *opaque = (WebViewOpaque*)view->opaque;
+	if (view->closed) return;
 
-	WebString wstr = view->view->title();
-	size_t len;
-	char *buf = webstring_to_buf(&wstr, &len);
-
-	lua_pushlstring(L, buf, len);
-	free(buf);
-	return 1;
+	if (focus) opaque->view->Focus();
+	else opaque->view->Unfocus();
 }
 
-static int lua_web_focus(lua_State *L) {
-	web_view_type *view = (web_view_type*)auxiliar_checkclass(L, "web{view}", 1);
-	if (view->closed) return 0;
+void te4_web_inject_mouse_move(web_view_type *view, int x, int y) {
+	WebViewOpaque *opaque = (WebViewOpaque*)view->opaque;
+	if (view->closed) return;
 
-	if (lua_toboolean(L, 2)) view->view->Focus();
-	else view->view->Unfocus();
-	return 0;
+	opaque->view->InjectMouseMove(x, y);
 }
 
-static int lua_web_inject_mouse_move(lua_State *L) {
-	web_view_type *view = (web_view_type*)auxiliar_checkclass(L, "web{view}", 1);
-	if (view->closed) return 0;
+void te4_web_inject_mouse_wheel(web_view_type *view, int x, int y) {
+	WebViewOpaque *opaque = (WebViewOpaque*)view->opaque;
+	if (view->closed) return;
 
-	int x = luaL_checknumber(L, 2);
-	int y = luaL_checknumber(L, 3);
-	view->view->InjectMouseMove(x, y);
-	return 0;
+	opaque->view->InjectMouseWheel(-y, -x);
 }
 
-static int lua_web_inject_mouse_wheel(lua_State *L) {
-	web_view_type *view = (web_view_type*)auxiliar_checkclass(L, "web{view}", 1);
-	if (view->closed) return 0;
+void te4_web_inject_mouse_button(web_view_type *view, int kind, bool up) {
+	WebViewOpaque *opaque = (WebViewOpaque*)view->opaque;
+	if (view->closed) return;
 
-	int x = luaL_checknumber(L, 2);
-	int y = luaL_checknumber(L, 3);
-	view->view->InjectMouseWheel(-y, -x);
-	return 0;
-}
-
-static int lua_web_inject_mouse_button(lua_State *L) {
-	web_view_type *view = (web_view_type*)auxiliar_checkclass(L, "web{view}", 1);
-	if (view->closed) return 0;
-
-	bool up = lua_toboolean(L, 2);
-	int kind = luaL_checknumber(L, 3);
 	MouseButton b = kMouseButton_Left;
 	if (kind == 2) b = kMouseButton_Middle;
 	else if (kind == 3) b = kMouseButton_Right;
 
-	if (up) view->view->InjectMouseUp(b);
-	else view->view->InjectMouseDown(b);
-	return 0;
+	if (up) opaque->view->InjectMouseUp(b);
+	else opaque->view->InjectMouseDown(b);
 }
 
-static int lua_web_inject_key(lua_State *L) {
-	web_view_type *view = (web_view_type*)auxiliar_checkclass(L, "web{view}", 1);
-	if (view->closed) return 0;
-
-	bool up = lua_toboolean(L, 2);
-	int scancode = lua_tonumber(L, 3);
-	int asymb = lua_tonumber(L, 4);
-	const char *uni = NULL;
-	size_t unilen = 0;
-	if (lua_isstring(L, 5)) uni = lua_tolstring(L, 5, &unilen);
+void te4_web_inject_key(web_view_type *view, int scancode, int asymb, const char *uni, int unilen, bool up) {
+	WebViewOpaque *opaque = (WebViewOpaque*)view->opaque;
+	if (view->closed) return;
 
 	WebKeyboardEvent keyEvent;
 	keyEvent.type = !up ? WebKeyboardEvent::kTypeKeyDown : WebKeyboardEvent::kTypeKeyUp;
-
+	
 	char buf[20];
 	keyEvent.virtual_key_code = asymb;
 	GetKeyIdentifierFromVirtualKeyCode(keyEvent.virtual_key_code, (char**)&buf);
 	strcpy(keyEvent.key_identifier, buf);
-
-	SDL_Keymod smod = SDL_GetModState();
-
+	
+	bool shift, ctrl, alt, meta;
+	web_key_mods(&shift, &ctrl, &alt, &meta);
 	keyEvent.modifiers = 0;
-
-	if (smod & KMOD_SHIFT) keyEvent.modifiers |= WebKeyboardEvent::kModShiftKey;
-	else if (smod & KMOD_CTRL) keyEvent.modifiers |= WebKeyboardEvent::kModControlKey;
-	else if (smod & KMOD_ALT) keyEvent.modifiers |= WebKeyboardEvent::kModAltKey;
-	else if (smod & KMOD_GUI) keyEvent.modifiers |= WebKeyboardEvent::kModMetaKey;
-
+	if (shift) keyEvent.modifiers |= WebKeyboardEvent::kModShiftKey;
+	else if (ctrl) keyEvent.modifiers |= WebKeyboardEvent::kModControlKey;
+	else if (alt) keyEvent.modifiers |= WebKeyboardEvent::kModAltKey;
+	else if (meta) keyEvent.modifiers |= WebKeyboardEvent::kModMetaKey;
+	
 	keyEvent.native_key_code = scancode;
-
+	
 	if (up) {
-		view->view->InjectKeyboardEvent(keyEvent);
+		opaque->view->InjectKeyboardEvent(keyEvent);
 	} else {
 		if (uni) {
 			WebString wstr = WebString::CreateFromUTF8(uni, unilen);
 			memcpy(keyEvent.text, wstr.data(), wstr.length() * sizeof(wchar16));
 			memcpy(keyEvent.unmodified_text, wstr.data(), wstr.length() * sizeof(wchar16));
 		}
+		
+		opaque->view->InjectKeyboardEvent(keyEvent);
 
-		view->view->InjectKeyboardEvent(keyEvent);
 		if (uni) {
 			keyEvent.type = WebKeyboardEvent::kTypeChar;
 			keyEvent.virtual_key_code = keyEvent.text[0];
 			keyEvent.native_key_code = keyEvent.text[0];
-			view->view->InjectKeyboardEvent(keyEvent);
+			opaque->view->InjectKeyboardEvent(keyEvent);
 		}
 	}
-	return 0;
 }
 
-static int lua_web_set_downloader(lua_State *L) {
-	web_view_type *view = (web_view_type*)auxiliar_checkclass(L, "web{view}", 1);
-	web_downloader_type *listener = (web_downloader_type*)auxiliar_checkclass(L, "web{downloader}", 2);
-	if (view->closed) return 0;
+void te4_web_download_action(web_view_type *view, long id, const char *path) {
+	WebViewOpaque *opaque = (WebViewOpaque*)view->opaque;
+	if (view->closed) return;
 
-	view->view->set_download_listener(listener->d);
-	return 0;
-}
-
-
-static int lua_downloader_new(lua_State *L) {
-	web_downloader_type *listener = (web_downloader_type*)lua_newuserdata(L, sizeof(web_downloader_type));
-	auxiliar_setclass(L, "web{downloader}", -1);
-
-	listener->d = new WebDownloader();
-	listener->d->d = listener;
-	listener->L = L;
-	listener->closed = false;
-
-	lua_pushvalue(L, 1);
-	listener->on_request_ref = luaL_ref(L, LUA_REGISTRYINDEX);
-	lua_pushvalue(L, 2);
-	listener->on_update_ref = luaL_ref(L, LUA_REGISTRYINDEX);
-	lua_pushvalue(L, 3);
-	listener->on_finish_ref = luaL_ref(L, LUA_REGISTRYINDEX);
-	return 1;
-}
-
-static int lua_downloader_close(lua_State *L) {
-	web_downloader_type *listener = (web_downloader_type*)auxiliar_checkclass(L, "web{downloader}", 1);
-	if (!listener->closed) {
-		luaL_unref(L, LUA_REGISTRYINDEX, listener->on_request_ref);
-		luaL_unref(L, LUA_REGISTRYINDEX, listener->on_update_ref);
-		luaL_unref(L, LUA_REGISTRYINDEX, listener->on_finish_ref);
-		delete listener->d;
-		listener->closed = true;
+	if (path) {
+		WebString wpath = WebString::CreateFromUTF8(path, strlen(path));
+		opaque->view->DidChooseDownloadPath(id, wpath);
+	} else {
+		opaque->view->DidCancelDownload(id);
 	}
-	return 0;
 }
 
-static int lua_web_download_action(lua_State *L) {
-	web_view_type *view = (web_view_type*)auxiliar_checkclass(L, "web{view}", 1);
-	if (view->closed) return 0;
-	int download_id = luaL_checknumber(L, 2);
+void te4_web_do_update(void (*cb)(WebEvent*)) {
+	if (!web_core) return;
 
-	if (lua_isstring(L, 3)) {
-		size_t len;
-		const char *buf = lua_tolstring(L, 3, &len);
-		WebString wpath = WebString::CreateFromUTF8(buf, len);
-		view->view->DidChooseDownloadPath(download_id, wpath);
-	} else view->view->DidCancelDownload(download_id);
-	return 0;
-}
+	web_core->Update();
+	WebEvent *event;
+	while (event = pop_event()) {
+		cb(event);
 
-static int lua_web_set_method(lua_State *L) {
-	web_view_type *view = (web_view_type*)auxiliar_checkclass(L, "web{view}", 1);
-	if (view->closed) return 0;
-	size_t lfctname;
-	const char *fctname = luaL_checklstring(L, 2, &lfctname);
-
-	if (!view->te4core) {
-		JSValue result = view->view->CreateGlobalJavascriptObject(WSLit("te4core"));
-		if (result.IsObject()) {
-			view->te4core = &result.ToObject();
-			view->js = (web_js_type*)malloc(sizeof(web_js_type));
-			lua_newtable(L);
-			view->js->L = L;
-			view->js->methods_ref = luaL_ref(L, LUA_REGISTRYINDEX);
-			view->js->listener = new WebJShandler();
-			view->js->listener->js = view->js;
-			view->view->set_js_method_handler(view->js->listener);
+		switch (event->kind) {
+			case TE4_WEB_EVENT_TITLE_CHANGE:
+				free((void*)event->data.title);
+				break;
+			case TE4_WEB_EVENT_REQUEST_POPUP_URL:
+				free((void*)event->data.popup.url);
+				break;
+			case TE4_WEB_EVENT_DOWNLOAD_REQUEST:
+				free((void*)event->data.download_request.url);
+				free((void*)event->data.download_request.name);
+				free((void*)event->data.download_request.mime);
+				break;
+			case TE4_WEB_EVENT_LOADING:
+				free((void*)event->data.loading.url);
+				break;
 		}
-	}
-	if (!view->te4core) {
-		lua_pushboolean(L, false);
-		return 1;
-	}
-	WebString name(WebString::CreateFromUTF8(fctname, lfctname));
-	view->te4core->SetCustomMethod(name, false);
 
-	// Store the function in the table for this view
-	lua_rawgeti(L, LUA_REGISTRYINDEX, view->js->methods_ref);
-	lua_pushstring(L, fctname);
-	lua_pushvalue(L, 3);
-	lua_rawset(L, -3);
-	lua_pop(L, 1);
-
-	lua_pushboolean(L, true);
-	return 1;
+		delete event;
+	}
 }
 
-static const struct luaL_Reg view_reg[] =
-{
-	{"__gc", lua_web_close},
-	{"downloader", lua_web_set_downloader},
-	{"downloadAction", lua_web_download_action},
-	{"toScreen", lua_web_toscreen},
-	{"focus", lua_web_focus},
-	{"loading", lua_web_loading},
-	{"title", lua_web_title},
-	{"injectMouseMove", lua_web_inject_mouse_move},
-	{"injectMouseWheel", lua_web_inject_mouse_wheel},
-	{"injectMouseButton", lua_web_inject_mouse_button},
-	{"injectKey", lua_web_inject_key},
-	{"setMethod", lua_web_set_method},
-	{NULL, NULL},
-};
+void te4_web_setup(
+	int argc, char **gargv, char *spawnc,
+	void*(*mutex_create)(), void(*mutex_destroy)(void*), void(*mutex_lock)(void*), void(*mutex_unlock)(void*),
+	unsigned int (*make_texture)(int, int), void (*del_texture)(unsigned int), void (*texture_update)(unsigned int, int, int, const void*),
+	void (*key_mods)(bool*, bool*, bool*, bool*)
+	) {
 
-static const struct luaL_Reg downloader_reg[] =
-{
-	{"__gc", lua_downloader_close},
-	{NULL, NULL},
-};
-
-static const struct luaL_Reg weblib[] =
-{
-	{"new", lua_web_new},
-	{"downloader", lua_downloader_new},
-	{NULL, NULL},
-};
-
-void te4_web_update() {
-	if (web_core) web_core->Update();
-}
-
-void te4_web_init(lua_State *L) {
+	web_mutex_create = mutex_create;
+	web_mutex_destroy = mutex_destroy;
+	web_mutex_lock = mutex_lock;
+	web_mutex_unlock = mutex_unlock;
+	web_make_texture = make_texture;
+	web_del_texture = del_texture;
+	web_texture_update = texture_update;
+	web_key_mods = key_mods;
 	if (!web_core) {
 		web_core = WebCore::Initialize(WebConfig());
 		web_core->set_surface_factory(new GLTextureSurfaceFactory());
@@ -649,9 +416,8 @@ void te4_web_init(lua_State *L) {
 		web_data_source = new PhysfsDataSource();
 		web_session->AddDataSource(WSLit("te4"), web_data_source);
 	}
+}
 
-	auxiliar_newclass(L, "web{view}", view_reg);
-	auxiliar_newclass(L, "web{downloader}", downloader_reg);
-	luaL_openlib(L, "core.webview", weblib, 0);
-	lua_settop(L, 0);
+void te4_web_initialize() {
+	te4_web_init_utils();
 }

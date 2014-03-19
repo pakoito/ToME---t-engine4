@@ -1,5 +1,5 @@
 -- ToME - Tales of Maj'Eyal
--- Copyright (C) 2009, 2010, 2011, 2012, 2013 Nicolas Casalini
+-- Copyright (C) 2009 - 2014 Nicolas Casalini
 --
 -- This program is free software: you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -62,14 +62,19 @@ newBirthDescriptor{
 		function(actor)
 			actor:addShaderAura("body_of_fire", "awesomeaura", {time_factor=3500, alpha=1, flame_scale=1.1}, "particles_images/wings.png")
 		end,
+		function(actor)
+			actor:addShaderAura("body_of_ice", "crystalineaura", {}, "particles_images/spikes.png")
+		end,
 	},
 	talents_types = {
 		["spell/explosives"]={true, 0.3},
-		["spell/infusion"]={true, 0.3},
 		["spell/golemancy"]={true, 0.3},
 		["spell/advanced-golemancy"]={false, 0.3},
 		["spell/stone-alchemy"]={true, 0.3},
-		["spell/fire-alchemy"]={false, 0.3},
+		["spell/fire-alchemy"]={true, 0.3},
+		["spell/acid-alchemy"]={true, 0.3},
+		["spell/frost-alchemy"]={true, 0.3},
+		["spell/energy-alchemy"]={false, 0.3},
 		["spell/staff-combat"]={true, 0.3},
 		["cunning/survival"]={false, -0.1},
 	},

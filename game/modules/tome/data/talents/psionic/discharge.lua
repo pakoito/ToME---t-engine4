@@ -1,5 +1,5 @@
 -- ToME - Tales of Maj'Eyal
--- Copyright (C) 2009, 2010, 2011, 2012, 2013 Nicolas Casalini
+-- Copyright (C) 2009 - 2014 Nicolas Casalini
 --
 -- This program is free software: you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -216,6 +216,6 @@ newTalent{
 		local crit_bonus = t.getCritBonus(self, t)
 		return ([[Focus your mind on a single target, diverting all offensive Discharge talent effects to it for %d turns.  While this effect is active, all Discharge talents gain %d%% critical power.
 		If the target is killed, the effect will end early.
-		The damage bonus will scale with your Mindpower.]]):format(duration, damDesc(self, DamageType.MIND, crit_bonus))
+		The damage bonus will scale with your Mindpower.]]):format(duration, crit_bonus)
 	end,
 }

@@ -1,5 +1,5 @@
 -- ToME - Tales of Maj'Eyal
--- Copyright (C) 2009, 2010, 2011, 2012, 2013 Nicolas Casalini
+-- Copyright (C) 2009 - 2014 Nicolas Casalini
 --
 -- This program is free software: you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -30,7 +30,7 @@ newEntity{
 	type = "humanoid", subtype = "human",
 	display = "p", color=colors.DARK_GREY,
 	name = "Necromancer", color=colors.DARK_GREY,
-	desc = [[A Human dressed in black robes. He mumbles is a harsh tongue. He seems to think you are his slave.]],
+	desc = [[A Human dressed in black robes. He mumbles in a harsh tongue. He seems to think you are his slave.]],
 	level_range = {1, nil}, exp_worth = 1,
 
 	combat = { dam=resolvers.rngavg(5,12), atk=2, apr=6, physspeed=2 },

@@ -1,6 +1,6 @@
 /*
     TE4 - T-Engine 4
-    Copyright (C) 2009, 2010, 2011, 2012, 2013 Nicolas Casalini
+    Copyright (C) 2009 - 2014 Nicolas Casalini
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -41,6 +41,7 @@
 #include "serial.h"
 #include "profile.h"
 #include "main.h"
+#include "te4web.h"
 #include "lua_externs.h"
 #include "runner/core.h"
 #ifdef SELFEXE_WINDOWS
@@ -107,22 +108,6 @@ SDL_mutex *renderingLock;
 SDL_mutex *realtimeLock;
 int redraw_pending = 0;
 int realtime_pending = 0;
-
-/*
- * Grab web browser methods
- */
-void (*te4_web_init)(lua_State *L);
-void (*te4_web_update)();
-void te4_web_load() {
-	void *web = SDL_LoadObject("libte4-web.so");
-	printf("Loading web core: %s\n", SDL_GetError());
-	
-	if (web) {
-		te4_web_init = (void (*)(lua_State*)) SDL_LoadFunction(web, "te4_web_init");
-		te4_web_update = (void (*)()) SDL_LoadFunction(web, "te4_web_update");
-	}
-}
-
 
 /*
  * Used to clean up a lock and its corresponding timer/flag.
@@ -212,6 +197,7 @@ static int traceback (lua_State *L) {
 			add_lua_error(ar.short_src, ar.currentline, ar.name?ar.name:"");
 		}
 	}
+	fflush(stdout);
 	return 1;
 }
 
@@ -244,6 +230,7 @@ void stackDump (lua_State *L) {
 		i--;
 	}
 	printf("--------------- Stack Dump Finished ---------------\n" );
+	fflush(stdout);
 }
 
 int docall (lua_State *L, int narg, int nret)
@@ -620,7 +607,7 @@ void on_redraw()
 #ifdef STEAM_TE4
 	if (!no_steam) te4_steam_callbacks();
 #endif
-	if (te4_web_update) te4_web_update();
+	if (te4_web_update) te4_web_update(L);
 }
 
 void pass_command_args(int argc, char *argv[])

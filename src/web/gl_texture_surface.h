@@ -69,4 +69,12 @@ public:
 	virtual void DestroySurface(Awesomium::Surface* surface);
 };
 
+extern void *(*web_mutex_create)();
+extern void (*web_mutex_destroy)(void *mutex);
+extern void (*web_mutex_lock)(void *mutex);
+extern void (*web_mutex_unlock)(void *mutex);
+extern unsigned int (*web_make_texture)(int w, int h);
+extern void (*web_del_texture)(unsigned int tex);
+extern void (*web_texture_update)(unsigned int tex, int w, int h, const void* buffer);
+
 #endif  // __GL_TEXTURE_SURFACE_H__

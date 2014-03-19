@@ -1,5 +1,5 @@
 -- ToME - Tales of Maj'Eyal
--- Copyright (C) 2009, 2010, 2011, 2012, 2013 Nicolas Casalini
+-- Copyright (C) 2009 - 2014 Nicolas Casalini
 --
 -- This program is free software: you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -27,7 +27,7 @@ newEntity{ define_as = "BRIAGH",
 	name = "Briagh, Great Sand Wyrm",
 	display = "D", color=colors.VIOLET,
 	resolvers.nice_tile{image="invis.png", add_mos = {{image="npc/dragon_sand_briagh__great_sand_wyrm.png", display_h=2, display_y=-1}}},
-	desc = [[A towering sand-drake stands before you. This wingless worm is mighty and could easily crush you.]],
+	desc = [[A towering sand drake stands before you. This wingless worm is mighty and could easily crush you.]],
 	level_range = {35, nil}, exp_worth = 2,
 	max_life = 350, life_rating = 29, fixed_rating = true,
 	max_mana = 900, mana_regen=100,

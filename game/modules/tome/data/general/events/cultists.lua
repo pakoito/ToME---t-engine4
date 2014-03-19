@@ -1,5 +1,5 @@
 -- ToME - Tales of Maj'Eyal
--- Copyright (C) 2009, 2010, 2011, 2012, 2013 Nicolas Casalini
+-- Copyright (C) 2009 - 2014 Nicolas Casalini
 --
 -- This program is free software: you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -201,7 +201,7 @@ game.zone.on_turn = function()
 				type = "armor", subtype="head",
 				name = "Crown of Burning Pain", image = "object/artifact/crown_of_burning_pain.png",
 				unided_name = "burning crown",
-				desc = [[This crown of pure flames possess a myriad of small molten rocks floating wildly above it. Each can be removed to throw as a true meteor.]],
+				desc = [[This crown of pure flames possesses a myriad of small molten rocks floating wildly above it. Each can be removed to throw as a true meteor.]],
 				add_name = " (#ARMOR#)",
 				power_source = {arcane=true},
 				display = "]", color=colors.SLATE,

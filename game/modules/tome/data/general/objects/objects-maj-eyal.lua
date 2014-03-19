@@ -1,5 +1,5 @@
 -- ToME - Tales of Maj'Eyal
--- Copyright (C) 2009, 2010, 2011, 2012, 2013 Nicolas Casalini
+-- Copyright (C) 2009 - 2014 Nicolas Casalini
 --
 -- This program is free software: you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -29,3 +29,7 @@ loadIfNot("/data/general/objects/lore/spellhunt.lua")
 loadIfNot("/data/general/objects/lore/fun.lua")
 loadIfNot("/data/general/objects/lore/misc.lua")
 loadIfNot("/data/general/objects/lore/maj-eyal.lua")
+
+--Artifacts
+loadIfNot("/data/general/objects/world-artifacts-maj-eyal.lua")
+loadIfNot("/data/general/objects/boss-artifacts-maj-eyal.lua")

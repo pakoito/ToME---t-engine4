@@ -1,5 +1,5 @@
 -- ToME - Tales of Maj'Eyal
--- Copyright (C) 2009, 2010, 2011, 2012, 2013 Nicolas Casalini
+-- Copyright (C) 2009 - 2014 Nicolas Casalini
 --
 -- This program is free software: you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -57,7 +57,7 @@ for i = 1, 3 do
 newEntity{ base = "BASE_LORE",
 	define_as = "NOTE"..i,
 	name = "tract", lore="temple-creation-note-"..i,
-	desc = [[Tract, revealing the history of the Nagas.]],
+	desc = [[A tract revealing the history of the Nagas.]],
 	rarity = false,
 	encumberance = 0,
 }
@@ -76,7 +76,7 @@ newEntity{ base = "BASE_TRIDENT",
 	define_as = "LEGACY_NALOREN",
 	unided_name = "ornate orichalcum trident",
 	name = "Legacy of the Naloren", unique=true, image = "object/artifact/trident_of_the_tides.png",
-	desc = [[This incredibly beautiful-and powerful-trident is made of the rare metal orichalcum. An amazing pearl is seated in head of the trident, as it spreads into three razor sharp prongs.
+	desc = [[This incredibly beautiful -- and powerful -- trident is made of the rare metal orichalcum. An amazing pearl is seated in head of the trident, as it spreads into three razor sharp prongs.
 It is imbued with the greatest strengths of all of the most powerful Naga warriors.
 Slasul gave it to you as a sign of his faith in you. It is a sign of hope for all of the Naloren race, that one outside of their tribe could be so trusted.]],
 	require = { stat = { str=35 }, },

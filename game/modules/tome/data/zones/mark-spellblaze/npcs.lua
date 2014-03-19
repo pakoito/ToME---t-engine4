@@ -1,5 +1,5 @@
 -- ToME - Tales of Maj'Eyal
--- Copyright (C) 2009, 2010, 2011, 2012, 2013 Nicolas Casalini
+-- Copyright (C) 2009 - 2014 Nicolas Casalini
 --
 -- This program is free software: you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -30,7 +30,7 @@ local Talents = require("engine.interface.ActorTalents")
 newEntity{ base = "BASE_NPC_ELVEN_CASTER", define_as = "GRAND_CORRUPTOR",
 	allow_infinite_dungeon = true,
 	name = "Grand Corruptor", color=colors.VIOLET, unique = true,
-	desc = [[An elven corruptor, drawn to these blighted lands.]],
+	desc = [[An Elven corruptor, drawn to these blighted lands.]],
 	level_range = {25, nil}, exp_worth = 0.3,
 	rank = 4,
 	max_vim = 800,

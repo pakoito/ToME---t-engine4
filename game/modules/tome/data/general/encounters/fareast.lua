@@ -1,5 +1,5 @@
 -- ToME - Tales of Maj'Eyal
--- Copyright (C) 2009, 2010, 2011, 2012, 2013 Nicolas Casalini
+-- Copyright (C) 2009 - 2014 Nicolas Casalini
 --
 -- This program is free software: you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -68,24 +68,24 @@ newEntity{
 	end
 }
 
+--[[
+-- A little more context; this made people so annoyed on both sides, taht I've had enough of it.
+-- This was never intended as a reference to any real world thing and if people are annoyed at it i'm sorry
+-- It's gone now
 newEntity{
-	name = "Orc Breeding Pit",
-	type = "hostile", subtype = "special", unique = true,
-	immediate = {"world-encounter", "fareast"},
+	name = "Orc Breeding Pits",
+	type = "harmless", subtype = "special", unique = true,
+	level_range = {35, 50},
+	rarity = 20,
+	on_world_encounter = "orc-breeding-pits",
 	on_encounter = function(self, who)
-		local x, y = self:findSpot(who)
-		if not x then return end
-
-		local g = game.level.map(x, y, engine.Map.TERRAIN):cloneFull()
-		g.__nice_tile_base = nil
-		g.name = "Entrance to the orc breeding pit"
-		g.display='>' g.color_r=colors.GREEN.r g.color_g=colors.GREEN.g g.color_b=colors.GREEN.b g.notice = true
-		g.change_level=1 g.change_zone="orc-breeding-pit" g.glow=true
-		g.add_displays = g.add_displays or {}
-		g.add_displays[#g.add_displays+1] = mod.class.Grid.new{image="terrain/ladder_down.png"}
-		g.nice_tiler = nil
-		g:initGlow()
-		game.zone:addEntity(game.level, g, "terrain", x, y)
+		who.energy.value = game.energy_to_act
+		game.paused = true
+		who:runStop()
+		local Chat = require "engine.Chat"
+		local chat = Chat.new("orc-breeding-pits", {name="Dying sun paladin"}, who)
+		chat:invoke()
 		return true
-	end
+	end,
 }
+]]

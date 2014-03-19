@@ -1,5 +1,5 @@
 -- ToME - Tales of Maj'Eyal
--- Copyright (C) 2009, 2010, 2011, 2012, 2013 Nicolas Casalini
+-- Copyright (C) 2009 - 2014 Nicolas Casalini
 --
 -- This program is free software: you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -28,7 +28,7 @@ newEntity{ base = "BASE_STAFF",
 	define_as = "TELOS_BOTTOM_HALF", rarity=false, image = "object/artifact/staff_broken_bottom_telos.png",
 	unided_name = "broken staff",
 	name = "Telos's Staff (Bottom Half)", unique=true,
-	desc = [[The bottom part of Telos's broken staff.]],
+	desc = [[The bottom part of Telos' broken staff.]],
 	require = { stat = { mag=35 }, },
 	encumberance = 2.5,
 	cost = 500,

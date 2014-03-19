@@ -1,5 +1,5 @@
 -- TE4 - T-Engine 4
--- Copyright (C) 2009, 2010, 2011, 2012, 2013 Nicolas Casalini
+-- Copyright (C) 2009 - 2014 Nicolas Casalini
 --
 -- This program is free software: you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -665,6 +665,7 @@ function _M:checkModuleHash(module, md5)
 	if game and game:isTainted() then return nil, "savefile tainted" end
 	core.profile.pushOrder(table.serialize{o="CheckModuleHash", module=module, md5=md5})
 
+	local ok = false
 	self:waitEvent("CheckModuleHash", function(e) ok = e.ok end, 10000)
 
 	if not ok then return nil, "bad game version" end
@@ -679,10 +680,27 @@ function _M:checkAddonHash(module, addon, md5)
 	if game and game:isTainted() then return nil, "savefile tainted" end
 	core.profile.pushOrder(table.serialize{o="CheckAddonHash", module=module, addon=addon, md5=md5})
 
+	local ok = false
 	self:waitEvent("CheckAddonHash", function(e) ok = e.ok end, 10000)
 
 	if not ok then return nil, "bad game addon version" end
 	print("[ONLINE PROFILE] addon hash is valid")
+	return true
+end
+
+function _M:checkBatchHash(list)
+	if not self.auth then return nil, "no online profile active" end
+	if config.settings.cheat then return nil, "cheat mode active" end
+	if game and game:isTainted() then return nil, "savefile tainted" end
+	core.profile.pushOrder(table.serialize{o="CheckBatchHash", data=list})
+
+	local ok = false
+	local error = nil
+	self:waitEvent("CheckBatchHash", function(e) ok = e.ok error = e.error end, 10000)
+
+	if not ok then return nil, error or "unknown error" end
+	print("[ONLINE PROFILE] all hashes are valid")
+	self.hash_valid = true
 	return true
 end
 
@@ -871,4 +889,10 @@ function _M:isDonator(s)
 	s = s or 1
 	if core.steam then return true end
 	if not self.auth or not tonumber(self.auth.donated) or tonumber(self.auth.donated) < s then return false else return true end
+end
+
+function _M:allowDLC(dlc)
+	if core.steam then if core.steam.checkDLC(dlc[2]) then return true end end
+	if self.auth and self.auth.dlcs and self.auth.dlcs[dlc[1]] then return true end
+	return false
 end

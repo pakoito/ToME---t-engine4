@@ -1,5 +1,5 @@
 -- ToME - Tales of Maj'Eyal
--- Copyright (C) 2009, 2010, 2011, 2012, 2013 Nicolas Casalini
+-- Copyright (C) 2009 - 2014 Nicolas Casalini
 --
 -- This program is free software: you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -20,6 +20,8 @@
 load("/data/general/grids/basic.lua")
 load("/data/general/grids/forest.lua")
 load("/data/general/grids/water.lua")
+load("/data/general/grids/autumn_forest.lua")
+load("/data/general/grids/elven_forest.lua")
 load("/data/general/grids/mountain.lua", function(e)
 	if e.image == "terrain/rocky_ground.png" then
 		e.image = "terrain/snowy_grass.png"

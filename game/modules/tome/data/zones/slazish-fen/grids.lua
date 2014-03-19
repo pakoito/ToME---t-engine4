@@ -1,5 +1,5 @@
 -- ToME - Tales of Maj'Eyal
--- Copyright (C) 2009, 2010, 2011, 2012, 2013 Nicolas Casalini
+-- Copyright (C) 2009 - 2014 Nicolas Casalini
 --
 -- This program is free software: you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -27,17 +27,36 @@ newEntity{
 	define_as = "BOGTREE",
 	type = "wall", subtype = "water",
 	name = "tree",
-	image = "terrain/swamptree.png",
+	image = "terrain/poisoned_water_01.png",
 	display = '#', color=colors.LIGHT_GREEN, back_color=colors.DARK_BLUE,
 	always_remember = true,
 	can_pass = {pass_tree=1},
 	does_block_move = true,
 	block_sight = true,
 	dig = "SHALLOW_WATER",
-	nice_tiler = { method="replace", base={"BOGTREE", 100, 1, 20}},
+	nice_tiler = { method="replace", base={"BOGTREE", 100, 1, 40}},
 	shader = "water",
 }
-for i = 1, 20 do newEntity{ base="BOGTREE", define_as = "BOGTREE"..i, image = "terrain/poisoned_water_01.png", add_displays = class:makeTrees("terrain/swamptree", 3, 3)} end
+for i = 1, 40 do
+	newEntity(class:makeNewTrees({base="BOGTREE", define_as = "BOGTREE"..i}, {
+		{"small_willow", {"shadow", "trunk", "waterripples", "foliage_bare"}},
+		{"small_willow_moss", {"shadow", "trunk", "waterripples", "foliage_bare"}},
+		{"willow", {tall=-1, "shadow", "trunk", "waterripples", "foliage_bare"}},
+		{"willow_moss", {tall=-1, "shadow", "trunk", "waterripples", "foliage_bare"}},
+		{"small_willow", {"shadow", "trunk", "waterripples", "foliage_spring"}},
+		{"small_willow_moss", {"shadow", "trunk", "waterripples", "foliage_spring"}},
+		{"willow", {tall=-1, "shadow", "trunk", "waterripples", "foliage_spring"}},
+		{"willow_moss", {tall=-1, "shadow", "trunk", "waterripples", "foliage_spring"}},
+		{"small_willow", {"shadow", "trunk", "waterripples", "foliage_spring"}},
+		{"small_willow_moss", {"shadow", "trunk", "waterripples", "foliage_spring"}},
+		{"willow", {tall=-1, "shadow", "trunk", "waterripples", "foliage_spring"}},
+		{"willow_moss", {tall=-1, "shadow", "trunk", "waterripples", "foliage_spring"}},
+		{"small_willow", {"shadow", "trunk", "waterripples", "foliage_spring"}},
+		{"small_willow_moss", {"shadow", "trunk", "waterripples", "foliage_spring"}},
+		{"willow", {tall=-1, "shadow", "trunk", "waterripples", "foliage_spring"}},
+		{"willow_moss", {tall=-1, "shadow", "trunk", "waterripples", "foliage_spring"}},
+	}))
+end
 
 newEntity{ base="WATER_BASE",
 	define_as = "BOGWATER",
@@ -53,7 +72,7 @@ for i = 1, 7 do newEntity{ base="BOGWATER_MISC", define_as = "BOGWATER_MISC"..i,
 
 newEntity{ base="BOGWATER",
 	define_as = "PORTAL",
-	display = "&", color = colors.BLUE,
+	display = "&", color = colors.VIOLET,
 	name = "coral portal",
 	add_displays = {class.new{z=18, image="terrain/naga_portal.png", display_h=2, display_y=-1, embed_particles = {
 		{name="naga_portal_smoke", rad=2, args={smoke="particles_images/smoke_whispery_bright"}},

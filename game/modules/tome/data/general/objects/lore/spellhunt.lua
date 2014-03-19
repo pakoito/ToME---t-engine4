@@ -1,5 +1,5 @@
 -- ToME - Tales of Maj'Eyal
--- Copyright (C) 2009, 2010, 2011, 2012, 2013 Nicolas Casalini
+-- Copyright (C) 2009 - 2014 Nicolas Casalini
 --
 -- This program is free software: you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -19,7 +19,7 @@
 
 newEntity{ base = "BASE_LORE_RANDOM",
 	name = "memories of archmage Varil", lore="spellhunt-note-1", unique=true,
-	desc = [[A collection of thoughts and memories of the archmage Varil, during the Age of Dusk]],
+	desc = [[A collection of thoughts and memories of the archmage Varil, during the Age of Dusk.]],
 	level_range = {1, 25},
 	rarity = 40,
 	encumber = 0,

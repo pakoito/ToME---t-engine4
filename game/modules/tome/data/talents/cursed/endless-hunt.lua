@@ -1,5 +1,5 @@
 -- ToME - Tales of Maj'Eyal
--- Copyright (C) 2009, 2010, 2011, 2012, 2013 Nicolas Casalini
+-- Copyright (C) 2009 - 2014 Nicolas Casalini
 --
 -- This program is free software: you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -151,7 +151,7 @@ newTalent{
 		return getHateMultiplier(self, 0.35, 0.67, false, hate)
 	end,
 	getTargetDamageChange = function(self, t)
-		return -self:combatLimit(self:combatTalentStatDamage(t, "wil", 0.7, 0.9), 1, 0, 0, 0.75, 0.87) -- Limit < 100%
+		return -self:combatLimit(self:combatTalentStatDamage(t, "wil", 0.7, 0.9), 1, 0, 0, 0.75, 0.87)*100 -- Limit < 100%
 	end,
 	getDuration = function(self, t)
 		return 2
@@ -196,7 +196,7 @@ newTalent{
 		local targetDamageChange = t.getTargetDamageChange(self, t)
 		local duration = t.getDuration(self, t)
 		return ([[Harass your stalked victim with two quick attacks for %d%% (at 0 Hate) to %d%% (at 100+ Hate) damage each. Each attack that scores a hit disrupts one talent, rune or infusion for %d turns. Your opponent will be unnerved by the attacks, reducing the damage they deal by %d%% for %d turns.
-		Damage reduction increases with the Willpower stat.]]):format(t.getDamageMultiplier(self, t, 0) * 100, t.getDamageMultiplier(self, t, 100) * 100, cooldownDuration, -targetDamageChange * 100, duration)
+		Damage reduction increases with the Willpower stat.]]):format(t.getDamageMultiplier(self, t, 0) * 100, t.getDamageMultiplier(self, t, 100) * 100, cooldownDuration, -targetDamageChange, duration)
 	end,
 }
 

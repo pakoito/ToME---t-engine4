@@ -1,5 +1,5 @@
 -- ToME - Tales of Maj'Eyal
--- Copyright (C) 2009, 2010, 2011, 2012, 2013 Nicolas Casalini
+-- Copyright (C) 2009 - 2014 Nicolas Casalini
 --
 -- This program is free software: you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -28,9 +28,9 @@ newEntity{base="HARDWALL", define_as = "ATAMATHON_BROKEN",
 	resolvers.nice_tile{image="terrain/grass.png", add_displays = {class.new{z=18,image="npc/construct_golem_athamathon_the_giant_golem.png", display_y=-1, display_h=2}}},
 	name = "the remains of Atamathon",
 	show_tooltip = true,
-	desc = [[This giant golem was constructed by the halflings during the Pyre Wars to fight the orcs, but was felled by Garkul the Devourer.
-Its body is made of marble, its joints of solid voratun, and its eyes of purest ruby. One of its eyes seems to be missing. At over 40 feet high it towers above you.
-Someone foolish has tried to reconstruct it, but it seems like it misses an eye to be completed.]],
+	desc = [[This giant golem was constructed by the Halflings during the Pyre Wars to fight the orcs, but was felled by Garkul the Devourer.
+Its body is made of marble, its joints of solid voratun, and its sole eye of purest ruby; the other one seems to be missing. At over 40 feet tall, it towers above you.
+Someone foolish has tried to reconstruct it, but was unable to complete the task; the golem needs another eye to be complete.]],
 	dig = false,
 	block_move = function(self, x, y, e, act, couldpass)
 		if e and e.player and act then

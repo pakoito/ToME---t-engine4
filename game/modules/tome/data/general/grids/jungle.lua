@@ -1,5 +1,5 @@
 -- ToME - Tales of Maj'Eyal
--- Copyright (C) 2009, 2010, 2011, 2012, 2013 Nicolas Casalini
+-- Copyright (C) 2009 - 2014 Nicolas Casalini
 --
 -- This program is free software: you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -41,7 +41,7 @@ for i = 1, 4 do
 	newEntity{ base = "JUNGLE_GRASS", define_as = "JUNGLE_GRASS_PATCH"..(i+5+8+3), add_displays={class.new{z=3,image = "terrain/jungle/jungle_dirt_var_"..i.."_64_01.png"}} }
 end
 for i = 1, 4 do
-	newEntity{ base = "JUNGLE_GRASS", define_as = "JUNGLE_GRASS_PATCH"..(i+5+8+3+4), add_displays={class.new{z=3,image = "terrain/jungle/jungle_plant_0"..i..".png"}} }
+	newEntity{ base = "JUNGLE_GRASS", define_as = "JUNGLE_GRASS_PATCH"..(i+5+8+3+4), add_displays={class.new{z=3,image = "terrain/jungle/jungle_plant_0"..i..".png", shader="tree"}} }
 end
 
 newEntity{

@@ -1,5 +1,5 @@
 -- ToME - Tales of Maj'Eyal
--- Copyright (C) 2009, 2010, 2011, 2012, 2013 Nicolas Casalini
+-- Copyright (C) 2009 - 2014 Nicolas Casalini
 --
 -- This program is free software: you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -39,7 +39,7 @@ newEntity{ define_as = "MINDWORM",
 	type = "humanoid", subtype = "thalore", unique = true,
 	name = "Mindworm",
 	display = "p", color=colors.VIOLET,
-	desc = [[This tall thalore eyes are lost in the distance, you can feel that he barely sees you.]],
+	desc = [[This tall Thalore's eyes are lost in the distance; you can sense that he barely sees you.]],
 	killer_message = "and mind-probed",
 	level_range = {25, nil}, exp_worth = 2,
 	max_life = 100, life_rating = 10, fixed_rating = true,

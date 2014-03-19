@@ -1,5 +1,5 @@
 -- ToME - Tales of Maj'Eyal
--- Copyright (C) 2009, 2010, 2011, 2012, 2013 Nicolas Casalini
+-- Copyright (C) 2009 - 2014 Nicolas Casalini
 --
 -- This program is free software: you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -36,10 +36,12 @@ newTalent{
 	end,
 	activate = function(self, t)
 		local ret = {}
+		
+		local boost = 1 + (self.enhance_meditate or 0)
 
-		local pt = 2 + self:combatTalentMindDamage(t, 20, 120) / 10
-		local save = 5 + self:combatTalentMindDamage(t, 10, 40)
-		local heal = 5 + self:combatTalentMindDamage(t, 12, 30)
+		local pt = (2 + self:combatTalentMindDamage(t, 20, 120) / 10) * boost
+		local save = (5 + self:combatTalentMindDamage(t, 10, 40)) * boost
+		local heal = (5 + self:combatTalentMindDamage(t, 12, 30)) * boost
 		
 		if self:knowTalent(self.T_EARTH_S_EYES) then
 			local te = self:getTalentFromId(self.T_EARTH_S_EYES)
@@ -58,9 +60,11 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		local pt = 2 + self:combatTalentMindDamage(t, 20, 120) / 10
-		local save = 5 + self:combatTalentMindDamage(t, 10, 40)
-		local heal = 5 + self:combatTalentMindDamage(t, 12, 30)
+		local boost = 1 + (self.enhance_meditate or 0)
+		
+		local pt = (2 + self:combatTalentMindDamage(t, 20, 120) / 10) * boost
+		local save = (5 + self:combatTalentMindDamage(t, 10, 40)) * boost
+		local heal = (5 + self:combatTalentMindDamage(t, 12, 30)) * boost
 		local rest = 0.5 * self:getTalentLevelRaw(t)
 		return ([[Meditate on your link with Nature.
 		While meditating, you regenerate %d equilibrium per turn, your Mental Save is increased by %d, and your healing factor increases by %d%%.

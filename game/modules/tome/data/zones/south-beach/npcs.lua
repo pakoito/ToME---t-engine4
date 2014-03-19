@@ -1,5 +1,5 @@
 -- ToME - Tales of Maj'Eyal
--- Copyright (C) 2009, 2010, 2011, 2012, 2013 Nicolas Casalini
+-- Copyright (C) 2009 - 2014 Nicolas Casalini
 --
 -- This program is free software: you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -53,6 +53,7 @@ newEntity{
 	combat_armor = 3, combat_def = 3,
 
 	on_resurrect = function(self)
+		game.level.data.blight_start_in = nil
 		game.level.map:particleEmitter(self.x, self.y, 10, "ball_blight", {radius=10})
 		local list = {}
 		for uid, e in pairs(game.level.entities) do

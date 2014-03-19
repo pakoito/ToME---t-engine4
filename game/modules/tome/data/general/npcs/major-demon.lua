@@ -1,5 +1,5 @@
 -- ToME - Tales of Maj'Eyal
--- Copyright (C) 2009, 2010, 2011, 2012, 2013 Nicolas Casalini
+-- Copyright (C) 2009 - 2014 Nicolas Casalini
 --
 -- This program is free software: you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -95,7 +95,7 @@ newEntity{ base = "BASE_NPC_MAJOR_DEMON",
 newEntity{ base = "BASE_NPC_MAJOR_DEMON",
 	name = "uruivellas", color=colors.LIGHT_RED, -- Hot strength
 	resolvers.nice_tile{image="invis.png", add_mos = {{image="npc/demon_major_uruivellas.png", display_h=2, display_y=-1}}},
-	desc = [[This demon would look like a minotaur, if a minotaur had a fiery aura surrounding it and horns all over the body.
+	desc = [[This demon would look like a minotaur, if a minotaur had a fiery aura surrounding it and horns all over its body.
 Oh, and it is twice as big, too.]],
 	level_range = {35, nil}, exp_worth = 1,
 	rarity = 4,
@@ -200,7 +200,7 @@ It moves swiftly toward you, casting terrible spells and swinging its weapons at
 
 newEntity{ base = "BASE_NPC_MAJOR_DEMON",
 	name = "champion of Urh'Rok", color=colors.GREY,
-	desc = [[One of Urh'Rok's own champions. A thousand nightmares made flesh and screaming steel towering before you in the form of a massive, armored humanoid.]],
+	desc = [[One of Urh'Rok's own champions. A thousand nightmares made flesh and screaming steel tower before you in the form of a massive, armored humanoid.]],
 	resolvers.nice_tile{image="invis.png", add_mos = {{image="npc/demon_major_champion_of_urh_rok.png", display_h=2, display_y=-1}}},
 	level_range = {43, nil}, exp_worth = 1,
 	rarity = 7,
@@ -244,7 +244,7 @@ newEntity{ base = "BASE_NPC_MAJOR_DEMON",
 
 newEntity{ base = "BASE_NPC_MAJOR_DEMON",
 	name = "forge-giant", color=colors.RED,
-	desc = [[A burning giant wielding a forge hammer of the underworld in each hand-- weapons imbued by Urh'Rok himself with the power to crush and shape felsteel. Enter their range at your peril.]],
+	desc = [[A burning giant wielding a forge hammer of the underworld in each hand -- weapons imbued by Urh'Rok himself with the power to crush and shape felsteel. Enter their range at your peril.]],
 	resolvers.nice_tile{image="invis.png", add_mos = {{image="npc/demon_major_forge_giant.png", display_h=2, display_y=-1}}},
 	level_range = {47, nil}, exp_worth = 1,
 	rarity = 8,

@@ -1,5 +1,5 @@
 -- TE4 - T-Engine 4
--- Copyright (C) 2009, 2010, 2011, 2012, 2013 Nicolas Casalini
+-- Copyright (C) 2009 - 2014 Nicolas Casalini
 --
 -- This program is free software: you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -240,6 +240,7 @@ function _M:saveGame(game, no_dialog)
 	f:write(("short_name = %q\n"):format(self.short_name))
 	f:write(("timestamp = %d\n"):format(os.time()))
 	f:write(("loadable = %s\n"):format(game:isLoadable() and "true" or "false"))
+	f:write(("cheat = %s\n"):format(game:isTainted() and "true" or "false"))
 	f:write(("description = %q\n"):format(desc.description))
 	f:close()
 	if core.steam then core.steam.writeFile(self.save_dir.."desc.lua") end
