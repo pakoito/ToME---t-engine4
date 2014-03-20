@@ -15,6 +15,8 @@ enum web_event_kind {
 	TE4_WEB_EVENT_DOWNLOAD_UPDATE,
 	TE4_WEB_EVENT_DOWNLOAD_FINISH,
 	TE4_WEB_EVENT_LOADING,
+	TE4_WEB_EVENT_LOCAL_REQUEST,
+	TE4_WEB_EVENT_RUN_LUA,
 };
 
 typedef struct {
@@ -44,8 +46,31 @@ typedef struct {
 			const char *url;
 			signed char status;
 		} loading;
+		struct {
+			int id;
+			const char *path;
+		} local_request;
+		struct {
+			const char *code;
+		} run_lua;
 	} data;
 } WebEvent;
+
+enum web_js_kind {
+	TE4_WEB_JS_NULL,
+	TE4_WEB_JS_BOOLEAN,
+	TE4_WEB_JS_NUMBER,
+	TE4_WEB_JS_STRING,
+};
+
+typedef struct {
+	enum web_js_kind kind;
+	union {
+		bool b;
+		double n;
+		const char *s;
+	} data;
+} WebJsValue;
 
 typedef struct {
 	void *opaque;

@@ -34,6 +34,7 @@ function _M:init(t)
 	self.never_clean = t.never_clean
 	self.allow_popup = t.allow_popup
 	self.allow_login = t.allow_login
+	self.custom_calls = t.custom_calls or {}
 	if self.allow_login == nil then self.allow_login = true end
 
 	if self.allow_login and self.url:find("^http://te4%.org/") and profile.auth then
@@ -60,18 +61,28 @@ function _M:generate()
 	self.key:reset()
 
 	local handlers = {
-		on_title = function(view, title) if self.on_title then self.on_title(title) end end,
-		on_popup = function(view, url, w, h) if self.allow_popup then
+		on_title = function(title) if self.on_title then self.on_title(title) end end,
+		on_popup = function(url, w, h) if self.allow_popup then
 			local Dialog = require "engine.ui.Dialog"
 			Dialog:webPopup(url, w, h)
 		end end,
-		on_loading = function(view, url, status)
-			print("===loading", url, status)
+		on_loading = function(url, status)
 			self.loading = status
 		end,
 	}
 	if self.allow_downloads then self:onDownload(handlers) end
-	self.view = core.webview.new(self.w, self.h, self.url, handlers)
+	self.view = core.webview.new(self.w, self.h, handlers)
+
+	self.custom_calls.lolzor = function(nb, str)
+		print("call from js got: ", nb, str)
+		return "PLAP"
+	end
+
+	for name, fct in pairs(self.custom_calls) do 
+		handlers[name] = fct
+		self.view:setMethod(name)
+	end
+	self.view:loadURL(self.url)
 	self.loading = 0
 	self.loading_rotation = 0
 	self.scroll_inertia = 0
@@ -155,7 +166,7 @@ end
 function _M:onDownload(handlers)
 	local Dialog = require "engine.ui.Dialog"
 
-	handlers.on_download_request = function(view, downid, url, file, mime)
+	handlers.on_download_request = function(downid, url, file, mime)
 		if mime == "application/t-engine-addon" and self.allow_downloads.addons and url:find("^http://te4%.org/") then
 			local path = fs.getRealPath("/addons/")
 			if path then
@@ -192,12 +203,12 @@ function _M:onDownload(handlers)
 		self.view:downloadAction(downid, false)
 	end
 
-	handlers.on_download_update = function(view, downid, cur_size, total_size, percent, speed)
+	handlers.on_download_update = function(downid, cur_size, total_size, percent, speed)
 		if not self.download_dialog then return end
 		self.download_dialog:updateFill(cur_size, total_size, ("%d%% - %d KB/s"):format(cur_size * 100 / total_size, speed / 1024))
 	end
 
-	handlers.on_download_finish = function(view, downid)
+	handlers.on_download_finish = function(downid)
 		if not self.download_dialog then return end
 		game:unregisterDialog(self.download_dialog)
 		if self.download_dialog.install_kind == "Addon" then

@@ -27,14 +27,15 @@ unsigned int (*web_make_texture)(int w, int h);
 void (*web_del_texture)(unsigned int tex);
 void (*web_texture_update)(unsigned int tex, int w, int h, const void* buffer);
 static void (*web_key_mods)(bool *shift, bool *ctrl, bool *alt, bool *meta);
+static void (*web_instant_js)(int handlers, const char *fct, int nb_args, WebJsValue *args, WebJsValue *ret);
 
 using namespace Awesomium;
 
-class PhysfsDataSource;
+class TE4DataSource;
 
 static WebCore *web_core = NULL;
 static WebSession *web_session = NULL;
-static PhysfsDataSource *web_data_source = NULL;
+static TE4DataSource *web_data_source = NULL;
 
 class WebListener;
 
@@ -58,6 +59,7 @@ class WebListener :
 private:
 	int handlers;
 public:
+	JSObject te4_js;
 	WebListener(int handlers) { this->handlers = handlers; }
 
 	virtual void OnChangeTitle(Awesomium::WebView* caller, const Awesomium::WebString& title) {
@@ -85,6 +87,11 @@ public:
 	}
 
 	virtual void OnAddConsoleMessage(Awesomium::WebView* caller, const Awesomium::WebString& message, int line_number, const Awesomium::WebString& source) {
+		char *msg = webstring_to_buf(message, NULL);
+		char *src = webstring_to_buf(source, NULL);
+		printf("[WEBCORE:console %s:%d] %s\n", src, line_number, msg);
+		free(msg);
+		free(src);
 	}
 
 	virtual void OnShowCreatedWebView(Awesomium::WebView* caller, Awesomium::WebView* new_view, const Awesomium::WebURL& opener_url, const Awesomium::WebURL& target_url, const Awesomium::Rect& initial_pos, bool is_popup) {
@@ -101,7 +108,7 @@ public:
 		event->data.popup.h = initial_pos.height;
 		push_event(event);
 
-		printf("[WEB] stopped popup to %s (%dx%d), pushing event...\n", url, event->data.popup.w, event->data.popup.h);
+		printf("[WEBCORE] stopped popup to %s (%dx%d), pushing event...\n", url, event->data.popup.w, event->data.popup.h);
 	}
 
 	void OnRequestDownload(WebView* caller, int download_id, const WebURL& wurl, const WebString& suggested_filename, const WebString& mime_type) {
@@ -109,7 +116,7 @@ public:
 		const char *mime = webstring_to_buf(mime_type, NULL);
 		const char *url = webstring_to_buf(rurl, NULL);
 		const char *name = webstring_to_buf(suggested_filename, NULL);
-		printf("[WEB] Download request [name: %s] [mime: %s] [url: %s]\n", name, mime, url);
+		printf("[WEBCORE] Download request [name: %s] [mime: %s] [url: %s]\n", name, mime, url);
 
 		WebEvent *event = new WebEvent();
 		event->kind = TE4_WEB_EVENT_DOWNLOAD_REQUEST;
@@ -187,17 +194,79 @@ public:
 	}
 
 	virtual void OnMethodCall(WebView* caller, unsigned int remote_object_id, const WebString& method_name, const JSArray& args) {
+		if (remote_object_id == te4_js.remote_id() && method_name == WSLit("lua")) {
+			JSValue arg = args[0];
+			WebString wcode = arg.ToString();
+			const char *code = webstring_to_buf(wcode, NULL);
+
+			WebEvent *event = new WebEvent();
+			event->kind = TE4_WEB_EVENT_RUN_LUA;
+			event->handlers = handlers;
+			event->data.run_lua.code = code;
+			push_event(event);
+		}
 	}
 
-	virtual JSValue OnMethodCallWithReturnValue(WebView* caller, unsigned int remote_object_id, const WebString& method_name, const JSArray& args) {
-		JSValue ret(false);
-		return ret;
+	virtual JSValue OnMethodCallWithReturnValue(WebView* caller, unsigned int remote_object_id, const WebString& method_name, const JSArray& jsargs) {
+		if (remote_object_id != te4_js.remote_id()) {
+			JSValue ret(false);
+			return ret;
+		}
+
+		const char *fct = webstring_to_buf(method_name, NULL);
+		WebJsValue ret;
+		int nb_args = jsargs.size();
+		WebJsValue *args = new WebJsValue[nb_args];
+		for (int i = 0; i < nb_args; i++) {
+			WebJsValue *wv = &args[i];
+			JSValue v = jsargs[i];
+			if (v.IsNull()) {
+				wv->kind = TE4_WEB_JS_NULL;
+			} else if (v.IsBoolean()) {
+				wv->kind = TE4_WEB_JS_BOOLEAN;
+				wv->data.b = v.ToBoolean();
+			} else if (v.IsNumber()) {
+				wv->kind = TE4_WEB_JS_NUMBER;
+				wv->data.n = v.ToDouble();
+			} else if (v.IsString()) {
+				wv->kind = TE4_WEB_JS_STRING;
+				const char *s = webstring_to_buf(v.ToString(), NULL);
+				wv->data.s = s;
+			}
+		}
+
+		web_instant_js(handlers, fct, nb_args, args, &ret);
+
+		// Free the fucking strings. I love GC. I want a GC :/
+		for (int i = 0; i < nb_args; i++) {
+			WebJsValue *wv = &args[i];
+			JSValue v = jsargs[i];
+			if (v.IsString()) free((void*)wv->data.s);
+		}
+		delete args;
+		free((void*)fct);
+
+		if (ret.kind == TE4_WEB_JS_NULL) return JSValue::Null();
+		else if (ret.kind == TE4_WEB_JS_BOOLEAN) return JSValue(ret.data.b);
+		else if (ret.kind == TE4_WEB_JS_NUMBER) return JSValue(ret.data.n);
+		else if (ret.kind == TE4_WEB_JS_STRING) {
+			WebString s = WebString::CreateFromUTF8(ret.data.s, strlen(ret.data.s));
+			return JSValue(s);
+		}
+		return JSValue();
 	}
 };
 
-class PhysfsDataSource : public DataSource {
+class TE4DataSource : public DataSource {
 public:
-	virtual void OnRequest(int request_id, const WebString& path) {
+	virtual void OnRequest(int request_id, const WebString& wpath) {
+		const char *path = webstring_to_buf(wpath, NULL);
+
+		WebEvent *event = new WebEvent();
+		event->kind = TE4_WEB_EVENT_LOCAL_REQUEST;
+		event->data.local_request.id = request_id;
+		event->data.local_request.path = path;
+		push_event(event);
 	}
 };
 
@@ -206,12 +275,9 @@ class WebViewOpaque {
 public:
 	WebView *view;
 	WebListener *listener;
-	JSObject *te4core;
 };
 
-void te4_web_new(web_view_type *view, const char *url, int w, int h) {
-	size_t urllen = strlen(url);
-	
+void te4_web_new(web_view_type *view, int w, int h) {
 	WebViewOpaque *opaque = new WebViewOpaque();
 	view->opaque = (void*)opaque;
 
@@ -220,15 +286,16 @@ void te4_web_new(web_view_type *view, const char *url, int w, int h) {
 	opaque->view->set_view_listener(opaque->listener);
 	opaque->view->set_download_listener(opaque->listener);
 	opaque->view->set_load_listener(opaque->listener);
-	opaque->te4core = NULL;
+	opaque->view->set_js_method_handler(opaque->listener);
 	view->w = w;
 	view->h = h;
 	view->closed = false;
 
-	WebURL lurl(WebString::CreateFromUTF8(url, urllen));
-	opaque->view->LoadURL(lurl);
+	opaque->listener->te4_js = (opaque->view->CreateGlobalJavascriptObject(WSLit("te4"))).ToObject();
+	opaque->listener->te4_js.SetCustomMethod(WSLit("lua"), false);
+
 	opaque->view->SetTransparent(true);
-	printf("Created webview: %s\n", url);
+	printf("Created webview: %dx%d\n", w, h);
 }
 
 bool te4_web_close(web_view_type *view) {
@@ -237,11 +304,26 @@ bool te4_web_close(web_view_type *view) {
 		opaque->view->Destroy();
 		delete opaque->listener;
 		view->closed = true;
-		if (opaque->te4core) delete opaque->te4core;
 		printf("Destroyed webview\n");
 		return true;
 	}
 	return false;
+}
+
+void te4_web_load_url(web_view_type *view, const char *url) {
+	WebViewOpaque *opaque = (WebViewOpaque*)view->opaque;
+	if (view->closed) return;
+
+	size_t urllen = strlen(url);
+	WebURL lurl(WebString::CreateFromUTF8(url, urllen));
+	opaque->view->LoadURL(lurl);
+}
+
+void te4_web_set_js_call(web_view_type *view, const char *name) {
+	WebViewOpaque *opaque = (WebViewOpaque*)view->opaque;
+	if (view->closed) return;
+
+	opaque->listener->te4_js.SetCustomMethod(WebString::CreateFromUTF8(name, strlen(name)), true);
 }
 
 bool te4_web_toscreen(web_view_type *view, int *w, int *h, unsigned int *tex) {
@@ -352,6 +434,12 @@ void te4_web_download_action(web_view_type *view, long id, const char *path) {
 	}
 }
 
+void te4_web_reply_local(int id, const char *mime, const char *result, size_t len) {
+	WebString wmime = WebString::CreateFromUTF8(mime, strlen(mime));
+	web_data_source->SendResponse(id, len, (unsigned char *)result, wmime);
+}
+
+
 void te4_web_do_update(void (*cb)(WebEvent*)) {
 	if (!web_core) return;
 
@@ -375,6 +463,12 @@ void te4_web_do_update(void (*cb)(WebEvent*)) {
 			case TE4_WEB_EVENT_LOADING:
 				free((void*)event->data.loading.url);
 				break;
+			case TE4_WEB_EVENT_LOCAL_REQUEST:
+				free((void*)event->data.local_request.path);
+				break;
+			case TE4_WEB_EVENT_RUN_LUA:
+				free((void*)event->data.run_lua.code);
+				break;
 		}
 
 		delete event;
@@ -385,7 +479,8 @@ void te4_web_setup(
 	int argc, char **gargv, char *spawnc,
 	void*(*mutex_create)(), void(*mutex_destroy)(void*), void(*mutex_lock)(void*), void(*mutex_unlock)(void*),
 	unsigned int (*make_texture)(int, int), void (*del_texture)(unsigned int), void (*texture_update)(unsigned int, int, int, const void*),
-	void (*key_mods)(bool*, bool*, bool*, bool*)
+	void (*key_mods)(bool*, bool*, bool*, bool*),
+	void (*instant_js)(int handlers, const char *fct, int nb_args, WebJsValue *args, WebJsValue *ret)
 	) {
 
 	web_mutex_create = mutex_create;
@@ -396,11 +491,12 @@ void te4_web_setup(
 	web_del_texture = del_texture;
 	web_texture_update = texture_update;
 	web_key_mods = key_mods;
+	web_instant_js = instant_js;
 	if (!web_core) {
 		web_core = WebCore::Initialize(WebConfig());
 		web_core->set_surface_factory(new GLTextureSurfaceFactory());
 		web_session = web_core->CreateWebSession(WSLit(""), WebPreferences());
-		web_data_source = new PhysfsDataSource();
+		web_data_source = new TE4DataSource();
 		web_session->AddDataSource(WSLit("te4"), web_data_source);
 	}
 }
