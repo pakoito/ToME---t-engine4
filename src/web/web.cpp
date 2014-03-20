@@ -305,10 +305,11 @@ void te4_web_inject_key(web_view_type *view, int scancode, int asymb, const char
 	WebKeyboardEvent keyEvent;
 	keyEvent.type = !up ? WebKeyboardEvent::kTypeKeyDown : WebKeyboardEvent::kTypeKeyUp;
 	
-	char buf[20];
+	char* buf = new char[20];
 	keyEvent.virtual_key_code = asymb;
-	GetKeyIdentifierFromVirtualKeyCode(keyEvent.virtual_key_code, (char**)&buf);
+	Awesomium::GetKeyIdentifierFromVirtualKeyCode(keyEvent.virtual_key_code, &buf);
 	strcpy(keyEvent.key_identifier, buf);
+	delete[] buf;
 	
 	bool shift, ctrl, alt, meta;
 	web_key_mods(&shift, &ctrl, &alt, &meta);
@@ -319,7 +320,6 @@ void te4_web_inject_key(web_view_type *view, int scancode, int asymb, const char
 	else if (meta) keyEvent.modifiers |= WebKeyboardEvent::kModMetaKey;
 	
 	keyEvent.native_key_code = scancode;
-	
 	if (up) {
 		opaque->view->InjectKeyboardEvent(keyEvent);
 	} else {
