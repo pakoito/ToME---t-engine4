@@ -19,6 +19,7 @@
 
 local grass_editer = { method="borders_def", def="grass"}
 local autumn_grass_editer = { method="borders_def", def="autumn_grass"}
+local snowy_grass_editer = { method="borders_def", def="snowy_grass"}
 
 local treesdef = {
 	{"elventree", {tall=-1, "shadow", "trunk", "foliage_summer"}},
@@ -71,7 +72,7 @@ local snow_treesdef = {
 
 newEntity{
 	define_as = "SNOW_ELVEN_TREE",
-	type = "wall", subtype = "grass",
+	type = "wall", subtype = "snowy_grass",
 	name = "tree",
 	image = "terrain/tree.png",
 	display = '#', color=colors.LIGHT_GREEN, back_color={r=44,g=95,b=43},
@@ -81,9 +82,10 @@ newEntity{
 	block_sight = true,
 	dig = "GRASS",
 	nice_tiler = { method="replace", base={"SNOW_ELVEN_TREE", 100, 1, 30}},
+	nice_editer = snowy_grass_editer,
 }
 for i = 1, 30 do
-	newEntity(class:makeNewTrees({base="SNOW_ELVEN_TREE", define_as = "SNOW_ELVEN_TREE"..i, image = "terrain/snowy_grass.png"}, snow_treesdef))
+	newEntity(class:makeNewTrees({base="SNOW_ELVEN_TREE", define_as = "SNOW_ELVEN_TREE"..i, image = "terrain/grass/snowy_grass_main_01.png"}, snow_treesdef))
 end
 
 local autumn_treesdef = {
@@ -107,5 +109,5 @@ newEntity{
 	nice_editer = autumn_grass_editer,
 }
 for i = 1, 30 do
-	newEntity(class:makeNewTrees({base="AUTUMN_ELVEN_TREE", define_as = "AUTUMN_ELVEN_TREE"..i, image = "terrain/grass/grass_main_01.png"}, autumn_treesdef))
+	newEntity(class:makeNewTrees({base="AUTUMN_ELVEN_TREE", define_as = "AUTUMN_ELVEN_TREE"..i, image = "terrain/grass/autumn_grass_main_01.png"}, autumn_treesdef))
 end

@@ -20,7 +20,7 @@
 defineTile('<', "GRASS_UP_WILDERNESS")
 defineTile('t', "ELVEN_TREE")
 defineTile('s', "SNOW_ELVEN_TREE")
-defineTile('-', "ROCKY_GROUND")
+defineTile('-', "SNOWY_GRASS")
 defineTile('~', "DEEP_WATER")
 defineTile('.', "GRASS")
 defineTile('_', "COBBLESTONE")
