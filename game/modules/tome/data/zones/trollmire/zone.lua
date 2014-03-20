@@ -18,7 +18,7 @@
 -- darkgod@te4.org
 
 local layout = game.state:alternateZoneTier1(short_name, {"FLOODED", 1})
-layout="DEFAULT"
+--layout="DEFAULT"
 if layout == "FLOODED" then
 
 return {
