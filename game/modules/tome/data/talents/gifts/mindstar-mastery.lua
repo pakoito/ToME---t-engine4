@@ -21,7 +21,7 @@ function get_mindstar_power_mult(self, div)
 	local main, off = self:hasPsiblades(true, true)
 	if not main or not off then return 1 end
 
-	local mult = 1 + (main.combat.dam + off.combat.dam) / (div or 40)
+	local mult = 1 + (main.combat.dam + off.combat.dam) * 0.8 / (div or 40)
 	return mult
 end
 
@@ -106,7 +106,7 @@ newTalent{
 	cooldown = 25,
 	tactical = { ATTACK = 2, DEFEND=3 },
 	getDamage = function(self, t) return 5 + self:combatTalentMindDamage(t, 5, 35) * get_mindstar_power_mult(self) end,
-	getChance = function(self, t) return util.bound(10 + self:combatTalentMindDamage(t, 5, 35), 10, 40) * get_mindstar_power_mult(self, 90) end,
+	getChance = function(self, t) return util.bound(10 + self:combatTalentMindDamage(t, 3, 25), 10, 40) * get_mindstar_power_mult(self, 90) end,
 	on_pre_use = function(self, t, silent) if not self:hasPsiblades(true, true) then if not silent then game.logPlayer(self, "You require two psiblades in your hands to use this talent.") end return false end return true end,
 	action = function(self, t)
 		-- Add a lasting map effect
