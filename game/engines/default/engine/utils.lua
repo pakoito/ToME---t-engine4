@@ -1972,6 +1972,10 @@ end
 
 function util.browserOpenUrl(url)
 	if core.steam and core.steam.openOverlayUrl(url) then return true end
+	if core.webview then
+		require("engine.ui.Dialog"):webPopup(url)
+		return true
+	end
 
 	local tries = {
 		"rundll32 url.dll,FileProtocolHandler %s",	-- Windows

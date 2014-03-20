@@ -41,6 +41,7 @@
 #include "serial.h"
 #include "profile.h"
 #include "main.h"
+#include "te4web.h"
 #include "lua_externs.h"
 #include "runner/core.h"
 #ifdef SELFEXE_WINDOWS
@@ -606,6 +607,7 @@ void on_redraw()
 #ifdef STEAM_TE4
 	if (!no_steam) te4_steam_callbacks();
 #endif
+	if (te4_web_update) te4_web_update(L);
 }
 
 void pass_command_args(int argc, char *argv[])
@@ -1024,6 +1026,7 @@ void boot_lua(int state, bool rebooting, int argc, char *argv[])
 		luaopen_zlib(L);
 		luaopen_bit(L);
 		luaopen_wait(L);
+		if (te4_web_init) te4_web_init(L);
 #ifdef STEAM_TE4
 		if (!no_steam) te4_steam_lua_init(L);
 #endif
@@ -1241,6 +1244,8 @@ int main(int argc, char *argv[])
 #endif
 
 	init_openal();
+
+	te4_web_load();
 
 	// RNG init
 	init_gen_rand(time(NULL));

@@ -30,6 +30,10 @@ function _M:init()
 	self.last_pos = { x = 0, y = 0 }
 end
 
+function _M:allowDownEvent(v)
+	self.allow_down = v
+end
+
 --- Called when a mouse is pressed
 -- @param button
 -- @param x coordinate of the click
@@ -39,7 +43,7 @@ end
 function _M:receiveMouse(button, x, y, isup, force_name, extra)
 	self.last_pos = { x = x, y = y }
 	self.status[button] = not isup
-	if not isup then return end
+	if not self.allow_down and not isup then return end
 
 	if _M.drag then
 		if _M.drag.prestart then _M.drag = nil
@@ -49,7 +53,7 @@ function _M:receiveMouse(button, x, y, isup, force_name, extra)
 	for i  = 1, #self.areas do
 		local m = self.areas[i]
 		if (not m.mode or m.mode.button) and (x >= m.x1 and x < m.x2 and y >= m.y1 and y < m.y2) and (not force_name or force_name == m.name) then
-			m.fct(button, x, y, nil, nil, (x-m.x1) / m.scale, (y-m.y1) / m.scale, "button", extra)
+			m.fct(button, x, y, nil, nil, (x-m.x1) / m.scale, (y-m.y1) / m.scale, isup and "button" or "button-down", extra)
 			break
 		end
 	end
@@ -88,6 +92,7 @@ function _M:delegate(button, mx, my, xrel, yrel, bx, by, event, name, extra)
 	my = my - oy
 
 	if event == "button" then self:receiveMouse(button, mx, my, true, name, extra)
+	elseif event == "button-down" then self:receiveMouse(button, mx, my, false, name, extra)
 	elseif event == "motion" then self:receiveMouseMotion(button, mx, my, xrel, yrel, name, extra)
 	end
 end

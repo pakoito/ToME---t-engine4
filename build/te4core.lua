@@ -87,6 +87,7 @@ project "TEngine"
 			"-framework libpng",
 			"-framework ogg",
 			"-framework vorbis",
+			"-Wl,-rpath,'@loader_path/../Frameworks'",
 		}
 		if _OPTIONS.lua == "jit2" then
 			linkoptions {
@@ -168,7 +169,10 @@ elseif _OPTIONS.lua == "jit2" then
 		kind "ConsoleApp"
 		language "C"
 		targetname "minilua"
-		links { "m", "mingw32" }
+		links { "m" }
+		if _OPTIONS.wincross then
+			links {"mingw32"}
+		end
 
 		files { "../src/luajit2/src/host/minilua.c" }
 
@@ -507,6 +511,19 @@ project "te4-bzip"
 	targetname "te4-bzip"
 
 	files { "../src/bzip2/*.c", }
+
+if _OPTIONS['web-awesomium'] and not _OPTIONS.wincross then
+project "te4-web"
+	kind "SharedLib"
+	language "C++"
+	targetname "te4-web"
+
+	libdirs {"/opt/awesomium/bin/"}
+	includedirs {"/opt/awesomium/include/"}
+	links { "awesomium-1-7" }
+	
+	files { "../src/web-awesomium/*.cpp", }
+end
 
 if _OPTIONS.steam then
 	dofile("../steamworks/build/steam-code.lua")

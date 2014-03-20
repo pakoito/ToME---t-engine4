@@ -18,6 +18,9 @@ solution "TEngine"
 		"src/zlib",
 		"src/bzip2",
 	}
+	if _OPTIONS['web-awesomium'] then
+		includedirs { "src/web-awesomium" }
+	end
 	if _OPTIONS.wincross then
 		includedirs {
 			"/usr/i686-pc-mingw32/usr/include/",
@@ -74,7 +77,7 @@ configuration "Debug"
 	defines { }
 	flags { "Symbols" }
 	buildoptions { "-ggdb" }
-	buildoptions { "-O3" }
+--	buildoptions { "-O3" }
 	targetdir "bin/Debug"
 	if _OPTIONS.luaassert then defines {"LUA_USE_APICHECK"} end
 	if _OPTIONS.pedantic then buildoptions { "-Wall" } end

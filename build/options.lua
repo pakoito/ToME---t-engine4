@@ -62,6 +62,11 @@ newoption {
 }
 
 newoption {
+	trigger	    = "web-awesomium",
+	description = "Use awesomium embedded browser as the webcore"
+}
+
+newoption {
 	trigger	    = "wincross",
 	description = "Enables cross-compilation for windows (from linux)"
 }

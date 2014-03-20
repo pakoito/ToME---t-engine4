@@ -191,6 +191,17 @@ function _M:yesnocancelLongPopup(title, text, w, fct, yes_text, no_text, cancel_
 	return d
 end
 
+function _M:webPopup(url)
+	local d = new(url, game.w * 0.9, game.h * 0.9)
+	local w = require("engine.ui.WebView").new{width=d.iw, height=d.ih, url=url, allow_downloads={addons=true, modules=true}}
+	w.on_title = function(title) d:updateTitle(title) end
+	d:loadUI{{left=0, top=0, ui=w}}
+	d:setupUI()
+	d.key:addBind("EXIT", function() game:unregisterDialog(d) end)
+	game:registerDialog(d)
+	return d
+end
+
 
 title_shadow = true
 
@@ -306,6 +317,7 @@ function _M:generate()
 
 	self:updateTitle(self.title)
 
+	self.mouse:allowDownEvent(true)
 	if self.absolute then
 		self.mouse:registerZone(0, 0, gamew, gameh, function(button, x, y, xrel, yrel, bx, by, event) self:mouseEvent(button, x, y, xrel, yrel, bx - self.display_x, by - self.display_y, event) end)
 	else
@@ -543,7 +555,6 @@ function _M:keyEvent(...)
 		KeyBind.receiveKey(self.key, ...)
 	end
 end
-
 function _M:display() end
 
 --- This does nothing and can be changed by other classes
@@ -553,6 +564,10 @@ end
 --- This provides required cleanups, do not touch
 function _M:cleanup()
 	for p, _ in pairs(self.particles) do p:dieDisplay() end
+
+	for i = 1, #self.uis do
+		if self.uis[i].ui and self.uis[i].ui.on_dialog_cleanup then self.uis[i].ui:on_dialog_cleanup() end
+	end
 end
 
 function _M:drawFrame(x, y, r, g, b, a)
