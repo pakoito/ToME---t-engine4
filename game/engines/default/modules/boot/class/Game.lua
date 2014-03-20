@@ -92,7 +92,7 @@ function _M:run()
 	-- Web Tooltip?
 	if core.webview then
 		self.webtooltip = require("engine.ui.WebView").new{width=380, height=500, has_frame=true, never_clean=true, allow_popup=true,
-			url = ("http://te4.org/tooltip-ingame?steam=%d&v=%d.%d.%d"):format(core.steam and 1 or 0, engine.version[1], engine.version[2], engine.version[3])
+			url = ("http://te4.org/tooltip-ingame?steam=%d&vM=%d&vm=%d&vp=%d"):format(core.steam and 1 or 0, engine.version[1], engine.version[2], engine.version[3])
 		}
 	end
 

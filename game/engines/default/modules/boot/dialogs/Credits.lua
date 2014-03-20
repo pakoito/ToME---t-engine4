@@ -63,7 +63,7 @@ local credits = {
 	{"John 'Benli' Truchard"},
 	{"Shoob"},
 	{"Taylor 'PureQuestion' Miller"},
-	{"Thomas 'Tomisgo' Creta"},
+	{"Thomas 'Tomisgo' Cretan"},
 	false,
 	false,
 
