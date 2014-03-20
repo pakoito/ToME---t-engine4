@@ -92,6 +92,7 @@ function _M:delegate(button, mx, my, xrel, yrel, bx, by, event, name, extra)
 	my = my - oy
 
 	if event == "button" then self:receiveMouse(button, mx, my, true, name, extra)
+	elseif event == "button-down" then self:receiveMouse(button, mx, my, false, name, extra)
 	elseif event == "motion" then self:receiveMouseMotion(button, mx, my, xrel, yrel, name, extra)
 	end
 end
