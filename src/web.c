@@ -28,7 +28,7 @@
 #include "types.h"
 #include "main.h"
 #include "te4web.h"
-#include "web/web-external.h"
+#include "web-external.h"
 #include "lua_externs.h"
 
 /*

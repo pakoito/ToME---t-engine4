@@ -17,8 +17,10 @@ solution "TEngine"
 		"src/physfs",
 		"src/zlib",
 		"src/bzip2",
-		"src/web",
 	}
+	if _OPTIONS['web-awesomium'] then
+		includedirs { "src/web-awesomium" }
+	end
 	if _OPTIONS.wincross then
 		includedirs {
 			"/usr/i686-pc-mingw32/usr/include/",

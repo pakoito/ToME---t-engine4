@@ -512,17 +512,17 @@ project "te4-bzip"
 
 	files { "../src/bzip2/*.c", }
 
-if not _OPTIONS['disable-awesomium'] and not _OPTIONS.wincross then
+if _OPTIONS['web-awesomium'] and not _OPTIONS.wincross then
 project "te4-web"
 	kind "SharedLib"
 	language "C++"
 	targetname "te4-web"
 
-	libdirs {"/Test/awesomium_v1.7.2_sdk_linux64/bin/"}
-	includedirs {"/Test/awesomium_v1.7.2_sdk_linux64/include/"}
+	libdirs {"/opt/awesomium/bin/"}
+	includedirs {"/opt/awesomium/include/"}
 	links { "awesomium-1-7" }
 	
-	files { "../src/web/*.cpp", }
+	files { "../src/web-awesomium/*.cpp", }
 end
 
 if _OPTIONS.steam then

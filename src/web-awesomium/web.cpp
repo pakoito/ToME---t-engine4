@@ -8,7 +8,7 @@
 extern "C" {
 #include <stdio.h>
 #include <stdlib.h>
-#include "web-external.h"
+#include "../web-external.h"
 }
 #include "web.h"
 #include "web-internal.h"

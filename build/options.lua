@@ -62,8 +62,8 @@ newoption {
 }
 
 newoption {
-	trigger	    = "disable-awesomium",
-	description = "Disable using awesomium embedded browser"
+	trigger	    = "web-awesomium",
+	description = "Use awesomium embedded browser as the webcore"
 }
 
 newoption {
