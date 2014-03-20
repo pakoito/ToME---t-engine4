@@ -23,6 +23,7 @@ local autumn_grass_editer = { method="borders_def", def="autumn_grass"}
 local treesdef = {
 	{"elventree", {tall=-1, "shadow", "trunk", "foliage_summer"}},
 	{"fat_elventree", {tall=-1, "shadow", "trunk", {"foliage_summer_%02d",1,2}}},
+	{"oak", {tall=-1, "shadow", {"trunk_%02d",1,2}, {"foliage_summer_%02d",1,4}}},
 }
 
 newEntity{
@@ -65,6 +66,7 @@ end
 local snow_treesdef = {
 	{"elventree", {tall=-1, "shadow", "trunk", "foliage_winter"}},
 	{"fat_elventree", {tall=-1, "shadow", "trunk", "foliage_winter"}},
+	{"oak", {tall=-1, "shadow", {"trunk_%02d",1,2}, {"foliage_winter_%02d",1,2}}},
 }
 
 newEntity{
@@ -87,6 +89,7 @@ end
 local autumn_treesdef = {
 	{"elventree", {tall=-1, "shadow", "trunk", "foliage_autumn"}},
 	{"fat_elventree", {tall=-1, "shadow", "trunk", {"foliage_autumn_%02d",1,2}}},
+	{"oak", {tall=-1, "shadow", {"trunk_%02d",1,2}, {"foliage_autumn_%02d",1,4}}},
 }
 
 newEntity{

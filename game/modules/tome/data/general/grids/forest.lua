@@ -52,6 +52,7 @@ local treesdef = {
 	{"cypress", {tall=-1, "shadow", "trunk", {"foliage_%02d",1,4}}},
 	{"small_cypress", {tall=-1, "shadow", "trunk", {"foliage_%02d",1,4}}},
 	{"tiny_cypress", {"shadow", "trunk", {"foliage_%02d",1,4}}},
+	{"oak", {tall=-1, "shadow", {"trunk_%02d",1,2}, {"foliage_spring_%02d",1,2}}},
 }
 
 newEntity{

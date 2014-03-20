@@ -65,6 +65,7 @@ for i = 1, 30 do
 		{"cypress", {tall=-1, "shadow", "trunk", {"foliage_winter_%02d",1,2}}},
 		{"small_cypress", {tall=-1, "shadow", "trunk", {"foliage_winter_%02d",1,2}}},
 		{"tiny_cypress", {"shadow", "trunk", {"foliage_winter_%02d",1,2}}},
+		{"oak", {tall=-1, "shadow", {"trunk_%02d",1,2}, {"foliage_winter_%02d",1,2}}},
 	}))
 end
 
