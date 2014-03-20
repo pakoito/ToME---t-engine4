@@ -63,6 +63,7 @@ local credits = {
 	{"John 'Benli' Truchard"},
 	{"Shoob"},
 	{"Taylor 'PureQuestion' Miller"},
+	{"Thomas 'Tomisgo' Creta"},
 	false,
 	false,
 
@@ -86,6 +87,7 @@ local credits = {
 
 	{"Sound Designer", title=1},
 	{"Ryan Sim"},
+	{"'Elvisman2001'"},
 	false,
 	false,
 
@@ -122,7 +124,6 @@ local credits = {
 	false,
 	false,
 
-
 	{"Text Editors", title=1},
 	{"Brian Jeffears"},
 	{"Greg Wooledge"},
@@ -130,7 +131,15 @@ local credits = {
 	false,
 	false,
 
-	{"Others", title=2},
+	{"The Community", title=2},
+	{"A huge global thank to all members"},
+	{"of the community, for being supportive,"},
+	{"fun and full of great ideas."},
+	{"You rock gals and guys!"},
+	false,
+	false,
+
+	{"Others", title=1},
 	{"J.R.R Tolkien - making the world an interesting place"},
 	false,
 	{"Lua Creators - making the world a better place"},
