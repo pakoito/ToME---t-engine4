@@ -78,6 +78,12 @@ function _M:generate()
 		return "PLAP"
 	end
 
+	self.custom_calls._nextDownloadName = function(name)
+		if name then self._next_download_name = {name=name, time=os.time()}
+		else self._next_download_name = nil
+		end
+	end
+
 	for name, fct in pairs(self.custom_calls) do 
 		handlers[name] = fct
 		self.view:setMethod(name)
@@ -170,7 +176,9 @@ function _M:onDownload(handlers)
 		if mime == "application/t-engine-addon" and self.allow_downloads.addons and url:find("^http://te4%.org/") then
 			local path = fs.getRealPath("/addons/")
 			if path then
-				Dialog:yesnoPopup("Confirm addon install/update", "Are you sure you want to install this addon? ("..file..")", function(ret)
+				local name = file
+				if self._next_download_name and os.time() - self._next_download_name.time <= 3 then name = self._next_download_name.name self._next_download_name = nil end
+				Dialog:yesnoPopup("Confirm addon install/update", "Are you sure you want to install this addon: #LIGHT_GREEN##{bold}#"..name.."#{normal}##LAST# ?", function(ret)
 					if ret then
 						print("Accepting addon download to:", path..file)
 						self.download_dialog = self:makeDownloadbox(downid, file)
@@ -186,7 +194,9 @@ function _M:onDownload(handlers)
 		elseif mime == "application/t-engine-module" and self.allow_downloads.modules and url:find("^http://te4%.org/") then
 			local path = fs.getRealPath("/modules/")
 			if path then
-				Dialog:yesnoPopup("Confirm module install/update", "Are you sure you want to install this module? ("..file..")", function(ret)
+				local name = file
+				if self._next_download_name and os.time() - self._next_download_name.time <= 3 then name = self._next_download_name.name self._next_download_name = nil end
+				Dialog:yesnoPopup("Confirm module install/update", "Are you sure you want to install this module: #LIGHT_GREEN##{bold}#"..name.."#{normal}##LAST# ?", function(ret)
 					if ret then
 						print("Accepting module download to:", path..file)
 						self.download_dialog = self:makeDownloadbox(downid, file)
