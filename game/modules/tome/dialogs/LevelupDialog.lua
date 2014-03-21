@@ -792,7 +792,7 @@ function _M:getStatDesc(item)
 		text:add("Mindpower: ", color, ("%0.2f"):format(diff * 0.7), dc, true)
 		text:add("Mental save: ", color, ("%0.2f"):format(diff * 0.35), dc, true)
 		text:add("Spell save: ", color, ("%0.2f"):format(diff * 0.35), dc, true)
-		if self.actor.use_psi_combat then
+		if self.actor:attr("use_psi_combat") then
 			text:add("Accuracy: ", color, ("%0.2f"):format(diff * 0.35), dc, true)
 		end
 	elseif stat_id == self.actor.STAT_STR then
@@ -803,7 +803,7 @@ function _M:getStatDesc(item)
 		text:add("Crit. chance: ", color, ("%0.2f"):format(diff * 0.3), dc, true)
 		text:add("Mental save: ", color, ("%0.2f"):format(diff * 0.35), dc, true)
 		text:add("Mindpower: ", color, ("%0.2f"):format(diff * 0.4), dc, true)
-		if self.actor.use_psi_combat then
+		if self.actor:attr("use_psi_combat") then
 			text:add("Accuracy: ", color, ("%0.2f"):format(diff * 0.35), dc, true)
 		end
 	elseif stat_id == self.actor.STAT_MAG then

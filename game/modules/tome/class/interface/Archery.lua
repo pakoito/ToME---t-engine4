@@ -182,7 +182,7 @@ local function archery_projectile(tx, ty, tg, self, tmp)
 	self.turn_procs.weapon_type = {kind=weapon and weapon.talented or "unknown", mode="archery"}
 
 	-- Does the blow connect? yes .. complex :/
-	if tg.archery.use_psi_archery then self.use_psi_combat = true end
+	if tg.archery.use_psi_archery then self:attr("use_psi_combat", 1) end
 	local atk, def = self:combatAttackRanged(weapon, ammo), target:combatDefenseRanged()
 	local dam, apr, armor = self:combatDamage(ammo), self:combatAPR(ammo) + (weapon and weapon.apr or 0), target:combatArmor()
 	atk = atk + (tg.archery.atk or 0)
@@ -429,7 +429,7 @@ local function archery_projectile(tx, ty, tg, self, tmp)
 	end
 
 	-- Conduit (Psi)
-	if hitted and not target.dead and self:knowTalent(self.T_CONDUIT) and self:isTalentActive(self.T_CONDUIT) and self.use_psi_combat then
+	if hitted and not target.dead and self:knowTalent(self.T_CONDUIT) and self:isTalentActive(self.T_CONDUIT) and self:attr("use_psi_combat") then
 		local t =  self:getTalentFromId(self.T_CONDUIT)
 		--t.do_combat(self, t, target)
 		local mult = 1 + 0.2*(self:getTalentLevel(t))
@@ -494,7 +494,7 @@ local function archery_projectile(tx, ty, tg, self, tmp)
 	end
 
 	self.turn_procs.weapon_type = nil
-	self.use_psi_combat = false
+	if tg.archery.use_psi_archery then self:attr("use_psi_combat", -1) end
 end
 -- Store it for addons
 _M.archery_projectile = archery_projectile

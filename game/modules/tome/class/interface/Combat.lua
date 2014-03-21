@@ -732,7 +732,7 @@ function _M:attackTargetWith(target, weapon, damtype, mult, force_dam)
 	end
 
 	-- Conduit (Psi)
-	if hitted and not target.dead and self:knowTalent(self.T_CONDUIT) and self:isTalentActive(self.T_CONDUIT) and self.use_psi_combat then
+	if hitted and not target.dead and self:knowTalent(self.T_CONDUIT) and self:isTalentActive(self.T_CONDUIT) and self:attr("use_psi_combat") then
 		local t = self:getTalentFromId(self.T_CONDUIT)
 		t.do_combat(self, t, target)
 	end
@@ -1125,7 +1125,7 @@ function _M:combatAttackBase(weapon, ammo)
 end
 function _M:combatAttack(weapon, ammo)
 	local stats
-	if self.use_psi_combat then stats = self:getCun(100, true) - 10
+	if self:attr("use_psi_combat") then stats = self:getCun(100, true) - 10
 	elseif weapon and weapon.wil_attack then stats = self:getWil(100, true) - 10
 	else stats = self:getDex(100, true) - 10
 	end
@@ -1136,7 +1136,7 @@ end
 
 function _M:combatAttackRanged(weapon, ammo)
 	local stats
-	if self.use_psi_combat then stats = self:getCun(100, true) - 10
+	if self:attr("use_psi_combat") then stats = self:getCun(100, true) - 10
 	elseif weapon and weapon.wil_attack then stats = self:getWil(100, true) - 10
 	else stats = self:getDex(100, true) - 10
 	end
@@ -1382,21 +1382,13 @@ function _M:combatDamage(weapon, adddammod)
 	local dammod = weapon.dammod or {str=0.6}
 	for stat, mod in pairs(dammod) do
 		if sub_cun_to_str and stat == "str" then stat = "cun" end
-		if self.use_psi_combat and stat == "str" then stat = "wil" end
-		if self.use_psi_combat and stat == "dex" then stat = "cun" end
+		if self:attr("use_psi_combat") and stat == "str" then stat = "wil" end
+		if self:attr("use_psi_combat") and stat == "dex" then stat = "cun" end
 		totstat = totstat + self:getStat(stat) * mod
 	end
 	if adddammod then
 		for stat, mod in pairs(adddammod) do
 			totstat = totstat + self:getStat(stat) * mod
-		end
-	end
-	if self.use_psi_combat then
-		if self:knowTalent(self.T_GREATER_TELEKINETIC_GRASP) then
-			local g = self:getTalentFromId(self.T_GREATER_TELEKINETIC_GRASP)
-			totstat = totstat * g.stat_sub(self, g)
-		else
-			totstat = totstat * 0.6
 		end
 	end
 

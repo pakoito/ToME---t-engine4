@@ -29,7 +29,7 @@ newTalent{
 	action = function(self, t)
 		local inven = self:getInven("INVEN")
 		local d d = self:showInventory("Telekinetically grasp which item?", inven, function(o)
-			return (o.type == "weapon" or o.type == "gem") and o.subtype ~= "sling"
+			return (o.type == "weapon" or o.type == "gem") and o.subtype ~= "sling" and o.subtype ~= "bow"
 		end, function(o, item)
 			local pf = self:getInven("PSIONIC_FOCUS")
 			if not pf then return end
@@ -123,9 +123,13 @@ newTalent{
 				for i, o in ipairs(self:getInven(self.INVEN_PSIONIC_FOCUS)) do
 					if o.combat and not o.archery then
 						print("[PSI ATTACK] attacking with", o.name)
-						self.use_psi_combat = true
+						self:attr("use_psi_combat", 1)
 						local s, h = self:attackTargetWith(a, o.combat, nil, 1)
-						self.use_psi_combat = false
+-- MAKE IT DO STUFF
+-- phys weapon => apply wil/cun conversion
+-- mindstars => random grab
+-- gems => +stats
+						self:attr("use_psi_combat", -1)
 						speed = math.max(speed or 0, s)
 						hit = hit or h
 						if hit and not sound then sound = o.combat.sound
@@ -171,13 +175,13 @@ newTalent{
 			You are not telekinetically wielding anything right now.]])
 		end
 		if o.type == "weapon" then
-			self.use_psi_combat = true
+			self:attr("use_psi_combat", 1)
 			atk = self:combatAttack(o.combat)
 			dam = self:combatDamage(o.combat)
 			apr = self:combatAPR(o.combat)
 			crit = self:combatCrit(o.combat)
 			speed = self:combatSpeed(o.combat)
-			self.use_psi_combat = false
+			self:attr("use_psi_combat", -1)
 		end
 		return ([[Allows you to wield a weapon telekinetically, directing it with your Willpower and Cunning rather than crude flesh. When activated, the telekinetically-wielded weapon will attack a random melee-range target each turn.
 		The telekinetically-wielded weapon uses Willpower in place of Strength, and Cunning in place of Dexterity, to determine Accuracy and damage.
