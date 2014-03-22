@@ -146,6 +146,16 @@ newAchievement{
 	show = "full", huge=true,
 	desc = [[Win the game without ever setting foot on Maj'Eyal.]],
 }
+newAchievement{
+	name = "Bikining along!", id = "WIN_BIKINI",
+	show = "full", huge=true,
+	desc = [[Won the game without ever taking off her bikini.]],
+}
+newAchievement{
+	name = "Mankining it happen!", id = "WIN_MANKINI",
+	show = "full", huge=true,
+	desc = [[Won the game without ever taking off his mankini.]],
+}
 
 -------------- Other quests
 newAchievement{

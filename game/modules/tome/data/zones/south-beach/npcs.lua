@@ -37,7 +37,7 @@ newEntity{
 	never_anger = true,
 	resists = {all=86},
 
-	moddable_tile_nude = true,
+	moddable_tile_nude = 1,
 	moddable_tile_ornament = {female="braid_redhead_01"},
 	resolvers.equip{ id=true,
 		{defined="MELINDA_BIKINI", autoreq=true, ego_chance=-1000}

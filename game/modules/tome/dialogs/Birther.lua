@@ -55,7 +55,7 @@ function _M:init(title, actor, order, at_end, quickbirth, w, h)
 
 	self.obj_list = Object:loadList("/data/general/objects/objects.lua")
 	self.obj_list_by_name = {}
-	for i, e in ipairs(self.obj_list) do if e.name and e.rarity then self.obj_list_by_name[e.name] = e end end
+	for i, e in ipairs(self.obj_list) do if e.name and (e.rarity or e.define_as) then self.obj_list_by_name[e.name] = e end end
 
 	self.descriptors = {}
 	self.descriptors_by_type = {}
@@ -294,7 +294,7 @@ function _M:atEnd(v)
 				self.actor.make_tile = nil
 				self.actor.moddable_tile = nil
 			end
-			self:applyCosmeticActor()
+			self:applyCosmeticActor(true)
 			game:setPlayerName(self.c_name.text)
 
 			local save = Savefile.new(game.save_name)
@@ -1086,8 +1086,6 @@ function _M:setTile(f, w, h, last)
 	end
 	self:resetAttachementSpots()
 
-	self:applyCosmeticActor()
-
 	if not last then
 		-- Add an example particles if any
 		local ps = self.actor:getParticlesList("all")
@@ -1104,12 +1102,15 @@ function _M:setTile(f, w, h, last)
 		end
 
 		self:fakeEquip(true)
+		self:applyCosmeticActor(false)
 		self.actor:updateModdableTile()
 		self:fakeEquip(false)
+	else
+		self:applyCosmeticActor(true)
 	end
 end
 
-function _M:applyCosmeticActor()
+function _M:applyCosmeticActor(last)
 	self.actor.is_redhaed = nil -- Booh this is ugly
 
 	local list = {}
@@ -1118,7 +1119,7 @@ function _M:applyCosmeticActor()
 	end
 	table.sort(list, function(a,b) return a.priority < b.priority end)
 	for i, d in ipairs(list) do
-		d.on_actor(self.actor)
+		d.on_actor(self.actor, self, last)
 	end
 end
 

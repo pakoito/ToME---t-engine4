@@ -32,7 +32,7 @@ local function makeGolem(self)
 		type = "construct", subtype = "golem",
 		display = 'g', color=colors.WHITE, image = "npc/alchemist_golem.png",
 		moddable_tile = "runic_golem",
-		moddable_tile_nude = true,
+		moddable_tile_nude = 1,
 		moddable_tile_base = resolvers.generic(function() return "base_0"..rng.range(1, 5)..".png" end),
 --		level_range = {1, 50}, exp_worth=0,
 		level_range = {1, self.max_level}, exp_worth=0,

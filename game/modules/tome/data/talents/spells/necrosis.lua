@@ -175,7 +175,7 @@ newTalent{
 		self.descriptor.subrace = "Lich"
 		if not self.has_custom_tile then
 			self.moddable_tile = "skeleton"
-			self.moddable_tile_nude = true
+			self.moddable_tile_nude = 1
 			self.moddable_tile_base = "base_lich_01.png"
 			self.moddable_tile_ornament = nil
 			self.attachement_spots = "race_skeleton"

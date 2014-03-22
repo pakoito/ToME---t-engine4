@@ -86,8 +86,8 @@ local credits = {
 	false,
 
 	{"Sound Designer", title=1},
+	{"Kenneth 'Elvisman2001' Toomey"},
 	{"Ryan Sim"},
-	{"'Elvisman2001'"},
 	false,
 	false,
 

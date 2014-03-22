@@ -121,6 +121,9 @@ function win(self, how)
 	elseif how == "yeek-sacrifice" then world:gainAchievement("YEEK_SACRIFICE", game.player)
 	elseif how == "yeek-selfless" then world:gainAchievement("YEEK_SELFLESS", game.player)
 	end
+	
+	local p = game:getPlayer(true)
+	p:inventoryApplyAll(function(inven, item, o) o:check("on_win") end)
 
 	local aeryn = game.level:findEntity{define_as="HIGH_SUN_PALADIN_AERYN"}
 	if aeryn and not aeryn.dead then world:gainAchievement("WIN_AERYN_SURVIVE", game.player) end

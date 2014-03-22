@@ -94,6 +94,26 @@ function _M:init(t, no_default)
 	self.talent_kind_log = self.talent_kind_log or {}
 end
 
+function _M:registerOnBirthForceWear(data)
+	self._on_birth = self._on_birth or {}
+	self._on_birth[#self._on_birth+1] = function()
+		local o = game.zone:makeEntityByName(game.level, "object", data, true)
+		o:identify(true)
+		local ro = self:wearObject(o, true, true)
+		if ro then
+			if type(ro) == "table" then self:addObject(self:getInven(self.INVEN_INVEN), ro) end
+		elseif not ro then
+			self:addObject(self:getInven(self.INVEN_INVEN), o)
+		end
+
+	end
+end
+
+function _M:registerOnBirth(f)
+	self._on_birth = self._on_birth or {}
+	self._on_birth[#self._on_birth+1] = f
+end
+
 function _M:onBirth(birther)
 	-- Make a list of random escort levels
 	local race_def = birther.birth_descriptor_def.race[self.descriptor.race]
@@ -110,6 +130,9 @@ function _M:onBirth(birther)
 			self.random_escort_levels[z[1]][z[2]] = true
 		end
 	end
+
+	for i, f in ipairs(self._on_birth or {}) do f(self, birther) end
+	self._on_birth = nil
 end
 
 function _M:onEnterLevel(zone, level)

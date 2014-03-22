@@ -434,3 +434,53 @@ Items in the chest will not encumber you.]], 500)
 		end
 	end,
 }
+
+newEntity{ base = "BASE_CLOTH_ARMOR", define_as = "FUN_BIKINI",
+	unique = true,
+	name = "Bikini", color = colors.RED, image = "object/artifact/bikini.png",
+	unided_name = "tiny piece of cloth",
+	desc = [[Revealing, pink, fun.
+#{bold}#If you never take it off and win you will gain a neat achievement and bragging rights!#{normal}#]],
+	level_range = {1, 1},
+	rarity = false,
+	cost = 1,
+	material_level = 1,
+	moddable_tile = "special/bikini_01",
+	moddable_tile_big = true,
+	special_desc = function(self) return "You have never taken it off." end,
+	on_win = function(self)
+		world:gainAchievement("WIN_BIKINI", game.player)
+	end,
+	on_takeoff = function(self)
+		self.special_desc = nil
+		self.on_win = nil
+	end,
+	wielder = {
+		moddable_tile_nude = 1,
+	},
+}
+
+newEntity{ base = "BASE_CLOTH_ARMOR", define_as = "FUN_MANKINI",
+	unique = true,
+	name = "Mankini", color = colors.RED, image = "object/artifact/bikini.png",
+	unided_name = "tiny piece of cloth",
+	desc = [[Revealing, green, fun.
+#{bold}#If you never take it off and win you will gain a neat achievement and bragging rights!#{normal}#]],
+	level_range = {1, 1},
+	rarity = false,
+	cost = 1,
+	material_level = 1,
+	moddable_tile = "special/mankini_01",
+	moddable_tile_big = true,
+	special_desc = function(self) return "You have never taken it off." end,
+	on_win = function(self)
+		world:gainAchievement("WIN_MANKINI", game.player)
+	end,
+	on_takeoff = function(self)
+		self.special_desc = nil
+		self.on_win = nil
+	end,
+	wielder = {
+		moddable_tile_nude = 1,
+	},
+}
