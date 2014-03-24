@@ -54,20 +54,22 @@ newTalent{
 		local radius = radianceRadius(self)
 		local grids = core.fov.circle_grids(self.x, self.y, radius, true)
 		for x, yy in pairs(grids) do for y, _ in pairs(grids[x]) do local target = game.level.map(x, y, Map.ACTOR) if target and self ~= target then
-			target:setEffect(target.EFF_ILLUMINATION, 1, {power=t.getPower(self, t), def=t.getDef(self, t)})
-			local ss = self:isTalentActive(self.T_SEARING_SIGHT)
-			if ss then
-				local dist = core.fov.distance(self.x, self.y, target.x, target.y) - 1
-				local coeff = math.scale(radius - dist, 1, radius, 0.1, 1)
-				local realdam = DamageType:get(DamageType.LIGHT).projector(self, target.x, target.y, DamageType.LIGHT, ss.dam * coeff)
-				if ss.daze and rng.percent(ss.daze) and target:canBe("stun") then
-					target:setEffect(target.EFF_DAZED, 3, {apply_power=self:combatSpellpower()})
-				end
+			if (self:reactionToward(target) < 0) then
+				target:setEffect(target.EFF_ILLUMINATION, 1, {power=t.getPower(self, t), def=t.getDef(self, t)})
+				local ss = self:isTalentActive(self.T_SEARING_SIGHT)
+				if ss then
+					local dist = core.fov.distance(self.x, self.y, target.x, target.y) - 1
+					local coeff = math.scale(radius - dist, 1, radius, 0.1, 1)
+					local realdam = DamageType:get(DamageType.LIGHT).projector(self, target.x, target.y, DamageType.LIGHT, ss.dam * coeff)
+					if ss.daze and rng.percent(ss.daze) and target:canBe("stun") then
+						target:setEffect(target.EFF_DAZED, 3, {apply_power=self:combatSpellpower()})
+					end
 
-				if realdam and realdam > 0 and self:hasEffect(self.EFF_LIGHT_BURST) then
-					self:setEffect(self.EFF_LIGHT_BURST_SPEED, 4, {})
+					if realdam and realdam > 0 and self:hasEffect(self.EFF_LIGHT_BURST) then
+						self:setEffect(self.EFF_LIGHT_BURST_SPEED, 4, {})
+					end
 				end
-			end
+		end
 		end end end		
 	end,
 	info = function(self, t)
@@ -97,6 +99,7 @@ newTalent{
 		return {dam=t.getDamage(self, t), daze=daze}
 	end,
 	deactivate = function(self, t, p)
+		return true
 	end,
 	info = function(self, t)
 		return ([[Your Radiance is so powerful it burns all foes caught in it, doing up to %0.2f light damage (reduced with distance) to all foes caught inside.

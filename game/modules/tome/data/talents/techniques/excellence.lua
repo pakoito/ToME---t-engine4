@@ -143,7 +143,7 @@ newTalent{
 	require = techs_dex_req_high3,
 	tactical = { BUFF = 2 },
 	getDist = function(self, t) return math.floor(self:combatTalentLimit(t, 11, 1, 3)) end, -- Limit <=10
-	getChance = function(self, t) return math.floor(self:combatTalentLimit(t, 100, 20, 50)) end,
+	getChance = function(self, t) return math.floor(self:combatTalentLimit(t, 50, 5, 40)) end,
 	archery_onhit = function(self, t, target, x, y)
 		if not target or not target:canBe("knockback") then return end
 		target:knockback(self.x, self.y, t.getDist(self, t))

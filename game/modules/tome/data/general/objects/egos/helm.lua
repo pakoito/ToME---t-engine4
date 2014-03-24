@@ -348,6 +348,7 @@ newEntity{
 			[DamageType.MIND] = resolvers.mbonus_material(15, 10),
 		},
 		combat_mentalresist = resolvers.mbonus_material(20, 10),
+		confusion_immune = resolvers.mbonus_material(30, 20, function(e, v) v=v/100 return 0, v end),
 	},
 }
 

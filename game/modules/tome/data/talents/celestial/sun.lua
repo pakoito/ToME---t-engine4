@@ -47,7 +47,11 @@ newTalent{
 			local _ _, x, y = self:canProject(tg, x, y)
 			self:project({type="ball", x=x, y=y, radius=1, selffire=false}, x, y, DamageType.BLIND, t.getDuration(self, t), {type="light"})
 		end
-		self:removeEffect(self.EFF_SUN_VENGEANCE)
+
+		-- Delay removal of the effect so its still there when no_energy checks
+		game:onTickEnd(function()
+			self:removeEffect(self.EFF_SUN_VENGEANCE)
+		end)
 
 		game:playSoundNear(self, "talents/flame")
 		return true

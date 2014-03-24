@@ -50,6 +50,7 @@ return {
 			class = "mod.class.generator.actor.Random",
 			nb_npc = {20, 30},
 			filters = { {max_ood=2}, },
+			randelite = 0,
 			guardian = "HIVE_MOTHER",
 		},
 		object = {

@@ -433,8 +433,9 @@ function _M:addedToLevel(level, x, y)
 		elseif game.difficulty == game.DIFFICULTY_INSANE and not game.party:hasMember(self) then
 			-- Increase talent level
 			for tid, lev in pairs(self.talents) do
-				self:learnTalent(tid, true, lev)
+				self:learnTalent(tid, true, lev / 2)
 			end
+			-- Give unrand bosses extra classes
 			if not self.randboss and self.rank >= 3.5 then
 				local data = {}
 				if self.rank == 3.5 then data = {nb_classes=1}
@@ -446,6 +447,12 @@ function _M:addedToLevel(level, x, y)
 				data.forbid_equip = true
 				game.state:applyRandomClass(self, data, true)
 			end
+			-- Increase life
+			local lifeadd = self.max_life * 0.2
+			self.max_life = self.max_life + lifeadd
+			self.life = self.life + lifeadd
+			-- print("Insane increasing " .. self.name .. " life by " .. lifeadd)
+
 			self:attr("difficulty_boosted", 1)
 		elseif game.difficulty == game.DIFFICULTY_MADNESS and not game.party:hasMember(self) then
 			-- Increase talent level
@@ -463,9 +470,11 @@ function _M:addedToLevel(level, x, y)
 				data.forbid_equip = true
 				game.state:applyRandomClass(self, data, true)
 			end
+			-- Increase life
 			local lifeadd = self.max_life * self:getRankLifeAdjust(1) * self.level / 65 / 1.5
 			self.max_life = self.max_life + lifeadd
 			self.life = self.life + lifeadd
+			
 			self:attr("difficulty_boosted", 1)
 		end
 	end

@@ -85,8 +85,7 @@ newEntity{
 		resists = { [DamageType.COLD] = resolvers.mbonus_material(5, 5), },
 		melee_project= { [DamageType.COLD] = resolvers.mbonus_material(10, 5) },
 		combat = {
-			burst_on_crit= { [DamageType.COLD] = resolvers.mbonus_material(10, 5) },
-			convert_damage = { [DamageType.COLD] = resolvers.mbonus_material(25, 25) },
+			burst_on_crit= { [DamageType.ICE] = resolvers.mbonus_material(10, 5) },
 			talent_on_hit = { [Talents.T_ICE_BREATH] = {level=resolvers.genericlast(function(e) return e.material_level end), chance=10} },
 		},
 	},
@@ -159,7 +158,6 @@ newEntity{
 		melee_project= { [DamageType.BLIGHT] = resolvers.mbonus_material(10, 5) },
 		combat = {
 			burst_on_crit= { [DamageType.BLIGHT] = resolvers.mbonus_material(10, 5) },
-			convert_damage = { [DamageType.BLIGHT] = resolvers.mbonus_material(25, 25) },
 			talent_on_hit = { [Talents.T_SOUL_ROT] = {level=resolvers.genericlast(function(e) return e.material_level end), chance=20} },
 		},
 	},
@@ -340,7 +338,7 @@ newEntity{
 		},
 		disarm_bonus = resolvers.mbonus_material(25, 5),
 		combat = {
-			talent_on_hit = { [Talents.T_MAIM] = {level=resolvers.genericlast(function(e) return e.material_level end), chance=20} },
+			talent_on_hit = { [Talents.T_DISARM] = {level=resolvers.genericlast(function(e) return e.material_level end), chance=10} },
 		},
 	},
 }
@@ -498,10 +496,10 @@ newEntity{
 		},
 		infravision = resolvers.mbonus_material(1, 1),
 		combat = {
-			talent_on_hit = { [Talents.T_CIRCLE_OF_BLAZING_LIGHT] = {level=resolvers.genericlast(function(e) return e.material_level end), chance=10} },
-			melee_project={
-				[DamageType.LIGHT] = resolvers.mbonus_material(10, 2),
-				[DamageType.DARKNESS] = resolvers.mbonus_material(10, 2),
+			burst_on_crit={
+				-- still an AoE effect, but not a weak one with poor stat scaling that wastes the proc registry
+				[DamageType.LIGHT] = resolvers.mbonus_material(40, 10),
+				[DamageType.DARKNESS] = resolvers.mbonus_material(40, 10),
 			},
 		},
 	},

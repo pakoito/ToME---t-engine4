@@ -59,6 +59,7 @@ return {
 			class = "mod.class.generator.actor.Random",
 			nb_npc = {7, 10},
 			filters = { {max_ood=2}, },
+			randelite = 0,
 		},
 		object = {
 			class = "engine.generator.object.Random",

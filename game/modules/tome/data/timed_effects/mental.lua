@@ -192,9 +192,9 @@ newEffect{
 	on_gain = function(self, err) return "#Target#'s will is shattered.", "+Battle Cry" end,
 	on_lose = function(self, err) return "#Target# regains some of its will.", "-Battle Cry" end,
 	activate = function(self, eff)
-		self:effectTemporaryValue("combat_def", -eff.power)
-		self:effectTemporaryValue("no_evasion", 1)
-		self:effectTemporaryValue("blind_fighted", 1)
+		self:effectTemporaryValue(eff, "combat_def", -eff.power)
+		self:effectTemporaryValue(eff, "no_evasion", 1)
+		self:effectTemporaryValue(eff, "blind_fighted", 1)
 	end,
 }
 
