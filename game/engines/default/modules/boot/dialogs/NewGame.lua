@@ -65,7 +65,17 @@ function _M:init()
 end
 
 function _M:on_register()
-	if #self.list == 1 and not self.has_incompatible then
+	if
+		#self.list == 1 and
+		not self.has_incompatible and
+		(
+			not profile or
+			not profile.generic or
+			not profile.generic.modules_played or
+			not profile.generic.modules_played.tome or
+			profile.generic.modules_played.tome < 5 * 60 * 60
+		)
+	then
 		game:unregisterDialog(self)
 		self.list[1]:fct()
 	end
