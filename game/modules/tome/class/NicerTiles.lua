@@ -22,7 +22,7 @@ local Map = require "engine.Map"
 
 module(..., package.seeall, class.make)
 
-local NB_VARIATIONS = 20
+local NB_VARIATIONS = 30
 
 function _M:init()
 	self.repo = {}

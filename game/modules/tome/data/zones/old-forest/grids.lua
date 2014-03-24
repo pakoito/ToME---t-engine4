@@ -21,6 +21,53 @@ load("/data/general/grids/basic.lua")
 load("/data/general/grids/forest.lua")
 load("/data/general/grids/water.lua")
 
+local treesdef = {
+	{"oldforest_tree_01", {tall=-1, "shadow", "trunk_01", {"foliage_spring_%02d",1,2}}},
+	{"oldforest_tree_01", {tall=-1, "shadow", "trunk_02", {"foliage_spring_%02d",3,3}}},
+	{"oldforest_tree_01", {tall=-1, "shadow", "trunk_03", {"foliage_spring_%02d",4,4}}},
+	{"oldforest_tree_02", {tall=-1, "shadow", "trunk_01", {"foliage_spring_%02d",1,2}}},
+	{"oldforest_tree_02", {tall=-1, "shadow", "trunk_02", {"foliage_spring_%02d",3,3}}},
+	{"oldforest_tree_02", {tall=-1, "shadow", "trunk_03", {"foliage_spring_%02d",4,4}}},
+	{"oldforest_tree_03", {tall=-1, "shadow", "trunk_01", {"foliage_spring_%02d",1,2}}},
+	{"oldforest_tree_03", {tall=-1, "shadow", "trunk_02", {"foliage_spring_%02d",3,3}}},
+	{"oldforest_tree_03", {tall=-1, "shadow", "trunk_03", {"foliage_spring_%02d",4,4}}},
+	{"small_oldforest_tree_01", {"shadow", "trunk_01", {"foliage_spring_%02d",1,2}}},
+	{"small_oldforest_tree_01", {"shadow", "trunk_02", {"foliage_spring_%02d",3,3}}},
+	{"small_oldforest_tree_01", {"shadow", "trunk_03", {"foliage_spring_%02d",4,4}}},
+	{"small_oldforest_tree_02", {"shadow", "trunk_01", {"foliage_spring_%02d",1,2}}},
+	{"small_oldforest_tree_02", {"shadow", "trunk_02", {"foliage_spring_%02d",3,3}}},
+	{"small_oldforest_tree_02", {"shadow", "trunk_03", {"foliage_spring_%02d",4,4}}},
+	{"small_oldforest_tree_03", {"shadow", "trunk_01", {"foliage_spring_%02d",1,2}}},
+	{"small_oldforest_tree_03", {"shadow", "trunk_02", {"foliage_spring_%02d",3,3}}},
+	{"small_oldforest_tree_03", {"shadow", "trunk_03", {"foliage_spring_%02d",4,4}}},
+
+	{"oldforest_tree_01", {tall=-1, "shadow", "trunk_01", {"foliage_bare_%02d",1,2}}},
+	{"oldforest_tree_01", {tall=-1, "shadow", "trunk_02", {"foliage_bare_%02d",3,3}}},
+	{"oldforest_tree_01", {tall=-1, "shadow", "trunk_03", {"foliage_bare_%02d",4,4}}},
+	{"oldforest_tree_02", {tall=-1, "shadow", "trunk_01", {"foliage_bare_%02d",1,2}}},
+	{"oldforest_tree_02", {tall=-1, "shadow", "trunk_02", {"foliage_bare_%02d",3,3}}},
+	{"oldforest_tree_02", {tall=-1, "shadow", "trunk_03", {"foliage_bare_%02d",4,4}}},
+	{"oldforest_tree_03", {tall=-1, "shadow", "trunk_01", {"foliage_bare_%02d",1,2}}},
+	{"oldforest_tree_03", {tall=-1, "shadow", "trunk_02", {"foliage_bare_%02d",3,3}}},
+	{"oldforest_tree_03", {tall=-1, "shadow", "trunk_03", {"foliage_bare_%02d",4,4}}},
+	{"small_oldforest_tree_01", {"shadow", "trunk_01", {"foliage_bare_%02d",1,2}}},
+	{"small_oldforest_tree_01", {"shadow", "trunk_02", {"foliage_bare_%02d",3,3}}},
+	{"small_oldforest_tree_01", {"shadow", "trunk_03", {"foliage_bare_%02d",4,4}}},
+	{"small_oldforest_tree_02", {"shadow", "trunk_01", {"foliage_bare_%02d",1,2}}},
+	{"small_oldforest_tree_02", {"shadow", "trunk_02", {"foliage_bare_%02d",3,3}}},
+	{"small_oldforest_tree_02", {"shadow", "trunk_03", {"foliage_bare_%02d",4,4}}},
+	{"small_oldforest_tree_03", {"shadow", "trunk_01", {"foliage_bare_%02d",1,2}}},
+	{"small_oldforest_tree_03", {"shadow", "trunk_02", {"foliage_bare_%02d",3,3}}},
+	{"small_oldforest_tree_03", {"shadow", "trunk_03", {"foliage_bare_%02d",4,4}}},
+}
+
+for i = 1, 30 do
+	newEntity(class:makeNewTrees({base="TREE", define_as = "TREE"..i, image = "terrain/grass.png"}, treesdef, 3))
+end
+for i = 1, 30 do
+	newEntity(class:makeNewTrees({base="HARDTREE", define_as = "HARDTREE"..i, image = "terrain/grass.png"}, treesdef))
+end
+
 newEntity{
 	define_as = "LAKE_NUR",
 	name = "way to the lake of Nur",
