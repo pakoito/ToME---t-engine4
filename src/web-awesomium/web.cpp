@@ -259,7 +259,7 @@ public:
 
 class TE4DataSource : public DataSource {
 public:
-	virtual void OnRequest(int request_id, const WebString& wpath) {
+	virtual void OnRequest(int request_id, const ResourceRequest& request, const WebString& wpath) {
 		const char *path = webstring_to_buf(wpath, NULL);
 
 		WebEvent *event = new WebEvent();
