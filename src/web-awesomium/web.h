@@ -25,7 +25,7 @@
 WEB_TE4_API void te4_web_setup(
 	int argc, char **argv, char *spawn,
 	void*(*mutex_create)(), void(*mutex_destroy)(void*), void(*mutex_lock)(void*), void(*mutex_unlock)(void*),
-	unsigned int (*make_texture)(int, int), void (*del_texture)(unsigned int), void (*texture_update)(unsigned int, int, int, const void*),
+	void*(*make_texture)(int, int), void (*del_texture)(void*), void (*texture_update)(void*, int, int, const void*),
 	void (*key_mods)(bool*, bool*, bool*, bool*),
 	void (*web_instant_js)(int handlers, const char *fct, int nb_args, WebJsValue *args, WebJsValue *ret)
 );
@@ -33,7 +33,7 @@ WEB_TE4_API void te4_web_initialize();
 WEB_TE4_API void te4_web_do_update(void (*cb)(WebEvent*));
 WEB_TE4_API void te4_web_new(web_view_type *view, int w, int h);
 WEB_TE4_API bool te4_web_close(web_view_type *view);
-WEB_TE4_API bool te4_web_toscreen(web_view_type *view, int *w, int *h, unsigned int *tex);
+WEB_TE4_API void *te4_web_toscreen(web_view_type *view, int *w, int *h);
 WEB_TE4_API bool te4_web_loading(web_view_type *view);
 WEB_TE4_API void te4_web_focus(web_view_type *view, bool focus);
 WEB_TE4_API void te4_web_inject_mouse_move(web_view_type *view, int x, int y);

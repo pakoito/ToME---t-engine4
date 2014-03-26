@@ -39,7 +39,7 @@ static bool webcore = FALSE;
 static void (*te4_web_setup)(
 	int, char**, char*,
 	void*(*)(), void(*)(void*), void(*)(void*), void(*)(void*),
-	unsigned int (*)(int, int), void (*)(unsigned int), void (*)(unsigned int, int, int, const void*),
+	void* (*)(int, int), void (*)(void*), void (*)(void*, int, int, const void*),
 	void (*)(bool*, bool*, bool*, bool*),
 	void (*)(int handlers, const char *fct, int nb_args, WebJsValue *args, WebJsValue *ret)
 );
@@ -47,7 +47,7 @@ static void (*te4_web_initialize)();
 static void (*te4_web_do_update)(void (*cb)(WebEvent*));
 static void (*te4_web_new)(web_view_type *view, int w, int h);
 static bool (*te4_web_close)(web_view_type *view);
-static bool (*te4_web_toscreen)(web_view_type *view, int *w, int *h, unsigned int *tex);
+static void* (*te4_web_toscreen)(web_view_type *view, int *w, int *h);
 static bool (*te4_web_loading)(web_view_type *view);
 static void (*te4_web_focus)(web_view_type *view, bool focus);
 static void (*te4_web_inject_mouse_move)(web_view_type *view, int x, int y);
@@ -97,12 +97,12 @@ static int lua_web_toscreen(lua_State *L) {
 	int h = -1;
 	if (lua_isnumber(L, 4)) w = lua_tonumber(L, 4);
 	if (lua_isnumber(L, 5)) h = lua_tonumber(L, 5);
-	unsigned int tex;
+	GLuint *tex = (GLuint*)te4_web_toscreen(view, &w, &h);
 
-	if (te4_web_toscreen(view, &w, &h, &tex)) {
+	if (tex) {
 		float r = 1, g = 1, b = 1, a = 1;
 
-		glBindTexture(GL_TEXTURE_2D, tex);
+		glBindTexture(GL_TEXTURE_2D, *tex);
 
 		GLfloat texcoords[2*4] = {
 			0, 0,
@@ -395,10 +395,10 @@ static void web_mutex_unlock(void *mutex) {
 	SDL_mutexV((SDL_mutex*)mutex);
 }
 
-static unsigned int web_make_texture(int w, int h) {
-	GLuint tex;
-	glGenTextures(1, &tex);
-	glBindTexture(GL_TEXTURE_2D, tex);
+static void *web_make_texture(int w, int h) {
+	GLuint *tex = malloc(sizeof(GLuint));
+	glGenTextures(1, tex);
+	glBindTexture(GL_TEXTURE_2D, *tex);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
@@ -411,12 +411,14 @@ static unsigned int web_make_texture(int w, int h) {
 	free(buffer);
 	return tex;
 }
-static void web_del_texture(unsigned int tex) {
-	GLuint t = tex;
+static void web_del_texture(void *tex) {
+	GLuint t = *((GLuint*)tex);
 	glDeleteTextures(1, &t);
+	free(tex);
 }
-static void web_texture_update(unsigned int tex, int w, int h, const void* buffer) {
-	tglBindTexture(GL_TEXTURE_2D, tex);
+static void web_texture_update(void *tex, int w, int h, const void* buffer) {
+	GLuint t = *((GLuint*)tex);
+	tglBindTexture(GL_TEXTURE_2D, t);
 	glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, w, h, GL_BGRA, GL_UNSIGNED_BYTE, buffer);
 }
 
@@ -485,7 +487,7 @@ void te4_web_load() {
 		te4_web_setup = (void (*)(
 			int, char**, char*,
 			void*(*)(), void(*)(void*), void(*)(void*), void(*)(void*),
-			unsigned int (*)(int, int), void (*)(unsigned int), void (*)(unsigned int, int, int, const void*),
+			void* (*)(int, int), void (*)(void*), void (*)(void*, int, int, const void*),
 			void (*)(bool*, bool*, bool*, bool*),
 			void (*)(int handlers, const char *fct, int nb_args, WebJsValue *args, WebJsValue *ret)
 		)) SDL_LoadFunction(web, "te4_web_setup");
@@ -493,7 +495,7 @@ void te4_web_load() {
 		te4_web_do_update = (void (*)(void (*cb)(WebEvent*))) SDL_LoadFunction(web, "te4_web_do_update");
 		te4_web_new = (void (*)(web_view_type *view, int w, int h)) SDL_LoadFunction(web, "te4_web_new");
 		te4_web_close = (bool (*)(web_view_type *view)) SDL_LoadFunction(web, "te4_web_close");
-		te4_web_toscreen = (bool (*)(web_view_type *view, int *w, int *h, unsigned int *tex)) SDL_LoadFunction(web, "te4_web_toscreen");
+		te4_web_toscreen = (void* (*)(web_view_type *view, int *w, int *h)) SDL_LoadFunction(web, "te4_web_toscreen");
 		te4_web_loading = (bool (*)(web_view_type *view)) SDL_LoadFunction(web, "te4_web_loading");
 		te4_web_focus = (void (*)(web_view_type *view, bool focus)) SDL_LoadFunction(web, "te4_web_focus");
 		te4_web_inject_mouse_move = (void (*)(web_view_type *view, int x, int y)) SDL_LoadFunction(web, "te4_web_inject_mouse_move");

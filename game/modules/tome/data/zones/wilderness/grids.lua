@@ -25,6 +25,23 @@ local mountain_editer = {method="borders_def", def="mountain"}
 local gold_mountain_editer = {method="borders_def", def="gold_mountain"}
 local lava_editer = {method="borders_def", def="lava"}
 
+local forest_editer = { method="borders", type="forest", use_type="name", forbid={},
+	default8={add_mos={{image="terrain/worldmap/forest_8.png", display_y=-1}}, min=1, max=1},
+	default2={add_mos={{image="terrain/worldmap/forest_2.png", display_y=1}}, min=1, max=1},
+	default4={add_mos={{image="terrain/worldmap/forest_4.png", display_x=-1}}, min=1, max=1},
+	default6={add_mos={{image="terrain/worldmap/forest_6.png", display_x=1}}, min=1, max=1},
+
+	default1={},
+	default3={},
+	default7={},
+	default9={},
+
+	default1i={},
+	default3i={},
+	default7i={},
+	default9i={},
+}
+
 --------------------------------------------------------------------------------
 -- Grassland
 --------------------------------------------------------------------------------
@@ -59,7 +76,8 @@ newEntity{
 	define_as = "FOREST",
 	type = "wall", subtype = "grass",
 	name = "forest",
-	image = "terrain/tree.png",
+	image = "terrain/grass.png",
+	add_mos = {{image="terrain/worldmap/forest_5.png"}},
 	display = '#', color=colors.LIGHT_GREEN, back_color={r=44,g=95,b=43},
 	always_remember = true,
 	can_pass = {pass_tree=1},
@@ -67,9 +85,9 @@ newEntity{
 	block_sight = true,
 	nice_tiler = { method="replace", base={"FOREST", 100, 1, 30}},
 	nice_editer = grass_editer,
+	nice_editer2 = forest_editer,
 	special_minimap = colors.GREEN,
 }
-for i = 1, 30 do newEntity{ base="FOREST", define_as = "FOREST"..i, image = "terrain/grass.png", add_displays = class:makeTrees("terrain/tree_alpha", 13, 9)} end
 
 newEntity{
 	define_as = "OLD_FOREST",

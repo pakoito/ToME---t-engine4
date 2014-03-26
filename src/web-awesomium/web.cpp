@@ -23,9 +23,9 @@ void *(*web_mutex_create)();
 void (*web_mutex_destroy)(void *mutex);
 void (*web_mutex_lock)(void *mutex);
 void (*web_mutex_unlock)(void *mutex);
-unsigned int (*web_make_texture)(int w, int h);
-void (*web_del_texture)(unsigned int tex);
-void (*web_texture_update)(unsigned int tex, int w, int h, const void* buffer);
+void *(*web_make_texture)(int w, int h);
+void (*web_del_texture)(void *tex);
+void (*web_texture_update)(void *tex, int w, int h, const void* buffer);
 static void (*web_key_mods)(bool *shift, bool *ctrl, bool *alt, bool *meta);
 static void (*web_instant_js)(int handlers, const char *fct, int nb_args, WebJsValue *args, WebJsValue *ret);
 
@@ -326,18 +326,16 @@ void te4_web_set_js_call(web_view_type *view, const char *name) {
 	opaque->listener->te4_js.SetCustomMethod(WebString::CreateFromUTF8(name, strlen(name)), true);
 }
 
-bool te4_web_toscreen(web_view_type *view, int *w, int *h, unsigned int *tex) {
+void *te4_web_toscreen(web_view_type *view, int *w, int *h) {
 	WebViewOpaque *opaque = (WebViewOpaque*)view->opaque;
-	if (view->closed) return false;
+	if (view->closed) return NULL;
 
 	const GLTextureSurface* surface = static_cast<const GLTextureSurface*> (opaque->view->surface());
-	if (!surface) return false;
-	unsigned int t = surface->GetTexture();
+	if (!surface) return NULL;
 
-	*tex = t;
 	*w = (*w < 0) ? view->w : *w;
 	*h = (*h < 0) ? view->h : *h;
-	return true;
+	return surface->GetTexture();
 }
 
 bool te4_web_loading(web_view_type *view) {
@@ -478,7 +476,7 @@ void te4_web_do_update(void (*cb)(WebEvent*)) {
 void te4_web_setup(
 	int argc, char **gargv, char *spawnc,
 	void*(*mutex_create)(), void(*mutex_destroy)(void*), void(*mutex_lock)(void*), void(*mutex_unlock)(void*),
-	unsigned int (*make_texture)(int, int), void (*del_texture)(unsigned int), void (*texture_update)(unsigned int, int, int, const void*),
+	void *(*make_texture)(int, int), void (*del_texture)(void*), void (*texture_update)(void*, int, int, const void*),
 	void (*key_mods)(bool*, bool*, bool*, bool*),
 	void (*instant_js)(int handlers, const char *fct, int nb_args, WebJsValue *args, WebJsValue *ret)
 	) {

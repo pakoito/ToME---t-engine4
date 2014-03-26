@@ -19,14 +19,14 @@ public:
 											int dy,
 											const Awesomium::Rect& clip_rect) = 0;
 
-	virtual GLuint GetTexture() const = 0;
+	virtual void* GetTexture() const = 0;
 	virtual int width() const = 0;
 	virtual int height() const = 0;
 	virtual int size() const = 0;
 };
 
 class GLRAMTextureSurface : public GLTextureSurface {
-	GLuint texture_id_;
+	void *texture_id_;
 	unsigned char* buffer_;
 	int bpp_, rowspan_, width_, height_;
 	bool needs_update_;
@@ -35,7 +35,7 @@ class GLRAMTextureSurface : public GLTextureSurface {
 	GLRAMTextureSurface(int width, int height);
 	virtual ~GLRAMTextureSurface();
 
-	GLuint GetTexture() const;
+	void* GetTexture() const;
 
 	int width() const { return width_; }
 
@@ -73,8 +73,8 @@ extern void *(*web_mutex_create)();
 extern void (*web_mutex_destroy)(void *mutex);
 extern void (*web_mutex_lock)(void *mutex);
 extern void (*web_mutex_unlock)(void *mutex);
-extern unsigned int (*web_make_texture)(int w, int h);
-extern void (*web_del_texture)(unsigned int tex);
-extern void (*web_texture_update)(unsigned int tex, int w, int h, const void* buffer);
+extern void *(*web_make_texture)(int w, int h);
+extern void (*web_del_texture)(void *tex);
+extern void (*web_texture_update)(void *tex, int w, int h, const void* buffer);
 
 #endif  // __GL_TEXTURE_SURFACE_H__

@@ -140,7 +140,7 @@ function _M:replaceAll(level)
 					local mos = gd.add_mos
 					for i = 1, #e.add_mos do
 						mos[#mos+1] = table.clone(e.add_mos[i])
-						mos[#mos].image = mos[#mos].image:format(rng.range(e.min, e.max))
+						mos[#mos].image = mos[#mos].image:format(rng.range(e.min or 1, e.max or 1))
 					end
 					if e.add_mos_shader then gd.shader = e.add_mos_shader end
 					gd._mo = nil
@@ -150,10 +150,10 @@ function _M:replaceAll(level)
 					g.add_displays = g.add_displays or {}
 					for i = 1, #e.add_displays do
 						 g.add_displays[#g.add_displays+1] = require(g.__CLASSNAME).new(e.add_displays[i])
-						g.add_displays[#g.add_displays].image = g.add_displays[#g.add_displays].image:format(rng.range(e.min, e.max))
+						g.add_displays[#g.add_displays].image = g.add_displays[#g.add_displays].image:format(rng.range(e.min or 1, e.max or 1))
 					end
 				end
-				if e.image then g.image = e.image:format(rng.range(e.min, e.max)) end
+				if e.image then g.image = e.image:format(rng.range(e.min or 1, e.max or 1)) end
 			end
 
 			level.map(i, j, Map.TERRAIN, g)
@@ -807,8 +807,12 @@ _M.generic_borders_defs = defs
 
 
 --- Make water have nice transition to other stuff
+local gtype = type
 function _M:editTileGenericBorders(level, i, j, g, nt, type)
-	local kind = nt.use_type and "type" or "subtype"
+	local kind
+	if gtype(nt.use_type) == "string" then kind = nt.use_type
+	else kind = nt.use_type and "type" or "subtype"
+	end
 	local g5 = level.map:checkEntity(i, j,   Map.TERRAIN, kind) or type
 	local g8 = level.map:checkEntity(i, j-1, Map.TERRAIN, kind) or type
 	local g2 = level.map:checkEntity(i, j+1, Map.TERRAIN, kind) or type

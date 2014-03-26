@@ -4,7 +4,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-GLRAMTextureSurface::GLRAMTextureSurface(int width, int height) : texture_id_(0),
+GLRAMTextureSurface::GLRAMTextureSurface(int width, int height) : texture_id_(NULL),
 	buffer_(0), bpp_(4), rowspan_(0), width_(width), height_(height) {
 	rowspan_ = width_ * bpp_;
 	buffer_ = new unsigned char[rowspan_ * height_];
@@ -18,7 +18,7 @@ GLRAMTextureSurface::~GLRAMTextureSurface() {
 	delete[] buffer_;
 }
 
-GLuint GLRAMTextureSurface::GetTexture() const {
+void* GLRAMTextureSurface::GetTexture() const {
 	const_cast<GLRAMTextureSurface*>(this)->UpdateTexture();
 
 	return texture_id_;
