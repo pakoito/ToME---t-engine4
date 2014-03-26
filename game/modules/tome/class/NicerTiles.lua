@@ -40,7 +40,7 @@ function _M:getTile(name)
 	end
 
 	local e
-	if self.repo[name] then e = self.repo[name]
+	if false and self.repo[name] then e = self.repo[name]
 	else
 		self.repo[name] = game.zone:makeEntityByName(game.level, "terrain", name)
 		e = self.repo[name]
