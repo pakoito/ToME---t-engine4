@@ -487,22 +487,6 @@ dark_grass = { method="borders", type="dark_grass", forbid={grass=true, lava=tru
 	water7i={add_mos={{image="terrain/grass/dark_grass_inner_7_%02d.png", display_x=-1, display_y=-1}}, min=1, max=1},
 	water9i={add_mos={{image="terrain/grass/dark_grass_inner_9_%02d.png", display_x=1, display_y=-1}}, min=1, max=1},
 },
-grass_wm = { method="borders", type="grass", forbid={lava=true, rock=true},
-	default8={add_mos={{image="terrain/grass_worldmap/grass_2_%02d.png", display_y=-1}}, min=1, max=2},
-	default2={add_mos={{image="terrain/grass_worldmap/grass_8_%02d.png", display_y=1}}, min=1, max=2},
-	default4={add_mos={{image="terrain/grass_worldmap/grass_6_%02d.png", display_x=-1}}, min=1, max=2},
-	default6={add_mos={{image="terrain/grass_worldmap/grass_4_%02d.png", display_x=1}}, min=1, max=2},
-
-	default1={z=3,add_mos={{image="terrain/grass_worldmap/grass_9_%02d.png", display_x=-1, display_y=1}}, min=1, max=1},
-	default3={z=3,add_mos={{image="terrain/grass_worldmap/grass_7_%02d.png", display_x=1, display_y=1}}, min=1, max=1},
-	default7={z=3,add_mos={{image="terrain/grass_worldmap/grass_3_%02d.png", display_x=-1, display_y=-1}}, min=1, max=1},
-	default9={z=3,add_mos={{image="terrain/grass_worldmap/grass_1_%02d.png", display_x=1, display_y=-1}}, min=1, max=1},
-
-	default1i={add_mos={{image="terrain/grass_worldmap/grass_inner_1_%02d.png", display_x=-1, display_y=1}}, min=1, max=2},
-	default3i={add_mos={{image="terrain/grass_worldmap/grass_inner_3_%02d.png", display_x=1, display_y=1}}, min=1, max=2},
-	default7i={add_mos={{image="terrain/grass_worldmap/grass_inner_7_%02d.png", display_x=-1, display_y=-1}}, min=1, max=2},
-	default9i={add_mos={{image="terrain/grass_worldmap/grass_inner_9_%02d.png", display_x=1, display_y=-1}}, min=1, max=2},
-},
 jungle_grass = { method="borders", type="jungle_grass", forbid={lava=true, rock=true, grass=true},
 	default8={add_mos={{image="terrain/jungle/jungle_grass_2_%02d.png", display_y=-1}}, min=1, max=5},
 	default2={add_mos={{image="terrain/jungle/jungle_grass_8_%02d.png", display_y=1}}, min=1, max=5},
@@ -800,6 +784,23 @@ rift = { method="walls", type="riftwall", forbid={}, use_type=true, extended=tru
 
 	default4={add_displays={{image="terrain/rift/rift_ver_edge_left_01.png", display_x=-1}}, min=1, max=1},
 	default6={add_displays={{image="terrain/rift/rift_ver_edge_right_01.png", display_x=1}}, min=1, max=1},
+},
+
+grass_wm = { method="borders", type="grass", forbid={lava=true, rock=true},
+	default8={add_mos={{image="terrain/grass_worldmap/grass_2_%02d.png", display_y=-1}}, min=1, max=2},
+	default2={add_mos={{image="terrain/grass_worldmap/grass_8_%02d.png", display_y=1}}, min=1, max=2},
+	default4={add_mos={{image="terrain/grass_worldmap/grass_6_%02d.png", display_x=-1}}, min=1, max=2},
+	default6={add_mos={{image="terrain/grass_worldmap/grass_4_%02d.png", display_x=1}}, min=1, max=2},
+
+	default1={z=3,add_mos={{image="terrain/grass_worldmap/grass_9_%02d.png", display_x=-1, display_y=1}}, min=1, max=1},
+	default3={z=3,add_mos={{image="terrain/grass_worldmap/grass_7_%02d.png", display_x=1, display_y=1}}, min=1, max=1},
+	default7={z=3,add_mos={{image="terrain/grass_worldmap/grass_3_%02d.png", display_x=-1, display_y=-1}}, min=1, max=1},
+	default9={z=3,add_mos={{image="terrain/grass_worldmap/grass_1_%02d.png", display_x=1, display_y=-1}}, min=1, max=1},
+
+	default1i={add_mos={{image="terrain/grass_worldmap/grass_inner_1_%02d.png", display_x=-1, display_y=1}}, min=1, max=2},
+	default3i={add_mos={{image="terrain/grass_worldmap/grass_inner_3_%02d.png", display_x=1, display_y=1}}, min=1, max=2},
+	default7i={add_mos={{image="terrain/grass_worldmap/grass_inner_7_%02d.png", display_x=-1, display_y=-1}}, min=1, max=2},
+	default9i={add_mos={{image="terrain/grass_worldmap/grass_inner_9_%02d.png", display_x=1, display_y=-1}}, min=1, max=2},
 },
 }
 _M.generic_borders_defs = defs

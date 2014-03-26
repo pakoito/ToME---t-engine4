@@ -186,7 +186,8 @@ function _M:tooltip(x, y)
 end
 
 --- Generate sub entities to make nice trees
-function _M:makeNewTrees(g, kindsdefs, max_trees)
+function _M:makeNewTrees(g, kindsdefs, max_trees, basedir)
+	basedir = basedir or "terrain/trees/"
 	max_trees = max_trees or 3
 	g.add_displays = g.add_displays or {}
 	g.add_mos = g.add_mos or {}
@@ -210,10 +211,10 @@ function _M:makeNewTrees(g, kindsdefs, max_trees)
 		local y = rng.float(-1 / 5 * nb / 3, 1 / 4 * nb / 3)
 
 		for i = 1, #parts - 1 do
-			mos[#mos+1] = {image="terrain/trees/"..treeid.."_"..getname(parts[i])..".png", display_x=x, display_y=y, display_w=scale, display_h=scale}
+			mos[#mos+1] = {image=basedir..treeid.."_"..getname(parts[i])..".png", display_x=x, display_y=y, display_w=scale, display_h=scale}
 		end
 		if parts.base then
-			basemos[#basemos+1] = {image="terrain/trees/"..treeid.."_"..getname(parts.base)..".png", display_x=x, display_y=y, display_w=scale, display_h=scale}
+			basemos[#basemos+1] = {image=basedir..treeid.."_"..getname(parts.base)..".png", display_x=x, display_y=y, display_w=scale, display_h=scale}
 		end
 		if parts.adds then
 			local name = parts.adds[1]
@@ -225,7 +226,7 @@ function _M:makeNewTrees(g, kindsdefs, max_trees)
 				display_h = scale,
 				display_on_seen = true,
 				display_on_remember = true,
-				image = "terrain/trees/"..treeid.."_"..getname(name)..".png",
+				image = basedir..treeid.."_"..getname(name)..".png",
 			}
 			table.merge(t, parts.adds)
 			add[#add+1] = engine.Entity.new(t)
@@ -239,7 +240,7 @@ function _M:makeNewTrees(g, kindsdefs, max_trees)
 			display_h = scale * (1 - parts.tall),
 			display_on_seen = true,
 			display_on_remember = true,
-			image = "terrain/trees/"..treeid.."_"..getname(parts[#parts])..".png",
+			image = basedir..treeid.."_"..getname(parts[#parts])..".png",
 			shader = "tree", shader_args = parts.shader_args,
 		}
 		return add[#add]

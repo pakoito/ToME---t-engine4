@@ -112,11 +112,11 @@ newEntity{
 	can_pass = {pass_tree=1},
 	does_block_move = true,
 	block_sight = true,
-	nice_tiler = { method="replace", base={"BURNT_FOREST", 100, 1, 20}},
+	nice_tiler = { method="replace", base={"BURNT_FOREST", 100, 1, 5}},
 	nice_editer = lava_editer,
 	special_minimap = colors.GREY,
 }
-for i = 1, 20 do newEntity{ base="BURNT_FOREST", define_as = "BURNT_FOREST"..i, name = "burnt tree", image = "terrain/lava_floor.png", add_displays = class:makeTrees("terrain/burnttree_alpha", 8, 0)} end
+for i = 1, 5 do newEntity{ base="BURNT_FOREST", define_as = "BURNT_FOREST"..i, name = "burnt forest", image = "terrain/lava_floor.png", add_mos={{image="terrain/worldmap/burnettrees_0"..i..".png"}}} end
 
 --------------------------------------------------------------------------------
 -- Iceland
@@ -145,21 +145,19 @@ for i = 1, 4 do newEntity{ base="FROZEN_SEA", define_as = "FROZEN_SEA"..i, add_m
 newEntity{
 	define_as = "COLD_FOREST",
 	type = "wall", subtype = "ice",
-	name = "cold forest", image = "terrain/tree_dark_snow1.png",
+	name = "cold forest", image = "terrain/frozen_ground.png",
 	display = '#', color=colors.WHITE, back_color=colors.LIGHT_UMBER,
 	always_remember = true,
 	can_pass = {pass_tree=1},
 	does_block_move = true,
 	block_sight = true,
-	nice_tiler = { method="replace", base={"COLD_FOREST", 100, 1, 30} },
+	nice_tiler = { method="replace", base={"COLD_FOREST", 100, 1, 30}},
+	nice_editer = ice_editer,
 }
 for i = 1, 30 do
-newEntity{ base="COLD_FOREST",
-	define_as = "COLD_FOREST"..i,
-	image = "terrain/frozen_ground.png",
-	add_displays = class:makeTrees("terrain/tree_dark_snow", 13, 10),
-	nice_tiler = false,
-}
+	newEntity(class:makeNewTrees({base="COLD_FOREST", define_as = "COLD_FOREST"..i, }, {
+		{"elventree", {tall=-1, {"snow_%01d",1,6}}},
+	}, 2, "terrain/worldmap/"))
 end
 
 --------------------------------------------------------------------------------

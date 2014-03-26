@@ -156,7 +156,6 @@ newEntity{
 	change_level = 1,
 	change_zone = "wilderness",
 	nice_editer = grass_editer,
-	shader = "tree",
 }
 
 newEntity{
