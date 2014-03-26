@@ -15,8 +15,8 @@
 @set DLLNAME=te4-web.dll
 @set LIBNAME=te4-web.lib
 @set TE4_WEB_C=web.cpp web-utils.cpp gl_texture_surface.cpp
-@set TE4_WEB_INCLUDES=/I ".." /I "C:\MingW\include\SDL2"  /I "n:\libs\awesomium\1.7.3.0\include"
-@set TE4_WEB_LIBS="n:\libs\awesomium\1.7.3.0\build\lib\awesomium.lib"
+@set TE4_WEB_INCLUDES=/I ".." /I "C:\MingW\include\SDL2"  /I "n:\libs\awesomium\1.7.4.1\include"
+@set TE4_WEB_LIBS="n:\libs\awesomium\1.7.4.1\build\lib\awesomium.lib"
 
 %CXX% %CXXFLAGS% /LD /Fe%DLLNAME% %TE4_WEB_INCLUDES% %TE4_WEB_C% %TE4_WEB_LIBS%
 
