@@ -26,6 +26,12 @@ for file in `find . -type f`; do
 		continue
 	fi
 
+	ignorable='false'
+	echo "$file" | grep -q "\-music\.team$"
+	if test $? -eq 0; then ignorable='true'; fi
+	echo "$file" | grep -q "\.teaa$"
+	if test $? -eq 0; then ignorable='true'; fi
+
 	if test -f "$oldd/$file"; then
 		cmp -s "$oldd/$file" "$file"
 		if test $? -ne 0; then
@@ -42,7 +48,7 @@ for file in `find . -type f`; do
 				p=`dirname $file`/`basename $file`.patch
 				mkdir -p "$patch"/`dirname $file`
 				bsdiff "$oldd/$file" "$file" "$patch"/$p
-				echo "change('$file', '$p')" >> $pl
+				echo "change('$file', '$p', $ignorable)" >> $pl
 				echo -n "$file:" >> $fm
 				md5sum "$file" | cut -d' ' -f1 >> $fm
 			fi
@@ -54,7 +60,7 @@ for file in `find . -type f`; do
 			mkdir -p "$patch"/`dirname $file`
 			p=`dirname $file`/`basename $rfile`-to-`basename $file`.patch
 			bsdiff "$oldd/$rfile" "$file" "$patch"/$p
-			echo "update('$rfile', '$file', '$p')" >> $pl
+			echo "update('$rfile', '$file', '$p', $ignorable)" >> $pl
 			echo -n "$file:" >> $fm
 			md5sum "$file" | cut -d' ' -f1 >> $fm
 		else
