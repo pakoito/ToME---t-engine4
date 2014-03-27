@@ -180,7 +180,7 @@ static int lua_web_inject_key(lua_State *L) {
 	const char *uni = NULL;
 	size_t unilen = 0;
 	if (lua_isstring(L, 5)) uni = lua_tolstring(L, 5, &unilen);
-printf("???=== %d\n", scancode);
+
 	te4_web_inject_key(view, scancode, asymb, uni, unilen, up);
 	return 0;
 }

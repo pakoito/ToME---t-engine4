@@ -132,14 +132,11 @@ function _M:generate()
 	elseif core.webview.kind == "cef3" then
 		function self.key.receiveKey(_, sym, ctrl, shift, alt, meta, unicode, isup, key, ismouse, keysym)
 			if not self.view then return end
-			print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!", isup, keysym)
 			if unicode then
 				keysym = unicode:sub(1):byte()
-				print("==uni", keysym, unicode)
 				self.view:injectKey(true, keysym, 0, unicode)
 				return
 			end
-			print("==not", keysym)
 			self.view:injectKey(isup, keysym, 0, "")
 		end
 	end
