@@ -28,9 +28,13 @@ static void (*web_instant_js)(int handlers, const char *fct, int nb_args, WebJsV
 
 static bool web_core = false;
 
-static const char *cstring_to_c(const CefString &cstr) {
+static char *cstring_to_c(const CefString &cstr) {
 	std::string str = cstr.ToString();
-	return (const char*)str.c_str();
+	size_t len = cstr.size();
+	char *ret = (char*)malloc((len+1) * sizeof(char));
+	memcpy(ret, str.c_str(), len);
+	ret[len] = '\0';
+	return ret;
 }
 
 class RenderHandler : public CefRenderHandler
@@ -124,7 +128,7 @@ public:
 	}
 
 	virtual void OnTitleChange(CefRefPtr<CefBrowser> browser, const CefString& title) OVERRIDE {
-		char *cur_title = strdup(cstring_to_c(title));
+		char *cur_title = cstring_to_c(title);
 		WebEvent *event = new WebEvent();
 		event->kind = TE4_WEB_EVENT_TITLE_CHANGE;
 		event->handlers = handlers;
@@ -145,7 +149,7 @@ public:
 	                             CefRefPtr<CefClient>& client,
 	                             CefBrowserSettings& settings,
 	                             bool* no_javascript_access) OVERRIDE {
-		char *url = strdup(cstring_to_c(target_url));
+		char *url = cstring_to_c(target_url);
 
 		WebEvent *event = new WebEvent();
 		event->kind = TE4_WEB_EVENT_REQUEST_POPUP_URL;
@@ -166,9 +170,9 @@ public:
 		cd->accept_cb = callback;
 		this->downloads[id] = cd;
 
-		const char *mime = strdup(cstring_to_c(download_item->GetMimeType()));
-		const char *url = strdup(cstring_to_c(download_item->GetURL()));
-		const char *name = strdup(cstring_to_c(suggested_name));
+		const char *mime = cstring_to_c(download_item->GetMimeType());
+		const char *url = cstring_to_c(download_item->GetURL());
+		const char *name = cstring_to_c(suggested_name);
 		printf("[WEB] Download request [name: %s] [mime: %s] [url: %s]\n", name, mime, url);
 
 		WebEvent *event = new WebEvent();
@@ -225,7 +229,7 @@ public:
 	}
 
 	virtual void OnLoadStart(CefRefPtr<CefBrowser> browser, CefRefPtr<CefFrame> frame) {
-		const char *url = strdup(cstring_to_c(frame->GetURL()));
+		const char *url = cstring_to_c(frame->GetURL());
 		WebEvent *event = new WebEvent();
 		event->kind = TE4_WEB_EVENT_LOADING;
 		event->handlers = handlers;
@@ -235,7 +239,7 @@ public:
 	}
 
 	virtual void OnLoadEnd(CefRefPtr<CefBrowser> browser, CefRefPtr<CefFrame> frame, int httpStatusCode) {
-		const char *url = strdup(cstring_to_c(frame->GetURL()));
+		const char *url = cstring_to_c(frame->GetURL());
 		WebEvent *event = new WebEvent();
 		event->kind = TE4_WEB_EVENT_LOADING;
 		event->handlers = handlers;
