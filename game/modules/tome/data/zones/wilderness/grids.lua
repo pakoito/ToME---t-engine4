@@ -24,7 +24,22 @@ local ice_editer = {method="borders_def", def="ice"}
 local mountain_editer = {method="borders_def", def="mountain"}
 local gold_mountain_editer = {method="borders_def", def="gold_mountain"}
 local lava_editer = {method="borders_def", def="lava"}
+local forest_editer = { method="borders", type="forest", use_type="name",
+	default8={},
+	default2={},
+	default4={add_displays={{z=17, image="terrain/worldmap/WM_better_trees_4.png", display_x=-1}}, min=1, max=1},
+	default6={add_displays={{z=18, image="terrain/worldmap/WM_better_trees_6.png", display_x=1}}, min=1, max=1},
 
+	default1={},
+	default3={},
+	default7={add_displays={{z=17, image="terrain/worldmap/WM_better_trees_7.png", display_y=-1, display_x=-1}}, min=1, max=1},
+	default9={add_displays={{z=17, image="terrain/worldmap/WM_better_trees_9.png", display_y=-1, display_x=1}}, min=1, max=1},
+
+	default1i={},
+	default3i={},
+	default7i={},
+	default9i={},
+},
 --------------------------------------------------------------------------------
 -- Grassland
 --------------------------------------------------------------------------------
@@ -59,17 +74,16 @@ newEntity{
 	define_as = "FOREST",
 	type = "wall", subtype = "grass",
 	name = "forest",
-	image = "terrain/tree.png",
+	image = "terrain/grass.png", add_displays={class.new{z=16, image="terrain/worldmap/WM_better_trees_5.png", display_h=2, display_y=-1}},
 	display = '#', color=colors.LIGHT_GREEN, back_color={r=44,g=95,b=43},
 	always_remember = true,
 	can_pass = {pass_tree=1},
 	does_block_move = true,
 	block_sight = true,
-	nice_tiler = { method="replace", base={"FOREST", 100, 1, 30}},
 	nice_editer = grass_editer,
+	nice_editer2 = forest_editer,
 	special_minimap = colors.GREEN,
 }
-for i = 1, 30 do newEntity{ base="FOREST", define_as = "FOREST"..i, image = "terrain/grass.png", add_displays = class:makeTrees("terrain/tree_alpha", 13, 9)} end
 
 newEntity{
 	define_as = "OLD_FOREST",
