@@ -40,7 +40,7 @@ function _M:getTile(name)
 	end
 
 	local e
-	if false and self.repo[name] then e = self.repo[name]
+	if self.repo[name] then e = self.repo[name]
 	else
 		self.repo[name] = game.zone:makeEntityByName(game.level, "terrain", name)
 		e = self.repo[name]
@@ -168,6 +168,7 @@ function _M:postProcessLevelTiles(level)
 	if not Map.tiles.nicer_tiles then return end
 
 	self.edit_entity_store = {}
+	self.repo = {}
 
 	for i = 0, level.map.w - 1 do for j = 0, level.map.h - 1 do
 		self:handle(level, i, j)
@@ -182,6 +183,7 @@ function _M:updateAround(level, x, y)
 	if not Map.tiles.nicer_tiles then return end
 
 	self.edit_entity_store = nil
+	self.repo = {}
 
 	for i = x-1, x+1 do for j = y-1, y+1 do
 		self:handle(level, i, j)
