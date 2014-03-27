@@ -1201,14 +1201,13 @@ int main(int argc, char *argv[])
 	core_def->define = &define_core;
 	core_def->define(core_def, "te4core", -1, NULL, NULL, NULL, NULL, 0, NULL);
 
-#ifdef SELFEXE_WINDOWS
-	FILE *logfile;
-	logfile = freopen ("te4_log.txt", "w", stdout);
-	bool windows_autoflush = FALSE;
-#endif
-
 	g_argc = argc;
 	g_argv = argv;
+
+	bool is_zygote = FALSE;
+#ifdef SELFEXE_WINDOWS
+	bool windows_autoflush = FALSE;
+#endif
 
 	// Parse arguments
 	int i;
@@ -1223,7 +1222,6 @@ int main(int argc, char *argv[])
 		{
 			setvbuf(stdout, (char *) NULL, _IOLBF, 0);
 #ifdef SELFEXE_WINDOWS
-			setvbuf(logfile, NULL, _IONBF, 2);
 			windows_autoflush = TRUE;
 #endif
 		}
@@ -1233,7 +1231,16 @@ int main(int argc, char *argv[])
 		if (!strncmp(arg, "--safe-mode", 11)) safe_mode = TRUE;
 		if (!strncmp(arg, "--home", 6)) override_home = strdup(argv[++i]);
 		if (!strncmp(arg, "--no-steam", 10)) no_steam = TRUE;
+		if (!strncmp(arg, "--type=zygote", 13)) is_zygote = TRUE;
 	}
+
+#ifdef SELFEXE_WINDOWS
+	if (!is_zygote) {
+		FILE *logfile;
+		logfile = freopen("te4_log.txt", "w", stdout);
+		if (windows_autoflush) setvbuf(logfile, NULL, _IONBF, 2);
+	}
+#endif
 
 	te4_web_load();
 
