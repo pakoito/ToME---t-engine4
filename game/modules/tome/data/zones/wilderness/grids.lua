@@ -24,22 +24,7 @@ local ice_editer = {method="borders_def", def="ice"}
 local mountain_editer = {method="borders_def", def="mountain"}
 local gold_mountain_editer = {method="borders_def", def="gold_mountain"}
 local lava_editer = {method="borders_def", def="lava"}
-local forest_editer = { method="borders", type="forest", use_type="name",
-	default8={z=16,  add_mos={{image="terrain/worldmap/WM_norm_trees_8_%02d.png", display_y=-1}}, min=1, max=6},
-	default2={z=6, add_mos={{image="terrain/worldmap/WM_norm_trees_2_%02d.png", display_h=2}}, min=1, max=6},
-	default4={z=16, add_mos={{image="terrain/worldmap/WM_norm_trees_4.png", display_x=-1}}, min=1, max=1},
-	default6={z=16, add_mos={{image="terrain/worldmap/WM_norm_trees_6.png", display_x=1}}, min=1, max=1},
 
-	default1={z=6, add_mos={{image="terrain/worldmap/WM_norm_trees_37d_%02d.png", display_y=1, display_x=-1}}, min=1, max=1},
-	default3={z=6, add_mos={{image="terrain/worldmap/WM_norm_trees_19d_%02d.png", display_y=1, display_x=1}}, min=1, max=1},
-	default7={z=16,  add_mos={{image="terrain/worldmap/WM_norm_trees_91d_%02d.png", display_y=-1, display_x=-1}}, min=1, max=1},
-	default9={z=16,  add_mos={{image="terrain/worldmap/WM_norm_trees_73d_%02d.png", display_y=-1, display_x=1}}, min=1, max=1},
-
-	default1i={},
-	default3i={},
-	default7i={z=6, add_mos={{image="terrain/worldmap/WM_norm_trees_7.png", display_y=-1, display_x=-1}}, min=1, max=1},
-	default9i={z=6, add_mos={{image="terrain/worldmap/WM_norm_trees_9.png", display_y=-1, display_x=1}}, min=1, max=1},
-},
 --------------------------------------------------------------------------------
 -- Grassland
 --------------------------------------------------------------------------------
@@ -70,6 +55,22 @@ newEntity{ base="PLAINS", define_as="LOW_HILLS",
 }
 for i = 1, 6 do newEntity{ base = "LOW_HILLS", define_as = "LOW_HILLS"..i, image="terrain/grass.png", add_mos={{image="terrain/grass_hill_"..i.."_01.png"}} } end
 
+local forest_editer = { method="borders", type="forest", use_type="name",
+	default8={z=16,  add_mos={{image="terrain/worldmap/WM_norm_trees_8_%02d.png", display_y=-1}}, min=1, max=6},
+	default2={z=6, add_mos={{image="terrain/worldmap/WM_norm_trees_2_%02d.png", display_h=2}}, min=1, max=6},
+	default4={z=16, add_mos={{image="terrain/worldmap/WM_norm_trees_4.png", display_x=-1}}, min=1, max=1},
+	default6={z=16, add_mos={{image="terrain/worldmap/WM_norm_trees_6.png", display_x=1}}, min=1, max=1},
+
+	default1={z=6, add_mos={{image="terrain/worldmap/WM_norm_trees_37d_%02d.png", display_y=1, display_x=-1}}, min=1, max=1},
+	default3={z=6, add_mos={{image="terrain/worldmap/WM_norm_trees_19d_%02d.png", display_y=1, display_x=1}}, min=1, max=1},
+	default7={z=16,  add_mos={{image="terrain/worldmap/WM_norm_trees_91d_%02d.png", display_y=-1, display_x=-1}}, min=1, max=1},
+	default9={z=16,  add_mos={{image="terrain/worldmap/WM_norm_trees_73d_%02d.png", display_y=-1, display_x=1}}, min=1, max=1},
+
+	default1i={},
+	default3i={},
+	default7i={z=6, add_mos={{image="terrain/worldmap/WM_norm_trees_7.png", display_y=-1, display_x=-1}}, min=1, max=1},
+	default9i={z=6, add_mos={{image="terrain/worldmap/WM_norm_trees_9.png", display_y=-1, display_x=1}}, min=1, max=1},
+}
 newEntity{
 	define_as = "FOREST",
 	type = "wall", subtype = "grass",
@@ -82,10 +83,43 @@ newEntity{
 	block_sight = true,
 	nice_editer = grass_editer,
 	nice_editer2 = forest_editer,
-	nice_tiler = { method="replace", base={"FOREST", 100, 1, 6}},
+	nice_tiler = { method="replace", base={"FOREST", 100, 1, 1}},
 	special_minimap = colors.GREEN,
 }
 for i = 1, 6 do newEntity{ base="FOREST", define_as = "FOREST"..i, image = "terrain/grass.png", add_displays={class.new{z=17, image="terrain/worldmap/WM_norm_trees_5_0"..i..".png", display_h=2, display_y=-1}}} end
+
+local pine_forest_editer = { method="borders", type="forest", use_type="name",
+	default8={z=16,  add_mos={{image="terrain/worldmap/WM_pines_8_%02d.png", display_y=-1}}, min=1, max=3},
+	default2={z=6, add_mos={{image="terrain/worldmap/WM_pines_2_%02d.png", display_h=2}}, min=1, max=3},
+	default4={z=16, add_mos={{image="terrain/worldmap/WM_pines_4.png", display_x=-1, display_h=2, display_y=-1}}, min=1, max=1},
+	default6={z=16, add_mos={{image="terrain/worldmap/WM_pines_6.png", display_x=1, display_h=2, display_y=-1}}, min=1, max=1},
+
+	default1={z=6, add_mos={{image="terrain/worldmap/WM_pines_37d_%02d.png", display_y=1, display_x=-1}}, min=1, max=1},
+	default3={z=6, add_mos={{image="terrain/worldmap/WM_pines_19d_%02d.png", display_y=1, display_x=1}}, min=1, max=1},
+	default7={z=16,  add_mos={{image="terrain/worldmap/WM_pines_91d_%02d.png", display_y=-1, display_x=-1}}, min=1, max=1},
+	default9={z=16,  add_mos={{image="terrain/worldmap/WM_pines_73d_%02d.png", display_y=-1, display_x=1}}, min=1, max=1},
+
+	default1i={},
+	default3i={},
+	default7i={z=6, add_mos={{image="terrain/worldmap/WM_pines_7.png", display_y=-1, display_x=-1}}, min=1, max=1},
+	default9i={z=6, add_mos={{image="terrain/worldmap/WM_pines_9.png", display_y=-1, display_x=1}}, min=1, max=1},
+}
+newEntity{
+	define_as = "PINE_FOREST",
+	type = "wall", subtype = "grass",
+	name = "pine forest",
+	image = "terrain/tree.png",
+	display = '#', color=colors.LIGHT_GREEN, back_color={r=44,g=95,b=43},
+	always_remember = true,
+	can_pass = {pass_tree=1},
+	does_block_move = true,
+	block_sight = true,
+	nice_editer = grass_editer,
+	nice_editer2 = pine_forest_editer,
+	nice_tiler = { method="replace", base={"PINE_FOREST", 100, 1, 1}},
+	special_minimap = colors.GREEN,
+}
+for i = 1, 6 do newEntity{ base="PINE_FOREST", define_as = "PINE_FOREST"..i, image = "terrain/grass.png", add_displays={class.new{z=17, image="terrain/worldmap/WM_pines_5_0"..i..".png", display_h=2, display_y=-1}}} end
 
 newEntity{
 	define_as = "OLD_FOREST",
