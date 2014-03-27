@@ -480,7 +480,6 @@ void te4_web_inject_key(web_view_type *view, int scancode, int asymb, const char
 	if (view->closed) return;
 	
 	int key_code = scancode;
-	printf("<==== %d :: %d :: %d\n", key_code, unilen, SDLK_RETURN);
 
 	CefKeyEvent key_event;
 
@@ -515,7 +514,8 @@ void te4_web_inject_key(web_view_type *view, int scancode, int asymb, const char
 	// This has been fully untested and most certainly isnt working
 	BYTE VkCode = LOBYTE(VkKeyScanA(key_code));
 	UINT scanCode = MapVirtualKey(VkCode, MAPVK_VK_TO_VSC);
-	cef_event.native_key_code = (scanCode << 16) |  // key scan code
+	key_event.native_key_code = (scanCode << 16) |  // key scan code
+                              1;  // key repeat count
 #elif defined(SELFEXE_MACOSX)
 	if (key_code == SDLK_BACKSPACE) {
 		cef_event.native_key_code = kVK_Delete;
