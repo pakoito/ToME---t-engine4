@@ -22,6 +22,7 @@ if __SELFEXE then
 	fs.mount(dir..fs.getPathSeparator().."game"..fs.getPathSeparator().."thirdparty", "/", true)
 	fs.mount(dir..fs.getPathSeparator().."game", "/", true)
 else
+	print("No SelfExe, using basic path")
 	fs.mount("game"..fs.getPathSeparator().."thirdparty", "/", true)
 	fs.mount("game", "/", true)
 end

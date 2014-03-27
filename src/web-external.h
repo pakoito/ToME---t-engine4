@@ -9,6 +9,10 @@
 #define __TE4WEB_EXTERNAL_H__
 
 enum web_event_kind {
+	// Internal stuff
+	TE4_WEB_EVENT_DELETE_TEXTURE,
+
+	// Eternal stuff
 	TE4_WEB_EVENT_TITLE_CHANGE,
 	TE4_WEB_EVENT_REQUEST_POPUP_URL,
 	TE4_WEB_EVENT_DOWNLOAD_REQUEST,
@@ -53,6 +57,7 @@ typedef struct {
 		struct {
 			const char *code;
 		} run_lua;
+		void *texture;
 	} data;
 } WebEvent;
 

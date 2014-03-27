@@ -42,6 +42,12 @@ project "TEngine"
 	defines { [[TENGINE_HOME_PATH='".t-engine"']], "TE4CORE_VERSION="..TE4CORE_VERSION }
 	buildoptions { "-O3" }
 
+	if _OPTIONS.relpath=="32" then linkoptions{"-Wl,-rpath -Wl,\\\$\$ORIGIN/lib "} end
+	if _OPTIONS.relpath=="64" then linkoptions{"-Wl,-rpath -Wl,\\\$\$ORIGIN/lib64 "} end
+
+	if _OPTIONS.relpath == "32" then defines{"TE4_RELPATH32"} end
+	if _OPTIONS.relpath == "64" then defines{"TE4_RELPATH64"} end
+
 	links { "m" }
 
 	if _OPTIONS.no_rwops_size then defines{"NO_RWOPS_SIZE"} end
@@ -523,6 +529,30 @@ project "te4-web"
 	links { "awesomium-1-7" }
 	
 	files { "../src/web-awesomium/*.cpp", }
+end
+
+if _OPTIONS['web-cef3'] and not _OPTIONS.wincross then
+project "te4-web"
+	kind "SharedLib"
+	language "C++"
+	targetname "te4-web"
+
+	if _OPTIONS.relpath=="32" then linkoptions{"-Wl,-rpath -Wl,\\\$\$ORIGIN "} end
+	if _OPTIONS.relpath=="64" then linkoptions{"-Wl,-rpath -Wl,\\\$\$ORIGIN "} end
+
+	buildoptions{"-Wall -pthread -I/usr/include/gtk-2.0 -I/usr/lib64/gtk-2.0/include -I/usr/include/atk-1.0 -I/usr/include/cairo -I/usr/include/gdk-pixbuf-2.0 -I/usr/include/pango-1.0 -I/usr/include/glib-2.0 -I/usr/lib64/glib-2.0/include -I/usr/include/pixman-1 -I/usr/include/freetype2 -I/usr/include/libpng15 -I/usr/include/libdrm"}
+	libdirs {"/opt/cef3/1547/out/Release/obj.target/", "/opt/cef3/1547/Release/"}
+	includedirs {"/opt/cef3/1547/include/", "/opt/cef3/1547/"}
+	links { "cef", "cef_dll_wrapper" }
+	
+	files { "../src/web-cef3/*.cpp", }
+
+	configuration "macosx"
+		defines { 'SELFEXE_MACOSX' }
+	configuration "windows"
+		defines { 'SELFEXE_WINDOWS' }
+	configuration "linux"
+		defines { 'SELFEXE_LINUX' }
 end
 
 if _OPTIONS.steam then

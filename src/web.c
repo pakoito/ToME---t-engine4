@@ -43,7 +43,7 @@ static void (*te4_web_setup)(
 	void (*)(bool*, bool*, bool*, bool*),
 	void (*)(int handlers, const char *fct, int nb_args, WebJsValue *args, WebJsValue *ret)
 );
-static void (*te4_web_initialize)();
+static void (*te4_web_initialize)(const char *locales, const char *pak);
 static void (*te4_web_do_update)(void (*cb)(WebEvent*));
 static void (*te4_web_new)(web_view_type *view, int w, int h);
 static bool (*te4_web_close)(web_view_type *view);
@@ -180,7 +180,7 @@ static int lua_web_inject_key(lua_State *L) {
 	const char *uni = NULL;
 	size_t unilen = 0;
 	if (lua_isstring(L, 5)) uni = lua_tolstring(L, 5, &unilen);
-
+printf("???=== %d\n", scancode);
 	te4_web_inject_key(view, scancode, asymb, uni, unilen, up);
 	return 0;
 }
@@ -372,12 +372,16 @@ void te4_web_update(lua_State *L) {
 void te4_web_init(lua_State *L) {
 	if (!webcore) return;
 
-	te4_web_initialize();
+	char *locales = PHYSFS_getDependentPath("/cef3/locales/");
+	char *pak = PHYSFS_getDependentPath("/cef3/");
+	te4_web_initialize(locales, pak);
+	free(locales);
+	free(pak);
 
 	auxiliar_newclass(L, "web{view}", view_reg);
 	luaL_openlib(L, "core.webview", weblib, 0);
 	lua_pushstring(L, "kind");
-	lua_pushstring(L, "awesomium");
+	lua_pushstring(L, "cef3");
 	lua_settable(L, -3);
 	lua_settop(L, 0);
 }
@@ -469,10 +473,14 @@ static void web_instant_js(int handlers, const char *fct, int nb_args, WebJsValu
 }
 
 void te4_web_load() {
-#if defined(SELFEXE_LINUX)
+#if defined(SELFEXE_LINUX) || defined(SELFEXE_BSD)
+#if defined(TE4_RELPATH64)
+	void *web = SDL_LoadObject("lib64/libte4-web.so");
+#elif defined(TE4_RELPATH64)
+	void *web = SDL_LoadObject("lib/libte4-web.so");
+#else
 	void *web = SDL_LoadObject("libte4-web.so");
-#elif defined(SELFEXE_BSD)
-	void *web = SDL_LoadObject("libte4-web.so");
+#endif
 #elif defined(SELFEXE_WINDOWS)
 	void *web = SDL_LoadObject("te4-web.dll");
 #elif defined(SELFEXE_MACOSX)
@@ -491,7 +499,7 @@ void te4_web_load() {
 			void (*)(bool*, bool*, bool*, bool*),
 			void (*)(int handlers, const char *fct, int nb_args, WebJsValue *args, WebJsValue *ret)
 		)) SDL_LoadFunction(web, "te4_web_setup");
-		te4_web_initialize = (void (*)()) SDL_LoadFunction(web, "te4_web_initialize");
+		te4_web_initialize = (void (*)(const char *locales, const char *pak)) SDL_LoadFunction(web, "te4_web_initialize");
 		te4_web_do_update = (void (*)(void (*cb)(WebEvent*))) SDL_LoadFunction(web, "te4_web_do_update");
 		te4_web_new = (void (*)(web_view_type *view, int w, int h)) SDL_LoadFunction(web, "te4_web_new");
 		te4_web_close = (bool (*)(web_view_type *view)) SDL_LoadFunction(web, "te4_web_close");

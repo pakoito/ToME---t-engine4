@@ -364,7 +364,10 @@ void on_event(SDL_Event *event)
 			else
 				lua_pushnil(L);
 
-			docall(L, 9, 0);
+			lua_pushnil(L);
+			lua_pushnumber(L, event->key.keysym.sym);
+
+			docall(L, 11, 0);
 		}
 		break;
 	case SDL_MOUSEBUTTONDOWN:
@@ -1026,7 +1029,6 @@ void boot_lua(int state, bool rebooting, int argc, char *argv[])
 		luaopen_zlib(L);
 		luaopen_bit(L);
 		luaopen_wait(L);
-		if (te4_web_init) te4_web_init(L);
 #ifdef STEAM_TE4
 		if (!no_steam) te4_steam_lua_init(L);
 #endif
@@ -1070,6 +1072,8 @@ void boot_lua(int state, bool rebooting, int argc, char *argv[])
 			PHYSFS_mount("game/thirdparty", "/", 1);
 			PHYSFS_mount("game/", "/", 1);
 		}
+
+		if (te4_web_init) te4_web_init(L);
 
 		// And run the lua engine pre init scripts
 		if (!luaL_loadfile(L, "/loader/pre-init.lua"))
@@ -1231,6 +1235,8 @@ int main(int argc, char *argv[])
 		if (!strncmp(arg, "--no-steam", 10)) no_steam = TRUE;
 	}
 
+	te4_web_load();
+
 	// Initialize display lock for thread safety.
 	renderingLock = SDL_CreateMutex();
 	realtimeLock = SDL_CreateMutex();
@@ -1244,8 +1250,6 @@ int main(int argc, char *argv[])
 #endif
 
 	init_openal();
-
-	te4_web_load();
 
 	// RNG init
 	init_gen_rand(time(NULL));

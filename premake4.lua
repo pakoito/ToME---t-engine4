@@ -5,7 +5,6 @@ solution "TEngine"
 	objdir "obj"
 	defines {"GLEW_STATIC"}
 	if _OPTIONS.force32bits then buildoptions{"-m32"} linkoptions{"-m32"} libdirs{"/usr/lib32"} end
-	if _OPTIONS.relpath then linkoptions{"-Wl,-rpath -Wl,\\\$\$ORIGIN/lib "} end
 
 	includedirs {
 		"src",
@@ -20,6 +19,9 @@ solution "TEngine"
 	}
 	if _OPTIONS['web-awesomium'] then
 		includedirs { "src/web-awesomium" }
+	end
+	if _OPTIONS['web-cef3'] then
+		includedirs { "src/web-cef3" }
 	end
 	if _OPTIONS.wincross then
 		includedirs {

@@ -36,6 +36,10 @@ newoption {
 newoption {
 	trigger     = "relpath",
 	description = "Links libraries relative to the application path for redistribution",
+	allowed = {
+		{ "32",	"32 bits location" },
+		{ "64",	"64 bits location" },
+	}
 }
 newoption {
 	trigger     = "luaassert",
@@ -64,6 +68,11 @@ newoption {
 newoption {
 	trigger	    = "web-awesomium",
 	description = "Use awesomium embedded browser as the webcore"
+}
+
+newoption {
+	trigger	    = "web-cef3",
+	description = "Use CEF3 embedded browser as the webcore"
 }
 
 newoption {
