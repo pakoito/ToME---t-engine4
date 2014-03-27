@@ -30,8 +30,7 @@ local Map = require "engine.Map"
 module(..., package.seeall, class.inherit(Dialog))
 
 local tiles_packs = {
-	shockbolt = {name= "Shockbolt", order=1},
---	mushroom = {name= "Mushroom", order=2},
+	shockbolt = {name= "Modern", order=1},
 	ascii = {name= "ASCII", order=5},
 	ascii_full = {name= "ASCII with background", order=6},
 	customtiles = {name= "Custom Tileset", order=7},
