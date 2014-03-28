@@ -2,7 +2,7 @@
     TE4 - T-Engine 4
     Copyright (C) 2009, 2010, 2011, 2012, 2013 Nicolas Casalini
 
-    No permission to copy or replicate in any ways, awesomium is not gpl so we cant link directly
+    No permission to copy or replicate in any ways.
 */
 
 #include <map>
