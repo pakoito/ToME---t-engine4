@@ -758,3 +758,7 @@ void te4_web_initialize(const char *locales, const char *pak) {
 
 	te4_web_init_utils();
 }
+
+void te4_web_shutdown() {
+	CefShutdown();
+}

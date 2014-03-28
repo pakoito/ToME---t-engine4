@@ -30,6 +30,7 @@ WEB_TE4_API void te4_web_setup(
 	void (*web_instant_js)(int handlers, const char *fct, int nb_args, WebJsValue *args, WebJsValue *ret)
 );
 WEB_TE4_API void te4_web_initialize(const char *locales, const char *pak);
+WEB_TE4_API void te4_web_shutdown();
 WEB_TE4_API void te4_web_do_update(void (*cb)(WebEvent*));
 WEB_TE4_API void te4_web_new(web_view_type *view, int w, int h);
 WEB_TE4_API bool te4_web_close(web_view_type *view);

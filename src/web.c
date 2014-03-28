@@ -44,6 +44,7 @@ static void (*te4_web_setup)(
 	void (*)(int handlers, const char *fct, int nb_args, WebJsValue *args, WebJsValue *ret)
 );
 static void (*te4_web_initialize)(const char *locales, const char *pak);
+static void (*te4_web_shutdown)();
 static void (*te4_web_do_update)(void (*cb)(WebEvent*));
 static void (*te4_web_new)(web_view_type *view, int w, int h);
 static bool (*te4_web_close)(web_view_type *view);
@@ -500,6 +501,7 @@ void te4_web_load() {
 			void (*)(int handlers, const char *fct, int nb_args, WebJsValue *args, WebJsValue *ret)
 		)) SDL_LoadFunction(web, "te4_web_setup");
 		te4_web_initialize = (void (*)(const char *locales, const char *pak)) SDL_LoadFunction(web, "te4_web_initialize");
+		te4_web_shutdown = (void (*)()) SDL_LoadFunction(web, "te4_web_shutdown");
 		te4_web_do_update = (void (*)(void (*cb)(WebEvent*))) SDL_LoadFunction(web, "te4_web_do_update");
 		te4_web_new = (void (*)(web_view_type *view, int w, int h)) SDL_LoadFunction(web, "te4_web_new");
 		te4_web_close = (bool (*)(web_view_type *view)) SDL_LoadFunction(web, "te4_web_close");
@@ -523,4 +525,9 @@ void te4_web_load() {
 			web_instant_js
 			);
 	}
+}
+
+void te4_web_terminate() {
+	if (!webcore) return;
+	te4_web_shutdown();
 }
