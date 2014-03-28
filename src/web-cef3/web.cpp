@@ -535,6 +535,10 @@ void te4_web_inject_key(web_view_type *view, int scancode, int asymb, const char
 		VkCode = VK_TAB;
 	else if (key_code == SDLK_UP)
 		VkCode = VK_UP;
+	else if (unilen == 1 && uni[0] >= 'A' && uni[0] <= 'Z')
+		VkCode = uni[0];
+	else if (unilen == 1 && uni[0] >= 'a' && uni[0] <= 'z')
+		VkCode = uni[0];
 	else
 		VkCode = LOBYTE(VkKeyScanA(key_code));
 	UINT scanCode = MapVirtualKey(VkCode, MAPVK_VK_TO_VSC);
@@ -646,7 +650,6 @@ void te4_web_inject_key(web_view_type *view, int scancode, int asymb, const char
 	key_event.character = key_event.unmodified_character;
 	key_event.modifiers = get_cef_state_modifiers();
 
-	printf("__INJECTKEY: %d, %d\n", unilen, up);
 	if (unilen) {
 		key_event.type = KEYEVENT_RAWKEYDOWN;
 		opaque->browser->GetHost()->SendKeyEvent(key_event);
