@@ -516,10 +516,27 @@ void te4_web_inject_key(web_view_type *view, int scancode, int asymb, const char
 		key_event.native_key_code = key_code;
 #elif defined(SELFEXE_WINDOWS)
 	// This has been fully untested and most certainly isnt working
-	if (key_code == SDLK_LEFT) {
-		key_code = VK_LEFT;
-	}
-	BYTE VkCode = LOBYTE(VkKeyScanA(key_code));
+	BYTE VkCode;
+	if (key_code == SDLK_BACKSPACE)
+		VkCode = VK_BACK;
+	else if (key_code == SDLK_DELETE)
+		VkCode = VK_DELETE;
+	else if (key_code == SDLK_DOWN)
+		VkCode = VK_DOWN;
+	else if (key_code == SDLK_RETURN)
+		VkCode = VK_RETURN;
+	else if (key_code == SDLK_ESCAPE)
+		VkCode = VK_ESCAPE;
+	else if (key_code == SDLK_LEFT)
+		VkCode = VK_LEFT;
+	else if (key_code == SDLK_RIGHT)
+		VkCode = VK_RIGHT;
+	else if (key_code == SDLK_TAB)
+		VkCode = VK_TAB;
+	else if (key_code == SDLK_UP)
+		VkCode = VK_UP;
+	else
+		VkCode = LOBYTE(VkKeyScanA(key_code));
 	UINT scanCode = MapVirtualKey(VkCode, MAPVK_VK_TO_VSC);
 	key_event.native_key_code = (scanCode << 16) |  // key scan code
                               1;  // key repeat count

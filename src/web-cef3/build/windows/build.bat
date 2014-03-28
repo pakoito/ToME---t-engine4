@@ -16,7 +16,7 @@
 @set LIBNAME=te4-web.lib
 @set TE4_WEB_C=web.cpp web-utils.cpp
 @set TE4_WEB_INCLUDES=/I ".." /I "C:\MingW\include\SDL2"  /I "n:\libs\cef3\include" /I "n:\libs\cef3"
-@set TE4_WEB_LIBS="n:\libs\cef3\Release\libcef.lib" "n:\libs\cef3\out\Release\lib\libcef_dll_wrapper.lib"
+@set TE4_WEB_LIBS="n:\libs\cef3\Release\libcef.lib" "n:\libs\cef3\out\Release\lib\libcef_dll_wrapper.lib" "user32.lib"
 
 %CXX% %CXXFLAGS% /LD /Fe%DLLNAME% %TE4_WEB_INCLUDES% %TE4_WEB_C% %TE4_WEB_LIBS%
 
