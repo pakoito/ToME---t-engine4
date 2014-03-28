@@ -473,11 +473,9 @@ static int GetMacKeyCodeFromChar(int key_code) {
 	return -1;
 }
 #endif  // defined(OS_MACOSX)
-#if defined(SELFEXE_LINUX)
 extern "C" {
 	#include <tSDL.h>
 }
-#endif
 
 void te4_web_inject_key(web_view_type *view, int scancode, int asymb, const char *uni, int unilen, bool up) {
 	WebViewOpaque *opaque = (WebViewOpaque*)view->opaque;
@@ -486,6 +484,8 @@ void te4_web_inject_key(web_view_type *view, int scancode, int asymb, const char
 	int key_code = scancode;
 
 	CefKeyEvent key_event;
+
+	key_event.modifiers = get_cef_state_modifiers();
 
 	// OMFG ... CEF3 is very very nice, except for key handling
 	// Once this will be working(-ish) I never want to take a look at that thing again.
@@ -516,10 +516,14 @@ void te4_web_inject_key(web_view_type *view, int scancode, int asymb, const char
 		key_event.native_key_code = key_code;
 #elif defined(SELFEXE_WINDOWS)
 	// This has been fully untested and most certainly isnt working
+	if (key_code == SDLK_LEFT) {
+		key_code = VK_LEFT;
+	}
 	BYTE VkCode = LOBYTE(VkKeyScanA(key_code));
 	UINT scanCode = MapVirtualKey(VkCode, MAPVK_VK_TO_VSC);
 	key_event.native_key_code = (scanCode << 16) |  // key scan code
                               1;  // key repeat count
+	key_event.windows_key_code = VkCode;
 #elif defined(SELFEXE_MACOSX)
 	if (key_code == SDLK_BACKSPACE) {
 		cef_event.native_key_code = kVK_Delete;
@@ -627,7 +631,7 @@ void te4_web_inject_key(web_view_type *view, int scancode, int asymb, const char
 
 	printf("__INJECTKEY: %d, %d\n", unilen, up);
 	if (unilen) {
-		key_event.type = KEYEVENT_KEYDOWN;
+		key_event.type = KEYEVENT_RAWKEYDOWN;
 		opaque->browser->GetHost()->SendKeyEvent(key_event);
 		key_event.type = KEYEVENT_KEYUP;
 		opaque->browser->GetHost()->SendKeyEvent(key_event);
