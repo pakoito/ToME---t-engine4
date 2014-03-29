@@ -896,9 +896,7 @@ function _M:restCheck()
 
 	-- Reload
 	local ammo = self:hasAmmo()
-	if self.resting.cnt == 0 and ammo and ammo.combat.shots_left < ammo.combat.capacity and not self:hasEffect(self.EFF_RELOADING) and self:knowTalent(self.T_RELOAD) then
-		self:forceUseTalent(self.T_RELOAD, {ignore_energy=true})
-	end
+	if ammo and ammo.combat.shots_left < ammo.combat.capacity then return true end
 
 	-- Check resources, make sure they CAN go up, otherwise we will never stop
 	if not self.resting.rest_turns then

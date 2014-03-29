@@ -1527,7 +1527,7 @@ function _M:setupCommands()
 			local add = g.add_displays
 			if add then for i, e in ipairs(add) do
 				print(" -", e.image, e.z or "+"..i)
-				for i, a in ipairs(e.add_mos or {}) do print("   => ", a.image) end
+				for i, a in ipairs(e.add_mos or {}) do print("   => ", a.image, (a.display_x or 0).."x"..(a.display_y or 0)) end
 			end end
 			print("---")
 			local mos = {}
@@ -1585,7 +1585,7 @@ do return end
 		MOVE_LEFT_DOWN = function() if core.key.modState("caps") and self.level then self.level.map:scrollDir(1) else self.player:moveDir(1) end end,
 		MOVE_RIGHT_UP = function() if core.key.modState("caps") and self.level then self.level.map:scrollDir(9) else self.player:moveDir(9) end end,
 		MOVE_RIGHT_DOWN = function() if core.key.modState("caps") and self.level then self.level.map:scrollDir(3) else self.player:moveDir(3) end end,
-		MOVE_STAY = function() if core.key.modState("caps") and self.level then self.level.map:centerViewAround(self.player.x, self.player.y) else if self.player:enoughEnergy() then self.player:describeFloor(self.player.x, self.player.y) self.player:useEnergy() end end end,
+		MOVE_STAY = function() if core.key.modState("caps") and self.level then self.level.map:centerViewAround(self.player.x, self.player.y) else if self.player:enoughEnergy() then self.player:describeFloor(self.player.x, self.player.y) self.player:waitTurn() end end end,
 
 		RUN = function()
 			self.log("Run in which direction?")

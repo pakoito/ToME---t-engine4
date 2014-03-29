@@ -25,16 +25,18 @@ newTalent{
 	mode = "passive",
 	getDamage = function(self, t) return self:getTalentLevel(t) * 10 end,
 	getPercentInc = function(self, t) return math.sqrt(self:getTalentLevel(t) / 5) / 2 end,
+	ammo_mastery_reload = function(self, t)
+		return math.floor(self:getTalentLevel(t) / 2)
+	end,
+	passives = function(self, t, p)
+		self:talentTemporaryValue(p, 'ammo_mastery_reload', t.ammo_mastery_reload(self, t))
+	end,
 	info = function(self, t)
 		local damage = t.getDamage(self, t)
 		local inc = t.getPercentInc(self, t)
+		local reloads = t.ammo_mastery_reload(self, t)
 		return ([[Increases Physical Power by %d and increases weapon damage by %d%% when using bows.
-		Also, when using Reload:
-		At level 2 it grants one more reload per turn.
-		At level 4 it grants two more reloads per turn.
-		At level 5 it grants three more reloads per turn.
-		]]):
-		format(damage, inc * 100)
+		Also, increases your reload rate by %d.]]):format(damage, inc * 100, reloads)
 	end,
 }
 

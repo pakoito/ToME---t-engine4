@@ -59,6 +59,7 @@ newTalent{
 	innate = true,
 	points = 1,
 	tactical = { AMMO = 2 },
+	no_energy = true,
 	no_reload_break = true,
 	no_break_stealth = true,
 	on_pre_use = function(self, t, silent)
@@ -68,32 +69,20 @@ newTalent{
 		return true 
 	end,
 	no_unlearn_last = true,
-	shots_per_turn = function(self, t)
-		local v = math.max(self:getTalentLevelRaw(self.T_BOW_MASTERY), self:getTalentLevelRaw(self.T_SLING_MASTERY))
-		local add = 0
-		if v >= 5 then add = add + 3
-		elseif v >= 4 then add = add + 2
-		elseif v >= 2 then add = add + 1
-		end
-		return self:getTalentLevelRaw(t) + (self:attr("ammo_reload_speed") or 0) + add
-	end,
 	action = function(self, t)
-		local q, err = self:hasAmmo()
-		if not q then
-			game.logPlayer(self, "%s", err)
-			return
+		if self.resting then return end
+		local ret = self:reload()
+		if ret then
+			self:setEffect(self.EFF_RELOAD_DISARMED, 1, {})
 		end
-		if q.combat.shots_left >= q.combat.capacity then
-			game.logPlayer(self, "Your %s is full.", q.name)
-			return
-		end
-		self:setEffect(self.EFF_RELOADING, q.combat.capacity, {ammo = q, shots_per_turn = t.shots_per_turn(self, t)})
 		return true
 	end,
 	info = function(self, t)
-		local spt = t.shots_per_turn(self, t)
-		return ([[Reload your quiver or shot pouch at the rate of %d shot%s per turn (depends on the ammo used).
-		Reloading does not break stealth.]]):format(spt, (spt > 1 and "s") or "")
+		return ([[Quickly reload your ammo by %d (depends on masteries and object bonuses).
+		Doing so requires no turn but you are considered disarmed for 2 turns.
+
+		Reloading does not break stealth.]])
+		:format(self:reloadRate())
 	end,
 }
 
