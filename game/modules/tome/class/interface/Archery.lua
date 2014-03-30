@@ -641,7 +641,7 @@ function _M:reloadRateQS()
 		add = add - ammo_main.wielder.ammo_reload_speed
 	end
 	if ammo_qs and ammo_qs.wielder and ammo_qs.wielder.ammo_reload_speed then
-		add = add + ammo_main.wielder.ammo_reload_speed
+		add = add + ammo_qs.wielder.ammo_reload_speed
 	end
 	return self:reloadRate() + add
 end
