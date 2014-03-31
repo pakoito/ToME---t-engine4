@@ -13,25 +13,29 @@ uniform float time_factor;
 
 uniform vec3 color;
 
+uniform vec2 quadSize;
+uniform vec2 texSize;
+
 void main(void)
 {
 	vec2 radius = gl_TexCoord[0].xy - vec2(0.5, 0.5);
 	float innerRadius = 0.25;
 	float outerRadius = 0.5;
 	
-	vec2 planarPos;
 	vec4 displacement = texture2D(displMapTex, gl_TexCoord[0].xy);
+	vec2 quadCoords = gl_TexCoord[0].xy / quadSize.xy;
+	float mult = pow(quadCoords.x * (1.0 - quadCoords.x) * 4.0, 0.5);//
+	mult *= pow(min(0.5, abs(1.0 - gl_TexCoord[0].y / quadSize.y)) * 2.0, 2.0);
+
 
 	vec2 point = gl_TexCoord[0].xy;
 	float eps = 0.05;
-	vec2 basisY = vec2(
-		 texture2D(displMapTex, point + vec2(eps, 0.0)).a - texture2D(displMapTex, point + vec2(-eps, 0.0)).a,
-		-texture2D(displMapTex, point + vec2(0.0, eps)).a + texture2D(displMapTex, point + vec2(0.0, -eps)).a);
-	basisY /= length(basisY) + 0.001;
-	vec2 basisX = vec2(basisY.y, -basisY.x);
+	vec2 basisY = vec2(0.0, 1.0);
+	vec2 basisX = vec2(1.0, 0.0);
 
-	planarPos.x = displacement.b * 6.0 / spikeWidth + spikeOffset;
-	planarPos.y = displacement.a * 20.0 / (spikeLength * clamp((tick - tick_start) / time_factor * growthSpeed, 0.0, 1.0) + 0.001);
+	vec2 planarPos;
+	planarPos.x = gl_TexCoord[0].x * texSize.x * 0.02 / spikeWidth + spikeOffset;
+	planarPos.y = displacement.a * 0.05 * sqrt(texSize.x * texSize.x + texSize.y * texSize.y) / (1e-2 + mult) / (spikeLength * clamp((tick - tick_start) / time_factor * growthSpeed, 0.0, 1.0) + 0.001);
 
 	vec4 normalMap = texture2D(normalMapTex, vec2(planarPos.x, clamp(1.0 - planarPos.y, 0.01, 0.99)));
 	vec3 localNormal = normalMap.rgb;

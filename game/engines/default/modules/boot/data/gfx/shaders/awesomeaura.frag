@@ -5,6 +5,8 @@ uniform float alpha;
 uniform float tick;
 uniform float time_factor;
 uniform float flameScale;
+uniform vec2 quadSize;
+uniform vec2 texSize;
 
 vec4 permute( vec4 x ) {
 
@@ -160,9 +162,12 @@ void main(void)
 	
 	vec2 planarPos;
 	vec4 displacement = texture2D(tex, gl_TexCoord[0].xy);
-	planarPos.x = displacement.b;	
-	planarPos.y = displacement.a * 3.0 * (1.0 + 10.0 * pow((planarPos.x) * (1.0 - planarPos.x) * 4.0, 1.0)) / max(flameScale, 1e-3);
-	
+	vec2 quadCoords = gl_TexCoord[0].xy / quadSize.xy;
+	float mult = pow(quadCoords.x * (1.0 - quadCoords.x) * 4.0, 0.5);//
+	mult *= pow(min(0.5, abs(1.0 - gl_TexCoord[0].y / quadSize.y)) * 2.0, 2.0);
+
+	planarPos.x = gl_TexCoord[0].x * texSize.x * 0.004;
+	planarPos.y = displacement.a * 0.05 * sqrt(texSize.x * texSize.x + texSize.y * texSize.y) / (1e-2 + mult);// * 3.0 * (1.0 + 10.0 * pow((planarPos.x) * (1.0 - planarPos.x) * 4.0, 1.0)) / max(flameScale, 1e-3);
 	vec4 resultColor = vec4(0.0, 0.0, 0.0, 0.0);
 		
 	resultColor = GetFireAuraColor(tick / time_factor, planarPos, 6.0, 15.0 * max(flameScale, 1e-3), 1.0, 1.0, 1.0, 0.75);//texture2D(tex, gl_TexCoord[0].xy) * texture2D(flames, gl_TexCoord[0].xy) + 0.2;

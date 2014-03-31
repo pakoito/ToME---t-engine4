@@ -83,10 +83,10 @@ newEntity{
 	block_sight = true,
 	nice_editer = grass_editer,
 	nice_editer2 = forest_editer,
-	nice_tiler = { method="replace", base={"FOREST", 100, 1, 6}},
+	nice_tiler = { method="replace", base={"FOREST", 100, 1, 12}},
 	special_minimap = colors.GREEN,
 }
-for i = 1, 6 do newEntity{ base="FOREST", define_as = "FOREST"..i, image = "terrain/grass.png", add_displays={class.new{z=17, image="terrain/worldmap/WM_norm_trees_5_0"..i..".png", display_h=2, display_y=-1}}} end
+for i = 1, 12 do newEntity{ base="FOREST", define_as = "FOREST"..i, image = "terrain/grass.png", add_displays={class.new{z=17, image=("terrain/worldmap/WM_norm_trees_5_%02d.png"):format(i), display_h=2, display_y=-1}}} end
 
 local pine_forest_editer = { method="borders", type="pine forest", use_type="name",
 	default8={z=16,  add_mos={{image="terrain/worldmap/WM_pines_8_%02d.png", display_y=-1}}, min=1, max=3},
@@ -123,8 +123,20 @@ for i = 1, 6 do newEntity{ base="PINE_FOREST", define_as = "PINE_FOREST"..i, ima
 
 
 local old_forest_editer = { method="borders", type="Old forest", use_type="name",
+	default8={z=16,  add_mos={{image="terrain/worldmap/WM_oldforest_8_%02d.png", display_y=-1}}, min=1, max=3},
+	default2={z=6, add_mos={{image="terrain/worldmap/WM_oldforest_2_%02d.png", display_h=2}}, min=1, max=3},
 	default4={z=16, add_mos={{image="terrain/worldmap/WM_oldforest_4_%02d.png", display_x=-1, display_h=2, display_y=-1}}, min=1, max=2},
 	default6={z=16, add_mos={{image="terrain/worldmap/WM_oldforest_6_%02d.png", display_x=1, display_h=2, display_y=-1}}, min=1, max=2},
+
+	default1={z=6, add_mos={{image="terrain/worldmap/WM_oldforest_37d_%02d.png", display_y=1, display_x=-1}}, min=1, max=1},
+	default3={z=6, add_mos={{image="terrain/worldmap/WM_oldforest_19d_%02d.png", display_y=1, display_x=1}}, min=1, max=1},
+	default7={z=16,  add_mos={{image="terrain/worldmap/WM_oldforest_91d_%02d.png", display_y=-1, display_x=-1}}, min=1, max=1},
+	default9={z=16,  add_mos={{image="terrain/worldmap/WM_oldforest_73d_%02d.png", display_y=-1, display_x=1}}, min=1, max=1},
+
+	default1i={},
+	default3i={},
+	default7i={z=6, add_mos={{image="terrain/worldmap/WM_oldforest_7.png", display_y=-1, display_x=-1}}, min=1, max=1},
+	default9i={z=6, add_mos={{image="terrain/worldmap/WM_oldforest_9.png", display_y=-1, display_x=1}}, min=1, max=1},
 }
 newEntity{
 	define_as = "OLD_FOREST",
@@ -138,10 +150,10 @@ newEntity{
 	block_sight = true,
 	nice_editer = grass_editer,
 	nice_editer2 = old_forest_editer,
-	nice_tiler = { method="replace", base={"OLD_FOREST", 100, 1, 1}},
+	nice_tiler = { method="replace", base={"OLD_FOREST", 100, 1, 5}},
 	special_minimap = colors.GREEN,
 }
-for i = 1, 6 do newEntity{ base="OLD_FOREST", define_as = "OLD_FOREST"..i, image = "terrain/grass.png", add_displays={class.new{z=17, image="terrain/worldmap/WM_oldforest_5_0"..i..".png", display_h=2, display_y=-1}}} end
+for i = 1, 5 do newEntity{ base="OLD_FOREST", define_as = "OLD_FOREST"..i, image = "terrain/grass.png", add_displays={class.new{z=17, image="terrain/worldmap/WM_oldforest_5_0"..i..".png", display_h=2, display_y=-1}}} end
 
 --------------------------------------------------------------------------------
 -- Desolation
@@ -247,6 +259,72 @@ newEntity{
 	special_minimap = colors.GREEN,
 }
 for i = 1, 6 do newEntity{ base="COLD_FOREST", define_as = "COLD_FOREST"..i, image = "terrain/frozen_ground.png", add_displays={class.new{z=17, image="terrain/worldmap/WM_snow_pine_5_0"..i..".png", display_h=2, display_y=-1}}} end
+
+local elvenwoon_snow_forest_editer = { method="borders", type="cold thaloren forest", use_type="name",
+--	default8={z=16,  add_mos={{image="terrain/worldmap/WM_snow_elvenwood_8_%02d.png", display_y=-1}}, min=1, max=3},
+--	default2={z=6, add_mos={{image="terrain/worldmap/WM_snow_elvenwood_2_%02d.png", display_h=2}}, min=1, max=3},
+	default4={z=16, add_mos={{image="terrain/worldmap/WM_snow_elvenwood_4_%02d.png", display_x=-1, display_h=2, display_y=-1}}, min=1, max=2},
+	default6={z=16, add_mos={{image="terrain/worldmap/WM_snow_elvenwood_6_%02d.png", display_x=1, display_h=2, display_y=-1}}, min=1, max=2},
+
+	-- default1={z=6, add_mos={{image="terrain/worldmap/WM_snow_elvenwood_37d_%02d.png", display_y=1, display_x=-1}}, min=1, max=1},
+	-- default3={z=6, add_mos={{image="terrain/worldmap/WM_snow_elvenwood_19d_%02d.png", display_y=1, display_x=1}}, min=1, max=1},
+	-- default7={z=16,  add_mos={{image="terrain/worldmap/WM_snow_elvenwood_91d_%02d.png", display_y=-1, display_x=-1}}, min=1, max=1},
+	-- default9={z=16,  add_mos={{image="terrain/worldmap/WM_snow_elvenwood_73d_%02d.png", display_y=-1, display_x=1}}, min=1, max=1},
+
+	default1i={},
+	default3i={},
+	default7i={z=6, add_mos={{image="terrain/worldmap/WM_snow_elvenwood_7.png", display_y=-1, display_x=-1}}, min=1, max=1},
+	default9i={z=6, add_mos={{image="terrain/worldmap/WM_snow_elvenwood_9.png", display_y=-1, display_x=1}}, min=1, max=1},
+}
+newEntity{
+	define_as = "ELVENWOOD_SNOW",
+	type = "wall", subtype = "ice",
+	name = "cold thaloren forest",
+	image = "terrain/tree.png",
+	display = '#', color=colors.LIGHT_GREEN, back_color={r=44,g=95,b=43},
+	always_remember = true,
+	can_pass = {pass_tree=1},
+	does_block_move = true,
+	block_sight = true,
+	nice_editer = ice_editer,
+	nice_editer2 = elvenwoon_snow_forest_editer,
+	nice_tiler = { method="replace", base={"ELVENWOOD_SNOW", 100, 1, 7}},
+	special_minimap = colors.GREEN,
+}
+for i = 1, 7 do newEntity{ base="ELVENWOOD_SNOW", define_as = "ELVENWOOD_SNOW"..i, image = "terrain/frozen_ground.png", add_displays={class.new{z=17, image="terrain/worldmap/WM_snow_elvenwood_5_0"..i..".png", display_h=2, display_y=-1}}} end
+
+local elvenwoon_green_forest_editer = { method="borders", type="thaloren forest", use_type="name",
+	default8={z=16, add_mos={{image="terrain/worldmap/WM_green_elvenwood_8_%02d.png", display_y=-1}}, min=1, max=3},
+	default2={z=6,  add_mos={{image="terrain/worldmap/WM_green_elvenwood_2_%02d.png", display_h=2}}, min=1, max=3},
+	default4={z=16, add_mos={{image="terrain/worldmap/WM_green_elvenwood_4_%02d.png", display_x=-1, display_h=2, display_y=-1}}, min=1, max=2},
+	default6={z=16, add_mos={{image="terrain/worldmap/WM_green_elvenwood_6_%02d.png", display_x=1, display_h=2, display_y=-1}}, min=1, max=2},
+
+	default1={z=6, add_mos={{image="terrain/worldmap/WM_green_elvenwood_37d_%02d.png", display_y=1, display_x=-1}}, min=1, max=1},
+	default3={z=6, add_mos={{image="terrain/worldmap/WM_green_elvenwood_19d_%02d.png", display_y=1, display_x=1}}, min=1, max=1},
+	default7={z=16,  add_mos={{image="terrain/worldmap/WM_green_elvenwood_91d_%02d.png", display_y=-1, display_x=-1}}, min=1, max=1},
+	default9={z=16,  add_mos={{image="terrain/worldmap/WM_green_elvenwood_73d_%02d.png", display_y=-1, display_x=1}}, min=1, max=1},
+
+	default1i={},
+	default3i={},
+	default7i={z=6, add_mos={{image="terrain/worldmap/WM_green_elvenwood_7.png", display_y=-1, display_x=-1}}, min=1, max=1},
+	default9i={z=6, add_mos={{image="terrain/worldmap/WM_green_elvenwood_9.png", display_y=-1, display_x=1}}, min=1, max=1},
+}
+newEntity{
+	define_as = "ELVENWOOD_GREEN",
+	type = "wall", subtype = "grass",
+	name = "thaloren forest",
+	image = "terrain/tree.png",
+	display = '#', color=colors.LIGHT_GREEN, back_color={r=44,g=95,b=43},
+	always_remember = true,
+	can_pass = {pass_tree=1},
+	does_block_move = true,
+	block_sight = true,
+	nice_editer = grass_editer,
+	nice_editer2 = elvenwoon_green_forest_editer,
+	nice_tiler = { method="replace", base={"ELVENWOOD_GREEN", 100, 1, 1}},
+	special_minimap = colors.GREEN,
+}
+for i = 1, 1 do newEntity{ base="ELVENWOOD_GREEN", define_as = "ELVENWOOD_GREEN"..i, image = "terrain/grass.png", add_displays={class.new{z=17, image="terrain/worldmap/WM_green_elvenwood_5_0"..i..".png", display_h=2, display_y=-1}}} end
 
 --------------------------------------------------------------------------------
 -- Water

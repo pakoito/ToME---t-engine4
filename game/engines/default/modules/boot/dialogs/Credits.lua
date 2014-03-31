@@ -226,6 +226,8 @@ function _M:displayCredit(txt, x, y)
 		if txt.title then
 			aura_texture[txt.title]:bind(1)
 			aura[txt.title].shad:use(true)
+			if aura[txt.title].shad.uniQuadSize then aura[txt.title].shad:uniQuadSize(txt.w/txt._tex_w, txt.h/txt._tex_h) end
+			if aura[txt.title].shad.uniTexSize then aura[txt.title].shad:uniTexSize(txt._tex_w, txt._tex_h) end
 			txt._texf:toScreenPrecise(x, y, txt.w, txt.h, 0, txt.w/txt._tex_w, 0, txt.h/txt._tex_h)
 			aura[txt.title].shad:use(false)
 

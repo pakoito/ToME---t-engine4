@@ -23,6 +23,7 @@ local snowy_grass_editer = { method="borders_def", def="snowy_grass"}
 
 local treesdef = {
 	{"elventree", {tall=-1, "shadow", "trunk", "foliage_summer"}},
+	{"elventree_03", {tall=-1, "shadow", "trunk", "foliage_summer"}},
 	{"fat_elventree", {tall=-1, "shadow", "trunk", {"foliage_summer_%02d",1,2}}},
 	{"oak", {tall=-1, "shadow", {"trunk_%02d",1,2}, {"foliage_summer_%02d",1,4}}},
 }
