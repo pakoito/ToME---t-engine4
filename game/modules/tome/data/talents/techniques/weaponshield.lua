@@ -90,20 +90,21 @@ newTalent{
 }
 
 newTalent{
-	name = "Overpower",
+	name = "Shield Slam",
 	type = {"technique/shield-offense", 3},
 	require = techs_req3,
 	points = 5,
 	random_ego = "attack",
-	cooldown = 8,
-	stamina = 22,
+	cooldown = 10,
+	stamina = 15,
 	requires_target = true,
-	tactical = { ATTACK = 2, ESCAPE = { knockback = 1 }, DISABLE = { knockback = 1 } },
+	getShieldDamage = function(self, t) return self:combatTalentWeaponDamage(t, 0.1, 0.8, self:getTalentLevel(self.T_SHIELD_EXPERTISE)) end,
+	tactical = { ATTACK = 2}, -- is there a way to make this consider the free Block?
 	on_pre_use = function(self, t, silent) if not self:hasShield() then if not silent then game.logPlayer(self, "You require a weapon and a shield to use this talent.") end return false end return true end,
 	action = function(self, t)
 		local shield = self:hasShield()
 		if not shield then
-			game.logPlayer(self, "You cannot use Overpower without a shield!")
+			game.logPlayer(self, "You cannot use Shield Slam without a shield!")
 			return nil
 		end
 
@@ -112,28 +113,19 @@ newTalent{
 		if not x or not y or not target then return nil end
 		if core.fov.distance(self.x, self.y, x, y) > 1 then return nil end
 
-		-- First attack with weapon
-		self:attackTarget(target, nil, self:combatTalentWeaponDamage(t, 0.8, 1.3), true)
-		-- Second attack with shield
-		self:attackTargetWith(target, shield.special_combat, nil, self:combatTalentWeaponDamage(t, 0.8, 1.3, self:getTalentLevel(self.T_SHIELD_EXPERTISE)))
-		-- Third attack with shield
-		local speed, hit = self:attackTargetWith(target, shield.special_combat, nil, self:combatTalentWeaponDamage(t, 0.8, 1.3, self:getTalentLevel(self.T_SHIELD_EXPERTISE)))
-
-		-- Try to stun !
-		if hit then
-			if target:checkHit(self:combatAttack(shield.special_combat), target:combatPhysicalResist(), 0, 95, 5 - self:getTalentLevel(t) / 2) and target:canBe("knockback") then
-				target:knockback(self.x, self.y, 4)
-			else
-				game.logSeen(target, "%s resists the knockback!", target.name:capitalize())
-			end
-		end
+		local damage = t.getShieldDamage(self, t)
+		self:forceUseTalent(self.T_BLOCK, {ignore_energy=true, ignore_cd = true, silent = true})
+		
+		self:attackTargetWith(target, shield.special_combat, nil, damage)
+		self:attackTargetWith(target, shield.special_combat, nil, damage)
+		self:attackTargetWith(target, shield.special_combat, nil, damage)
 
 		return true
 	end,
 	info = function(self, t)
-		return ([[Hits the target with your weapon doing %d%% damage and two shield strikes doing %d%% damage, trying to overpower your target.
-		If the last attack hits, the target is knocked back. The chance for knockback increases with your Accuracy.]])
-		:format(100 * self:combatTalentWeaponDamage(t, 0.8, 1.3), 100 * self:combatTalentWeaponDamage(t, 0.8, 1.3, self:getTalentLevel(self.T_SHIELD_EXPERTISE)))
+		local damage = t.getShieldDamage(self, t)*100
+		return ([[Hit your target with your shield 3 times for %d%% damage then quickly return to a blocking position.  The bonus block will not check or trigger Block cooldown.]])
+		:format(damage)
 	end,
 }
 

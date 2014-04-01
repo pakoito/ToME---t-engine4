@@ -576,15 +576,6 @@ function _M:attackTargetWith(target, weapon, damtype, mult, force_dam)
 		end
 	end end
 
-	-- Weapon of light cast
-	if hitted and not target.dead and self:knowTalent(self.T_WEAPON_OF_LIGHT) and self:isTalentActive(self.T_WEAPON_OF_LIGHT) then
-		if self:getPositive() >= 3 then
-			local dam = 7 + self:getTalentLevel(self.T_WEAPON_OF_LIGHT) * self:combatSpellpower(0.092)
-			DamageType:get(DamageType.LIGHT).projector(self, target.x, target.y, DamageType.LIGHT, dam)
-			self:incPositive(-3)
-		end
-	end
-
 	-- Shadow cast
 	if hitted and not target.dead and self:knowTalent(self.T_SHADOW_COMBAT) and self:isTalentActive(self.T_SHADOW_COMBAT) and self:getMana() > 0 then
 		local dam = 2 + self:combatTalentSpellDamage(self.T_SHADOW_COMBAT, 2, 50)

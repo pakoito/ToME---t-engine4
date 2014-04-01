@@ -53,23 +53,23 @@ newTalent{
 	require = spells_req2,
 	random_ego = "defensive",
 	points = 5,
-	cooldown = 10,
+	cooldown = 15,
 	positive = -20,
 	tactical = { HEAL = 3 },
 	range = 0,
-	radius = 3,
+	radius = 2,
 	target = function(self, t)
 		return {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t)}
 	end,
-	getHeal = function(self, t) return self:combatTalentSpellDamage(t, 4, 40) end,
-	getDuration = function(self, t) return math.floor(self:combatTalentScale(t, 3, 7)) end,
+	getHeal = function(self, t) return self:combatTalentSpellDamage(t, 4, 80) end,
+	getDuration = function(self, t) return math.floor(self:combatTalentScale(t, 4, 7)) end,
 	action = function(self, t)
 		local tg = self:getTalentTarget(t)
 		self:project(tg, self.x, self.y, DamageType.LITE, 1)
 		-- Add a lasting map effect
 		game.level.map:addEffect(self,
 			self.x, self.y, t.getDuration(self, t),
-			DamageType.HEALING_POWER, t.getHeal(self, t),
+			DamageType.HEALING_POWER, self:spellCrit(t.getHeal(self, t)),
 			self:getTalentRadius(t),
 			5, nil,
 			{type="healing_vapour"},
@@ -85,7 +85,7 @@ newTalent{
 		return ([[A magical zone of Sunlight appears around you, healing and shielding all within radius %d for %0.2f per turn and increasing healing effects on everyone within by %d%%. The effect lasts for %d turns.
 		It also lights up the affected zone.
 		The amount healed will increase with the Magic stat]]):
-		format(radius, heal, heal, duration)
+		format(radius, heal, heal / 2, duration)
 	end,
 }
 
@@ -98,9 +98,9 @@ newTalent{
 	positive = -20,
 	cooldown = 15,
 	tactical = { DEFEND = 2 },
-	getAbsorb = function(self, t) return self:combatTalentSpellDamage(t, 30, 470) end,
+	getAbsorb = function(self, t) return self:combatTalentSpellDamage(t, 30, 370) end,
 	action = function(self, t)
-		self:setEffect(self.EFF_DAMAGE_SHIELD, 10, {color={0xe1/255, 0xcb/255, 0x3f/255}, power=t.getAbsorb(self, t)})
+		self:setEffect(self.EFF_DAMAGE_SHIELD, 10, {color={0xe1/255, 0xcb/255, 0x3f/255}, power=self:spellCrit(t.getAbsorb(self, t))})
 		game:playSoundNear(self, "talents/heal")
 		return true
 	end,

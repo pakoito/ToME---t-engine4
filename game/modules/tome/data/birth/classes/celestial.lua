@@ -69,6 +69,7 @@ newBirthDescriptor{
 	stats = { mag=4, str=5, },
 	talents_types = {
 		["technique/shield-offense"]={true, 0.1},
+		["technique/2hweapon-assault"]={true, 0.1},
 		["technique/combat-techniques-active"]={false, 0.1},
 		["technique/combat-techniques-passive"]={true, 0.1},
 		["technique/combat-training"]={true, 0.1},
@@ -79,7 +80,7 @@ newBirthDescriptor{
 		["celestial/light"]={true, 0.3},
 		["celestial/guardian"]={false, 0.3},
 		["celestial/radiance"]={false, 0.3},
-		["celestial/crusader"]={true, 0.3},
+		["celestial/crusader"]={false, 0.3},
 	},
 	birth_example_particles = "golden_shield",
 	talents = {

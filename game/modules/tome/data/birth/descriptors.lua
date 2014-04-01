@@ -211,10 +211,12 @@ newBirthDescriptor{
 	desc =
 	{
 		"#GOLD##{bold}#Insane mode#WHITE##{normal}#",
-		"Absolutely unfair game setting.  You are really mentally ill to play this mode!",
-		"All zone levels increased by 120% + 5",
-		"All creature talent levels increased by 100%",
-		"Bosses will have randomly selected talents",
+		"Similar rules to Nightmare, but with more random bosses!",
+		"All zone levels increased by 50% + 5",
+		"All creature talent levels increased by 50%",
+		"Rare creatures are far more frequent and random bosses start to appear",
+		"Nonrandom bosses will have randomly selected talents",
+		"All enemies have 20% more life",
 		"Player rank is normal instead of elite",
 		"Player can earn Insane version of achievements if also playing in Roguelike or Adventure permadeath mode.",
 	},
