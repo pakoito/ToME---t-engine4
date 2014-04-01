@@ -34,6 +34,13 @@ function math.round(v, mult, num)
 	return v >= 0 and math.floor((v + mult/2)/mult) * mult/num or math.ceil((v - mult/2)/mult) * mult/num
 end
 
+function math.scale(i, imin, imax, dmin, dmax)
+	local bi = i - imin
+	local bm = imax - imin
+	local dm = dmax - dmin
+	return bi * dm / bm + dmin
+end
+
 function lpeg.anywhere (p)
 	return lpeg.P{ p + 1 * lpeg.V(1) }
 end
@@ -1963,8 +1970,12 @@ function util.uuid()
 	return uuid
 end
 
-function util.browserOpenUrl(url)
-	if core.steam and core.steam.openOverlayUrl(url) then return true end
+function util.browserOpenUrl(url, forbid_methods)
+	forbid_methods = forbid_methods or {}
+	if core.webview and not forbid_methods.webview then local d = require("engine.ui.Dialog"):webPopup(url) return "webview", d end
+	if core.steam and not forbid_methods.steam and core.steam.openOverlayUrl(url) then return "steam", true end
+
+	if forbid_methods.native then return false end
 
 	local tries = {
 		"rundll32 url.dll,FileProtocolHandler %s",	-- Windows
@@ -1981,7 +1992,7 @@ function util.browserOpenUrl(url)
 		local urlbase = table.remove(tries, 1)
 		urlbase = urlbase:format(url)
 		print("Trying to run URL with command: ", urlbase)
-		if os.execute(urlbase) == 0 then return true end
+		if os.execute(urlbase) == 0 then return "native", true end
 	end
 	return false
 end

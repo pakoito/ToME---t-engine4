@@ -34,8 +34,11 @@ function _M:init()
 	local url1 = Textzone.new{text="You can get new addons at #LIGHT_BLUE##{underline}#http://te4.org/addons/tome#{normal}#", auto_height=true, auto_width=true, fct=function() util.browserOpenUrl("http://te4.org/addons/tome") end}
 	local url2 = Textzone.new{text=" ", auto_height=true, auto_width=true, fct=function()end}
 	if core.steam then
-		url1 = Textzone.new{text="You can get new addons at #LIGHT_BLUE##{underline}#Steam Workshop#{normal}#", auto_height=true, auto_width=true, fct=function() util.browserOpenUrl("http://steamcommunity.com/app/"..core.steam.appid().."/workshop/ ") end}
-		url2 = Textzone.new{text=" or at #LIGHT_BLUE##{underline}#http://te4.org/addons/tome#{normal}#", auto_height=true, auto_width=true, fct=function() util.browserOpenUrl("http://te4.org/addons/tome") end}
+		url1 = Textzone.new{text="You can get new addons at #LIGHT_BLUE##{underline}#Steam Workshop#{normal}#", auto_height=true, auto_width=true, fct=function() util.browserOpenUrl("http://steamcommunity.com/app/"..core.steam.appid().."/workshop/", {webview=true}) end}
+		url2 = Textzone.new{text=" or at #LIGHT_BLUE##{underline}#http://te4.org/addons/tome#{normal}#", auto_height=true, auto_width=true, fct=function()
+			local method, d = util.browserOpenUrl("http://te4.org/addons/tome", {steam=true})
+			if method == "webview" and d then d.unload = function() self:regen() end end
+		end}
 	end
 
 	self.c_compat = Checkbox.new{default=false, width=math.floor(self.iw / 3 - 40), title="Show incompatible", on_change=function() self:switch() end}
@@ -80,6 +83,13 @@ function _M:init()
 	self.key:addBinds{
 		EXIT = function() game:unregisterDialog(self) end,
 	}
+end
+
+function _M:regen()
+	local d = new()
+	d.__showup = false
+	game:replaceDialog(self, d)
+	self.next_dialog = d
 end
 
 function _M:select(item)

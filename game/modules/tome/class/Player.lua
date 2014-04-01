@@ -94,6 +94,26 @@ function _M:init(t, no_default)
 	self.talent_kind_log = self.talent_kind_log or {}
 end
 
+function _M:registerOnBirthForceWear(data)
+	self._on_birth = self._on_birth or {}
+	self._on_birth[#self._on_birth+1] = function()
+		local o = game.zone:makeEntityByName(game.level, "object", data, true)
+		o:identify(true)
+		local ro = self:wearObject(o, true, true)
+		if ro then
+			if type(ro) == "table" then self:addObject(self:getInven(self.INVEN_INVEN), ro) end
+		elseif not ro then
+			self:addObject(self:getInven(self.INVEN_INVEN), o)
+		end
+
+	end
+end
+
+function _M:registerOnBirth(f)
+	self._on_birth = self._on_birth or {}
+	self._on_birth[#self._on_birth+1] = f
+end
+
 function _M:onBirth(birther)
 	-- Make a list of random escort levels
 	local race_def = birther.birth_descriptor_def.race[self.descriptor.race]
@@ -110,6 +130,9 @@ function _M:onBirth(birther)
 			self.random_escort_levels[z[1]][z[2]] = true
 		end
 	end
+
+	for i, f in ipairs(self._on_birth or {}) do f(self, birther) end
+	self._on_birth = nil
 end
 
 function _M:onEnterLevel(zone, level)
@@ -567,14 +590,16 @@ function _M:playerFOV()
 		self:computeFOV(self.sight or 10, "block_sight", function(x, y, dx, dy, sqdist)
 			game.level.map:apply(x, y, fovdist[sqdist])
 		end, true, false, true)
+		local lradius = self.lite
+		if self.radiance_aura and lradius < self.radiance_aura then lradius = self.radiance_aura end
 		if self.lite <= 0 then game.level.map:applyLite(self.x, self.y)
-		else self:computeFOV(self.lite + bonus, "block_sight", function(x, y, dx, dy, sqdist) game.level.map:applyLite(x, y) end, true, true, true) end
+		else self:computeFOV(lradius + bonus, "block_sight", function(x, y, dx, dy, sqdist) game.level.map:applyLite(x, y) end, true, true, true) end
 
 		-- For each entity, generate lite
 		local uid, e = next(game.level.entities)
 		while uid do
-			if e ~= self and e.lite and e.lite > 0 and e.computeFOV then
-				e:computeFOV(e.lite, "block_sight", function(x, y, dx, dy, sqdist) game.level.map:applyExtraLite(x, y, fovdist[sqdist]) end, true, true)
+			if e ~= self and ((e.lite and e.lite > 0) or (e.radiance_aura and e.radiance_aura > 0)) and e.computeFOV then
+				e:computeFOV(math.max(e.lite or 0, e.radiance_aura or 0), "block_sight", function(x, y, dx, dy, sqdist) game.level.map:applyExtraLite(x, y, fovdist[sqdist]) end, true, true)
 			end
 			uid, e = next(game.level.entities, uid)
 		end
@@ -871,9 +896,7 @@ function _M:restCheck()
 
 	-- Reload
 	local ammo = self:hasAmmo()
-	if self.resting.cnt == 0 and ammo and ammo.combat.shots_left < ammo.combat.capacity and not self:hasEffect(self.EFF_RELOADING) and self:knowTalent(self.T_RELOAD) then
-		self:forceUseTalent(self.T_RELOAD, {ignore_energy=true})
-	end
+	if ammo and ammo.combat.shots_left < ammo.combat.capacity then return true end
 
 	-- Check resources, make sure they CAN go up, otherwise we will never stop
 	if not self.resting.rest_turns then

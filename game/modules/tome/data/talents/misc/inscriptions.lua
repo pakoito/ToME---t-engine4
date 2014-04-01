@@ -563,7 +563,7 @@ newInscription{
 	info = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
 		return ([[Activate the rune to create a protective shield absorbing and reflecting at most %d damage for %d turns.
-The effect will scale with your magic stat.]]):format(100+1.5*self:getMag(), 5)
+The effect will scale with your magic stat.]]):format(100+5*self:getMag(), 5)
 	end,
 	short_info = function(self, t)
 		local data = self:getInscriptionData(t.short_name)

@@ -422,19 +422,6 @@ newEntity{
 
 newEntity{
 	power_source = {nature=true},
-	name = "huntsman's ", prefix=true, instant_resolve=true,
-	keywords = {hunt=true},
-	level_range = {1, 50},
-	rarity = 10,
-	cost = 20,
-	combat = {
-		ranged_project={[DamageType.NATURE] = resolvers.mbonus_material(15, 5)},
-		inc_damage_type = {animal=resolvers.mbonus_material(25, 5)},
-	},
-}
-
-newEntity{
-	power_source = {nature=true},
 	name = "insidious ", prefix=true, instant_resolve=true,
 	keywords = {insid=true},
 	level_range = {10, 50},
@@ -710,6 +697,7 @@ newEntity{
 	combat = {
 		ranged_project={[DamageType.DARKNESS] = resolvers.mbonus_material(15, 5)},
 		inc_damage_type = {humanoid=resolvers.mbonus_material(25, 5)},
+		inc_damage_type = {animal=resolvers.mbonus_material(25, 5)},
 	},
 }
 

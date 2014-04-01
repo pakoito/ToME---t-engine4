@@ -20,6 +20,8 @@
 load("/data/general/grids/basic.lua")
 load("/data/general/grids/forest.lua")
 load("/data/general/grids/water.lua")
+load("/data/general/grids/snowy_forest.lua")
+load("/data/general/grids/elven_forest.lua")
 load("/data/general/grids/mountain.lua", function(e)
 	if e.image == "terrain/rocky_ground.png" then
 		e.image = "terrain/snowy_grass.png"

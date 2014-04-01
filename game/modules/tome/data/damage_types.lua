@@ -584,6 +584,13 @@ local function tryDestroy(who, inven, dam, destroy_prop, proof_prop, msg)
 end
 
 newDamageType{
+	name = "cosmetic", type = "COSMETIC", text_color = "#WHITE#",
+	projector = function(src, x, y, type, dam)
+	end,
+	death_message = {"cosmeticed"},
+}
+
+newDamageType{
 	name = "physical", type = "PHYSICAL",
 	death_message = {"battered", "bludgeoned", "sliced", "maimed", "raked", "bled", "impaled", "dissected", "disembowelled", "decapitated", "stabbed", "pierced", "torn limb from limb", "crushed", "shattered", "smashed", "cleaved", "swiped", "struck", "mutilated", "tortured", "skewered", "squished", "mauled", "chopped into tiny pieces", "splattered", "ground", "minced", "punctured", "hacked apart", "eviscerated"},
 }
@@ -1636,7 +1643,7 @@ newDamageType{
 		local target = game.level.map(x, y, Map.ACTOR)
 		if target and rng.percent(dam.dam) then
 			if target:canBe("blind") then
-				target:setEffect(target.EFF_BLINDED, 4, {apply_power=(dam.power_check or src.combatSpellpower)(src), no_ct_effect=true})
+				target:setEffect(target.EFF_BLINDED, 4, {apply_power=(dam.power_check or math.max(src:combatSpellpower(), src:combatPhysicalpower())), no_ct_effect=true})
 			else
 				game.logSeen(target, "%s resists!", target.name:capitalize())
 			end

@@ -22,7 +22,7 @@ local Map = require "engine.Map"
 
 module(..., package.seeall, class.make)
 
-local NB_VARIATIONS = 20
+local NB_VARIATIONS = 30
 
 function _M:init()
 	self.repo = {}
@@ -140,7 +140,7 @@ function _M:replaceAll(level)
 					local mos = gd.add_mos
 					for i = 1, #e.add_mos do
 						mos[#mos+1] = table.clone(e.add_mos[i])
-						mos[#mos].image = mos[#mos].image:format(rng.range(e.min, e.max))
+						mos[#mos].image = mos[#mos].image:format(rng.range(e.min or 1, e.max or 1))
 					end
 					if e.add_mos_shader then gd.shader = e.add_mos_shader end
 					gd._mo = nil
@@ -150,10 +150,10 @@ function _M:replaceAll(level)
 					g.add_displays = g.add_displays or {}
 					for i = 1, #e.add_displays do
 						 g.add_displays[#g.add_displays+1] = require(g.__CLASSNAME).new(e.add_displays[i])
-						g.add_displays[#g.add_displays].image = g.add_displays[#g.add_displays].image:format(rng.range(e.min, e.max))
+						g.add_displays[#g.add_displays].image = g.add_displays[#g.add_displays].image:format(rng.range(e.min or 1, e.max or 1))
 					end
 				end
-				if e.image then g.image = e.image:format(rng.range(e.min, e.max)) end
+				if e.image then g.image = e.image:format(rng.range(e.min or 1, e.max or 1)) end
 			end
 
 			level.map(i, j, Map.TERRAIN, g)
@@ -168,6 +168,7 @@ function _M:postProcessLevelTiles(level)
 	if not Map.tiles.nicer_tiles then return end
 
 	self.edit_entity_store = {}
+	self.repo = {}
 
 	for i = 0, level.map.w - 1 do for j = 0, level.map.h - 1 do
 		self:handle(level, i, j)
@@ -182,6 +183,7 @@ function _M:updateAround(level, x, y)
 	if not Map.tiles.nicer_tiles then return end
 
 	self.edit_entity_store = nil
+	self.repo = {}
 
 	for i = x-1, x+1 do for j = y-1, y+1 do
 		self:handle(level, i, j)
@@ -394,21 +396,98 @@ grass = { method="borders", type="grass", forbid={lava=true, rock=true},
 	water7i={add_mos={{image="terrain/grass/grass_inner_7_%02d.png", display_x=-1, display_y=-1}}, min=1, max=1},
 	water9i={add_mos={{image="terrain/grass/grass_inner_9_%02d.png", display_x=1, display_y=-1}}, min=1, max=1},
 },
-grass_wm = { method="borders", type="grass", forbid={lava=true, rock=true},
-	default8={add_mos={{image="terrain/grass_worldmap/grass_2_%02d.png", display_y=-1}}, min=1, max=2},
-	default2={add_mos={{image="terrain/grass_worldmap/grass_8_%02d.png", display_y=1}}, min=1, max=2},
-	default4={add_mos={{image="terrain/grass_worldmap/grass_6_%02d.png", display_x=-1}}, min=1, max=2},
-	default6={add_mos={{image="terrain/grass_worldmap/grass_4_%02d.png", display_x=1}}, min=1, max=2},
+autumn_grass = { method="borders", type="autumn_grass", forbid={grass=true, lava=true, rock=true},
+	default8={add_mos={{image="terrain/grass/autumn_grass_2_%02d.png", display_y=-1}}, min=1, max=2},
+	default2={add_mos={{image="terrain/grass/autumn_grass_8_%02d.png", display_y=1}}, min=1, max=2},
+	default4={add_mos={{image="terrain/grass/autumn_grass_6_%02d.png", display_x=-1}}, min=1, max=2},
+	default6={add_mos={{image="terrain/grass/autumn_grass_4_%02d.png", display_x=1}}, min=1, max=2},
 
-	default1={z=3,add_mos={{image="terrain/grass_worldmap/grass_9_%02d.png", display_x=-1, display_y=1}}, min=1, max=1},
-	default3={z=3,add_mos={{image="terrain/grass_worldmap/grass_7_%02d.png", display_x=1, display_y=1}}, min=1, max=1},
-	default7={z=3,add_mos={{image="terrain/grass_worldmap/grass_3_%02d.png", display_x=-1, display_y=-1}}, min=1, max=1},
-	default9={z=3,add_mos={{image="terrain/grass_worldmap/grass_1_%02d.png", display_x=1, display_y=-1}}, min=1, max=1},
+	default1={add_mos={{image="terrain/grass/autumn_grass_9_%02d.png", display_x=-1, display_y=1}}, min=1, max=1},
+	default3={add_mos={{image="terrain/grass/autumn_grass_7_%02d.png", display_x=1, display_y=1}}, min=1, max=1},
+	default7={add_mos={{image="terrain/grass/autumn_grass_3_%02d.png", display_x=-1, display_y=-1}}, min=1, max=1},
+	default9={add_mos={{image="terrain/grass/autumn_grass_1_%02d.png", display_x=1, display_y=-1}}, min=1, max=1},
 
-	default1i={add_mos={{image="terrain/grass_worldmap/grass_inner_1_%02d.png", display_x=-1, display_y=1}}, min=1, max=2},
-	default3i={add_mos={{image="terrain/grass_worldmap/grass_inner_3_%02d.png", display_x=1, display_y=1}}, min=1, max=2},
-	default7i={add_mos={{image="terrain/grass_worldmap/grass_inner_7_%02d.png", display_x=-1, display_y=-1}}, min=1, max=2},
-	default9i={add_mos={{image="terrain/grass_worldmap/grass_inner_9_%02d.png", display_x=1, display_y=-1}}, min=1, max=2},
+	default1i={add_mos={{image="terrain/grass/autumn_grass_inner_1_%02d.png", display_x=-1, display_y=1}}, min=1, max=2},
+	default3i={add_mos={{image="terrain/grass/autumn_grass_inner_3_%02d.png", display_x=1, display_y=1}}, min=1, max=2},
+	default7i={add_mos={{image="terrain/grass/autumn_grass_inner_7_%02d.png", display_x=-1, display_y=-1}}, min=1, max=2},
+	default9i={add_mos={{image="terrain/grass/autumn_grass_inner_9_%02d.png", display_x=1, display_y=-1}}, min=1, max=2},
+
+	water8={add_mos={{image="terrain/grass/autumn_grass_2_%02d.png", display_y=-1}}, min=1, max=1},
+	water2={add_mos={{image="terrain/grass/autumn_grass_8_%02d.png", display_y=1}}, min=1, max=1},
+	water4={add_mos={{image="terrain/grass/autumn_grass_6_%02d.png", display_x=-1}}, min=1, max=1},
+	water6={add_mos={{image="terrain/grass/autumn_grass_4_%02d.png", display_x=1}}, min=1, max=1},
+
+	water1={add_mos={{image="terrain/grass/autumn_grass_9_%02d.png", display_x=-1, display_y=1}}, min=1, max=1},
+	water3={add_mos={{image="terrain/grass/autumn_grass_7_%02d.png", display_x=1, display_y=1}}, min=1, max=1},
+	water7={add_mos={{image="terrain/grass/autumn_grass_3_%02d.png", display_x=-1, display_y=-1}}, min=1, max=1},
+	water9={add_mos={{image="terrain/grass/autumn_grass_1_%02d.png", display_x=1, display_y=-1}}, min=1, max=1},
+
+	water1i={add_mos={{image="terrain/grass/autumn_grass_inner_1_%02d.png", display_x=-1, display_y=1}}, min=1, max=1},
+	water3i={add_mos={{image="terrain/grass/autumn_grass_inner_3_%02d.png", display_x=1, display_y=1}}, min=1, max=1},
+	water7i={add_mos={{image="terrain/grass/autumn_grass_inner_7_%02d.png", display_x=-1, display_y=-1}}, min=1, max=1},
+	water9i={add_mos={{image="terrain/grass/autumn_grass_inner_9_%02d.png", display_x=1, display_y=-1}}, min=1, max=1},
+},
+snowy_grass = { method="borders", type="snowy_grass", forbid={grass=true, lava=true, rock=true},
+	default8={add_mos={{image="terrain/grass/snowy_grass_2_%02d.png", display_y=-1}}, min=1, max=2},
+	default2={add_mos={{image="terrain/grass/snowy_grass_8_%02d.png", display_y=1}}, min=1, max=2},
+	default4={add_mos={{image="terrain/grass/snowy_grass_6_%02d.png", display_x=-1}}, min=1, max=2},
+	default6={add_mos={{image="terrain/grass/snowy_grass_4_%02d.png", display_x=1}}, min=1, max=2},
+
+	default1={add_mos={{image="terrain/grass/snowy_grass_9_%02d.png", display_x=-1, display_y=1}}, min=1, max=1},
+	default3={add_mos={{image="terrain/grass/snowy_grass_7_%02d.png", display_x=1, display_y=1}}, min=1, max=1},
+	default7={add_mos={{image="terrain/grass/snowy_grass_3_%02d.png", display_x=-1, display_y=-1}}, min=1, max=1},
+	default9={add_mos={{image="terrain/grass/snowy_grass_1_%02d.png", display_x=1, display_y=-1}}, min=1, max=1},
+
+	default1i={add_mos={{image="terrain/grass/snowy_grass_inner_1_%02d.png", display_x=-1, display_y=1}}, min=1, max=2},
+	default3i={add_mos={{image="terrain/grass/snowy_grass_inner_3_%02d.png", display_x=1, display_y=1}}, min=1, max=2},
+	default7i={add_mos={{image="terrain/grass/snowy_grass_inner_7_%02d.png", display_x=-1, display_y=-1}}, min=1, max=2},
+	default9i={add_mos={{image="terrain/grass/snowy_grass_inner_9_%02d.png", display_x=1, display_y=-1}}, min=1, max=2},
+
+	water8={add_mos={{image="terrain/grass/snowy_grass_2_%02d.png", display_y=-1}}, min=1, max=1},
+	water2={add_mos={{image="terrain/grass/snowy_grass_8_%02d.png", display_y=1}}, min=1, max=1},
+	water4={add_mos={{image="terrain/grass/snowy_grass_6_%02d.png", display_x=-1}}, min=1, max=1},
+	water6={add_mos={{image="terrain/grass/snowy_grass_4_%02d.png", display_x=1}}, min=1, max=1},
+
+	water1={add_mos={{image="terrain/grass/snowy_grass_9_%02d.png", display_x=-1, display_y=1}}, min=1, max=1},
+	water3={add_mos={{image="terrain/grass/snowy_grass_7_%02d.png", display_x=1, display_y=1}}, min=1, max=1},
+	water7={add_mos={{image="terrain/grass/snowy_grass_3_%02d.png", display_x=-1, display_y=-1}}, min=1, max=1},
+	water9={add_mos={{image="terrain/grass/snowy_grass_1_%02d.png", display_x=1, display_y=-1}}, min=1, max=1},
+
+	water1i={add_mos={{image="terrain/grass/snowy_grass_inner_1_%02d.png", display_x=-1, display_y=1}}, min=1, max=1},
+	water3i={add_mos={{image="terrain/grass/snowy_grass_inner_3_%02d.png", display_x=1, display_y=1}}, min=1, max=1},
+	water7i={add_mos={{image="terrain/grass/snowy_grass_inner_7_%02d.png", display_x=-1, display_y=-1}}, min=1, max=1},
+	water9i={add_mos={{image="terrain/grass/snowy_grass_inner_9_%02d.png", display_x=1, display_y=-1}}, min=1, max=1},
+},
+dark_grass = { method="borders", type="dark_grass", forbid={grass=true, lava=true, rock=true},
+	default8={add_mos={{image="terrain/grass/dark_grass_2_%02d.png", display_y=-1}}, min=1, max=2},
+	default2={add_mos={{image="terrain/grass/dark_grass_8_%02d.png", display_y=1}}, min=1, max=2},
+	default4={add_mos={{image="terrain/grass/dark_grass_6_%02d.png", display_x=-1}}, min=1, max=2},
+	default6={add_mos={{image="terrain/grass/dark_grass_4_%02d.png", display_x=1}}, min=1, max=2},
+
+	default1={add_mos={{image="terrain/grass/dark_grass_9_%02d.png", display_x=-1, display_y=1}}, min=1, max=1},
+	default3={add_mos={{image="terrain/grass/dark_grass_7_%02d.png", display_x=1, display_y=1}}, min=1, max=1},
+	default7={add_mos={{image="terrain/grass/dark_grass_3_%02d.png", display_x=-1, display_y=-1}}, min=1, max=1},
+	default9={add_mos={{image="terrain/grass/dark_grass_1_%02d.png", display_x=1, display_y=-1}}, min=1, max=1},
+
+	default1i={add_mos={{image="terrain/grass/dark_grass_inner_1_%02d.png", display_x=-1, display_y=1}}, min=1, max=2},
+	default3i={add_mos={{image="terrain/grass/dark_grass_inner_3_%02d.png", display_x=1, display_y=1}}, min=1, max=2},
+	default7i={add_mos={{image="terrain/grass/dark_grass_inner_7_%02d.png", display_x=-1, display_y=-1}}, min=1, max=2},
+	default9i={add_mos={{image="terrain/grass/dark_grass_inner_9_%02d.png", display_x=1, display_y=-1}}, min=1, max=2},
+
+	water8={add_mos={{image="terrain/grass/dark_grass_2_%02d.png", display_y=-1}}, min=1, max=1},
+	water2={add_mos={{image="terrain/grass/dark_grass_8_%02d.png", display_y=1}}, min=1, max=1},
+	water4={add_mos={{image="terrain/grass/dark_grass_6_%02d.png", display_x=-1}}, min=1, max=1},
+	water6={add_mos={{image="terrain/grass/dark_grass_4_%02d.png", display_x=1}}, min=1, max=1},
+
+	water1={add_mos={{image="terrain/grass/dark_grass_9_%02d.png", display_x=-1, display_y=1}}, min=1, max=1},
+	water3={add_mos={{image="terrain/grass/dark_grass_7_%02d.png", display_x=1, display_y=1}}, min=1, max=1},
+	water7={add_mos={{image="terrain/grass/dark_grass_3_%02d.png", display_x=-1, display_y=-1}}, min=1, max=1},
+	water9={add_mos={{image="terrain/grass/dark_grass_1_%02d.png", display_x=1, display_y=-1}}, min=1, max=1},
+
+	water1i={add_mos={{image="terrain/grass/dark_grass_inner_1_%02d.png", display_x=-1, display_y=1}}, min=1, max=1},
+	water3i={add_mos={{image="terrain/grass/dark_grass_inner_3_%02d.png", display_x=1, display_y=1}}, min=1, max=1},
+	water7i={add_mos={{image="terrain/grass/dark_grass_inner_7_%02d.png", display_x=-1, display_y=-1}}, min=1, max=1},
+	water9i={add_mos={{image="terrain/grass/dark_grass_inner_9_%02d.png", display_x=1, display_y=-1}}, min=1, max=1},
 },
 jungle_grass = { method="borders", type="jungle_grass", forbid={lava=true, rock=true, grass=true},
 	default8={add_mos={{image="terrain/jungle/jungle_grass_2_%02d.png", display_y=-1}}, min=1, max=5},
@@ -708,13 +787,34 @@ rift = { method="walls", type="riftwall", forbid={}, use_type=true, extended=tru
 	default4={add_displays={{image="terrain/rift/rift_ver_edge_left_01.png", display_x=-1}}, min=1, max=1},
 	default6={add_displays={{image="terrain/rift/rift_ver_edge_right_01.png", display_x=1}}, min=1, max=1},
 },
+
+grass_wm = { method="borders", type="grass", forbid={lava=true, rock=true},
+	default8={add_mos={{image="terrain/grass_worldmap/grass_2_%02d.png", display_y=-1}}, min=1, max=2},
+	default2={add_mos={{image="terrain/grass_worldmap/grass_8_%02d.png", display_y=1}}, min=1, max=2},
+	default4={add_mos={{image="terrain/grass_worldmap/grass_6_%02d.png", display_x=-1}}, min=1, max=2},
+	default6={add_mos={{image="terrain/grass_worldmap/grass_4_%02d.png", display_x=1}}, min=1, max=2},
+
+	default1={z=3,add_mos={{image="terrain/grass_worldmap/grass_9_%02d.png", display_x=-1, display_y=1}}, min=1, max=1},
+	default3={z=3,add_mos={{image="terrain/grass_worldmap/grass_7_%02d.png", display_x=1, display_y=1}}, min=1, max=1},
+	default7={z=3,add_mos={{image="terrain/grass_worldmap/grass_3_%02d.png", display_x=-1, display_y=-1}}, min=1, max=1},
+	default9={z=3,add_mos={{image="terrain/grass_worldmap/grass_1_%02d.png", display_x=1, display_y=-1}}, min=1, max=1},
+
+	default1i={add_mos={{image="terrain/grass_worldmap/grass_inner_1_%02d.png", display_x=-1, display_y=1}}, min=1, max=2},
+	default3i={add_mos={{image="terrain/grass_worldmap/grass_inner_3_%02d.png", display_x=1, display_y=1}}, min=1, max=2},
+	default7i={add_mos={{image="terrain/grass_worldmap/grass_inner_7_%02d.png", display_x=-1, display_y=-1}}, min=1, max=2},
+	default9i={add_mos={{image="terrain/grass_worldmap/grass_inner_9_%02d.png", display_x=1, display_y=-1}}, min=1, max=2},
+},
 }
 _M.generic_borders_defs = defs
 
 
 --- Make water have nice transition to other stuff
+local gtype = type
 function _M:editTileGenericBorders(level, i, j, g, nt, type)
-	local kind = nt.use_type and "type" or "subtype"
+	local kind
+	if gtype(nt.use_type) == "string" then kind = nt.use_type
+	else kind = nt.use_type and "type" or "subtype"
+	end
 	local g5 = level.map:checkEntity(i, j,   Map.TERRAIN, kind) or type
 	local g8 = level.map:checkEntity(i, j-1, Map.TERRAIN, kind) or type
 	local g2 = level.map:checkEntity(i, j+1, Map.TERRAIN, kind) or type

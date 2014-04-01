@@ -32,6 +32,7 @@ newEntity{
 	rarity = 12,
 	cost = 14,
 	wielder = {
+		healing_factor = resolvers.mbonus_material(20, 10, function(e, v) v=v/100 return 0, v end), -- copied from robe.lua
 		life_regen = resolvers.mbonus_material(120, 30, function(e, v) v=v/10 return 0, v end),
 	},
 }
@@ -45,12 +46,13 @@ newEntity{
 	rarity = 22,
 	cost = 35,
 	wielder = {
-		combat_def = resolvers.mbonus_material(8, 2),
-		combat_def_ranged = resolvers.mbonus_material(8, 2),
-		movement_speed = 0.1,
+		combat_def = resolvers.mbonus_material(14, 2),
+		combat_def_ranged = resolvers.mbonus_material(14, 2),
+		movement_speed = 0.2,
 		inc_stats = { [Stats.STAT_DEX] = resolvers.mbonus_material(3, 2), },
 	},
 }
+
 newEntity{
 	power_source = {technique=true},
 	name = "marauder's ", prefix=true, instant_resolve=true,
@@ -109,15 +111,13 @@ newEntity{
 	power_source = {technique=true},
 	name = " of the wind", suffix=true, instant_resolve=true,
 	keywords = {wind=true},
-	level_range = {40, 50},
+	level_range = {30, 50},
 	greater_ego = 1,
 	rarity = 30,
 	cost = 80,
 	resolvers.charmt(Talents.T_SECOND_WIND, {3,4,5}, 35),
 	wielder = {
-		max_life = resolvers.mbonus_material(60, 40, function(e, v) return 0, -v end),
-		combat_armor = resolvers.mbonus_material(7, 3, function(e, v) return 0, -v end),
-
+		cancel_damage_chance = resolvers.mbonus_material(8, 2),
 		combat_physcrit = resolvers.mbonus_material(7, 3),
 		combat_apr = resolvers.mbonus_material(15, 5),
 		combat_def = resolvers.mbonus_material(10, 5),
@@ -168,3 +168,37 @@ newEntity{
 	},
 }
 
+newEntity{
+	power_source = {technique=true},
+	name = " of alacrity", suffix=true, instant_resolve=true,
+	keywords = {alacrity=true},
+	level_range = {40, 50},
+	greater_ego = 1,
+	rarity = 30,
+	cost = 80,
+	wielder = {
+		combat_physspeed = 0.15,
+		combat_mindspeed = 0.15,
+		combat_spellspeed = 0.15,
+	},
+}
+
+-- you are so going to veto this ^^;
+newEntity{
+	power_source = {technique=true, arcane=true, nature=true},
+	name = " of the hero ", suffix=true, instant_resolve=true,
+	keywords = {hero=true},
+	level_range = {25, 50},
+	greater_ego = 1,
+	rarity = 30,
+	cost = 35,
+	wielder = {
+		inc_stats = {
+			[Stats.STAT_STR] = resolvers.mbonus_material(4, 3),
+			[Stats.STAT_DEX] = resolvers.mbonus_material(4, 3),
+			[Stats.STAT_WIL] = resolvers.mbonus_material(4, 3),
+			[Stats.STAT_CUN] = resolvers.mbonus_material(4, 3),
+			[Stats.STAT_MAG] = resolvers.mbonus_material(4, 3),
+		},
+	},
+}

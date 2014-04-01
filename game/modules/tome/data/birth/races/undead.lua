@@ -69,6 +69,18 @@ newBirthDescriptor{
 			{type="scroll", subtype="rune", name="phase door rune", ego_chance=-1000, ego_chance=-1000}}), -- keep this in inventory incase people actually want it, can't add it baseline because some classes start with 3 inscribed
 	},
 
+	cosmetic_unlock = {
+		cosmetic_bikini =  {
+			{name="Bikini [donator only]", donator=true, on_actor=function(actor, birther, last)
+				if not last then local o = birther.obj_list_by_name.Bikini if not o then print("No bikini found!") return end actor:getInven(actor.INVEN_BODY)[1] = o:cloneFull()
+				else actor:registerOnBirthForceWear("FUN_BIKINI") end
+			end, check=function(birth) return birth.descriptors_by_type.sex == "Female" end},
+			{name="Mankini [donator only]", donator=true, on_actor=function(actor, birther, last)
+				if not last then local o = birther.obj_list_by_name.Mankini if not o then print("No mankini found!") return end actor:getInven(actor.INVEN_BODY)[1] = o:cloneFull()
+				else actor:registerOnBirthForceWear("FUN_MANKINI") end
+			end, check=function(birth) return birth.descriptors_by_type.sex == "Male" end},
+		},
+	},
 	
 	random_escort_possibilities = { {"tier1.1", 1, 2}, {"tier1.2", 1, 2}, {"daikara", 1, 2}, {"old-forest", 1, 4}, {"dreadfell", 1, 8}, {"reknor", 1, 2}, },
 }
@@ -122,7 +134,7 @@ newBirthDescriptor
 		fear_immune = 1,
 		global_speed_base = 0.8,
 		moddable_tile = "ghoul",
-		moddable_tile_nude = true,
+		moddable_tile_nude = 1,
 	},
 	experience = 1.25,
 }
@@ -174,7 +186,7 @@ newBirthDescriptor
 		no_breath = 1,
 		blood_color = colors.GREY,
 		moddable_tile = "skeleton",
-		moddable_tile_nude = true,
+		moddable_tile_nude = 1,
 	},
 	experience = 1.4,
 }

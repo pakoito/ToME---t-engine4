@@ -77,6 +77,7 @@ Now my sweet one, where were we the last time?]],
 		{"My memory fails me, care to help me remember? #LIGHT_GREEN#[smile playfully at her]", action=function(npc, player)
 			player:setQuestStatus("love-melinda", engine.Quest.COMPLETED, "portal-done")
 			world:gainAchievement("MELINDA_LUCKY", player)
+			game:setAllowedBuild("cosmetic_bikini", true)
 		end},
 	}
 }

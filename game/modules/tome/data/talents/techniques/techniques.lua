@@ -18,6 +18,8 @@
 -- darkgod@te4.org
 
 -- Physical combat
+newTalentType{ allow_random=true, type="technique/2hweapon-assault", name = "two-handed assault", description = "Specialized two-handed techniques." }
+newTalentType{ allow_random=true, type="technique/strength-of-the-berserker", name = "berserker's strength", description = "Fear nothing!" }
 newTalentType{ allow_random=true, type="technique/2hweapon-offense", name = "two-handed weapons", description = "Specialized two-handed techniques." }
 newTalentType{ allow_random=true, type="technique/2hweapon-cripple", name = "two-handed maiming", description = "Specialized two-handed techniques." }
 newTalentType{ allow_random=true, type="technique/shield-offense", name = "shield offense", description = "Specialized weapon and shield techniques." }
@@ -47,7 +49,7 @@ newTalentType{ is_unarmed=true, allow_random=true, type="technique/pugilism", na
 newTalentType{ is_unarmed=true, allow_random=true, type="technique/finishing-moves", name = "finishing moves", description = "Finishing moves that use combo points and may not be practiced in massive armor or while a weapon or shield is equipped." }
 newTalentType{ is_unarmed=true, allow_random=true, type="technique/grappling", name = "grappling", description = "Grappling techniques that may not be practiced in massive armor or while a weapon or shield is equipped." }
 newTalentType{ is_unarmed=true, allow_random=true, type="technique/unarmed-discipline", name = "unarmed discipline", description = "Advanced unarmed techniques including kicks and throw that may not be practiced in massive armor or while a weapon or shield is equipped." }
-newTalentType{ is_unarmed=true, allow_random=true, type="technique/unarmed-training", name = "unarmed training", description = "Teaches various martial arts techniques that may not be practiced in massive armor or while a weapon or shield is equipped." }
+newTalentType{ is_unarmed=true, allow_random=true, generic = true, type="technique/unarmed-training", name = "unarmed training", description = "Teaches various martial arts techniques that may not be practiced in massive armor or while a weapon or shield is equipped." }
 newTalentType{ allow_random=true, type="technique/conditioning", name = "conditioning", generic = true, description = "Physical conditioning." }
 
 newTalentType{ is_unarmed=true, type="technique/unarmed-other", name = "unarmed other", generic = true, description = "Base martial arts attack and stances." }
@@ -243,6 +245,8 @@ cancelStances = function(self)
 end
 
 load("/data/talents/techniques/2hweapon.lua")
+load("/data/talents/techniques/2h-assault.lua")
+load("/data/talents/techniques/strength-of-the-berserker.lua")
 load("/data/talents/techniques/dualweapon.lua")
 load("/data/talents/techniques/weaponshield.lua")
 load("/data/talents/techniques/superiority.lua")

@@ -21,6 +21,7 @@ return {
 	frag = "tree",
 	vert = nil,
 	args = {
+		attenuation = attenuation or 35,
 	},
 	clone = false,
 }

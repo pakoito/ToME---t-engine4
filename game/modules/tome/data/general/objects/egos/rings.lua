@@ -554,22 +554,6 @@ newEntity{
 
 newEntity{
 	power_source = {technique=true},
-	name = " of focus", suffix=true, instant_resolve=true,
-	keywords = {focus=true},
-	level_range = {40, 50},
-	greater_ego = 1,
-	rarity = 30,
-	cost = 100,
-	resolvers.charmt(Talents.T_GREATER_WEAPON_FOCUS, {2,3,4}, 20),
-	wielder = {
-		resists_pen = {
-			[DamageType.PHYSICAL] = resolvers.mbonus_material(10, 5),
-		},
-	},
-}
-
-newEntity{
-	power_source = {technique=true},
 	name = " of pilfering", suffix=true, instant_resolve=true,
 	keywords = {pilfering=true},
 	level_range = {10, 50},

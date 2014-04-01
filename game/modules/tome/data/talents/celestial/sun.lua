@@ -47,7 +47,11 @@ newTalent{
 			local _ _, x, y = self:canProject(tg, x, y)
 			self:project({type="ball", x=x, y=y, radius=1, selffire=false}, x, y, DamageType.BLIND, t.getDuration(self, t), {type="light"})
 		end
-		self:removeEffect(self.EFF_SUN_VENGEANCE)
+
+		-- Delay removal of the effect so its still there when no_energy checks
+		game:onTickEnd(function()
+			self:removeEffect(self.EFF_SUN_VENGEANCE)
+		end)
 
 		game:playSoundNear(self, "talents/flame")
 		return true
@@ -148,7 +152,8 @@ newTalent{
 		grids[self.x] = grids[self.x] or {}
 		grids[self.x][self.y] = true
 		local _ _, x, y = self:canProject(tg, x, y)
-		game.level.map:addEffect(self, self.x, self.y, 5, DamageType.SUN_PATH, dam / 5, 0, 5, grids, {type="sun_path", args={tx=x-self.x, ty=y-self.y}, only_one=true}, nil, true)
+		game.level.map:addEffect(self, self.x, self.y, 5, DamageType.SUN_PATH, dam / 5, 0, 5, grids, MapEffect.new{color_br=255, color_bg=249, color_bb=60, alpha=100, effect_shader="shader_images/sun_effect.png"}, nil, true)
+		game.level.map:addEffect(self, self.x, self.y, 5, DamageType.COSMETIC, 0      , 0, 5, grids, {type="sun_path", args={tx=x-self.x, ty=y-self.y}, only_one=true}, nil, true)
 
 		self:setEffect(self.EFF_PATH_OF_THE_SUN, 5, {})
 

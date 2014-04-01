@@ -78,6 +78,8 @@ newBirthDescriptor{
 		["celestial/combat"]={true, 0.3},
 		["celestial/light"]={true, 0.3},
 		["celestial/guardian"]={false, 0.3},
+		["celestial/radiance"]={false, 0.3},
+		["celestial/crusader"]={true, 0.3},
 	},
 	birth_example_particles = "golden_shield",
 	talents = {

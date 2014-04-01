@@ -62,6 +62,16 @@ newBirthDescriptor{
 			{name="Redhead [donator only]", donator=true, on_actor=function(actor) if actor.moddable_tile then actor.moddable_tile_base = "base_redhead_01.png" end end},
 			{name="Red braids [donator only]", donator=true, on_actor=function(actor) if actor.moddable_tile then actor.moddable_tile_ornament = {female="braid_redhead_01"} end end, check=function(birth) return birth.descriptors_by_type.sex == "Female" end},
 		},
+		cosmetic_bikini =  {
+			{name="Bikini [donator only]", donator=true, on_actor=function(actor, birther, last)
+				if not last then local o = birther.obj_list_by_name.Bikini if not o then print("No bikini found!") return end actor:getInven(actor.INVEN_BODY)[1] = o:cloneFull()
+				else actor:registerOnBirthForceWear("FUN_BIKINI") end
+			end, check=function(birth) return birth.descriptors_by_type.sex == "Female" end},
+			{name="Mankini [donator only]", donator=true, on_actor=function(actor, birther, last)
+				if not last then local o = birther.obj_list_by_name.Mankini if not o then print("No mankini found!") return end actor:getInven(actor.INVEN_BODY)[1] = o:cloneFull()
+				else actor:registerOnBirthForceWear("FUN_MANKINI") end
+			end, check=function(birth) return birth.descriptors_by_type.sex == "Male" end},
+		},
 	},
 }
 

@@ -48,9 +48,9 @@ newTalent{
 		local x, y, target = self:getTarget(tg)
 		if not x or not y or not target then return nil end
 		if core.fov.distance(self.x, self.y, x, y) > 1 then return nil end
-		self.use_psi_combat = true
+		self:attr("use_psi_combat", 1)
 		self:attackTargetWith(target, weapon.combat, nil, self:combatTalentWeaponDamage(t, 1.8, 3))
-		self.use_psi_combat = false
+		self:attr("use_psi_combat", -1)
 		return true
 	end,
 	info = function(self, t)

@@ -36,7 +36,7 @@ rm -rf mac/base_app/
 rm -rf game/modules/angband
 rm -rf game/modules/rogue
 rm -rf game/modules/gruesome
-find . -name '*~' -or -name '.svn' | xargs rm -rf
+find . -name '*~' -or -name '.svn' -or -name '.keep' | xargs rm -rf
 
 # create teae/teams
 cd game/engines
@@ -46,8 +46,8 @@ te4_pack_engine.sh default/ te4-"$ever" 1
 mv boot*team ../modules
 rm -rf default
 cd ../modules
-te4_pack_module.sh tome "$tver"
-te4_pack_module.sh tome "$tver" 1
+te4_pack_module_tome.sh tome "$tver"
+#te4_pack_module.sh tome "$tver" 1
 \cp -f tome*.team /var/www/te4.org/htdocs/dl/modules/tome/
 rm -f tome*nomusic.team
 rm -f boot*nomusic.team
@@ -106,9 +106,10 @@ IFS=$'\n'; for i in `find game/ -name '*.ogg'`; do
 	echo "$i"|grep '/music/' -q
 	if test $? -eq 0; then rm "$i"; fi
 done
-rm game/modules/tome*team
+rm game/modules/tome*-music.team
+#rm game/modules/tome*team
 rm game/modules/boot*team
-cp /var/www/te4.org/htdocs/dl/modules/tome/tome-"$tver"-nomusic.team game/modules/
+#cp /var/www/te4.org/htdocs/dl/modules/tome/tome-"$tver"-nomusic.team game/modules/
 cp /var/www/te4.org/htdocs/dl/engines/boot-te4-"$ever"-nomusic.team game/modules/
 cd ..
 tar cvjf t-engine4-src-"$ver"-nomusic.tar.bz2 t-engine4-src-"$ver"
@@ -120,9 +121,10 @@ IFS=$'\n'; for i in `find game/ -name '*.ogg'`; do
 	echo "$i"|grep '/music/' -q
 	if test $? -eq 0; then rm "$i"; fi
 done
-rm game/modules/tome*team
+rm game/modules/tome*-music.team
+#rm game/modules/tome*team
 rm game/modules/boot*team
-cp /var/www/te4.org/htdocs/dl/modules/tome/tome-"$tver"-nomusic.team game/modules/
+#cp /var/www/te4.org/htdocs/dl/modules/tome/tome-"$tver"-nomusic.team game/modules/
 cp /var/www/te4.org/htdocs/dl/engines/boot-te4-"$ever"-nomusic.team game/modules/
 cd ..
 zip -r -9 t-engine4-windows-"$ver"-nomusic.zip t-engine4-windows-"$ver"
@@ -134,9 +136,10 @@ IFS=$'\n'; for i in `find game/ -name '*.ogg'`; do
 	echo "$i"|grep '/music/' -q
 	if test $? -eq 0; then rm "$i"; fi
 done
-rm game/modules/tome*team
+rm game/modules/tome*-music.team
+#rm game/modules/tome*team
 rm game/modules/boot*team
-cp /var/www/te4.org/htdocs/dl/modules/tome/tome-"$tver"-nomusic.team game/modules/
+#cp /var/www/te4.org/htdocs/dl/modules/tome/tome-"$tver"-nomusic.team game/modules/
 cp /var/www/te4.org/htdocs/dl/engines/boot-te4-"$ever"-nomusic.team game/modules/
 cd ..
 tar -cvjf t-engine4-linux32-"$ver"-nomusic.tar.bz2 t-engine4-linux32-"$ver"
@@ -148,9 +151,10 @@ IFS=$'\n'; for i in `find game/ -name '*.ogg'`; do
 	echo "$i"|grep '/music/' -q
 	if test $? -eq 0; then rm "$i"; fi
 done
-rm game/modules/tome*team
+rm game/modules/tome*-music.team
+#rm game/modules/tome*team
 rm game/modules/boot*team
-cp /var/www/te4.org/htdocs/dl/modules/tome/tome-"$tver"-nomusic.team game/modules/
+#cp /var/www/te4.org/htdocs/dl/modules/tome/tome-"$tver"-nomusic.team game/modules/
 cp /var/www/te4.org/htdocs/dl/engines/boot-te4-"$ever"-nomusic.team game/modules/
 cd ..
 tar -cvjf t-engine4-linux64-"$ver"-nomusic.tar.bz2 t-engine4-linux64-"$ver"

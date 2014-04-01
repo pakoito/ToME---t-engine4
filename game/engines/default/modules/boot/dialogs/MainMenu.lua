@@ -54,8 +54,11 @@ function _M:init()
 		local menu = require("engine.dialogs.GameMenu").new(list)
 		game:registerDialog(menu)
 	end}
+	l[#l+1] = {name="Credits", fct=function() game:registerDialog(require("mod.dialogs.Credits").new()) end}
 	l[#l+1] = {name="Exit", fct=function() game:onQuit() end}
 	if config.settings.cheat then l[#l+1] = {name="Reboot", fct=function() util.showMainMenu() end} end
+	if config.settings.cheat then l[#l+1] = {name="webtest", fct=function() util.browserOpenUrl("http://google.com/") end} end
+--	if config.settings.cheat then l[#l+1] = {name="webtest", fct=function() util.browserOpenUrl("asset://te4/html/test.html") end} end
 
 	self.c_background = Button.new{text=game.stopped and "Enable background" or "Disable background", fct=function() self:switchBackground() end}
 	self.c_version = Textzone.new{auto_width=true, auto_height=true, text=("#{bold}##B9E100#T-Engine4 version: %d.%d.%d"):format(engine.version[1], engine.version[2], engine.version[3])}
@@ -74,6 +77,12 @@ function _M:init()
 		{right=0, bottom=self.c_twitter.h, absolute=true, ui=self.c_facebook},
 		{right=0, bottom=0, absolute=true, ui=self.c_twitter},
 	}
+
+	if core.webview and game.webtooltip then
+		self.c_tooltip = game.webtooltip
+		self.base_uis[#self.base_uis+1] = {left=9, top=9, absolute=true, ui=self.c_tooltip}
+
+	end
 
 	self:updateUI()	
 end

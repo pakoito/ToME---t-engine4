@@ -41,9 +41,9 @@ newEntity{ base = "BASE_GEM",
 	identified = false,
 	material_level = 4,
 	wielder = {
-		inc_stats = {[Stats.STAT_DEX] = 10, [Stats.STAT_CUN] = 10 },
+		inc_stats = {[Stats.STAT_DEX] = 8, [Stats.STAT_CUN] = 8 },
 		inc_damage = {[DamageType.LIGHTNING] = 20 },
-		cancel_damage_chance = 10, -- add to tooltip
+		cancel_damage_chance = 8, -- add to tooltip
 		damage_affinity={
 			[DamageType.LIGHTNING] = 20,
 		},

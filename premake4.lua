@@ -5,7 +5,6 @@ solution "TEngine"
 	objdir "obj"
 	defines {"GLEW_STATIC"}
 	if _OPTIONS.force32bits then buildoptions{"-m32"} linkoptions{"-m32"} libdirs{"/usr/lib32"} end
-	if _OPTIONS.relpath then linkoptions{"-Wl,-rpath -Wl,\\\$\$ORIGIN/lib "} end
 
 	includedirs {
 		"src",
@@ -17,9 +16,24 @@ solution "TEngine"
 		"src/physfs",
 		"src/zlib",
 		"src/bzip2",
-		"/opt/SDL-2.0/include/SDL2",
-		"/usr/include/GL",
 	}
+	if _OPTIONS['web-awesomium'] then
+		includedirs { "src/web-awesomium" }
+	end
+	if _OPTIONS['web-cef3'] then
+		includedirs { "src/web-cef3" }
+	end
+	if _OPTIONS.wincross then
+		includedirs {
+			"/usr/i686-pc-mingw32/usr/include/",
+			"/usr/i686-pc-mingw32/usr/include/GL/",
+		}
+	else
+		includedirs {
+			"/opt/SDL-2.0/include/SDL2",
+			"/usr/include/GL",
+		}
+	end
 	if _OPTIONS.lua == "default" then includedirs{"src/lua"}
 	elseif _OPTIONS.lua == "jit2" then includedirs{"src/luajit2/src", "src/luajit2/dynasm",}
 	end
@@ -36,15 +50,26 @@ configuration "bsd"
 		"/usr/local/include",
 	}
 
+if _OPTIONS.wincross then
 configuration "windows"
 	libdirs {
-		"/c/code/SDL/lib",
+		"/Test/xcompile/local//lib",
 	}
 	includedirs {
+		"/Test/xcompile/local/include/SDL2",
+		"/Test/xcompile/local/include",
+	}
+else
+configuration "windows"
+ 	libdirs {
+		"/c/code/SDL/lib",
+ 	}
+ 	includedirs {
 		"/c/code/SDL/include/SDL2",
 		"/c/code/SDL/include",
 		"/c/mingw2/include/GL",
-	}
+ 	}
+end
 
 configuration "macosx"
 	buildoptions { "-isysroot /Developer/SDKs/MacOSX10.6.sdk", "-mmacosx-version-min=10.6" }
@@ -54,7 +79,7 @@ configuration "Debug"
 	defines { }
 	flags { "Symbols" }
 	buildoptions { "-ggdb" }
-	buildoptions { "-O3" }
+--	buildoptions { "-O3" }
 	targetdir "bin/Debug"
 	if _OPTIONS.luaassert then defines {"LUA_USE_APICHECK"} end
 	if _OPTIONS.pedantic then buildoptions { "-Wall" } end

@@ -318,6 +318,7 @@ end
 --- Try to totally evade an attack
 function _M:checkEvasion(target)
 	if not target:attr("evasion") or self == target then return end
+	if target:attr("no_evasion") then return end
 
 	local evasion = target:attr("evasion")
 	print("checkEvasion", evasion, target.level, self.level)
@@ -400,7 +401,7 @@ function _M:attackTargetWith(target, weapon, damtype, mult, force_dam)
 	elseif self:checkEvasion(target) then
 		evaded = true
 		self:logCombat(target, "#Target# evades #Source#.")
-	elseif self.turn_procs.auto_melee_hit or (self:checkHit(atk, def) and (self:canSee(target) or self:attr("blind_fight") or rng.chance(3))) then
+	elseif self.turn_procs.auto_melee_hit or (self:checkHit(atk, def) and (self:canSee(target) or self:attr("blind_fight") or target:attr("blind_fighted") or rng.chance(3))) then
 		local pres = util.bound(target:combatArmorHardiness() / 100, 0, 1)
 		if target.knowTalent and target:hasEffect(target.EFF_DUAL_WEAPON_DEFENSE) then
 			local deflect = math.min(dam, target:callTalent(target.T_DUAL_WEAPON_DEFENSE, "doDeflect"))
@@ -508,12 +509,12 @@ function _M:attackTargetWith(target, weapon, damtype, mult, force_dam)
 			dam = dam + total_conversion
 		end
 
-		target:fireTalentCheck("callbackOnMeleeHit", self)
+		target:fireTalentCheck("callbackOnMeleeHit", self, dam)
 
 		hitted = true
 	else
 		self:logCombat(target, "#Source# misses #Target#.")
-		target:fireTalentCheck("callbackOnMeleeMiss", self)
+		target:fireTalentCheck("callbackOnMeleeMiss", self, dam)
 	end
 
 	-- cross-tier effect for accuracy vs. defense
@@ -533,7 +534,7 @@ function _M:attackTargetWith(target, weapon, damtype, mult, force_dam)
 ]]
 
 	if self:isAccuracyEffect(weapon, "staff") then
-		local bonus = 1 + self:getAccuracyEffect(weapon, atk, def, 0.04, 2)
+		local bonus = 1 + self:getAccuracyEffect(weapon, atk, def, 0.025, 2)
 		print("[ATTACK] staff accuracy bonus", atk, def, "=", bonus)
 		self.__global_accuracy_damage_bonus = bonus
 	end
@@ -642,7 +643,7 @@ function _M:attackTargetWith(target, weapon, damtype, mult, force_dam)
 		target.invulnerable = 1 -- Target already hit, don't damage it twice
 		self:project({type="ball", radius=1, selffire=false}, target.x, target.y, DamageType.PHYSICAL, dam)
 		target.invulnerable = invuln
-		self:incStamina(-15)
+		self:incStamina(-8)
 		self.shattering_impact_last_turn = game.turn
 	end
 	
@@ -731,7 +732,7 @@ function _M:attackTargetWith(target, weapon, damtype, mult, force_dam)
 	end
 
 	-- Conduit (Psi)
-	if hitted and not target.dead and self:knowTalent(self.T_CONDUIT) and self:isTalentActive(self.T_CONDUIT) and self.use_psi_combat then
+	if hitted and not target.dead and self:knowTalent(self.T_CONDUIT) and self:isTalentActive(self.T_CONDUIT) and self:attr("use_psi_combat") then
 		local t = self:getTalentFromId(self.T_CONDUIT)
 		t.do_combat(self, t, target)
 	end
@@ -1124,7 +1125,7 @@ function _M:combatAttackBase(weapon, ammo)
 end
 function _M:combatAttack(weapon, ammo)
 	local stats
-	if self.use_psi_combat then stats = self:getCun(100, true) - 10
+	if self:attr("use_psi_combat") then stats = self:getCun(100, true) - 10
 	elseif weapon and weapon.wil_attack then stats = self:getWil(100, true) - 10
 	else stats = self:getDex(100, true) - 10
 	end
@@ -1135,7 +1136,7 @@ end
 
 function _M:combatAttackRanged(weapon, ammo)
 	local stats
-	if self.use_psi_combat then stats = self:getCun(100, true) - 10
+	if self:attr("use_psi_combat") then stats = self:getCun(100, true) - 10
 	elseif weapon and weapon.wil_attack then stats = self:getWil(100, true) - 10
 	else stats = self:getDex(100, true) - 10
 	end
@@ -1381,21 +1382,13 @@ function _M:combatDamage(weapon, adddammod)
 	local dammod = weapon.dammod or {str=0.6}
 	for stat, mod in pairs(dammod) do
 		if sub_cun_to_str and stat == "str" then stat = "cun" end
-		if self.use_psi_combat and stat == "str" then stat = "wil" end
-		if self.use_psi_combat and stat == "dex" then stat = "cun" end
+		if self:attr("use_psi_combat") and stat == "str" then stat = "wil" end
+		if self:attr("use_psi_combat") and stat == "dex" then stat = "cun" end
 		totstat = totstat + self:getStat(stat) * mod
 	end
 	if adddammod then
 		for stat, mod in pairs(adddammod) do
 			totstat = totstat + self:getStat(stat) * mod
-		end
-	end
-	if self.use_psi_combat then
-		if self:knowTalent(self.T_GREATER_TELEKINETIC_GRASP) then
-			local g = self:getTalentFromId(self.T_GREATER_TELEKINETIC_GRASP)
-			totstat = totstat * g.stat_sub(self, g)
-		else
-			totstat = totstat * 0.6
 		end
 	end
 
@@ -1641,7 +1634,7 @@ function _M:physicalCrit(dam, weapon, target, atk, def, add_chance, crit_power_a
 
 		if self:knowTalent(self.T_EYE_OF_THE_TIGER) then self:triggerTalent(self.T_EYE_OF_THE_TIGER, nil, "physical") end
 
-		self:fireTalentCheck("callbackOnCrit", "physical", dam, chance)
+		self:fireTalentCheck("callbackOnCrit", "physical", dam, chance, target)
 	end
 	return dam, crit
 end
@@ -2251,26 +2244,36 @@ end
 -- Starts the grapple
 function _M:startGrapple(target)
 	-- pulls boosted grapple effect from the clinch talent if known
+	local grappledParam = {src = self, apply_power = 1, silence = 0, power = 1, slow = 0, reduction = 0}
+	local grappleParam = {sharePct = 0, drain = 0, trgt = target }
+	local duration = 5
 	if self:knowTalent(self.T_CLINCH) then
 		local t = self:getTalentFromId(self.T_CLINCH)
-		power = t.getPower(self, t)
+		if self:knowTalent(self.T_CRUSHING_HOLD) then
+			local t2 = self:getTalentFromId(self.T_CRUSHING_HOLD)
+			grappledParam = t2.getBonusEffects(self, t2) -- get the 4 bonus parameters first
+		end
+		local power = self:physicalCrit(t.getPower(self, t), nil, target, self:combatAttack(), target:combatDefense())
+		grappledParam["power"] = power -- damage/turn set by Clinch
 		duration = t.getDuration(self, t)
-		hitbonus = self:getTalentLevel(t)/2
-	else
-		power = 5
-		duration = 4
-		hitbonus = 0
+
+		grappleParam["drain"] = t.getDrain(self, t) -- stamina/turn set by Clinch
+		grappleParam["sharePct"] = t.getSharePct(self, t) -- damage shared with grappled set by Clinch
+
 	end
+	-- oh for the love of god why didn't I rewrite this entire structure
+	grappledParam["src"] = self
+	grappledParam["apply_power"] = self:combatPhysicalpower()
 	-- Breaks the grapple before reapplying
 	if self:hasEffect(self.EFF_GRAPPLING) then
 		self:removeEffect(self.EFF_GRAPPLING, true)
-		target:setEffect(target.EFF_GRAPPLED, duration, {src=self, power=power}, true)
-		self:setEffect(self.EFF_GRAPPLING, duration, {trgt=target}, true)
+		target:setEffect(target.EFF_GRAPPLED, duration, grappledParam, true)
+		self:setEffect(self.EFF_GRAPPLING, duration, grappleParam, true)
 		return true
 	elseif target:canBe("pin") then
-		target:setEffect(target.EFF_GRAPPLED, duration, {src=self, power=power, apply_power=self:combatPhysicalpower()})
+		target:setEffect(target.EFF_GRAPPLED, duration, grappledParam)
 		target:crossTierEffect(target.EFF_GRAPPLED, self:combatPhysicalpower())
-		self:setEffect(self.EFF_GRAPPLING, duration, {trgt=target})
+		self:setEffect(self.EFF_GRAPPLING, duration, grappleParam)
 		return true
 	else
 		game.logSeen(target, "%s resists the grapple!", target.name:capitalize())

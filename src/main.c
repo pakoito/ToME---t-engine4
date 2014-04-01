@@ -41,6 +41,7 @@
 #include "serial.h"
 #include "profile.h"
 #include "main.h"
+#include "te4web.h"
 #include "lua_externs.h"
 #include "runner/core.h"
 #ifdef SELFEXE_WINDOWS
@@ -363,7 +364,10 @@ void on_event(SDL_Event *event)
 			else
 				lua_pushnil(L);
 
-			docall(L, 9, 0);
+			lua_pushnil(L);
+			lua_pushnumber(L, event->key.keysym.sym);
+
+			docall(L, 11, 0);
 		}
 		break;
 	case SDL_MOUSEBUTTONDOWN:
@@ -606,6 +610,7 @@ void on_redraw()
 #ifdef STEAM_TE4
 	if (!no_steam) te4_steam_callbacks();
 #endif
+	if (te4_web_update) te4_web_update(L);
 }
 
 void pass_command_args(int argc, char *argv[])
@@ -1068,6 +1073,8 @@ void boot_lua(int state, bool rebooting, int argc, char *argv[])
 			PHYSFS_mount("game/", "/", 1);
 		}
 
+		if (te4_web_init) te4_web_init(L);
+
 		// And run the lua engine pre init scripts
 		if (!luaL_loadfile(L, "/loader/pre-init.lua"))
 			docall(L, 0, 0);
@@ -1194,14 +1201,13 @@ int main(int argc, char *argv[])
 	core_def->define = &define_core;
 	core_def->define(core_def, "te4core", -1, NULL, NULL, NULL, NULL, 0, NULL);
 
-#ifdef SELFEXE_WINDOWS
-	FILE *logfile;
-	logfile = freopen ("te4_log.txt", "w", stdout);
-	bool windows_autoflush = FALSE;
-#endif
-
 	g_argc = argc;
 	g_argv = argv;
+
+	bool is_zygote = FALSE;
+#ifdef SELFEXE_WINDOWS
+	bool windows_autoflush = FALSE;
+#endif
 
 	// Parse arguments
 	int i;
@@ -1216,7 +1222,6 @@ int main(int argc, char *argv[])
 		{
 			setvbuf(stdout, (char *) NULL, _IOLBF, 0);
 #ifdef SELFEXE_WINDOWS
-			setvbuf(logfile, NULL, _IONBF, 2);
 			windows_autoflush = TRUE;
 #endif
 		}
@@ -1226,7 +1231,18 @@ int main(int argc, char *argv[])
 		if (!strncmp(arg, "--safe-mode", 11)) safe_mode = TRUE;
 		if (!strncmp(arg, "--home", 6)) override_home = strdup(argv[++i]);
 		if (!strncmp(arg, "--no-steam", 10)) no_steam = TRUE;
+		if (!strncmp(arg, "--type=zygote", 13)) is_zygote = TRUE;
 	}
+
+#ifdef SELFEXE_WINDOWS
+	if (!is_zygote) {
+		FILE *logfile;
+		logfile = freopen("te4_log.txt", "w", stdout);
+		if (windows_autoflush) setvbuf(logfile, NULL, _IONBF, 2);
+	}
+#endif
+
+	te4_web_load();
 
 	// Initialize display lock for thread safety.
 	renderingLock = SDL_CreateMutex();
@@ -1480,6 +1496,7 @@ int main(int argc, char *argv[])
 	cleanupTimerLock(renderingLock, &display_timer_id, &redraw_pending);
 	cleanupTimerLock(realtimeLock, &realtime_timer_id, &realtime_pending);
 	
+	te4_web_terminate();
 	SDL_Quit();
 	deinit_openal();
 	printf("Thanks for having fun!\n");

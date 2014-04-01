@@ -227,6 +227,10 @@ newBirthDescriptor{
 		__game_difficulty = 4,
 		rank = 2,
 	},
+	game_state = {
+		default_random_rare_chance = 3,
+		default_random_boss_chance = 20,
+	},
 }
 newBirthDescriptor{
 	type = "difficulty",

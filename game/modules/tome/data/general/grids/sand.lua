@@ -122,7 +122,7 @@ newEntity{
 	nice_tiler = { method="replace", base={"PALMTREE", 100, 1, 20}},
 	nice_editer = sand_editer,
 }
-for i = 1, 20 do newEntity{ base="PALMTREE", define_as = "PALMTREE"..i, image = "terrain/sandfloor.png", add_displays = class:makeTrees("terrain/palmtree_alpha", 8, 5) } end
+for i = 1, 20 do newEntity{ base="PALMTREE", define_as = "PALMTREE"..i, image = "terrain/sandfloor.png", add_displays = class:makeTrees("terrain/palmtree_alpha", 8, 5, nil, 25) } end
 
 -----------------------------------------
 -- Sandy exits

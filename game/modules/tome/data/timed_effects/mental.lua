@@ -159,9 +159,7 @@ newEffect{
 newEffect{
 	name = "BATTLE_SHOUT", image = "talents/battle_shout.png",
 	desc = "Battle Shout",
-	
 	long_desc = function(self, eff) return ("Increases maximum life and stamina by %d%%. When the effect ends, the extra life and stamina will be lost."):format(eff.power) end,
-	
 	type = "mental",
 	subtype = { morale=true },
 	status = "beneficial",
@@ -194,10 +192,9 @@ newEffect{
 	on_gain = function(self, err) return "#Target#'s will is shattered.", "+Battle Cry" end,
 	on_lose = function(self, err) return "#Target# regains some of its will.", "-Battle Cry" end,
 	activate = function(self, eff)
-		eff.tmpid = self:addTemporaryValue("combat_def", -eff.power)
-	end,
-	deactivate = function(self, eff)
-		self:removeTemporaryValue("combat_def", eff.tmpid)
+		self:effectTemporaryValue(eff, "combat_def", -eff.power)
+		self:effectTemporaryValue(eff, "no_evasion", 1)
+		self:effectTemporaryValue(eff, "blind_fighted", 1)
 	end,
 }
 

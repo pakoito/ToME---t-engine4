@@ -431,6 +431,13 @@ function _M:actBase()
 		t.do_regenLife(self, t)
 	end
 
+	if self.resting and self.reload then
+		local reloaded = self:reload()
+		if not reloaded and self.reloadQS then
+			self:reloadQS()
+		end
+	end
+
 	-- update hate regen based on calculated decay rate
 	if self:knowTalent(self.T_HATE_POOL) then
 		local t = self:getTalentFromId(self.T_HATE_POOL)
@@ -1044,7 +1051,16 @@ function _M:move(x, y, force)
 					for i, e in ipairs(game.level.map.effects) do if e.damtype == DamageType.SUN_PATH and e.grids[x] and e.grids[x][y] then use_energy = false break end end
 				end
 
-				if use_energy then self:useEnergy(game.energy_to_act * speed) end
+				if use_energy then
+					self:useEnergy(game.energy_to_act * speed)
+
+					if self.reload then
+						local reloaded = self:reload()
+						if not reloaded and self.reloadQS then
+							self:reloadQS()
+						end
+					end
+				end
 
 				if speed <= 0.125 and self:knowTalent(self.T_FAST_AS_LIGHTNING) then
 					local t = self:getTalentFromId(self.T_FAST_AS_LIGHTNING)
@@ -1122,6 +1138,18 @@ function _M:move(x, y, force)
 	self:triggerHook{"Actor:move", moved=moved, force=force, ox=ox, oy=oy}
 
 	return moved
+end
+
+--- Just wait a turn
+function _M:waitTurn()
+	if self.reload then
+		local reloaded = self:reload()
+		if not reloaded and self.reloadQS then
+			self:reloadQS()
+		end
+	end
+
+	self:useEnergy()
 end
 
 --- Knock back the actor
@@ -1540,7 +1568,6 @@ function _M:regenAmmo()
 		ammo.combat.reload_counter = 0
 		ammo.combat.shots_left = util.bound(ammo.combat.shots_left + 1, 0, ammo.combat.capacity)
 	end
-
 end
 
 --- Called before healing
@@ -3092,9 +3119,9 @@ function _M:updateModdableTile()
 	i = self.inven[self.INVEN_CLOAK]; if i and i[1] and i[1].moddable_tile then add[#add+1] = {image = base..(i[1].moddable_tile):format("shoulder")..".png", auto_tall=1} end
 	i = self.inven[self.INVEN_FEET]; if i and i[1] and i[1].moddable_tile then add[#add+1] = {image = base..(i[1].moddable_tile)..".png", auto_tall=1} end
 	i = self.inven[self.INVEN_BODY]; if i and i[1] and i[1].moddable_tile2 then add[#add+1] = {image = base..(i[1].moddable_tile2)..".png", auto_tall=1}
-	elseif not self.moddable_tile_nude then add[#add+1] = {image = base.."lower_body_01.png"} end
+	elseif not self:attr("moddable_tile_nude") then add[#add+1] = {image = base.."lower_body_01.png"} end
 	i = self.inven[self.INVEN_BODY]; if i and i[1] and i[1].moddable_tile then add[#add+1] = {image = base..(i[1].moddable_tile)..".png", auto_tall=1}
-	elseif not self.moddable_tile_nude then add[#add+1] = {image = base.."upper_body_01.png"} end
+	elseif not self:attr("moddable_tile_nude") then add[#add+1] = {image = base.."upper_body_01.png"} end
 	i = self.inven[self.INVEN_HEAD]; if i and i[1] and i[1].moddable_tile then add[#add+1] = {image = base..(i[1].moddable_tile)..".png", auto_tall=1} end
 	i = self.inven[self.INVEN_HANDS]; if i and i[1] and i[1].moddable_tile then add[#add+1] = {image = base..(i[1].moddable_tile)..".png", auto_tall=1} end
 	i = self.inven[self.INVEN_CLOAK]; if i and i[1] and i[1].moddable_tile_hood then add[#add+1] = {image = base..(i[1].moddable_tile):format("hood")..".png", auto_tall=1} end

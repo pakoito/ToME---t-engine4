@@ -56,12 +56,17 @@ newEntity{
 	nice_tiler = { method="replace", base={"ROCKY_SNOWY_TREE", 100, 1, 30} },
 }
 for i = 1, 30 do
-newEntity{ base="ROCKY_SNOWY_TREE",
-	define_as = "ROCKY_SNOWY_TREE"..i,
-	image = "terrain/rocky_ground.png",
-	add_displays = class:makeTrees("terrain/tree_dark_snow", 13, 10),
-	nice_tiler = false,
-}
+	newEntity(class:makeNewTrees({base="ROCKY_SNOWY_TREE", define_as = "ROCKY_SNOWY_TREE"..i, image = "terrain/rocky_ground.png", nice_tiler = false}, {
+		{"small_elm", {"shadow", "trunk", "foliage_winter"}},
+		{"elm", {tall=-1, "shadow", "trunk", "foliage_winter"}},
+		{"pine", {tall=-1, "shadow", "trunk", {"foliage_winter_%02d", 1, 2}, shader_args={attenuation=14}}},
+		{"small_narrow_pine", {"shadow", "trunk", {"foliage_winter_%02d", 1, 2}, shader_args={attenuation=14}}},
+		{"small_wider_pine", {"shadow", "trunk", {"foliage_winter_%02d", 1, 2}, shader_args={attenuation=14}}},
+		{"cypress", {tall=-1, "shadow", "trunk", {"foliage_winter_%02d",1,2}}},
+		{"small_cypress", {tall=-1, "shadow", "trunk", {"foliage_winter_%02d",1,2}}},
+		{"tiny_cypress", {"shadow", "trunk", {"foliage_winter_%02d",1,2}}},
+		{"oak", {tall=-1, "shadow", {"trunk_%02d",1,2}, {"foliage_winter_%02d",1,2}}},
+	}))
 end
 
 newEntity{

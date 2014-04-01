@@ -230,13 +230,13 @@ newTalent{
 			You are not telekinetically wielding anything right now.]]):format(duration)
 		end
 		if o.type == "weapon" then
-			self.use_psi_combat = true
+			self:attr("use_psi_combat", 1)
 			atk = self:combatAttack(o.combat)
 			dam = self:combatDamage(o.combat)
 			apr = self:combatAPR(o.combat)
 			crit = self:combatCrit(o.combat)
 			speed = self:combatSpeed(o.combat)
-			self.use_psi_combat = false
+			self:attr("use_psi_combat ", -1)
 		end
 		return ([[You temporarily set aside a part of you mind to direct your telekinetically-wielded bow. It will automatically attack a target each turn for %d turns.
 			The telekinetically-wielded bow uses Willpower in place of Strength and Cunning in place of Dexterity to determine attack and damage.

@@ -139,6 +139,9 @@ core.display.setGamma(config.settings.gamma_correction / 100)
 if not config.settings.fbo_active then core.display.disableFBO() print("Disabling FBO") end
 if not config.settings.shaders_active then core.shader.disable() print("Disabling Shaders") end
 
+-- Webcore local request resolver
+dofile("/engine/webcore.lua")
+
 -- Load profile configs
 core.profile.createThread()
 profile = engine.PlayerProfile.new()

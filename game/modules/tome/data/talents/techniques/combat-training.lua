@@ -108,7 +108,8 @@ newTalent{
 	levelup_screen_break_line = true,
 	require = { level=function(level) return (level - 1) * 4 end },
 	mode = "passive",
-	getAttack = function(self, t) return self:getTalentLevel(t) * 10 end,
+	--getAttack = function(self, t) return self:getTalentLevel(t) * 10 end,
+	getAttack = function(self, t) return self:combatTalentScale(t, 10, 50) end, -- match values at 1 and 5 for old formula
 	info = function(self, t)
 		local attack = t.getAttack(self, t)
 		return ([[Increases the accuracy of unarmed, melee and ranged weapons by %d.]]):

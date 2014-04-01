@@ -231,8 +231,33 @@ function _M:event(e)
 		elseif e.donator == "recurring" then color = colors.ROYAL_BLUE end
 		e.color_name = color
 
+		local data = zlib.decompress(e.msg)
+		if not data then return end
+		data = data:unserialize()
+		if not data then return end
+
 		self.channels[e.channel] = self.channels[e.channel] or {users={}, log={}}
-		if self.uc_ext then
+
+		if data.kind == "donator-update" and data.donated > 0 then
+			if world then
+				if data.donated <= 5 then world:gainAchievement("BRONZE_DONATOR", game:getPlayer(true))
+				elseif data.donated <= 15 then world:gainAchievement("SILVER_DONATOR", game:getPlayer(true))
+				elseif data.donated <= 30 then world:gainAchievement("GOLD_DONATOR", game:getPlayer(true))
+				elseif data.donated <= 60 then world:gainAchievement("STRALITE_DONATOR", game:getPlayer(true))
+				else world:gainAchievement("VORATUN_DONATOR", game:getPlayer(true))
+				end
+			end
+
+			local text = ([[#{bold}#Thank you#{normal}# for you donation, your support means a lot for the continued survival of this game.
+
+Your current donation total is #LIGHT_GREEN#%0.2f euro#WHITE# which equals to #ROYAL_BLUE#%d voratun coins to use on te4.org.
+Your Item's Vault has #TEAL#%d slots#WHITE#.
+
+Again, thank you, and enjoy Eyal!
+
+#{italic}#Your malevolent local god of darkness, #GOLD#DarkGod#{normal}#]]):format(data.donated, data.donated * 10, data.items_vault_slots)
+			Dialog:simpleLongPopup("Thank you!", text, 600)
+		elseif self.uc_ext then
 			self.uc_ext:event(e)
 		end
 	elseif e.se == "SelfJoin" then

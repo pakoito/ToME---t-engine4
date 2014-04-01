@@ -22,6 +22,8 @@ newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="celestia
 newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="celestial/chants", name = "chants", generic = true, description = "Chant the glory of the Sun." }
 newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="celestial/light", name = "light", generic = true, description = "Invoke the power of the light to heal and mend." }
 newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="celestial/combat", name = "combat", description = "Your devotion allows you to combat your foes with indomitable determination." }
+newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="celestial/radiance", name = "radiance", description = "You channel the light of the sun through your body." }
+newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="celestial/crusader", name = "crusader", description = "Forgo your shield for the chance to crush your foes with a mighty two handed weapon." }
 newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="celestial/sunlight", name = "sunlight", description = "Summon the power of the Sun to burn your foes." }
 newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="celestial/sun", name = "sun", description = "Summon the power of the Sun to burn your foes." }
 newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="celestial/glyphs", name = "glyphs", min_lev = 10, description = "Bind the brilliant powers into glyphs to trap your foes." }
@@ -83,6 +85,8 @@ load("/data/talents/celestial/combat.lua")
 load("/data/talents/celestial/light.lua")
 load("/data/talents/celestial/glyphs.lua")
 load("/data/talents/celestial/guardian.lua")
+load("/data/talents/celestial/radiance.lua")
+load("/data/talents/celestial/crusader.lua")
 
 load("/data/talents/celestial/twilight.lua")
 load("/data/talents/celestial/hymns.lua")

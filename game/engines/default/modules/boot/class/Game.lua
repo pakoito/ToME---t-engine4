@@ -64,7 +64,7 @@ function _M:init()
 		self.background, self.background_tw, self.background_th = self.background:glTexture()
 	end
 
-	self.tooltip = Tooltip.new(nil, 14, nil, colors.DARK_GREY, 380)
+	if not core.webview then self.tooltip = Tooltip.new(nil, 14, nil, colors.DARK_GREY, 380) end
 
 --	self.refuse_threads = true
 	self.normal_key = self.key
@@ -88,6 +88,13 @@ end
 
 function _M:run()
 	self:triggerHook{"Boot:run"}
+
+	-- Web Tooltip?
+	if core.webview then
+		self.webtooltip = require("engine.ui.WebView").new{width=380, height=500, has_frame=true, never_clean=true, allow_popup=true,
+			url = ("http://te4.org/tooltip-ingame?steam=%d&vM=%d&vm=%d&vp=%d"):format(core.steam and 1 or 0, engine.version[1], engine.version[2], engine.version[3])
+		}
+	end
 
 	self.flyers = FlyingText.new()
 	self:setFlyingText(self.flyers)
@@ -126,8 +133,10 @@ Remember that in most roguelikes death is usually permanent so be careful!
 Now go and have some fun!]]
 		}
 
-		self:serverNews()
-		self:updateNews()
+		if self.tooltip then
+			self:serverNews()
+			self:updateNews()
+		end
 	end
 
 --	self:installNewEngine()
@@ -316,6 +325,8 @@ function _M:getPlayer()
 end
 
 function _M:updateNews()
+	if not self.tooltip then return end
+
 	if self.news.link then
 		self.tooltip:set("#AQUAMARINE#%s#WHITE#\n---\n%s\n---\n#LIGHT_BLUE##{underline}#%s#LAST##{normal}#", self.news.title, self.news.text, self.news.link)
 	else
@@ -372,8 +383,12 @@ function _M:display(nb_keyframes)
 			end
 			self.background:toScreenFull(x, y, w, h, w * self.background_tw / self.background_w, h * self.background_th / self.background_h)
 		end
-		self.tooltip:display()
-		self.tooltip:toScreen(5, 5)
+		if self.tooltip then
+			if #self.dialogs == 0 or not self.dialogs[#self.dialogs].__show_only then
+				self.tooltip:display()
+				self.tooltip:toScreen(5, 5)
+			end
+		end
 		self.logdisplay:toScreen()
 		engine.GameEnergyBased.display(self, nb_keyframes)
 		if self.full_fbo then self.full_fbo:use(false) self.full_fbo:toScreen(0, 0, self.w, self.h, self.full_fbo_shader.shad) end
@@ -410,8 +425,12 @@ function _M:display(nb_keyframes)
 --		core.display.drawQuad(0, 0, game.w, game.h, 128, 128, 128, 128)
 	end
 
-	self.tooltip:display()
-	self.tooltip:toScreen(5, 5)
+	if self.tooltip then
+		if #self.dialogs == 0 or not self.dialogs[#self.dialogs].__show_only then
+			self.tooltip:display()
+			self.tooltip:toScreen(5, 5)
+		end
+	end
 
 	self.logdisplay:toScreen()
 

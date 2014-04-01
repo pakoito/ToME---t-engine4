@@ -55,7 +55,7 @@ newTalent{
 		return math.floor(self:combatStatTalentIntervalDamage(t, "combatMindpower", 3, 20))
 	end,
 	action = function(self, t)
-		local d d = self:showInventory("Reshape which weapon?", self:getInven("INVEN"), function(o) return not o.quest and o.type == "weapon" and not o.fully_reshaped end, function(o, item)
+		local d d = self:showInventory("Reshape which weapon?", self:getInven("INVEN"), function(o) return not o.quest and o.type == "weapon" and not o.fully_reshaped and o.subtype ~= "mindstar" end, function(o, item)
 			--o.wielder = o.wielder or {}
 			if (o.old_atk or 0) < t.boost(self, t) then
 				o.combat.atk = (o.combat.atk or 0) - (o.old_atk or 0)
@@ -83,6 +83,7 @@ newTalent{
 	info = function(self, t)
 		local weapon_boost = t.boost(self, t)
 		return ([[Manipulate forces on the molecular level to realign, rebalance, and hone your weapon. Permanently increases the Accuracy and damage of any weapon by %d.
+		Mindstars being weapons of the mind can not be affected.
 		These values scale with your Mindpower.]]):
 		format(weapon_boost)
 	end,

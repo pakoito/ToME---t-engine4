@@ -2174,3 +2174,75 @@ newTalent{
 		format(defense, saves)
 	end,
 }
+
+newTalent{
+	name = "Maim",
+	type = {"technique/other", 1},
+	points = 5,
+	random_ego = "attack",
+	cooldown = 12,
+	stamina = 10,
+	tactical = { ATTACK = { PHYSICAL = 2 }, DISABLE = 2 },
+	requires_target = true,
+	getDuration = function(self, t) return math.floor(self:combatTalentScale(t, 3, 7)) end,
+	getDamage = function(self, t) return self:combatTalentPhysicalDamage(t, 10, 100) * getUnarmedTrainingBonus(self) end,
+	getMaim = function(self, t) return self:combatTalentPhysicalDamage(t, 5, 30) end,
+	-- Learn the appropriate stance
+	action = function(self, t)
+		local tg = {type="hit", range=self:getTalentRange(t)}
+		local x, y, target = self:getTarget(tg)
+		if not x or not y or not target then return nil end
+		if core.fov.distance(self.x, self.y, x, y) > 1 then return nil end
+
+		local grappled = false
+
+		-- breaks active grapples if the target is not grappled
+		if target:isGrappled(self) then
+			grappled = true
+		else
+			self:breakGrapples()
+		end
+
+		-- end the talent without effect if the target is to big
+		if self:grappleSizeCheck(target) then
+			return true
+		end
+
+		-- start the grapple; this will automatically hit and reapply the grapple if we're already grappling the target
+		local hit = self:startGrapple (target)
+		-- deal damage and maim if appropriate
+		if hit then
+			if grappled then
+				self:project(target, x, y, DamageType.PHYSICAL, self:physicalCrit(t.getDamage(self, t), nil, target, self:combatAttack(), target:combatDefense()))
+				target:setEffect(target.EFF_MAIMED, t.getDuration(self, t), {power=t.getMaim(self, t)})
+			else
+				self:project(target, x, y, DamageType.PHYSICAL, self:physicalCrit(t.getDamage(self, t), nil, target, self:combatAttack(), target:combatDefense()))
+			end
+		end
+
+		return true
+	end,
+	info = function(self, t)
+		local duration = t.getDuration(self, t)
+		local damage = t.getDamage(self, t)
+		local maim = t.getMaim(self, t)
+		return ([[Grapples the target and inflicts %0.2f physical damage. If the target is already grappled, the target will be maimed as well, reducing damage by %d and global speed by 30%% for %d turns.
+		The grapple effects will be based off your grapple talent, if you have it, and the damage will scale with your Physical Power.]])
+		:format(damDesc(self, DamageType.PHYSICAL, (damage)), maim, duration)
+	end,
+}
+
+newTalent{
+	name = "Bloodrage",
+	type = {"technique/other", 1},
+	points = 5,
+	mode = "passive",
+	getDuration = function(self, t) return math.floor(self:combatTalentScale(t, 6, 10)) end,
+	on_kill = function(self, t)
+		self:setEffect(self.EFF_BLOODRAGE, t.getDuration(self, t), {max=math.floor(self:getTalentLevel(t) * 6), inc=2})
+	end,
+	info = function(self, t)
+		return ([[Each time one of your foes bites the dust, you feel a surge of power, increasing your strength by 2 up to a maximum of %d for %d turns.]]):
+		format(math.floor(self:getTalentLevel(t) * 6), t.getDuration(self, t))
+	end,
+}

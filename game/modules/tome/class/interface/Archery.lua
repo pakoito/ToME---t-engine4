@@ -182,7 +182,7 @@ local function archery_projectile(tx, ty, tg, self, tmp)
 	self.turn_procs.weapon_type = {kind=weapon and weapon.talented or "unknown", mode="archery"}
 
 	-- Does the blow connect? yes .. complex :/
-	if tg.archery.use_psi_archery then self.use_psi_combat = true end
+	if tg.archery.use_psi_archery then self:attr("use_psi_combat", 1) end
 	local atk, def = self:combatAttackRanged(weapon, ammo), target:combatDefenseRanged()
 	local dam, apr, armor = self:combatDamage(ammo), self:combatAPR(ammo) + (weapon and weapon.apr or 0), target:combatArmor()
 	atk = atk + (tg.archery.atk or 0)
@@ -429,7 +429,7 @@ local function archery_projectile(tx, ty, tg, self, tmp)
 	end
 
 	-- Conduit (Psi)
-	if hitted and not target.dead and self:knowTalent(self.T_CONDUIT) and self:isTalentActive(self.T_CONDUIT) and self.use_psi_combat then
+	if hitted and not target.dead and self:knowTalent(self.T_CONDUIT) and self:isTalentActive(self.T_CONDUIT) and self:attr("use_psi_combat") then
 		local t =  self:getTalentFromId(self.T_CONDUIT)
 		--t.do_combat(self, t, target)
 		local mult = 1 + 0.2*(self:getTalentLevel(t))
@@ -494,7 +494,7 @@ local function archery_projectile(tx, ty, tg, self, tmp)
 	end
 
 	self.turn_procs.weapon_type = nil
-	self.use_psi_combat = false
+	if tg.archery.use_psi_archery then self:attr("use_psi_combat", -1) end
 end
 -- Store it for addons
 _M.archery_projectile = archery_projectile
@@ -612,4 +612,56 @@ function _M:hasAmmo(type)
 	if not ammo.combat.capacity then return nil, "bad ammo" end
 	if type and ammo.archery_ammo ~= type then return nil, "bad type" end
 	return ammo
+end
+
+--- Get the ammo in the quick slot.
+function _M:hasAmmoQS(type)
+	if not self:getInven("QS_QUIVER") then return nil, "no ammo" end
+	local ammo = self:getInven("QS_QUIVER")[1]
+
+	if not ammo then return nil, "no ammo" end
+	if not ammo.archery_ammo then return nil, "bad ammo" end
+	if not ammo.combat then return nil, "bad ammo" end
+	if not ammo.combat.capacity then return nil, "bad ammo" end
+	if type and ammo.archery_ammo ~= type then return nil, "bad type" end
+	return ammo
+end
+
+-- Get the current reload rate.
+function _M:reloadRate()
+	return 1 + (self.ammo_reload_speed or 0) + (self.ammo_mastery_reload or 0)
+end
+
+-- Get the current reload rate for the quick slot ammo.
+function _M:reloadRateQS()
+	local ammo_main = self:hasAmmo()
+	local ammo_qs = self:hasAmmoQS()
+	local add = 0
+	if ammo_main and ammo_main.wielder and ammo_main.wielder.ammo_reload_speed then
+		add = add - ammo_main.wielder.ammo_reload_speed
+	end
+	if ammo_qs and ammo_qs.wielder and ammo_qs.wielder.ammo_reload_speed then
+		add = add + ammo_qs.wielder.ammo_reload_speed
+	end
+	return self:reloadRate() + add
+end
+
+-- Increase ammo by reload amount. Returns true if actually reloaded.
+function _M:reload()
+	local ammo, err = self:hasAmmo()
+	if not ammo then return end
+	if ammo.combat.shots_left >= ammo.combat.capacity then return end
+	local reloads = self:reloadRateQS()
+	ammo.combat.shots_left = math.min(ammo.combat.capacity, ammo.combat.shots_left + reloads)
+	return true
+end
+
+-- Increase qs ammo by reload amount. Returns true if actually reloaded.
+function _M:reloadQS()
+	local ammo, err = self:hasAmmoQS()
+	if not ammo then return end
+	if ammo.combat.shots_left >= ammo.combat.capacity then return end
+	local reloads = self:reloadRateQS()
+	ammo.combat.shots_left = math.min(ammo.combat.capacity, ammo.combat.shots_left + reloads)
+	return true
 end
