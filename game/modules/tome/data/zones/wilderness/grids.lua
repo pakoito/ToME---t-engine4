@@ -294,8 +294,8 @@ newEntity{
 for i = 1, 7 do newEntity{ base="ELVENWOOD_SNOW", define_as = "ELVENWOOD_SNOW"..i, image = "terrain/frozen_ground.png", add_displays={class.new{z=17, image="terrain/worldmap/WM_snow_elvenwood_5_0"..i..".png", display_h=2, display_y=-1}}} end
 
 local elvenwoon_green_forest_editer = { method="borders", type="thaloren forest", use_type="name",
-	default8={z=16, add_mos={{image="terrain/worldmap/WM_green_elvenwood_8_%02d.png", display_y=-1}}, min=1, max=3},
-	default2={z=6,  add_mos={{image="terrain/worldmap/WM_green_elvenwood_2_%02d.png", display_h=2}}, min=1, max=3},
+	default8={z=16, add_mos={{image="terrain/worldmap/WM_green_elvenwood_8_%02d.png", display_y=-1, display_h=2}}, min=1, max=3},
+	default2={z=6,  add_mos={{image="terrain/worldmap/WM_green_elvenwood_2_%02d.png", display_y=-1, display_h=2}}, min=1, max=3},
 	default4={z=16, add_mos={{image="terrain/worldmap/WM_green_elvenwood_4_%02d.png", display_x=-1, display_h=2, display_y=-1}}, min=1, max=2},
 	default6={z=16, add_mos={{image="terrain/worldmap/WM_green_elvenwood_6_%02d.png", display_x=1, display_h=2, display_y=-1}}, min=1, max=2},
 

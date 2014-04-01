@@ -28,7 +28,8 @@ __show_only = true
 local title_font = core.display.newFont("/data/font/DroidSans-Bold.ttf", 32)
 local aura = {
 	Shader.new("awesomeaura", {flameScale=0.6, time_factor=8000}),
-	Shader.new("crystalineaura", {time_factor=8000}),
+	Shader.new("awesomeaura", {flameScale=0.6, time_factor=8000}),
+--	Shader.new("crystalineaura", {time_factor=8000}),
 }
 local aura_texture = {
 	core.display.loadImage("/data/gfx/flame_credits.png"):glTexture(),
@@ -109,6 +110,7 @@ local credits = {
 	{"Madmonk"},
 	{"Neil Stevens"},
 	{"Shani"},
+	{"Shibari"},
 	{"Tiger Eye"},
 	{"Yufra"},
 	false,
