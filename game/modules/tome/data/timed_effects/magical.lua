@@ -568,6 +568,22 @@ newEffect{
 	end,
 }
 
+-- This only exists to mark a timer for Radiance being consumed
+newEffect{
+	name = "RADIANCE_DIM", image = "talents/curse_of_vulnerability.png",
+	desc = "Radiance Lost",
+	long_desc = function(self, eff) return ("You have expended the power of your Radiance temporarily reducing its radius to 1."):format() end,
+	type = "other",
+	subtype = { radiance=true },
+	parameters = { },
+	on_gain = function(self, err) return "#Target#'s aura dims.", "+Dim" end,
+	on_lose = function(self, err) return "#Target# shines with renewed light.", "-Dim" end,
+	activate = function(self, eff)
+	end,
+	deactivate = function(self, eff)
+	end,
+}
+
 newEffect{
 	name = "CURSE_VULNERABILITY", image = "talents/curse_of_vulnerability.png",
 	desc = "Curse of Vulnerability",
@@ -2474,35 +2490,21 @@ newEffect{
 newEffect{
 	name = "SUNCLOAK", image = "talents/suncloak.png",
 	desc = "Suncloak",
-	long_desc = function(self, eff) return ("The target is filled with the Sun's fury, next Sun Beam will be instant cast."):format() end,
+	long_desc = function(self, eff) return ("The target is protected by the sun, increasing their spell casting speed by 30%%, reducing spell cooldowns by 30%%, and preventing damage over %d%% of your maximum life from a single hit."):format(eff.cap) end,
 	type = "magical",
 	subtype = { sun=true, },
 	status = "beneficial",
-	parameters = {},
-	on_gain = function(self, err) return "#Target# is filled with the Sun's fury!", "+Sun's Vengeance" end,
-	on_lose = function(self, err) return "#Target#'s solar fury subsides.", "-Sun's Vengeance" end,
+	parameters = {cap = 1, haste = 0.1},
+	on_gain = function(self, err) return "#Target# is energized and protected by the Sun!", "+Suncloak" end,
+	on_lose = function(self, err) return "#Target#'s solar fury subsides.", "-Suncloak" end,
 	activate = function(self, eff)
-		self:effectTemporaryValue(eff, "resists", {all=eff.resists})
-		self:effectTemporaryValue(eff, "reduce_detrimental_status_effects_time", eff.reduce)
+		self:effectTemporaryValue(eff, "flat_damage_cap", {all=eff.cap})
+		self:effectTemporaryValue(eff, "combat_spellspeed", eff.haste)
+		self:effectTemporaryValue(eff, "spell_cooldown_reduction", eff.haste)
 		eff.particle = self:addParticles(Particles.new("suncloak", 1))
 	end,
 	deactivate = function(self, eff)
 		self:removeParticles(eff.particle)
-	end,
-}
-
-newEffect{
-	name = "ABSORPTION_STRIKE", image = "talents/absorption_strike.png",
-	desc = "Absorption Strike",
-	long_desc = function(self, eff) return ("The target's light has been drained, reducing light resistance by %d%%."):format(eff.power) end,
-	type = "magical",
-	subtype = { sun=true, },
-	status = "detrimental",
-	parameters = { power = 10 },
-	on_gain = function(self, err) return "#Target# is drained from light!", "+Absorption Strike" end,
-	on_lose = function(self, err) return "#Target#'s light is back.", "-Absorption Strike" end,
-	activate = function(self, eff)
-		self:effectTemporaryValue(eff, "resists", {[DamageType.LIGHT]=-eff.power})
 	end,
 }
 

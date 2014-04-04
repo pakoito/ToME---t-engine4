@@ -29,6 +29,7 @@ newTalent{
 	range = 10,
 	tactical = { CLOSEIN = 2, ESCAPE = 2 },
 	requires_target = true,
+	no_energy = true,
 	getSpeed = function(self, t) return self:combatTalentScale(t, 470, 750, 0.75) end,
 	getDuration = function(self, t) return math.ceil(self:combatTalentScale(t, 1.1, 2.6)) end,
 	on_learn = function(self, t) self.resists[DamageType.LIGHTNING] = (self.resists[DamageType.LIGHTNING] or 0) + 1 end,

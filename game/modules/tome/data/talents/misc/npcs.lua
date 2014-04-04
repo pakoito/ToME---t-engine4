@@ -2246,3 +2246,83 @@ newTalent{
 		format(math.floor(self:getTalentLevel(t) * 6), t.getDuration(self, t))
 	end,
 }
+
+newTalent{
+	name = "Martyrdom",
+	type = {"spell/other", 1},
+	points = 5,
+	random_ego = "attack",
+	cooldown = 22,
+	positive = 25,
+	tactical = { DISABLE = 2 },
+	range = 6,
+	reflectable = true,
+	requires_target = true,
+	getReturnDamage = function(self, t) return self:combatLimit(self:getTalentLevel(t)^.5, 100, 15, 1, 40, 2.24) end, -- Limit <100%
+	action = function(self, t)
+		local tg = {type="bolt", range=self:getTalentRange(t), talent=t}
+		local x, y = self:getTarget(tg)
+		if not x or not y then return nil end
+		local _ _, x, y = self:canProject(tg, x, y)
+		game:playSoundNear(self, "talents/spell_generic")
+		local target = game.level.map(x, y, Map.ACTOR)
+		if target then
+			target:setEffect(self.EFF_MARTYRDOM, 10, {src = self, power=t.getReturnDamage(self, t), apply_power=self:combatSpellpower()})
+		else
+			return
+		end
+		return true
+	end,
+	info = function(self, t)
+		local returndamage = t.getReturnDamage(self, t)
+		return ([[Designate a target as a martyr for 10 turns. When the martyr deals damage, it also damages itself for %d%% of the damage dealt.]]):
+		format(returndamage)
+	end,
+}
+
+newTalent{
+	name = "Overpower",
+	type = {"technique/other", 1},
+	points = 5,
+	random_ego = "attack",
+	cooldown = 8,
+	stamina = 22,
+	requires_target = true,
+	tactical = { ATTACK = 2, ESCAPE = { knockback = 1 }, DISABLE = { knockback = 1 } },
+	on_pre_use = function(self, t, silent) if not self:hasShield() then if not silent then game.logPlayer(self, "You require a weapon and a shield to use this talent.") end return false end return true end,
+	action = function(self, t)
+		local shield = self:hasShield()
+		if not shield then
+			game.logPlayer(self, "You cannot use Overpower without a shield!")
+			return nil
+		end
+
+		local tg = {type="hit", range=self:getTalentRange(t)}
+		local x, y, target = self:getTarget(tg)
+		if not x or not y or not target then return nil end
+		if core.fov.distance(self.x, self.y, x, y) > 1 then return nil end
+
+		-- First attack with weapon
+		self:attackTarget(target, nil, self:combatTalentWeaponDamage(t, 0.8, 1.3), true)
+		-- Second attack with shield
+		self:attackTargetWith(target, shield.special_combat, nil, self:combatTalentWeaponDamage(t, 0.8, 1.3, self:getTalentLevel(self.T_SHIELD_EXPERTISE)))
+		-- Third attack with shield
+		local speed, hit = self:attackTargetWith(target, shield.special_combat, nil, self:combatTalentWeaponDamage(t, 0.8, 1.3, self:getTalentLevel(self.T_SHIELD_EXPERTISE)))
+
+		-- Try to stun !
+		if hit then
+			if target:checkHit(self:combatAttack(shield.special_combat), target:combatPhysicalResist(), 0, 95, 5 - self:getTalentLevel(t) / 2) and target:canBe("knockback") then
+				target:knockback(self.x, self.y, 4)
+			else
+				game.logSeen(target, "%s resists the knockback!", target.name:capitalize())
+			end
+		end
+
+		return true
+	end,
+	info = function(self, t)
+		return ([[Hits the target with your weapon doing %d%% damage and two shield strikes doing %d%% damage, trying to overpower your target.
+		If the last attack hits, the target is knocked back. The chance for knockback increases with your Accuracy.]])
+		:format(100 * self:combatTalentWeaponDamage(t, 0.8, 1.3), 100 * self:combatTalentWeaponDamage(t, 0.8, 1.3, self:getTalentLevel(self.T_SHIELD_EXPERTISE)))
+	end,
+}

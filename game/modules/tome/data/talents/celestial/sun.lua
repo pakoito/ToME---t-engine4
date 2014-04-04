@@ -17,13 +17,14 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
+-- Baseline blind because the class has a lot of trouble with CC early game and rushing TL4 isn't reasonable
 newTalent{
 	name = "Sun Beam",
 	type = {"celestial/sun", 1},
 	require = divi_req1,
 	random_ego = "attack",
 	points = 5,
-	cooldown = 6,
+	cooldown = 9,
 	positive = -16,
 	range = 7,
 	tactical = { ATTACK = {LIGHT = 2} },
@@ -34,18 +35,21 @@ newTalent{
 	getDamage = function(self, t)
 		local mult = 1
 		if self:attr("amplify_sun_beam") then mult = 1 + self:attr("amplify_sun_beam") / 100 end
-		return self:combatTalentSpellDamage(t, 6, 220) * mult
+		return self:combatTalentSpellDamage(t, 20, 240) * mult
 	end,
 	getDuration = function(self, t) return math.floor(self:combatTalentScale(t, 2, 4)) end,
 	action = function(self, t)
-		local tg = {type="bolt", range=self:getTalentRange(t), talent=t}
+		local tg = {type="hit", range=self:getTalentRange(t), talent=t}
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
 		self:project(tg, x, y, DamageType.LIGHT, self:spellCrit(t.getDamage(self, t)), {type="light"})
 
 		if self:getTalentLevel(t) >= 4 then
 			local _ _, x, y = self:canProject(tg, x, y)
-			self:project({type="ball", x=x, y=y, radius=1, selffire=false}, x, y, DamageType.BLIND, t.getDuration(self, t), {type="light"})
+			self:project({type="ball", x=x, y=y, radius=2, selffire=false}, x, y, DamageType.BLIND, t.getDuration(self, t), {type="light"})
+		else
+			local _ _, x, y = self:canProject(tg, x, y)
+			self:project({type="hit", x=x, y=y, radius=0, selffire=false}, x, y, DamageType.BLIND, t.getDuration(self, t), {type="light"})
 		end
 
 		-- Delay removal of the effect so its still there when no_energy checks
@@ -58,39 +62,43 @@ newTalent{
 	end,
 	info = function(self, t)
 		local damage = t.getDamage(self, t)
-		return ([[Calls the a beam of light from the Sun, doing %0.2f damage to the target.
-		At level 4 the beam will be so intense it blinds all foes in radius 1 for %d turns.
+		return ([[Calls the a beam of light from the Sun, doing %0.2f damage to the target and blinding them.
+		At level 4 the beam will be so intense it blinds all foes in radius 2 for %d turns.
 		The damage dealt will increase with your Spellpower.]]):
 		format(damDesc(self, DamageType.LIGHT, damage), t.getDuration(self, t))
 	end,
 }
 
+-- Core class defense to be compared with Bone Shield, Aegis, Indiscernable Anatomy, etc
+-- Moderate offensive scaler
+-- The CD reduction effects more abilities on the class than it doesn't
 newTalent{
 	name = "Suncloak",
 	type = {"celestial/sun", 2},
 	require = divi_req2,
 	points = 5,
-	cooldown = 15,
+	cooldown = 20, -- CD reduction works on this 
 	positive = -15,
 	tactical = { BUFF = 2 },
 	direct_hit = true,
 	requires_target = true,
 	range = 10,
-	getResists = function(self, t) return 10 + self:combatTalentSpellDamage(t, 4, 150) / 10 end,
-	getDuration = function(self, t) return 20 + self:combatTalentSpellDamage(t, 4, 400) / 10 end,
+	getCap = function(self, t) return math.max(50, 100 - self:getTalentLevelRaw(t) * 10) end,
+	getHaste = function(self, t) return math.min(1, self:combatTalentSpellDamage(t, 0.2, 0.8)) end,
 	action = function(self, t)
-		self:setEffect(self.EFF_SUNCLOAK, 5, {reduce=t.getDuration(self, t), resists=t.getResists(self, t)})
+		self:setEffect(self.EFF_SUNCLOAK, 6, {cap=t.getCap(self, t), haste=t.getHaste(self, t)})
 		game:playSoundNear(self, "talents/flame")
 		return true
 	end,
 	info = function(self, t)
-		return ([[You wrap yourself in a cloak of sunlight for 5 turns.
-		While the cloak is active all new detrimental temporary effects have their duration reduced by %d%% and all your resistances are increased by %d%%.
+		return ([[You wrap yourself in a cloak of sunlight that empowers your magic and protects you for 6 turns.
+		While the cloak is active your spell casting speed is increased by %d%%, your spell cooldowns are reduced by %d%%, and you cannot take more than %d%% of your maximum life from a single blow.
 		The effects will increase with your Spellpower.]]):
-		format(t.getDuration(self, t), t.getResists(self, t))
+		format(t.getHaste(self, t)*100, t.getHaste(self, t)*100, t.getCap(self, t))
    end,
 }
 
+-- Can someone put a really obvious visual on this?
 newTalent{
 	name = "Sun's Vengeance", short_name = "SUN_VENGEANCE",
 	type = {"celestial/sun",3},

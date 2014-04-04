@@ -25,6 +25,40 @@ local Map = require "engine.Map"
 local Level = require "engine.Level"
 local Combat = require "mod.class.interface.Combat"
 
+newEffect{
+	name = "FLASH_SHIELD", image = "talents/flash_of_the_blade.png",
+	desc = "Protected by the Sun",
+	long_desc = function(self, eff) return "The Sun has granted a brief immunity to all damage." end,
+	type = "other",
+	subtype = { },
+	status = "beneficial",
+	on_gain = function(self, err) return "#Target# whirls around and a radiant shield surrounds them!", "+Divine Shield" end,
+	parameters = {},
+	activate = function(self, eff)
+		self:effectTemporaryValue(eff, "cancel_damage_chance", 100)
+	end,
+	deactivate = function(self, eff)
+
+	end,
+}
+
+-- type other because this is a core defensive mechanic in debuff form, it should not interact with saves
+newEffect{
+	name = "ABSORPTION_STRIKE", image = "talents/absorption_strike.png",
+	desc = "Absorption Strike",
+	long_desc = function(self, eff) return ("The target's light has been drained, reducing light resistance by %d%% and damage by %d%%."):format(eff.power, eff.numb) end,
+	type = "other",
+	subtype = { sun=true, },
+	status = "detrimental",
+	parameters = { power = 10, numb = 1 },
+	on_gain = function(self, err) return "#Target# is drained from light!", "+Absorption Strike" end,
+	on_lose = function(self, err) return "#Target#'s light is back.", "-Absorption Strike" end,
+	activate = function(self, eff)
+		self:effectTemporaryValue(eff, "resists", {[DamageType.LIGHT]=-eff.power})
+		self:effectTemporaryValue(eff, "numbed", eff.numb)
+	end,
+}
+
 -- Design:  Temporary immobility in exchange for a large stat buff.
 newEffect{
 	name = "TREE_OF_LIFE", image = "shockbolt/object/artifact/tree_of_life.png",

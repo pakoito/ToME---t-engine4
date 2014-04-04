@@ -347,7 +347,7 @@ newEffect{
 newEffect{
 	name = "STUNNED", image = "effects/stunned.png",
 	desc = "Stunned",
-	long_desc = function(self, eff) return ("The target is stunned, reducing damage by 70%%, putting random talents on cooldown and reducing movement speed by 50%%. While stunned talents do not cooldown."):format() end,
+	long_desc = function(self, eff) return ("The target is stunned, reducing damage by 60%%, putting 3 random talents on cooldown and reducing movement speed by 50%%. While stunned talents do not cooldown."):format() end,
 	type = "physical",
 	subtype = { stun=true },
 	status = "detrimental",
@@ -364,7 +364,7 @@ newEffect{
 			local t = self:getTalentFromId(tid)
 			if t and not self.talents_cd[tid] and t.mode == "activated" and not t.innate and util.getval(t.no_energy, self, t) ~= true then tids[#tids+1] = t end
 		end
-		for i = 1, 4 do
+		for i = 1, 3 do
 			local t = rng.tableRemove(tids)
 			if not t then break end
 			self.talents_cd[t.id] = 1 -- Just set cooldown to 1 since cooldown does not decrease while stunned

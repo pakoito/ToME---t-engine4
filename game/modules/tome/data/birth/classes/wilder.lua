@@ -137,7 +137,7 @@ newBirthDescriptor{
 		["wild-gift/fungus"]={true, 0.1},
 		["cunning/survival"]={false, 0},
 		["technique/shield-offense"]={true, 0.1},
-		["technique/2hweapon-offense"]={true, 0.1},
+		["technique/2hweapon-assault"]={true, 0.1},
 		["technique/combat-techniques-active"]={false, 0},
 		["technique/combat-techniques-passive"]={true, 0},
 		["technique/combat-training"]={true, 0},

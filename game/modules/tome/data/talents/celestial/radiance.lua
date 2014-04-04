@@ -18,7 +18,11 @@
 -- darkgod@te4.org
 
 function radianceRadius(self)
-	return self:getTalentRadius(self:getTalentFromId(self.T_RADIANCE))
+	if self:hasEffect(self.EFF_RADIANCE_DIM) then
+		return 1
+	else
+		return self:getTalentRadius(self:getTalentFromId(self.T_RADIANCE))
+	end
 end
 
 newTalent{
@@ -59,14 +63,10 @@ newTalent{
 				local ss = self:isTalentActive(self.T_SEARING_SIGHT)
 				if ss then
 					local dist = core.fov.distance(self.x, self.y, target.x, target.y) - 1
-					local coeff = math.scale(radius - dist, 1, radius, 0.1, 1)
-					local realdam = DamageType:get(DamageType.LIGHT).projector(self, target.x, target.y, DamageType.LIGHT, ss.dam * coeff)
+					local coeff = math.max(0.1, 1 - (0.1*dist)) -- 10% less damage per distance
+					DamageType:get(DamageType.LIGHT).projector(self, target.x, target.y, DamageType.LIGHT, ss.dam * coeff)
 					if ss.daze and rng.percent(ss.daze) and target:canBe("stun") then
 						target:setEffect(target.EFF_DAZED, 3, {apply_power=self:combatSpellpower()})
-					end
-
-					if realdam and realdam > 0 and self:hasEffect(self.EFF_LIGHT_BURST) then
-						self:setEffect(self.EFF_LIGHT_BURST_SPEED, 4, {})
 					end
 				end
 		end
@@ -81,6 +81,8 @@ newTalent{
 	end,
 }
 
+-- This doesn't work well in practice.. Its powerful but it leads to cheesy gameplay, spams combat logs, maybe even lags
+-- It can stay like this for now but may be worth making better
 newTalent{
 	name = "Searing Sight",
 	type = {"celestial/radiance",3},
@@ -90,8 +92,8 @@ newTalent{
 	cooldown = 15,
 	range = function(self) return radianceRadius(self) end,
 	tactical = { ATTACKAREA = {LIGHT=1} },
-	sustain_positive = 40,
-	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 1, 90) end,
+	sustain_positive = 10,
+	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 1, 50) end,
 	getDaze = function(self, t) return self:combatTalentLimit(t, 35, 5, 20) end,
 	activate = function(self, t)
 		local daze = nil
@@ -115,28 +117,54 @@ newTalent{
 	require = divi_req4,
 	points = 5,
 	cooldown = 25,
-	positive = 15,
-	tactical = { DISABLE = {blind=1} },
+	positive = 20,
+	tactical = { ATTACKAREA = {LIGHT = 2} },
+	radius = function(self) return radianceRadius(self) end,
 	range = function(self) return radianceRadius(self) end,
-	requires_target = true,
-	getDur = function(self, t) return self:combatTalentLimit(t, 9, 2, 6) end,
-	getMax = function(self, t) return math.floor(self:combatTalentScale(t, 2, 8)) end,
+	getMoveDamage = function(self, t) return self:combatTalentSpellDamage(t, 1, 40) end,
+	getExplosionDamage = function(self, t) return self:combatTalentSpellDamage(t, 20, 150) end,
 	action = function(self, t)
-		local radius = radianceRadius(self)
-		local grids = core.fov.circle_grids(self.x, self.y, radius, true)
-		for x, yy in pairs(grids) do for y, _ in pairs(grids[x]) do local target = game.level.map(x, y, Map.ACTOR) if target and self ~= target then
-			if target:canBe("blind") then
-				target:setEffect(target.EFF_BLINDED, 4, {apply_power=self:combatSpellpower()})
-			end
-		end end end
 
-		self:setEffect(self.EFF_LIGHT_BURST, t.getDur(self, t), {max=t.getMax(self, t)})
+		local tg = {type="ball", range=self:getTalentRange(t), radius = self:getTalentRadius(t), selffire = false, talent=t}
+
+		local movedam = self:spellCrit(t.getMoveDamage(self, t))
+		local dam = self:spellCrit(t.getExplosionDamage(self, t))
+
+		self:project(tg, self.x, self.y, function(tx, ty)
+			local target = game.level.map(tx, ty, engine.Map.ACTOR)
+			if not target then return end
+
+			local proj = require("mod.class.Projectile"):makeHoming(
+				self,
+				{particle="bolt_light", trail="lighttrail"},
+				{speed=1, name="Judgement", dam=dam, movedam=movedam},
+				target,
+				self:getTalentRange(t),
+				function(self, src)
+					local DT = require("engine.DamageType")
+					DT:get(DT.JUDGEMENT).projector(src, self.x, self.y, DT.JUDGEMENT, self.def.movedam)
+				end,
+				function(self, src, target)
+					local DT = require("engine.DamageType")
+					local grids = src:project({type="ball", radius=1, x=self.x, y=self.y}, self.x, self.y, DT.JUDGEMENT, self.def.dam)
+
+						
+					game.level.map:particleEmitter(self.x, self.y, 1, "sunburst", {radius=1, grids=grids, tx=self.x, ty=self.y})
+					
+					game:playSoundNear(self, "talents/lightning")
+				end
+			)
+			game.zone:addEntity(game.level, proj, "projectile", self.x, self.y)
+		end)
+		
+		-- EFF_RADIANCE_DIM does nothing by itself its just used by radianceRadius
+		self:setEffect(self.EFF_RADIANCE_DIM, 8, {})
+
 		return true
 	end,
 	info = function(self, t)
-		return ([[Concentrate your Radiance in a blinding flash of light. All foes caught inside will be blinded for 3 turns.
-		In addition for %d turns each time your Searing Sight damages a foe you gain a movement bonus of 10%%, stacking up to %d times.]]):
-		format(t.getDur(self, t), t.getMax(self, t))
+		return ([[Fire a glowing orb of light at each enemy within your Radiance.  Each orb will slowly follow its target until it connects dealing %d light damage to anything else it contacts along the way.  When the target is reached the orb will explode dealing %d light damage and healing you for 50%% of the damage dealt.  This powerful ability will dim your Radiance reducing its radius to 1 for 5 turns.]]):
+		format(t.getMoveDamage(self, t), t.getExplosionDamage(self, t))
 	end,
 }
 

@@ -26,6 +26,7 @@ local function cancelChants(self)
 	end
 end
 
+-- Synergizes with melee classes (escort), Weapon of Wrath, healing mod (avoid overheal > healing efficiency), and low spellpower
 newTalent{
 	name = "Chant of Fortitude",
 	type = {"celestial/chants", 1},
@@ -39,15 +40,18 @@ newTalent{
 	tactical = { BUFF = 2 },
 	range = 10,
 	getResists = function(self, t) return self:combatTalentSpellDamage(t, 5, 70) end,
+	getLifePct = function(self, t) return math.min(0.55, self:combatTalentScale(t, 0.05, 0.25, 1)) end,
 	getDamageOnMeleeHit = function(self, t) return self:combatTalentSpellDamage(t, 5, 25) end,
 	activate = function(self, t)
 		cancelChants(self)
 		local power = t.getResists(self, t)
 		game:playSoundNear(self, "talents/spell_generic2")
+		
 		local ret = {
 			onhit = self:addTemporaryValue("on_melee_hit", {[DamageType.LIGHT]=t.getDamageOnMeleeHit(self, t)}),
 			phys = self:addTemporaryValue("combat_physresist", power),
 			spell = self:addTemporaryValue("combat_spellresist", power),
+			life = self:addTemporaryValue("max_life", t.getLifePct(self, t)*self.max_life),
 			particle = self:addParticles(Particles.new("golden_shield", 1))
 		}
 		return ret
@@ -57,19 +61,24 @@ newTalent{
 		self:removeTemporaryValue("on_melee_hit", p.onhit)
 		self:removeTemporaryValue("combat_physresist", p.phys)
 		self:removeTemporaryValue("combat_spellresist", p.spell)
+		self:removeTemporaryValue("max_life", p.life)
 		return true
 	end,
 	info = function(self, t)
 		local saves = t.getResists(self, t)
+		local life = t.getLifePct(self, t)
 		local damageonmeleehit = t.getDamageOnMeleeHit(self, t)
-		return ([[You chant the glory of the Sun, granting you %d Physical Save and Spell Save.
+		return ([[You chant the glory of the Sun, granting you %d Physical Save and Spell Save and increasing your maximum life by %d%% (Currently:  %d).
 		In addition, this talent surrounds you with a shield of light, dealing %0.2f light damage to anything that attacks you.
 		You may only have one Chant active at once.
-		The effects will increase with your Spellpower.]]):
-		format(saves, damDesc(self, DamageType.LIGHT, damageonmeleehit))
+		The saves and light damage will increase with your Spellpower and the life with talent level.]]):
+		format(saves, life*100, life*self.max_life, damDesc(self, DamageType.LIGHT, damageonmeleehit))
 	end,
 }
 
+-- Mostly the same code as Sanctuary
+-- Just like Fortress we limit the interaction with spellpower a bit because this is an escort reward
+-- This can be swapped to reactively with a projectile already in the air
 newTalent{
 	name = "Chant of Fortress",
 	type = {"celestial/chants", 2},
@@ -82,14 +91,15 @@ newTalent{
 	dont_provide_pool = true,
 	tactical = { BUFF = 2 },
 	range = 10,
-	getPhysicalResistance = function(self, t) return self:combatTalentSpellDamage(t, 5, 23) end,
 	getDamageOnMeleeHit = function(self, t) return self:combatTalentSpellDamage(t, 5, 25) end,
+	getDamageChange = function(self, t)
+		return math.max(-40, -math.sqrt(self:getTalentLevel(t)) * 14)
+	end,
 	activate = function(self, t)
 		cancelChants(self)
 		game:playSoundNear(self, "talents/spell_generic2")
 		local ret = {
 			onhit = self:addTemporaryValue("on_melee_hit", {[DamageType.LIGHT]=t.getDamageOnMeleeHit(self, t)}),
-			phys = self:addTemporaryValue("resists", {[DamageType.PHYSICAL] = t.getPhysicalResistance(self, t)}),
 			particle = self:addParticles(Particles.new("golden_shield", 1))
 		}
 		return ret
@@ -97,20 +107,22 @@ newTalent{
 	deactivate = function(self, t, p)
 		self:removeParticles(p.particle)
 		self:removeTemporaryValue("on_melee_hit", p.onhit)
-		self:removeTemporaryValue("resists", p.phys)
 		return true
 	end,
 	info = function(self, t)
-		local physicalresistance = t.getPhysicalResistance(self, t)
+		local range = -t.getDamageChange(self, t)
 		local damageonmeleehit = t.getDamageOnMeleeHit(self, t)
-		return ([[You chant the glory of the Sun, granting you %d%% physical damage resistance.
+		return ([[You chant the glory of the Sun, reducing the damage enemies 3 or more spaces away deal by %d%%.
 		In addition, this talent surrounds you with a shield of light, dealing %0.2f light damage to anything that attacks you.
 		You may only have one Chant active at once.
-		The effects will increase with your Spellpower.]]):
-		format(physicalresistance, damDesc(self, DamageType.LIGHT, damageonmeleehit))
+		The damage reduction will increase with talent level and light damage will increase with your Spellpower.]]):
+		format(range, damDesc(self, DamageType.LIGHT, damageonmeleehit))
 	end,
 }
 
+-- Escorts can't give this one so it should have the most significant spellpower scaling
+-- Ideally at high spellpower this would almost always be the best chant to use, but we can't guarantee that while still differentiating the chants in interesting ways
+-- People that don't want to micromanage/math out when the other chants are better will like this and it should still outperform Fortitude most of the time
 newTalent{
 	name = "Chant of Resistance",
 	type = {"celestial/chants",3},
@@ -123,7 +135,7 @@ newTalent{
 	tactical = { BUFF = 2 },
 	no_energy = true,
 	range = 10,
-	getResists = function(self, t) return self:combatTalentSpellDamage(t, 5, 20) end,
+	getResists = function(self, t) return math.min(35, self:combatTalentSpellDamage(t, 5, 30)) end,
 	getDamageOnMeleeHit = function(self, t) return self:combatTalentSpellDamage(t, 5, 25) end,
 	activate = function(self, t)
 		cancelChants(self)
@@ -131,12 +143,7 @@ newTalent{
 		game:playSoundNear(self, "talents/spell_generic2")
 		local ret = {
 			onhit = self:addTemporaryValue("on_melee_hit", {[DamageType.LIGHT]=t.getDamageOnMeleeHit(self, t)}),
-			res = self:addTemporaryValue("resists", {
-				[DamageType.FIRE] = power,
-				[DamageType.LIGHTNING] = power,
-				[DamageType.ACID] = power,
-				[DamageType.COLD] = power,
-			}),
+			res = self:addTemporaryValue("resists", {all = power}),
 			particle = self:addParticles(Particles.new("golden_shield", 1))
 		}
 		return ret
@@ -150,7 +157,7 @@ newTalent{
 	info = function(self, t)
 		local resists = t.getResists(self, t)
 		local damage = t.getDamageOnMeleeHit(self, t)
-		return ([[You chant the glory of the Sun, granting you %d%% fire, lightning, acid and cold damage resistance.
+		return ([[You chant the glory of the Sun, granting you %d%% resistance to all damage.
 		In addition, this talent surrounds you with a shield of light, dealing %0.2f light damage to anything that attacks you.
 		You may only have one Chant active at once.
 		The effects will increase with your Spellpower.]]):
@@ -158,6 +165,8 @@ newTalent{
 	end,
 }
 
+-- Extremely niche in the name of theme
+-- A defensive chant is realistically always a better choice than an offensive one but we can mitigate this by giving abnormally high value at low talent investment
 newTalent{
 	name = "Chant of Light",
 	type = {"celestial/chants", 4},
@@ -170,7 +179,7 @@ newTalent{
 	dont_provide_pool = true,
 	tactical = { BUFF = 2 },
 	range = 10,
-	getLightDamageIncrease = function(self, t) return self:combatTalentSpellDamage(t, 10, 50) end,
+	getLightDamageIncrease = function(self, t) return self:combatTalentSpellDamage(t, 20, 50) end,
 	getDamageOnMeleeHit = function(self, t) return self:combatTalentSpellDamage(t, 5, 25) end,
 	getLite = function(self, t) return math.floor(self:combatTalentScale(t, 2, 6, "log")) end,
 	activate = function(self, t)

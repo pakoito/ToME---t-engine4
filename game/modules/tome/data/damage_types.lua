@@ -327,7 +327,7 @@ setDefaultProjector(function(src, x, y, type, dam, tmp, no_martyr)
 		end
 
 		if src:attr("stunned") then
-			dam = dam * 0.3
+			dam = dam * 0.4
 			print("[PROJECTOR] stunned dam", dam)
 		end
 		if src:attr("invisible_damage_penalty") then
@@ -371,6 +371,19 @@ setDefaultProjector(function(src, x, y, type, dam, tmp, no_martyr)
 				end
 			end
 		end
+
+		-- Chant of Fortress, reduces damage from attackers over range 3
+		if target.isTalentActive and target:isTalentActive(target.T_CHANT_OF_FORTRESS) and target:knowTalent(target.T_CHANT_OF_FORTRESS) then
+			if src and src.x and src.y then
+				-- assume instantaneous projection and check range to source
+				local t = target:getTalentFromId(target.T_CHANT_OF_FORTRESS)
+				if core.fov.distance(target.x, target.y, src.x, src.y) > 3 then
+					t = target:getTalentFromId(target.T_CHANT_OF_FORTRESS)
+					dam = dam * (100 + t.getDamageChange(target, t)) / 100
+					print("[PROJECTOR] Chant of Fortress (source) dam", dam)
+				end
+			end
+		end		
 
 		-- Psychic Projection
 		if src.attr and src:attr("is_psychic_projection") and not game.zone.is_dream_scape then
@@ -652,7 +665,8 @@ newDamageType{
 	end,
 	death_message = {"electrocuted", "shocked", "bolted", "volted", "amped", "zapped"},
 }
--- Acid destroys potions
+
+-- Acid, few specific interactions currently aside from damage types later derived from this
 newDamageType{
 	name = "acid", type = "ACID", text_color = "#GREEN#",
 	antimagic_resolve = true,
@@ -724,6 +738,7 @@ newDamageType{
 }
 
 -- Mind damage
+-- Most uses of this have their damage effected by mental save and do not trigger cross tiers, ie, melee items
 newDamageType{
 	name = "mind", type = "MIND", text_color = "#YELLOW#",
 	projector = function(src, x, y, type, dam)
@@ -749,6 +764,8 @@ newDamageType{
 	death_message = {"psyched", "mentally tortured", "mindraped"},
 }
 
+-- Cold damage+turn energy drain, used exclusively by the Wintertide weapon
+-- If you use this for something else make sure to note it has no power check or sanity check on how much turn energy is drained
 newDamageType{
 	name = "winter", type = "WINTER",
 	projector = function(src, x, y, type, dam)
@@ -827,7 +844,7 @@ newDamageType{
 			if target:canBe("silence") then
 				target:setEffect(target.EFF_SILENCED, math.ceil(dam.dur), {apply_power=dam.power_check or src:combatMindpower() * 0.7})
 			else
-				game.logSeen(target, "%s resists!", target.name:capitalize())
+				game.logSeen(target, "%s resists the silence!", target.name:capitalize())
 			end
 		end
 	end,
@@ -862,7 +879,7 @@ newDamageType{
 			if target:canBe("silence") then
 				target:setEffect(target.EFF_SILENCED, 4, {apply_power=src:combatAttack()*0.7, no_ct_effect=true})
 			else
-				game.logSeen(target, "%s resists!", target.name:capitalize())
+				game.logSeen(target, "%s resists the silence!", target.name:capitalize())
 			end
 		end
 	end,
@@ -1071,7 +1088,8 @@ newDamageType{
 	end,
 }
 
--- Freezes target, checks for spellresistance
+-- Freezes target, checks for spellresistance and stun resistance
+-- Used on melee items but abnormally strong, not currently checking accuracy
 newDamageType{
 	name = "freeze", type = "FREEZE",
 	projector = function(src, x, y, type, dam)
@@ -1106,6 +1124,7 @@ newDamageType{
 }
 
 -- Acid damage + blind chance
+-- Used on melee items so check Accuracy too
 newDamageType{
 	name = "acid blind", type = "ACID_BLIND", text_color = "#GREEN#",
 	projector = function(src, x, y, type, dam)
@@ -1113,7 +1132,7 @@ newDamageType{
 		local target = game.level.map(x, y, Map.ACTOR)
 		if target and rng.percent(25) then
 			if target:canBe("blind") then
-				target:setEffect(target.EFF_BLINDED, 3, {src=src, apply_power=math.max(src:combatSpellpower(), src:combatMindpower())})
+				target:setEffect(target.EFF_BLINDED, 3, {src=src, apply_power=math.max(src:combatAttack(), src:combatSpellpower(), src:combatMindpower())})
 			else
 				game.logSeen(target, "%s resists!", target.name:capitalize())
 			end
@@ -1415,6 +1434,7 @@ newDamageType{
 }
 
 -- Spydric poison: prevents movement
+-- Very special, does not have a power check
 newDamageType{
 	name = "spydric poison", type = "SPYDRIC_POISON",
 	projector = function(src, x, y, type, dam)
@@ -1819,19 +1839,50 @@ newDamageType{
 	end,
 }
 
+-- Used by Bathe in Light, symmetric healing+shielding, damage to Undead
+-- Keep an eye on this and Weapon of Light for any infinite stack shield then engage combos
 newDamageType{
 	name = "healing light", type = "HEALING_POWER",
 	projector = function(src, x, y, type, dam)
 		local target = game.level.map(x, y, Map.ACTOR)
 		if target and not target:attr("undead") then
-			target:setEffect(target.EFF_EMPOWERED_HEALING, 1, {power=(dam/100)})
+			
+			target:setEffect(target.EFF_EMPOWERED_HEALING, 1, {power=(dam/200)})
 			if dam >= 100 then target:attr("allow_on_heal", 1) end
 			target:heal(dam, src)
-			if not target:hasEffect(target.EFF_DAMAGE_SHIELD) then target:setEffect(target.EFF_DAMAGE_SHIELD, 2, {power=dam * util.bound((target.healing_factor or 1), 0, 2.5)}) end
+			
+			-- If the target is shielded already then add to the shield power, else add a shield
+			local shield_power = dam * util.bound((target.healing_factor or 1), 0, 2.5)
+			if not target:hasEffect(target.EFF_DAMAGE_SHIELD) then 
+				target:setEffect(target.EFF_DAMAGE_SHIELD, 2, {power=shield_power})
+			else
+				-- Shields can't usually merge, so change the parameters manually 
+				local shield = target:hasEffect(target.EFF_DAMAGE_SHIELD)
+				shield.power = shield.power + shield_power
+				target.damage_shield_absorb = target.damage_shield_absorb + shield_power
+				target.damage_shield_absorb_max = target.damage_shield_absorb_max + shield_power
+				shield.dur = math.max(2, shield.dur)
+			end
 			if dam >= 100 then target:attr("allow_on_heal", -1) end
 		elseif target then
 			DamageType:get(DamageType.LIGHT).projector(src, x, y, DamageType.LIGHT, dam)
-			DamageType:get(DamageType.FIREBURN).projector(src, x, y, DamageType.FIREBURN, {dam=dam, dur=2, initial=0})
+		end
+	end,
+}
+
+-- Light damage+heal source, used by Radiance
+newDamageType{
+	name = "judgement", type = "JUDGEMENT",
+	projector = function(src, x, y, type, dam)
+		local target = game.level.map(x, y, Map.ACTOR)
+		if target and target ~= src then
+			--print("[JUDGEMENT] src ", src, "target", target, "src", src )
+			DamageType:get(DamageType.LIGHT).projector(src, x, y, DamageType.LIGHT, dam)
+			if dam >= 100 then src:attr("allow_on_heal", 1) end
+			src:heal(dam / 2, src)
+			if dam >= 100 then src:attr("allow_on_heal", -1) end
+		
+			
 		end
 	end,
 }

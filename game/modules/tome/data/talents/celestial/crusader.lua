@@ -17,6 +17,11 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
+-- NOTE:  2H may seem to have more defense than 1H/Shield at a glance but this isn't true
+-- Mechanically, 2H gets bigger numbers on its defenses because they're all active, they don't do anything when you get hit at range 10 before you've taken an action unlike Retribution/Shield of Light
+-- Thematically, 2H feels less defensive for the same reason--when you get hit it hurts, but you're encouraged to be up in their face fighting
+
+-- Part of 2H core defense to be compared with Shield of Light, Retribution, etc
 newTalent{
 	name = "Absorption Strike",
 	type = {"celestial/crusader", 1},
@@ -27,7 +32,8 @@ newTalent{
 	tactical = { ATTACK = 2, DISABLE = 1 },
 	range = 1,
 	requires_target = true,
-	getWeakness = function(self, t) return self:combatTalentScale(t, 20, 45, 0.75) end,
+	getWeakness = function(self, t) return self:combatTalentScale(t, 5, 20, 0.75) end,
+	getNumb = function(self, t) return math.min(30, self:combatTalentScale(t, 1, 15, 0.75)) end,
 	getDamage = function(self, t) return self:combatTalentWeaponDamage(t, 1.1, 2.3) end,
 	on_pre_use = function(self, t, silent) if not self:hasTwoHandedWeapon() then if not silent then game.logPlayer(self, "You require a two handed weapon to use this talent.") end return false end return true end,
 	action = function(self, t)
@@ -37,10 +43,12 @@ newTalent{
 		if core.fov.distance(self.x, self.y, x, y) > 1 then return nil end
 		local hit = self:attackTarget(target, nil, t.getDamage(self, t), true)
 		if hit then
+			
 			self:project({type="ball", radius=2, selffire=false}, self.x, self.y, function(px, py)
 				local a = game.level.map(px, py, Map.ACTOR)
 				if a then
-					a:setEffect(a.EFF_ABSORPTION_STRIKE, 5, {apply_power=self:combatSpellpower(), power=t.getWeakness(self, t)})
+					-- No power check, this is essentially a defensive talent in debuff form.  Instead of taking less damage passively 2H has to stay active, but we still want the consistency of a sustain/passive
+					a:setEffect(a.EFF_ABSORPTION_STRIKE, 5, {power=t.getWeakness(self, t), numb = t.getNumb(self, t)})
 				end
 			end)
 		end
@@ -49,11 +57,12 @@ newTalent{
 	info = function(self, t)
 		local damage = t.getDamage(self, t)
 		return ([[You strike your foe with your two handed weapon, dealing %d%% weapon damage.
-		If the attack hits all foes in radius 2 will have their light resistance reduced by %d%% for 5 turns.]]):
-		format(100 * damage, t.getWeakness(self, t))
+		If the attack hits all foes in radius 2 will have their light resistance reduced by %d%% and their damage reduced by %d%% for 5 turns.]]):
+		format(100 * damage, t.getWeakness(self, t), t.getNumb(self, t))
 	end,
 }
 
+-- Part of 2H core defense to be compared with Shield of Light, Retribution, etc
 newTalent{
 	name = "Mark of Light",
 	type = {"celestial/crusader", 2},
@@ -65,7 +74,7 @@ newTalent{
 	tactical = { ATTACK=0.5, DISABLE=2, HEAL=2 },
 	range = 1,
 	requires_target = true,
-	getPower = function(self, t) return self:combatTalentScale(t, 30, 70) end,
+	getPower = function(self, t) return self:combatTalentScale(t, 10, 50) end,
 	getDamage = function(self, t) return self:combatTalentWeaponDamage(t, 0.2, 0.7) end,
 	on_pre_use = function(self, t, silent) if not self:hasTwoHandedWeapon() then if not silent then game.logPlayer(self, "You require a two handed weapon to use this talent.") end return false end return true end,
 	action = function(self, t)
@@ -96,8 +105,9 @@ newTalent{
 	getArmor = function(self, t) return self:combatTalentScale(t, 5, 30) end,
 	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 10, 120) end,
 	getCrit = function(self, t) return self:combatTalentScale(t, 3, 10, 0.75) end,
-	getPower = function(self, t) return self:combatTalentScale(t, 5, 20) end,
+	getPower = function(self, t) return self:combatTalentScale(t, 5, 15) end,
 	callbackOnCrit = function(self, t, kind, dam, chance, target)
+		if not self:hasTwoHandedWeapon() then return end
 		if kind ~= "physical" or not target then return end
 		if self.turn_procs.righteous_strength then return end
 		self.turn_procs.righteous_strength = true
@@ -116,13 +126,15 @@ newTalent{
 	end,
 }
 
+-- Low damage, 2H Assault has plenty of AoE damage strikes, this one is fundamentally defensive or strong only if Light is scaled up
+-- Part of 2H core defense to be compared with Shield of Light, Retribution, etc
 newTalent{
 	name = "Flash of the Blade",
 	type = {"celestial/crusader", 4},
 	require = divi_req4,
 	random_ego = "attack",
 	points = 5,
-	cooldown = 10,
+	cooldown = 9,
 	positive = 15,
 	tactical = { ATTACKAREA = {LIGHT = 2} },
 	range = 0,
@@ -132,8 +144,8 @@ newTalent{
 		return {type="ball", range=self:getTalentRange(t), selffire=false, radius=self:getTalentRadius(t)}
 	end,
 	on_pre_use = function(self, t, silent) if not self:hasTwoHandedWeapon() then if not silent then game.logPlayer(self, "You require a two handed weapon to use this talent.") end return false end return true end,
-	get1Damage = function(self, t) return self:combatTalentWeaponDamage(t, 0.8, 1.6) end,
-	get2Damage = function(self, t) return self:combatTalentWeaponDamage(t, 0.5, 1.2) end,
+	get1Damage = function(self, t) return self:combatTalentWeaponDamage(t, 0.5, 1.3) end,
+	get2Damage = function(self, t) return self:combatTalentWeaponDamage(t, 0.3, 1.5) end,
 	action = function(self, t)
 		local tg1 = self:getTalentTarget(t) tg1.radius = 1
 		local tg2 = self:getTalentTarget(t)
@@ -143,15 +155,17 @@ newTalent{
 				self:attackTarget(target, nil, t.get1Damage(self, t), true)
 			end
 		end)
+
 		self:project(tg2, self.x, self.y, function(px, py, tg, self)
 			local target = game.level.map(px, py, Map.ACTOR)
 			if target and target ~= self then
 				self:attackTarget(target, DamageType.LIGHT, t.get2Damage(self, t), true)
-				if self:getTalentLevel(t) >= 4 then
-					target:setEffect(target.EFF_DAZED, 3, {apply_power=self:combatSpellpower()})
-				end
 			end
 		end)
+
+		if self:getTalentLevel(t) >= 4 then
+			self:setEffect(self.EFF_FLASH_SHIELD, 1, {})
+		end
 
 		self:addParticles(Particles.new("meleestorm", 2, {radius=2, img="spinningwinds_yellow"}))
 		self:addParticles(Particles.new("meleestorm", 1, {img="spinningwinds_yellow"}))
@@ -161,7 +175,7 @@ newTalent{
 		return ([[Infuse your two handed weapon with light while spinning around.
 		All creatures in radius one take %d%% weapon damage.
 		In addition while spinning your weapon shines so much it deals %d%% light weapon damage to all foes in radius 2.
-		At level 4 creatures may also be dazed by the light.]]):
+		At level 4 your mystical, manly display of spinning around creates a manly shield that blocks all damage for 1 turn.]]):
 		format(t.get1Damage(self, t) * 100, t.get2Damage(self, t) * 100)
 	end,
 }

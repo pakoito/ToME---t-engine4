@@ -360,6 +360,7 @@ function _M:useEnergy(val)
 	end
 end
 
+-- Called at the start of a turn before the actor chooses their action, energy is handled, etc
 function _M:actBase()
 	-- Stupid sanity check that is actualy useful
 	if self.life ~= self.life then self.life = self.max_life end
@@ -2163,7 +2164,10 @@ function _M:onTakeHit(value, src, death_note)
 		end
 		if self:getPositive() >= drain then
 			self:incPositive(- drain)
-			self:heal(self:combatTalentSpellDamage(self.T_SHIELD_OF_LIGHT, 5, 25), tal)
+
+			local t = self:getTalentFromId(self.T_SHIELD_OF_LIGHT)
+
+			self:heal(self:spellCrit(t.getHeal(self, t)), tal)
 		end
 	end
 
@@ -2173,7 +2177,8 @@ function _M:onTakeHit(value, src, death_note)
 		if tal then
 			local sl = self:callTalent(self.T_SECOND_LIFE,"getLife")
 			value = 0
-			self.life = sl
+			self.life = 1
+			self:heal(sl, self)
 			game.logSeen(self, "#YELLOW#%s has been saved by a blast of positive energy!#LAST#", self.name:capitalize())
 			game:delayedLogDamage(tal, self, -sl, ("#LIGHT_GREEN#%d healing#LAST#"):format(sl), false)
 			self:forceUseTalent(self.T_SECOND_LIFE, {ignore_energy=true})
@@ -2756,7 +2761,10 @@ end
 function _M:resetToFull()
 	if self.dead then return end
 	self.life = self.max_life
-	self.mana = self.max_mana
+	-- Make Disruption Shield not kill Archmages on levelup or we risk Archmages being mortal
+	if not (self.isTalentActive and self:isTalentActive(self.T_DISRUPTION_SHIELD)) then
+		self.mana = self.max_mana
+	end
 	self.vim = self.max_vim
 	self.stamina = self.max_stamina
 	self.equilibrium = self.min_equilibrium
@@ -4729,6 +4737,57 @@ function _M:removeEffectsFilter(t, nb, silent, force)
 		removed = removed + 1
 	end
 	return removed
+end
+
+--- Randomly reduce talent cooldowns based on a filter
+-- @param t the function to use as a filter on the talent definition or nil to apply to all talents on cooldown
+-- @param change the amount to change the cooldown by
+-- @param nb the number of times to reduce a talent cooldown
+-- @param duplicate boolean representing whether the same talent can be reduced more than once
+-- @return the number of times a talent cooldown was reduced
+function _M:talentCooldownFilter(t, change, nb, duplicate)
+	nb = nb or 100000
+	change = change or 1
+	
+	local changed = 0
+	local talents = {}
+
+	-- For each talent currently on cooldown find its definition (e) and add it to another table if the filter (t) applies
+	for tid, cd in pairs(self.talents_cd) do
+		if type(t) == "function" then
+			local e = self:getTalentFromId(tid)  
+			if t(e) then talents[#talents+1] = {tid, cd} end
+		else -- Apply to all talents on cooldown the filter isn't a function
+			talents[#talents+1] = {tid, cd}
+		end
+	end
+
+	-- Pick random talents in the new table and apply the cooldown change to them
+	while #talents > 0 and nb > 0 do
+		local i = rng.range(1, #talents)
+		local t = talents[i]
+		local removed = false
+
+		---[[ Change the cooldown to the reduced value or mark it as off cooldown
+		t[2] = t[2] - change
+		if t[2] <= 0 then 
+			self.talents_cd[ t[1] ] = nil
+			table.remove(talents, i)
+			removed = true
+		else 
+			self.talents_cd[ t[1] ] = t[2] 
+		end 
+		--]]
+
+		if not duplicate then
+			if not removed then table.remove(talents, i) end -- only remove if it hasn't already been removed
+		end
+		
+		nb = nb - 1
+		changed = changed + 1
+	end
+
+	return changed
 end
 
 --- Suffocate a bit, lose air

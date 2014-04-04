@@ -152,6 +152,7 @@ newTalent{
 	end,
 }
 
+-- FIX SCALING
 newTalent{
 	name = "Execution",
 	type = {"technique/2hweapon-assault", 4},
@@ -173,10 +174,10 @@ newTalent{
 		if core.fov.distance(self.x, self.y, x, y) > 1 then return nil end
 
 		local perc = 1 - (target.life / target.max_life)
-		local power = t.getPower()
-
+		local power = t.getPower(self, t)
+		game.logPlayer(self, "perc " .. perc .. " power " .. power)
 		self.turn_procs.auto_phys_crit = true
-		local speed, hit = self:attackTargetWith(target, weapon.combat, nil, power * perc * 100)
+		local speed, hit = self:attackTargetWith(target, weapon.combat, nil, power * perc)
 		self.turn_procs.auto_phys_crit = nil
 		return true
 	end,
