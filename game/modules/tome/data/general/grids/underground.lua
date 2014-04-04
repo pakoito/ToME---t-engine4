@@ -23,26 +23,44 @@ newEntity{
 	name = "floor", image = "terrain/underground_floor.png",
 	display = '.', color=colors.LIGHT_UMBER, back_color=colors.UMBER,
 	grow = "UNDERGROUND_TREE",
-	nice_tiler = { method="replace", base={"UNDERGROUND_FLOOR", 30, 1, 8}},
+	nice_tiler = { method="replace", base={"UNDERGROUND_FLOOR", 50, 1, 20}},
 }
-for i = 1, 8 do
-newEntity{base = "UNDERGROUND_FLOOR", define_as = "UNDERGROUND_FLOOR"..i, image = "terrain/underground_floor"..i..".png"}
+for i = 1, 20 do
+local add = nil
+if rng.percent(50) then add = {{image="terrain/floor_mushroom_0"..rng.range(1,8)..".png"}} end
+newEntity{base = "UNDERGROUND_FLOOR", define_as = "UNDERGROUND_FLOOR"..i, image = "terrain/underground_floor"..(1 + i % 8)..".png", add_mos=add}
 end
 
-for i = 1, 20 do
+local treesdef = {
+	{"small_mushroom_01", {"shadow", "trunk", {"head_%02d", 1, 2}}},
+	{"small_mushroom_02", {"shadow", "trunk", {"head_%02d", 1, 6}}},
+	{"small_mushroom_03", {"shadow", "trunk", {"head_%02d", 1, 5}}},
+	{"small_mushroom_04", {"shadow", "trunk", {"head_%02d", 1, 2}}},
+	{"mushroom_01", {tall=-1, "shadow", "trunk", {"head_%02d", 1, 2}}},
+	{"mushroom_02", {tall=-1, "shadow", "trunk", {"head_%02d", 1, 2}}},
+	{"mushroom_03", {tall=-1, "shadow", "trunk", {"head_%02d", 1, 2}}},
+	{"mushroom_04", {tall=-1, "shadow", "trunk", {"head_%02d", 1, 1}}},
+	{"mushroom_05", {tall=-1, "shadow", "trunk", {"head_%02d", 1, 1}}},
+	{"mushroom_06", {tall=-1, "shadow", "trunk", {"head_%02d", 1, 1}}},
+	{"mushroom_07", {tall=-1, "shadow", "trunk", {"head_%02d", 1, 1}}},
+	{"mushroom_08", {tall=-1, "shadow", "trunk", {"head_%02d", 1, 4}}},
+}
+
 newEntity{
-	define_as = "UNDERGROUND_TREE"..(i > 1 and i or ""),
+	define_as = "UNDERGROUND_TREE",
 	type = "wall", subtype = "underground",
 	name = "underground thick vegetation",
-	image = "terrain/underground_floor.png",
-	add_displays = class:makeSubTrees("terrain/underground_tree_alpha", 10),
+	image = "terrain/tree.png",
 	display = '#', color=colors.PURPLE, back_color=colors.UMBER,
 	always_remember = true,
 	can_pass = {pass_tree=1},
 	does_block_move = true,
 	block_sight = true,
+	nice_tiler = { method="replace", base={"UNDERGROUND_TREE", 100, 1, 30}},
 	dig = "UNDERGROUND_FLOOR",
 }
+for i = 1, 30 do
+	newEntity(class:makeNewTrees({base="UNDERGROUND_TREE", define_as = "UNDERGROUND_TREE"..i, image = "terrain/underground_floor.png"}, treesdef))
 end
 
 newEntity{

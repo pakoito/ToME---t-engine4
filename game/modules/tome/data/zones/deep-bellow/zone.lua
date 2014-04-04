@@ -37,7 +37,7 @@ return {
 			zoom = 14,
 			min_floor = 700,
 			floor = "UNDERGROUND_FLOOR",
-			wall = {"UNDERGROUND_TREE","UNDERGROUND_TREE2","UNDERGROUND_TREE3","UNDERGROUND_TREE4","UNDERGROUND_TREE5","UNDERGROUND_TREE6","UNDERGROUND_TREE7","UNDERGROUND_TREE8","UNDERGROUND_TREE9","UNDERGROUND_TREE10","UNDERGROUND_TREE11","UNDERGROUND_TREE12","UNDERGROUND_TREE13","UNDERGROUND_TREE14","UNDERGROUND_TREE15","UNDERGROUND_TREE16","UNDERGROUND_TREE17","UNDERGROUND_TREE18","UNDERGROUND_TREE19","UNDERGROUND_TREE20",},
+			wall = "UNDERGROUND_TREE",
 			up = "UNDERGROUND_LADDER_UP",
 			down = "UNDERGROUND_LADDER_DOWN",
 			door = "UNDERGROUND_FLOOR",
@@ -81,5 +81,7 @@ return {
 	post_process = function(level)
 		-- Place a lore note on each level
 		game:placeRandomLoreObject("NOTE"..level.level)
+
+		game.state:makeWeather(level, 4, {max_nb=4, speed={0.3, 0.4}, alpha={0.23, 0.35}, particle_name="weather/spore_mist_%02d"})
 	end,
 }

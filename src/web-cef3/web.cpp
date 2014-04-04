@@ -301,7 +301,8 @@ bool te4_web_close(web_view_type *view) {
 		opaque->render = NULL;
 		opaque->view = NULL;
 		opaque->browser->GetHost()->CloseBrowser(true);
-		opaque->browser = NULL;
+		//opaque->browser = NULL;
+		delete opaque;
 		printf("Destroyed webview\n");
 		return true;
 	}
