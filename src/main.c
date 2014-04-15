@@ -1496,6 +1496,7 @@ int main(int argc, char *argv[])
 	cleanupTimerLock(renderingLock, &display_timer_id, &redraw_pending);
 	cleanupTimerLock(realtimeLock, &realtime_timer_id, &realtime_pending);
 	
+	printf("Terminating!\n");
 	te4_web_terminate();
 	SDL_Quit();
 	deinit_openal();

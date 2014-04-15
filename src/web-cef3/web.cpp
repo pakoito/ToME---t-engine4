@@ -14,6 +14,7 @@ extern "C" {
 }
 #include "web.h"
 #include "web-internal.h"
+#include <map>
 
 
 void *(*web_mutex_create)();
@@ -51,7 +52,7 @@ public:
 	}
 
 	~RenderHandler() {
-		printf("Destroyed renreder\n");
+		printf("[WEBCORE] Destroyed renreder\n");
 
 		WebEvent *event = new WebEvent();
 		event->kind = TE4_WEB_EVENT_DELETE_TEXTURE;
@@ -83,6 +84,15 @@ public:
 	CefRefPtr<CefDownloadItemCallback> cancel_cb;
 };
 
+class BrowserClient;
+
+class WebViewOpaque {
+public:
+	CefRefPtr<RenderHandler> render;
+	CefRefPtr<CefBrowser> browser;
+	CefRefPtr<BrowserClient> view;
+};
+
 class BrowserClient :
 	public CefClient,
 	public CefRequestHandler,
@@ -92,17 +102,20 @@ class BrowserClient :
 	public CefLoadHandler
 {
 	std::map<int32, CurrentDownload*> downloads;
+	WebViewOpaque *opaque;
 	CefRefPtr<CefRenderHandler> m_renderHandler;
+	CefRefPtr<CefBrowser> browser;
 	int handlers;
 
 public:
 	bool first_load;
-	BrowserClient(RenderHandler *renderHandler, int handlers) : m_renderHandler(renderHandler) {
+	BrowserClient(WebViewOpaque *opaque, RenderHandler *renderHandler, int handlers) : m_renderHandler(renderHandler) {
+		this->opaque = opaque;
 		this->handlers = handlers;
 		this->first_load = true;
 	}
 	~BrowserClient() {
-		printf("Destroyed client\n");
+		printf("[WEBCORE] Destroyed client\n");
 		for (std::map<int32, CurrentDownload*>::iterator it=downloads.begin(); it != downloads.end(); ++it) {
 			delete it->second;
 		}
@@ -159,7 +172,7 @@ public:
 		event->data.popup.h = popupFeatures.heightSet ? popupFeatures.height : -1;
 		push_event(event);
 
-		printf("[WEB] stopped popup to %s (%dx%d), pushing event...\n", url, event->data.popup.w, event->data.popup.h);
+		printf("[WEBCORE] stopped popup to %s (%dx%d), pushing event...\n", url, event->data.popup.w, event->data.popup.h);
 
 		return true;
 	}
@@ -173,7 +186,7 @@ public:
 		const char *mime = cstring_to_c(download_item->GetMimeType());
 		const char *url = cstring_to_c(download_item->GetURL());
 		const char *name = cstring_to_c(suggested_name);
-		printf("[WEB] Download request [name: %s] [mime: %s] [url: %s]\n", name, mime, url);
+		printf("[WEBCORE] Download request [name: %s] [mime: %s] [url: %s]\n", name, mime, url);
 
 		WebEvent *event = new WebEvent();
 		event->kind = TE4_WEB_EVENT_DOWNLOAD_REQUEST;
@@ -219,12 +232,12 @@ public:
 			if (cd->cancel_cb) cd->cancel_cb->Cancel();
 			delete cd;
 			downloads.erase(id);
-			printf("[WEB] Cancel download(%d)\n", id);
+			printf("[WEBCORE] Cancel download(%d)\n", id);
 		} else {
 			// Accept
 			CefString fullpath(path);
 			cd->accept_cb->Continue(fullpath, false);
-			printf("[WEB] Accepting download(%d) to %s\n", id, path);
+			printf("[WEBCORE] Accepting download(%d) to %s\n", id, path);
 		}
 	}
 
@@ -248,6 +261,21 @@ public:
 		push_event(event);
 	}
 
+	virtual void OnAfterCreated(CefRefPtr<CefBrowser> browser) {
+		printf("[WEBCORE] Created browser for webview\n");
+		this->browser = browser;
+	}
+
+	virtual void OnBeforeClose(CefRefPtr<CefBrowser> browser) {
+		this->opaque->render = NULL;
+		this->opaque->view = NULL;
+		this->browser = NULL;
+
+		delete this->opaque;
+
+		printf("[WEBCORE] Destroyed webview for browser\n");
+	}
+
 	IMPLEMENT_REFCOUNTING(BrowserClient);
 };
 
@@ -267,14 +295,6 @@ public:
 	IMPLEMENT_REFCOUNTING(ClientApp);
 };
 
-
-class WebViewOpaque {
-public:
-	CefRefPtr<RenderHandler> render;
-	CefRefPtr<CefBrowser> browser;
-	CefRefPtr<BrowserClient> view;
-};
-
 void te4_web_new(web_view_type *view, int w, int h) {
 	WebViewOpaque *opaque = new WebViewOpaque();
 	view->opaque = (void*)opaque;
@@ -284,26 +304,22 @@ void te4_web_new(web_view_type *view, int w, int h) {
 	window_info.SetAsOffScreen(NULL);
 	window_info.SetTransparentPainting(true);
 	opaque->render = new RenderHandler(w, h);
-	opaque->view = new BrowserClient(opaque->render, view->handlers);
+	opaque->view = new BrowserClient(opaque, opaque->render, view->handlers);
 	CefString curl("");
 	opaque->browser = CefBrowserHost::CreateBrowserSync(window_info, opaque->view.get(), curl, browserSettings);
 
 	view->w = w;
 	view->h = h;
 	view->closed = false;
-	printf("Created webview\n");
+	printf("[WEBCORE] Created webview\n");
 }
 
 bool te4_web_close(web_view_type *view) {
 	WebViewOpaque *opaque = (WebViewOpaque*)view->opaque;
 	if (!view->closed) {
 		view->closed = true;
-		opaque->render = NULL;
-		opaque->view = NULL;
+		printf("[WEBCORE] Destroying webview for browser\n");
 		opaque->browser->GetHost()->CloseBrowser(true);
-		//opaque->browser = NULL;
-		delete opaque;
-		printf("Destroyed webview\n");
 		return true;
 	}
 	return false;
@@ -318,7 +334,7 @@ void te4_web_load_url(web_view_type *view, const char *url) {
 }
 
 void te4_web_set_js_call(web_view_type *view, const char *name) {
-	WebViewOpaque *opaque = (WebViewOpaque*)view->opaque;
+//	WebViewOpaque *opaque = (WebViewOpaque*)view->opaque;
 	if (view->closed) return;
 
 //	opaque->listener->te4_js.SetCustomMethod(WebString::CreateFromUTF8(name, strlen(name)), true);
@@ -684,7 +700,7 @@ void te4_web_do_update(void (*cb)(WebEvent*)) {
 	CefDoMessageLoopWork();
 
 	WebEvent *event;
-	while (event = pop_event()) {
+	while ((event = pop_event())) {
 		cb(event);
 
 		switch (event->kind) {
@@ -698,6 +714,10 @@ void te4_web_do_update(void (*cb)(WebEvent*)) {
 				free((void*)event->data.download_request.url);
 				free((void*)event->data.download_request.name);
 				free((void*)event->data.download_request.mime);
+				break;
+			case TE4_WEB_EVENT_DOWNLOAD_UPDATE:
+				break;
+			case TE4_WEB_EVENT_DOWNLOAD_FINISH:
 				break;
 			case TE4_WEB_EVENT_LOADING:
 				free((void*)event->data.loading.url);
