@@ -93,6 +93,8 @@ public:
 	CefRefPtr<BrowserClient> view;
 };
 
+static std::map<BrowserClient*, bool> all_browsers;
+
 class BrowserClient :
 	public CefClient,
 	public CefRequestHandler,
@@ -104,21 +106,23 @@ class BrowserClient :
 	std::map<int32, CurrentDownload*> downloads;
 	WebViewOpaque *opaque;
 	CefRefPtr<CefRenderHandler> m_renderHandler;
-	CefRefPtr<CefBrowser> browser;
 	int handlers;
 
 public:
+	CefRefPtr<CefBrowser> browser;
 	bool first_load;
 	BrowserClient(WebViewOpaque *opaque, RenderHandler *renderHandler, int handlers) : m_renderHandler(renderHandler) {
 		this->opaque = opaque;
 		this->handlers = handlers;
 		this->first_load = true;
+		all_browsers[this] = true;
 	}
 	~BrowserClient() {
 		printf("[WEBCORE] Destroyed client\n");
 		for (std::map<int32, CurrentDownload*>::iterator it=downloads.begin(); it != downloads.end(); ++it) {
 			delete it->second;
 		}
+		all_browsers.erase(this);
 	}
 
 	virtual CefRefPtr<CefRenderHandler> GetRenderHandler() {
@@ -801,5 +805,13 @@ void te4_web_initialize(const char *locales, const char *pak) {
 }
 
 void te4_web_shutdown() {
+	for (std::map<BrowserClient*, bool>::iterator it=all_browsers.begin(); it != all_browsers.end(); ++it) {
+		it->first->browser->GetHost()->CloseBrowser(true);
+	}
+
+	while (!all_browsers.empty()) {
+		CefDoMessageLoopWork();
+		printf("Waiting browsers to close: %d left\n", all_browsers.size());
+	}
 	CefShutdown();
 }
