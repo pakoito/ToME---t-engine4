@@ -88,9 +88,9 @@ class BrowserClient;
 
 class WebViewOpaque {
 public:
-	RenderHandler *render;
-	CefBrowser *browser;
-	BrowserClient *view;
+	CefRefPtr<RenderHandler> render;
+	CefRefPtr<CefBrowser> browser;
+	CefRefPtr<BrowserClient> view;
 };
 
 static std::map<BrowserClient*, bool> all_browsers;
@@ -271,10 +271,6 @@ public:
 	}
 
 	virtual void OnBeforeClose(CefRefPtr<CefBrowser> browser) {
-		this->opaque->render->Release();
-		this->opaque->view->Release();
-		this->opaque->browser->Release();
-
 		this->opaque->render = NULL;
 		this->opaque->view = NULL;
 		this->opaque->browser = NULL;
@@ -315,11 +311,7 @@ void te4_web_new(web_view_type *view, int w, int h) {
 	opaque->render = new RenderHandler(w, h);
 	opaque->view = new BrowserClient(opaque, opaque->render, view->handlers);
 	CefString curl("");
-	opaque->browser = CefBrowserHost::CreateBrowserSync(window_info, opaque->view, curl, browserSettings);
-
-	opaque->render->AddRef();
-	opaque->view->AddRef();
-	opaque->browser->AddRef();
+	opaque->browser = CefBrowserHost::CreateBrowserSync(window_info, opaque->view.get(), curl, browserSettings);
 
 	view->w = w;
 	view->h = h;
