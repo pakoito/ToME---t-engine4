@@ -88,13 +88,18 @@ function _M:generateList()
 		if m.is_boot then table.remove(list, i) m.savefiles={} end
 
 		local nodes = {}
+		local mod_addons = {}
 
 		for j, save in ipairs(m.savefiles) do
 			local mod_string = ("%s-%d.%d.%d"):format(m.short_name, save.module_version and save.module_version[1] or -1, save.module_version and save.module_version[2] or -1, save.module_version and save.module_version[3] or -1)
 			local mod = list[mod_string]
 			if not mod and self.c_compat.checked and m.versions and m.versions[1] then mod = m.versions[1] end
 			if mod and save.loadable then
-				local laddons = table.reversekey(Module:listAddons(mod, true), "short_name")
+				local laddons = mod_addons[mod]
+				if not laddons then
+					laddons = table.reversekey(Module:listAddons(mod, true), "short_name")
+					mod_addons[mod] = laddons
+				end
 				local addons = {}
 				save.usable = true
 				for i, add in ipairs(save.addons or {}) do
