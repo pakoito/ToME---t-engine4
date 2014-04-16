@@ -357,6 +357,7 @@ function _M:generateRandart(data)
 	local nb_egos = data.egos or 3
 	local gr_egos = data.greater_egos_bias or math.floor(nb_egos*2/3) -- 2/3 greater egos by default
 	if o.egos and nb_egos > 0 then
+		local picked_egos = {}
 		local legos = {}
 		local been_greater = 0
 		table.insert(legos, game.level:getEntitiesList("object/"..o.egos..":prefix"))
@@ -369,12 +370,13 @@ function _M:generateRandart(data)
 			if rng.percent(100*lev/(lev+50)) and been_greater < gr_egos then been_greater = been_greater + 1 filter = function(e) return e.greater_ego end end --RE Phase out (but don't eliminate) lesser egos with level
 			for z = 1, #egos do list[#list+1] = egos[z].e end
 
-			local ef = self:egoFilter(game.zone, game.level, "object", "randartego", o, {special=filter, forbid_power_source=data.forbid_power_source, power_source=data.power_source}, list, {})
+			local ef = self:egoFilter(game.zone, game.level, "object", "randartego", o, {special=filter, forbid_power_source=data.forbid_power_source, power_source=data.power_source}, picked_egos, {})
 			filter = ef.special
 
 			local pick_egos = game.zone:computeRarities("object", list, game.level, filter, nil, nil)
 			local ego = game.zone:pickEntity(pick_egos)
 			if ego then
+				table.insert(picked_egos, ego)
 --				print(" ** selected ego", ego.name)
 				ego = ego:clone()
 				if ego.instant_resolve then ego:resolve(nil, nil, o) end -- Don't allow resolvers.generic here (conflict)
