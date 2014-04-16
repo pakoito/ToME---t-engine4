@@ -139,6 +139,9 @@ core.display.setGamma(config.settings.gamma_correction / 100)
 if not config.settings.fbo_active then core.display.disableFBO() print("Disabling FBO") end
 if not config.settings.shaders_active then core.shader.disable() print("Disabling Shaders") end
 
+-- Disable webcore if no fbo, it probably means the card wont handle will the huge buffers anyway
+if not core.display.FBOActive() then core.webview = nil end
+
 -- Webcore local request resolver
 dofile("/engine/webcore.lua")
 
