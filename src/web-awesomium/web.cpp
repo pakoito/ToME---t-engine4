@@ -499,6 +499,9 @@ void te4_web_setup(
 	}
 }
 
-void te4_web_initialize() {
+void te4_web_initialize(const char *locales, const char *pak) {
 	te4_web_init_utils();
+}
+
+void te4_web_shutdown() {
 }
