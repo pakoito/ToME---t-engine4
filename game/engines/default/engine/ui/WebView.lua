@@ -72,6 +72,10 @@ function _M:generate()
 	}
 	if self.allow_downloads then self:onDownload(handlers) end
 	self.view = core.webview.new(self.w, self.h, handlers)
+	if not self.view:usable() then
+		self.unusable = true
+		return
+	end
 
 	self.custom_calls.lolzor = function(nb, str)
 		print("call from js got: ", nb, str)

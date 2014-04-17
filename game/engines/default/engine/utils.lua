@@ -1972,7 +1972,7 @@ end
 
 function util.browserOpenUrl(url, forbid_methods)
 	forbid_methods = forbid_methods or {}
-	if core.webview and not forbid_methods.webview then local d = require("engine.ui.Dialog"):webPopup(url) return "webview", d end
+	if core.webview and not forbid_methods.webview then local d = require("engine.ui.Dialog"):webPopup(url) if d then return "webview", d end end
 	if core.steam and not forbid_methods.steam and core.steam.openOverlayUrl(url) then return "steam", true end
 
 	if forbid_methods.native then return false end

@@ -806,7 +806,13 @@ void te4_web_initialize(const char *locales, const char *pak) {
 }
 
 void te4_web_shutdown() {
+	std::map<BrowserClient*, bool> all;
+
 	for (std::map<BrowserClient*, bool>::iterator it=all_browsers.begin(); it != all_browsers.end(); ++it) {
+		all[it->first] = it->second;
+	}
+
+	for (std::map<BrowserClient*, bool>::iterator it=all.begin(); it != all.end(); ++it) {
 		it->first->browser->GetHost()->CloseBrowser(true);
 	}
 

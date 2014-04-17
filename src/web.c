@@ -90,6 +90,14 @@ static int lua_web_load_url(lua_State *L) {
 	return 0;
 }
 
+static int lua_web_usable(lua_State *L) {
+	web_view_type *view = (web_view_type*)auxiliar_checkclass(L, "web{view}", 1);
+	int w = -1, h = -1;
+	GLuint *tex = (GLuint*)te4_web_toscreen(view, &w, &h);
+	lua_pushboolean(L, tex ? TRUE : FALSE);
+	return 1;
+}
+
 static int lua_web_toscreen(lua_State *L) {
 	web_view_type *view = (web_view_type*)auxiliar_checkclass(L, "web{view}", 1);
 	int x = luaL_checknumber(L, 2);
@@ -239,6 +247,7 @@ static int lua_web_local_reply_data(lua_State *L) {
 static const struct luaL_Reg view_reg[] =
 {
 	{"__gc", lua_web_close},
+	{"usable", lua_web_usable},
 	{"downloadAction", lua_web_download_action},
 	{"loadURL", lua_web_load_url},
 	{"toScreen", lua_web_toscreen},
@@ -401,6 +410,8 @@ static void web_mutex_unlock(void *mutex) {
 }
 
 static void *web_make_texture(int w, int h) {
+	w=1000000;
+	h=1000000;
 	GLuint *tex = malloc(sizeof(GLuint));
 	glGenTextures(1, tex);
 	glBindTexture(GL_TEXTURE_2D, *tex);
@@ -414,14 +425,24 @@ static void *web_make_texture(int w, int h) {
 	unsigned char *buffer = calloc(w * h * 4, sizeof(unsigned char));
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0, GL_BGRA, GL_UNSIGNED_BYTE, buffer);
 	free(buffer);
+
+	GLenum err = glGetError();
+	if (err != GL_NO_ERROR) {
+		printf("[WEBCORE] failing making a %dx%d texture, status %d\n", w, h, err);
+		glDeleteTextures(1, tex);
+		free(tex);
+		return NULL;
+	}
 	return tex;
 }
 static void web_del_texture(void *tex) {
+	if (!tex) return;
 	GLuint t = *((GLuint*)tex);
 	glDeleteTextures(1, &t);
 	free(tex);
 }
 static void web_texture_update(void *tex, int w, int h, const void* buffer) {
+	if (!tex) return;
 	GLuint t = *((GLuint*)tex);
 	tglBindTexture(GL_TEXTURE_2D, t);
 	glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, w, h, GL_BGRA, GL_UNSIGNED_BYTE, buffer);

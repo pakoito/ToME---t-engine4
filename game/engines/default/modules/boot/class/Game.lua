@@ -94,6 +94,10 @@ function _M:run()
 		self.webtooltip = require("engine.ui.WebView").new{width=380, height=500, has_frame=true, never_clean=true, allow_popup=true,
 			url = ("http://te4.org/tooltip-ingame?steam=%d&vM=%d&vm=%d&vp=%d"):format(core.steam and 1 or 0, engine.version[1], engine.version[2], engine.version[3])
 		}
+		if self.webtooltip.unusable then
+			self.webtooltip = nil
+			self.tooltip = Tooltip.new(nil, 14, nil, colors.DARK_GREY, 380)
+		end
 	end
 
 	self.flyers = FlyingText.new()
