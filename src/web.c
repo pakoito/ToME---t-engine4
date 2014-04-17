@@ -410,8 +410,6 @@ static void web_mutex_unlock(void *mutex) {
 }
 
 static void *web_make_texture(int w, int h) {
-	w=1000000;
-	h=1000000;
 	GLuint *tex = malloc(sizeof(GLuint));
 	glGenTextures(1, tex);
 	glBindTexture(GL_TEXTURE_2D, *tex);
