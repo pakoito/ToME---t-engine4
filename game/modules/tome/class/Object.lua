@@ -591,20 +591,54 @@ function _M:getTextualDesc(compare_with, use_actor)
 		if combat.special_on_hit then
 			special = combat.special_on_hit.desc
 		end
+
+		--[[ I couldn't figure out how to make this work because tdesc goes in the same list as special_on_Hit
 		local found = false
 		for i, v in ipairs(compare_with or {}) do
 			if v[field] and v[field].special_on_hit then
 				if special ~= v[field].special_on_hit.desc then
-					desc:add({"color","RED"}, "Special effect when this weapon hits: "..v[field].special_on_hit.desc, {"color","LAST"}, true)
+					desc:add({"color","RED"}, "When this weapon hits: "..v[field].special_on_hit.desc, {"color","LAST"}, true)
 				else
 					found = true
 				end
 			end
 		end
-		if special ~= "" then
-			desc:add(found and {"color","WHITE"} or {"color","GREEN"}, "Special effect when this weapon hits: "..special, {"color","LAST"}, true)
+		--]]
+
+		-- Store the DamageTypes with tdesc defined in dt_string
+		-- Store the DamageTypes without tdesc in combat2 (to be displayed normally)
+		local found = false
+		local dt_string = tstring{}
+		local combat2 = { melee_project = {} }
+		for i, v in pairs(combat.melee_project or {}) do
+			local def = DamageType.dam_def[i]
+			if def and def.tdesc then
+				local d = def.tdesc(v)
+				found = true
+				dt_string:add(d, {"color","LAST"}, true)
+				
+			else
+				combat2.melee_project[i] = v
+			end
 		end
 
+		-- Add the on hit section only if theres a tdesc DT or a special_on_hit
+		if found or special ~= ""  then
+			desc:add({"color","ORANGE"}, "When this weapon hits: ", {"color","LAST"}, true)
+
+		end
+
+		-- Add the special_on_hit desc first always in green
+		if special ~= "" then
+			desc:add({"color","GREEN"}, special:capitalize(), {"color","LAST"}, true)
+		end
+
+		-- Add the extended melee_project descriptions after special_on_hit, colors defined by tdesc
+		if found then
+			desc:merge(dt_string)
+		end
+
+		-- only special_on_hit display is modified, not special_on_crit and so on
 		special = ""
 		if combat.special_on_crit then
 			special = combat.special_on_crit.desc
@@ -613,32 +647,23 @@ function _M:getTextualDesc(compare_with, use_actor)
 		for i, v in ipairs(compare_with or {}) do
 			if v[field] and v[field].special_on_crit then
 				if special ~= v[field].special_on_crit.desc then
-					desc:add({"color","RED"}, "Special effect when this weapon crits: "..v[field].special_on_crit.desc, {"color","LAST"}, true)
+					desc:add({"color","RED"}, "When this weapon crits: "..v[field].special_on_crit.desc, {"color","LAST"}, true)
 				else
 					found = true
 				end
 			end
 		end
 		if special ~= "" then
-			desc:add(found and {"color","WHITE"} or {"color","GREEN"}, "Special effect when this weapon crits: "..special, {"color","LAST"}, true)
+			desc:add(found and {"color","WHITE"} or {"color","ORANGE"}, "When this weapon crits: "..special, {"color","LAST"}, true)
 		end
 
 		local special = ""
 		if combat.special_on_kill then
 			special = combat.special_on_kill.desc
 		end
-		local found = false
-		for i, v in ipairs(compare_with or {}) do
-			if v[field] and v[field].special_on_kill then
-				if special ~= v[field].special_on_kill.desc then
-					desc:add({"color","RED"}, "Special effect when this weapon kills: "..v[field].special_on_kill.desc, {"color","LAST"}, true)
-				else
-					found = true
-				end
-			end
-		end
+
 		if special ~= "" then
-			desc:add(found and {"color","WHITE"} or {"color","GREEN"}, "Special effect when this weapon kills: "..special, {"color","LAST"}, true)
+			desc:add(found and {"color","WHITE"} or {"color","ORANGE"}, "When this weapon kills: "..special, {"color","LAST"}, true)
 		end
 
 		found = false
@@ -668,7 +693,8 @@ function _M:getTextualDesc(compare_with, use_actor)
 			desc:add({"color","YELLOW"}, ("Shots beam through all targets."), {"color","LAST"}, true)
 		end
 
-		compare_table_fields(combat, compare_with, field, "melee_project", "%+d", "Damage when this weapon hits: ", function(item)
+		-- Use the second combat table for melee_project so we don't repeat the tdesc entries
+		compare_table_fields(combat2, compare_with, field, "melee_project", "%+d", "Damage (Melee): ", function(item)
 				local col = (DamageType.dam_def[item] and DamageType.dam_def[item].text_color or "#WHITE#"):toTString()
 				return col[2], (" %s"):format(DamageType.dam_def[item].name),{"color","LAST"}
 			end)
@@ -722,25 +748,84 @@ function _M:getTextualDesc(compare_with, use_actor)
 
 		compare_fields(w, compare_with, field, "ammo_reload_speed", "%+d", "Ammo reloads per turns: ")
 
+
+		local dt_string = tstring{}
+		local found = false
+		local combat2 = { melee_project = {} }
+		for i, v in pairs(w.melee_project or {}) do
+			local def = DamageType.dam_def[i]
+			if def and def.tdesc then
+				local d = def.tdesc(v)
+				found = true
+				dt_string:add(d, {"color","LAST"}, true)
+			else
+				combat2.melee_project[i] = v
+			end
+		end
+
+		if found then
+			desc:add({"color","ORANGE"}, "Effects on melee hit: ", {"color","LAST"}, true)
+			desc:merge(dt_string)
+		end
+
+		local ranged = tstring{}
+		local ranged_found = false
+		local ranged_combat = { ranged_project = {} }
+		for i, v in pairs(w.ranged_project or {}) do
+			local def = DamageType.dam_def[i]
+			if def and def.tdesc then
+				local d = def.tdesc(v)
+				ranged_found = true
+				ranged:add(d, {"color","LAST"}, true)
+			else
+				ranged_combat.ranged_project[i] = v
+			end
+		end
+
+		onhit = tstring{}
+		local found = false
+		local onhit_combat = { on_melee_hit = {} }
+		for i, v in pairs(w.on_melee_hit or {}) do
+			local def = DamageType.dam_def[i]
+			if def and def.tdesc then
+				local d = def.tdesc(v)
+				found = true
+				onhit:add(d, {"color","LAST"}, true)
+			else
+				onhit_combat.on_melee_hit[i] = v
+			end
+		end
+
+		compare_table_fields(combat2, compare_with, field, "melee_project", "%d", "Damage (Melee): ", function(item)
+				local col = (DamageType.dam_def[item] and DamageType.dam_def[item].text_color or "#WHITE#"):toTString()
+				return col[2],(" %s"):format(DamageType.dam_def[item].name),{"color","LAST"}
+			end)
+
+		if ranged_found then
+			desc:add({"color","ORANGE"}, "Effects on ranged hit: ", {"color","LAST"}, true)
+			desc:merge(ranged)
+		end
+
+		compare_table_fields(ranged_combat, compare_with, field, "ranged_project", "%d", "Damage (Ranged): ", function(item)
+				local col = (DamageType.dam_def[item] and DamageType.dam_def[item].text_color or "#WHITE#"):toTString()
+				return col[2],(" %s"):format(DamageType.dam_def[item].name),{"color","LAST"}
+			end)
+
+		if found then
+			desc:add({"color","ORANGE"}, "Effects when hit in melee: ", {"color","LAST"}, true)
+			desc:merge(onhit)
+		end
+
+		compare_table_fields(onhit_combat, compare_with, field, "on_melee_hit", "%d", "Damage when hit (Melee): ", function(item)
+				local col = (DamageType.dam_def[item] and DamageType.dam_def[item].text_color or "#WHITE#"):toTString()
+				return col[2],(" %s"):format(DamageType.dam_def[item].name),{"color","LAST"}
+			end)
+
+		desc:add({"color","ORANGE"}, "General effects: ", {"color","LAST"}, true)
+
 		compare_table_fields(w, compare_with, field, "inc_stats", "%+d", "Changes stats: ", function(item)
 				return (" %s"):format(Stats.stats_def[item].short_name:capitalize())
 			end)
-
-		compare_table_fields(w, compare_with, field, "melee_project", "%d", "Damage when the wearer hits(melee): ", function(item)
-				local col = (DamageType.dam_def[item] and DamageType.dam_def[item].text_color or "#WHITE#"):toTString()
-				return col[2],(" %s"):format(DamageType.dam_def[item].name),{"color","LAST"}
-			end)
-
-		compare_table_fields(w, compare_with, field, "ranged_project", "%d", "Damage when the wearer hits(ranged): ", function(item)
-				local col = (DamageType.dam_def[item] and DamageType.dam_def[item].text_color or "#WHITE#"):toTString()
-				return col[2],(" %s"):format(DamageType.dam_def[item].name),{"color","LAST"}
-			end)
-
-		compare_table_fields(w, compare_with, field, "on_melee_hit", "%d", "Damage when the wearer is hit: ", function(item)
-				local col = (DamageType.dam_def[item] and DamageType.dam_def[item].text_color or "#WHITE#"):toTString()
-				return col[2],(" %s"):format(DamageType.dam_def[item].name),{"color","LAST"}
-			end)
-
 		compare_table_fields(w, compare_with, field, "resists", "%+d%%", "Changes resistances: ", function(item)
 				local col = (DamageType.dam_def[item] and DamageType.dam_def[item].text_color or "#WHITE#"):toTString()
 				return col[2], (" %s"):format(item == "all" and "all" or DamageType.dam_def[item].name), {"color","LAST"}
@@ -771,7 +856,6 @@ function _M:getTextualDesc(compare_with, use_actor)
 				return col[2], (" %s"):format(item == "all" and "all" or DamageType.dam_def[item].name), {"color","LAST"}
 			end)
 
-
 		compare_table_fields(w, compare_with, field, "inc_damage_actor_type", "%+d%% ", "Damage against: ", function(item)
 				local _, _, t, st = item:find("^([^/]+)/?(.*)$")
 				if st and st ~= "" then
@@ -780,6 +864,15 @@ function _M:getTextualDesc(compare_with, use_actor)
 					return t:capitalize()
 				end
 			end)
+
+		compare_table_fields(w, compare_with, field, "resists_actor_type", "%+d%% ", "Reduced damage from: ", function(item)
+		local _, _, t, st = item:find("^([^/]+)/?(.*)$")
+			if st and st ~= "" then
+				return st:capitalize()
+			else
+				return t:capitalize()
+			end
+		end)
 
 		compare_table_fields(w, compare_with, field, "damage_affinity", "%+d%%", "Damage affinity(heal): ", function(item)
 				local col = (DamageType.dam_def[item] and DamageType.dam_def[item].text_color or "#WHITE#"):toTString()
@@ -1097,7 +1190,7 @@ function _M:getTextualDesc(compare_with, use_actor)
 		compare_fields(w, compare_with, field, "damage_backfire", "%+d%%", "Damage Backlash: ", nil, true)
 		
 		compare_fields(w, compare_with, field, "resist_unseen", "%-d%%", "Reduce all damage from unseen attackers: ")
-
+		
 		if w.undead then
 			desc:add("The wearer is treated as an undead.", true)
 		end
@@ -1139,6 +1232,9 @@ function _M:getTextualDesc(compare_with, use_actor)
 		end
 
 		self:triggerHook{"Object:descWielder", compare_with=compare_with, compare_fields=compare_fields, compare_table_fields=compare_table_fields, desc=desc, w=w, field=field}
+
+		-- Do not show "general effect" if nothing to show
+		if desc[#desc-2] == "General effects: " then table.remove(desc) table.remove(desc) table.remove(desc) table.remove(desc) end
 
 		local can_combat_unarmed = false
 		local compare_unarmed = {}
@@ -1218,6 +1314,13 @@ function _M:getTextualDesc(compare_with, use_actor)
 		local d = self:special_desc()
 		desc:add({"color", "ROYAL_BLUE"})
 		desc:merge(d:toTString())
+		desc:add({"color", "LAST"}, true)
+	end
+
+	if self.on_block and self.on_block.desc then
+		local d = self.on_block.desc
+		desc:add({"color", "ORCHID"})
+		desc:add("Special effect on block: " .. d)
 		desc:add({"color", "LAST"}, true)
 	end
 

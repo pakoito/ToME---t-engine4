@@ -163,12 +163,9 @@ newEntity{
 	rarity = 20,
 	cost = 30,
 	wielder = {
-		max_life=resolvers.mbonus_material(30, 30),
+		shield_factor=resolvers.mbonus_material(10, 5), -- this stat terrifies me
 		life_regen = resolvers.mbonus_material(45, 15, function(e, v) v=v/10 return 0, v end),
-		talents_types_mastery = {
-			["spell/aegis"] = resolvers.mbonus_material(30, 10, function(e, v) v=v/100 return 0, v end),
 		},
-	},
 }
 
 newEntity{

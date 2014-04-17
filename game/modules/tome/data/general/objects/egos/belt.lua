@@ -178,6 +178,7 @@ newEntity{
 	wielder = {
 		combat_dam = resolvers.mbonus_material(10, 2),
 		combat_spellresist = resolvers.mbonus_material(10, 5),
+		size_category = 1, -- May as well, Halflingyeeks want to Grapple too
 	},
 }
 

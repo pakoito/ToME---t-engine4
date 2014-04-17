@@ -23,6 +23,7 @@ local DamageType = require "engine.DamageType"
 
 load("/data/general/objects/egos/ranged.lua")
 
+-- Now matches the sling with a different stat
 newEntity{
 	power_source = {technique=true},
 	name = " of dexterity (#STATBONUS#)", suffix=true, instant_resolve=true,
@@ -31,6 +32,7 @@ newEntity{
 	rarity = 7,
 	cost = 7,
 	wielder = {
+		resists_pen={ [DamageType.PHYSICAL] = resolvers.mbonus_material(15, 10), },
 		inc_stats = { [Stats.STAT_DEX] = resolvers.mbonus_material(6, 2) },
 	},
 }

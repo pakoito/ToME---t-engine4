@@ -243,7 +243,8 @@ newEntity{ base = "BASE_LONGBOW",
 	},
 	wielder = {
 		disease_immune = 0.5,
-		ranged_project = {[DamageType.CORRUPTED_BLOOD] = 15},
+		ranged_project = {[DamageType.ITEM_BLIGHT_DISEASE] = 50},
+
 		inc_damage={ [DamageType.BLIGHT] = 10, },
 		talent_cd_reduction={
 			[Talents.T_CYST_BURST] = 2,

@@ -107,24 +107,16 @@ newEntity{ theme={mental=true}, name="hate on crit", points = 1, rarity = 16, le
 newEntity{ theme={mental=true}, name="max psi", points = 1, rarity = 16, level_range = {1, 50},
 	wielder = { max_psi = resolvers.randartmax(10, 50), },
 }
-newEntity{ theme={mental=true}, name="psi per kill", points = 1, rarity = 16, level_range = {1, 50},
-	wielder = { psi_per_kill = resolvers.randartmax(1, 5), },
-}
 newEntity{ theme={mental=true}, name="psi on hit", points = 1, rarity = 16, level_range = {1, 50},
 	wielder = { psi_regen_when_hit = resolvers.randartmax(.04, 2), },
 }
 newEntity{ theme={mental=true}, name="psi on crit", points = 1, rarity = 16, level_range = {1, 50},
 	wielder = { psi_on_crit = resolvers.randartmax(1, 5), },
 }
-newEntity{ theme={mental=true}, name="psi regen", points = 1, rarity = 16, level_range = {1, 50},
-	wielder = { psi_regen = resolvers.randartmax(.1, 1), },
-}
+
 ----------------------------------------------------------------
 -- Misc
 ----------------------------------------------------------------
-newEntity{ theme={mental=true}, name="summon regen", points = 1, rarity = 16, level_range = {1, 50},
-	wielder = { nature_summon_regen = resolvers.randartmax(1, 5), },
-}
 newEntity{ theme={mental=true}, name="summon heal", points = 1, rarity = 16, level_range = {1, 50},
 	wielder = { heal_on_nature_summon  = resolvers.randartmax(10, 50), },
 }
@@ -148,7 +140,7 @@ newEntity{ theme={physical=true}, name="phys atk", points = 1, rarity = 10, leve
 	wielder = { combat_atk = resolvers.randartmax(2, 20), },
 }
 newEntity{ theme={physical=true}, name="phys crit magnitude", points = 3, rarity = 15, level_range = {1, 50},
-	wielder = { combat_critical_power = resolvers.randartmax(5, 25),   },
+	wielder = { combat_critical_power = resolvers.randartmax(3, 25),   },
 }
 ----------------------------------------------------------------
 -- Resources
@@ -287,6 +279,7 @@ newEntity{ theme={defense=true, antimagic=true, temporal=true}, name="resist tem
 ----------------------------------------------------------------
 -- Elemental Projection
 ----------------------------------------------------------------
+--[[ Removed for now since the "greater" melee project egos were added 
 newEntity{ theme={physical=true}, name="physical melee", points = 2, rarity = 18, level_range = {1, 50},
 	wielder = { melee_project = {[DamageType.PHYSICAL] = resolvers.randartmax(2, 20), }, },
 }
@@ -323,6 +316,8 @@ newEntity{ theme={arcane=true, spell=true}, name="arcane melee", points = 4, rar
 newEntity{ theme={temporal=true}, name="temporal melee", points = 4, rarity = 24, level_range = {1, 50},
 	wielder = { melee_project = {[DamageType.TEMPORAL] = resolvers.randartmax(2, 20), }, },
 }
+--]]
+
 ----------------------------------------------------------------
 -- Elemental Retribution
 ----------------------------------------------------------------
@@ -479,18 +474,77 @@ newEntity{ theme={misc=true, darkness=true}, name="infravision radius", points =
 newEntity{ theme={misc=true, light=true}, name="lite radius", points = 1, rarity = 14, level_range = {1, 50},
 	wielder = { lite = resolvers.randartmax(1, 3), },
 }
-newEntity{ theme={misc=true}, name="water breathing", points = 10, rarity = 15, level_range = {1, 50},
+newEntity{ theme={misc=true}, name="water breathing", points = 2, rarity = 30, level_range = {1, 50},
 	wielder = { can_breath = {water=1}, },
 }
 newEntity{ theme={misc=true, mental=true}, name="telepathy", points = 60, rarity = 100, level_range = {1, 50},
 	wielder = { esp_all = 1 },
 }
-newEntity{ theme={misc=true, mental=true}, name="orc telepathy", points = 15, rarity = 50, level_range = {1, 50},
+newEntity{ theme={misc=true, mental=true}, name="orc telepathy", points = 2, rarity = 50, level_range = {1, 50},
 	wielder = { esp = {["humanoid/orc"]=1}, },
 }
-newEntity{ theme={misc=true, mental=true}, name="dragon telepathy", points = 8, rarity = 40, level_range = {1, 50},
+newEntity{ theme={misc=true, mental=true}, name="dragon telepathy", points = 2, rarity = 40, level_range = {1, 50},
 	wielder = { esp = {dragon=1}, },
 }
-newEntity{ theme={misc=true, mental=true}, name="demon telepathy", points = 8, rarity = 40, level_range = {1, 50},
+newEntity{ theme={misc=true, mental=true}, name="demon telepathy", points = 2, rarity = 40, level_range = {1, 50},
 	wielder = { esp = {["demon/minor"]=1, ["demon/major"]=1}, },
 }
+
+----------------------------------------------------------------
+-- Melee damage Projection (rare)
+----------------------------------------------------------------
+newEntity{ theme={blight=true}, name="corrupted blood melee", points = 2, rarity = 20, level_range = {1, 50},
+	wielder = { melee_project = {[DamageType.ITEM_BLIGHT_DISEASE] = resolvers.randartmax(10, 40), }, },
+}
+newEntity{ theme={acid=true}, name="acid corrode melee", points = 2, rarity = 20, level_range = {1, 50},
+	wielder = { melee_project = {[DamageType.ITEM_ACID_CORRODE] = resolvers.randartmax(15, 40), }, },
+}
+newEntity{ theme={light=true}, name="light blind melee", points = 2, rarity = 20, level_range = {1, 50},
+	wielder = { melee_project = {[DamageType.ITEM_LIGHT_BLIND] = resolvers.randartmax(15, 40), }, },
+}
+newEntity{ theme={temporal=true}, name="temporal energize melee", points = 2, rarity = 20, level_range = {1, 50},
+	wielder = { melee_project = {[DamageType.ITEM_TEMPORAL_ENERGIZE] = resolvers.randartmax(10, 40), }, },
+}
+newEntity{ theme={lightning=true}, name="lightning daze melee", points = 2, rarity = 20, level_range = {1, 50},
+	wielder = { melee_project = {[DamageType.ITEM_LIGHTNING_DAZE] = resolvers.randartmax(15, 40), }, },
+}
+newEntity{ theme={antimagic=true}, name="manaburn melee", points = 2, rarity = 18, level_range = {1, 50},
+	wielder = { melee_project = {[DamageType.ITEM_ANTIMAGIC_MANABURN] = resolvers.randartmax(10, 40), }, },
+}
+newEntity{ theme={nature=true, antimagic=true}, name="slime melee", points = 2, rarity = 18, level_range = {1, 50},
+	wielder = { melee_project = {[DamageType.ITEM_NATURE_SLOW] = resolvers.randartmax(15, 40), }, },
+}
+newEntity{ theme={dark=true}, name="dark numbing melee", points = 2, rarity = 24, level_range = {1, 50},
+	wielder = { melee_project = {[DamageType.ITEM_DARKNESS_NUMBING] = resolvers.randartmax(15, 40), }, },
+}
+
+----------------------------------------------------------------
+-- High level
+----------------------------------------------------------------
+
+-- The ultimate Ghoul buff
+newEntity{ theme={physical=true, defense=true}, name="die at greater", points = 1, rarity = 15, level_range = {20, 50},
+	wielder = { die_at = resolvers.randartmax(-20, -80), },
+}
+
+newEntity{ theme={physical = true, misc = true, defense=true}, name="ignore crit greater", points = 1, rarity = 15, level_range = {20, 50},
+	wielder = { ignore_direct_crits = resolvers.randartmax(5, 15), },
+}
+
+
+
+--[[ Doesn't work, power system only supports integers, or something
+newEntity{ theme={spell=true}, name="spell speed greater", points = 1, rarity = 20, level_range = {20, 50},
+	wielder = { combat_spellspeed = resolvers.randartmax(0.05, 0.1), },
+}
+
+newEntity{ theme={mental=true}, name="mind speed greater", points = 1, rarity = 20, level_range = {20, 50},
+	wielder = { combat_mindspeed = resolvers.randartmax(0.05, 0.1), },
+}
+
+newEntity{ theme={misc = true, physical=true}, name="move speed greater", points = 1, rarity = 20, level_range = {20, 50},
+	wielder = { move_speed = resolvers.randartmax(0.05, 0.1), },
+}
+--]]
+
+

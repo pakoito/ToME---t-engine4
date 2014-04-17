@@ -25,7 +25,10 @@ local DamageType = require "engine.DamageType"
 --load("/data/general/objects/egos/charged-defensive.lua")
 --load("/data/general/objects/egos/charged-utility.lua")
 
--- Immunity/Resist rings
+-- Thanks for DoctorNull for a very significant number of changes to this file
+----------------------------------------------------------------
+-- Immunity/resist
+----------------------------------------------------------------
 newEntity{
 	power_source = {arcane=true},
 	name = " of sensing", suffix=true, instant_resolve=true,
@@ -192,7 +195,9 @@ newEntity{
 	resolvers.genericlast(function(e) e.wielder.resists[engine.DamageType.ACID] = (e.wielder.resists[engine.DamageType.ACID] or 0) + (e.wielder.inc_damage[engine.DamageType.ACID]*2) end),
 }
 
--- rare resists
+----------------------------------------------------------------
+-- Rare resists (also known as bad resists, fix later)
+----------------------------------------------------------------
 newEntity{
 	power_source = {arcane=true},
 	name = " of aether (#RESIST#)", suffix=true, instant_resolve=true,
@@ -263,34 +268,10 @@ newEntity{
 	resolvers.genericlast(function(e) e.wielder.resists[engine.DamageType.TEMPORAL] = (e.wielder.resists[engine.DamageType.TEMPORAL] or 0) + (e.wielder.inc_damage[engine.DamageType.TEMPORAL]) end),
 }
 
--- The rest
-newEntity{ 
-	power_source = {arcane=true},
-	name = " of power", suffix=true, instant_resolve=true,
-	keywords = {power=true},
-	level_range = {1, 50},
-	rarity = 4,
-	cost = 4,
-	wielder = {
-		combat_spellpower = resolvers.mbonus_material(10, 5),
-		combat_dam = resolvers.mbonus_material(10, 5),
-		combat_mindpower = resolvers.mbonus_material(10, 5),
-	},
-}
 
-newEntity{
-	power_source = {technique=true},
-	name = "savior's ", prefix=true, instant_resolve=true,
-	keywords = {savior=true},
-	level_range = {1, 50},
-	rarity = 10,
-	cost = 10,
-	wielder = {
-		combat_mentalresist = resolvers.mbonus_material(12, 6),
-		combat_physresist = resolvers.mbonus_material(12, 6),
-		combat_spellresist = resolvers.mbonus_material(12, 6),
-	},
-}
+----------------------------------------------------------------
+-- Single stat lesser
+----------------------------------------------------------------
 
 newEntity{
 	power_source = {technique=true},
@@ -369,6 +350,10 @@ newEntity{
 	},
 	resolvers.genericlast(function(e) e.wielder.combat_mentalresist = (e.wielder.combat_mentalresist or 0) + (e.wielder.inc_stats[engine.interface.ActorStats.STAT_WIL]*2) end),
 }
+
+----------------------------------------------------------------
+-- Double stat greater
+----------------------------------------------------------------
 newEntity{
 	power_source = {technique=true},
 	name = "sneakthief's ", prefix=true, instant_resolve=true,
@@ -434,6 +419,27 @@ newEntity{
 	},
 }
 
+-- Stolen from Doctornull's addon
+newEntity{
+	power_source = {arcane=true},
+	name = "faerie's ", prefix=true, instant_resolve=true,
+	keywords = {faerie=true},
+	level_range = {15, 50},
+	greater_ego = 1,
+	rarity = 12,
+	cost = 20,
+	wielder = {
+		combat_spellpower = resolvers.mbonus_material(10, 5),
+		inc_stats = {
+			[Stats.STAT_MAG] = resolvers.mbonus_material(6, 2),
+			[Stats.STAT_CUN] = resolvers.mbonus_material(6, 2),
+		},
+	},
+}
+
+----------------------------------------------------------------
+-- Misc Lesser
+----------------------------------------------------------------
 newEntity{
 	power_source = {technique=true},
 	name = "mule's ", prefix=true, instant_resolve=true,
@@ -447,18 +453,31 @@ newEntity{
 	},
 }
 
-newEntity{
-	power_source = {nature=true},
-	name = " of life", suffix=true, instant_resolve=true,
-	keywords = {life=true},
-	level_range = {30, 50},
-	greater_ego = 1,
-	rarity = 12,
-	cost = 50,
+newEntity{ 
+	power_source = {arcane=true},
+	name = " of power", suffix=true, instant_resolve=true,
+	keywords = {power=true},
+	level_range = {1, 50},
+	rarity = 4,
+	cost = 4,
 	wielder = {
-		max_life=resolvers.mbonus_material(60, 40),
-		life_regen = resolvers.mbonus_material(15, 5, function(e, v) v=v/10 return 0, v end),
-		healing_factor = resolvers.mbonus_material(20, 10, function(e, v) v=v/100 return 0, v end),
+		combat_spellpower = resolvers.mbonus_material(10, 5),
+		combat_dam = resolvers.mbonus_material(10, 5),
+		combat_mindpower = resolvers.mbonus_material(10, 5),
+	},
+}
+
+newEntity{
+	power_source = {technique=true},
+	name = "savior's ", prefix=true, instant_resolve=true,
+	keywords = {savior=true},
+	level_range = {1, 50},
+	rarity = 10,
+	cost = 10,
+	wielder = {
+		combat_mentalresist = resolvers.mbonus_material(12, 6),
+		combat_physresist = resolvers.mbonus_material(12, 6),
+		combat_spellresist = resolvers.mbonus_material(12, 6),
 	},
 }
 
@@ -476,6 +495,27 @@ newEntity{
 		inc_damage = { all = resolvers.mbonus_material(4, 4) },
 	},
 }
+
+
+----------------------------------------------------------------
+-- Misc Greater
+----------------------------------------------------------------
+
+newEntity{
+	power_source = {nature=true},
+	name = " of life", suffix=true, instant_resolve=true,
+	keywords = {life=true},
+	level_range = {30, 50},
+	greater_ego = 1,
+	rarity = 12,
+	cost = 50,
+	wielder = {
+		max_life=resolvers.mbonus_material(60, 40),
+		life_regen = resolvers.mbonus_material(15, 5, function(e, v) v=v/10 return 0, v end),
+		healing_factor = resolvers.mbonus_material(20, 10, function(e, v) v=v/100 return 0, v end),
+	},
+}
+
 
 newEntity{
 	power_source = {technique=true},
@@ -505,10 +545,10 @@ newEntity{
 	wielder = {
 		resists={
 			[DamageType.NATURE] = resolvers.mbonus_material(10, 5),
+		   [DamageType.BLIGHT] = resolvers.mbonus_material(10, 5),
 		},
-		poison_immune = resolvers.mbonus_material(15, 10, function(e, v) v=v/100 return 0, v end),
-		disease_immune = resolvers.mbonus_material(15, 10, function(e, v) v=v/100 return 0, v end),
-		combat_physresist = resolvers.mbonus_material(10, 10),
+		poison_immune = resolvers.mbonus_material(20, 10, function(e, v) v=v/100 return 0, v end),
+		disease_immune = resolvers.mbonus_material(20, 10, function(e, v) v=v/100 return 0, v end),
 	},
 }
 
@@ -524,7 +564,7 @@ newEntity{
 	wielder = {
 		melee_project = {
 			[DamageType.BLEED] = resolvers.mbonus_material(20, 20),
-			[DamageType.RANDOM_GLOOM] = resolvers.mbonus_material(10, 10),
+			[DamageType.ITEM_MIND_GLOOM] = resolvers.mbonus_material(10, 10),
 		},
 		inc_stats = {
 			[Stats.STAT_CUN] = resolvers.mbonus_material(9, 1),
@@ -552,6 +592,7 @@ newEntity{
 	},
 }
 
+-- Instant so it isn't strictly worse than Psychoport/etc
 newEntity{
 	power_source = {technique=true},
 	name = " of pilfering", suffix=true, instant_resolve=true,
@@ -560,6 +601,7 @@ newEntity{
 	greater_ego = 1,
 	rarity = 15,
 	cost = 30,
+	use_no_energy = true,
 	resolvers.charmt(Talents.T_DISENGAGE, 2, 30),
 	wielder = {
 		combat_atk = resolvers.mbonus_material(10, 7),
@@ -568,6 +610,7 @@ newEntity{
 	},
 }
 
+-- Instant so it isn't strictly worse than Psychoport/etc
 newEntity{
 	power_source = {technique=true},
 	name = " of speed", suffix=true, instant_resolve=true,
@@ -576,6 +619,7 @@ newEntity{
 	greater_ego = 1,
 	rarity = 40,
 	cost = 140,
+	use_no_energy = true,
 	resolvers.charmt(Talents.T_BLINDING_SPEED, {2,3,4}, 40),
 	wielder = {
 		movement_speed = resolvers.mbonus_material(15, 10, function(e, v) v=v/100 return 0, v end),
@@ -594,14 +638,10 @@ newEntity{
 	cost = 60,
 	wielder = {
 		melee_project = {
-			[DamageType.LIGHTNING] = resolvers.mbonus_material(12, 3),
-			[DamageType.PHYSICAL] = resolvers.mbonus_material(12, 3),
-			[DamageType.RANDOM_BLIND] = resolvers.mbonus_material(12, 3),
+			[DamageType.ITEM_LIGHT_BLIND] = resolvers.mbonus_material(45, 10),
 		},
-		on_melee_hit = {
-			[DamageType.LIGHTNING] = resolvers.mbonus_material(12, 3),
-			[DamageType.PHYSICAL] = resolvers.mbonus_material(12, 3),
-			[DamageType.RANDOM_BLIND] = resolvers.mbonus_material(12, 3),
+		ranged_project = {
+			[DamageType.ITEM_LIGHT_BLIND] = resolvers.mbonus_material(45, 10),
 		},
 	},
 }

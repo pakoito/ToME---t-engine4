@@ -1873,7 +1873,7 @@ newEffect{
 		local amt = util.bound(dam - eff.power, 0, dam)
 		local blocked = dam - amt
 		local shield = self:hasShield()
-		if shield then shield:check("on_block", self, src, type, dam, eff) end
+		if shield and shield.on_block and shield.on_block.fct then shield.on_block.fct(shield, self, src, type, dam, eff) end
 		if eff.properties.br then
 			self:heal(blocked, src)
 			game:delayedLogMessage(self, src, "block_heal", "#CRIMSON##Source# heals from blocking with %s shield!", string.his_her(self))

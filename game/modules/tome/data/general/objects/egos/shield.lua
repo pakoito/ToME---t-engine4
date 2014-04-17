@@ -25,7 +25,9 @@ local DamageType = require "engine.DamageType"
 --load("/data/general/objects/egos/charged-defensive.lua")
 --load("/data/general/objects/egos/charged-utility.lua")
 
--- resists... shields are very good at providing resists
+----------------------------------------------------------------
+-- Resists Lesser - Suffix
+----------------------------------------------------------------
 newEntity{
 	power_source = {technique=true},
 	name = " of fire resistance (#RESIST#)", suffix=true, instant_resolve=true,
@@ -48,17 +50,7 @@ newEntity{
 		resists={[DamageType.COLD] = resolvers.mbonus_material(15, 15)},
 	},
 }
-newEntity{
-	power_source = {technique=true},
-	name = " of acid resistance (#RESIST#)", suffix=true, instant_resolve=true,
-	keywords = {acid=true},
-	level_range = {1, 50},
-	rarity = 5,
-	cost = 4,
-	wielder = {
-		resists={[DamageType.ACID] = resolvers.mbonus_material(15, 15)},
-	},
-}
+
 newEntity{
 	power_source = {technique=true},
 	name = " of lightning resistance (#RESIST#)", suffix=true, instant_resolve=true,
@@ -70,7 +62,21 @@ newEntity{
 		resists={[DamageType.LIGHTNING] = resolvers.mbonus_material(15, 15)},
 	},
 }
--- rare resists
+----------------------------------------------------------------
+-- Rare Resists
+----------------------------------------------------------------
+newEntity{
+	power_source = {technique=true},
+	name = " of acid resistance (#RESIST#)", suffix=true, instant_resolve=true,
+	keywords = {acid=true},
+	level_range = {1, 50},
+	rarity = 12,
+	cost = 4,
+	wielder = {
+		resists={[DamageType.ACID] = resolvers.mbonus_material(15, 15)},
+	},
+}
+
 newEntity{
 	power_source = {antimagic=true},
 	name = " of arcane resistance (#RESIST#)", suffix=true, instant_resolve=true,
@@ -137,30 +143,17 @@ newEntity{
 	name = " of temporal resistance (#RESIST#)", suffix=true, instant_resolve=true,
 	keywords = {temporal=true},
 	level_range = {10, 50},
-	rarity = 12,
+	rarity = 18,
 	cost = 4,
 	wielder = {
 		resists={[DamageType.TEMPORAL] = resolvers.mbonus_material(10, 10)},
+		on_melee_hit={[DamageType.ITEM_TEMPORAL_ENERGIZE] = resolvers.mbonus_material(25, 10)},
 	},
 }
-newEntity{
-	power_source = {nature=true},
-	name = " of resistance", suffix=true, instant_resolve=true,
-	keywords = {resistance=true},
-	level_range = {30, 50},
-	greater_ego = 1,
-	rarity = 24,
-	cost = 20,
-	wielder = {
-		resists={
-			[DamageType.ACID] = resolvers.mbonus_material(8, 5),
-			[DamageType.LIGHTNING] = resolvers.mbonus_material(8, 5),
-			[DamageType.FIRE] = resolvers.mbonus_material(8, 5),
-			[DamageType.COLD] = resolvers.mbonus_material(8, 5),
-		},
-	},
-}
--- retalation/melee_project shields
+
+----------------------------------------------------------------
+-- Lesser Elemental - Prefix
+----------------------------------------------------------------
 newEntity{
 	power_source = {nature=true},
 	name = "flaming ", prefix=true, instant_resolve=true,
@@ -178,6 +171,7 @@ newEntity{
 	},
 	},
 }
+
 newEntity{
 	power_source = {nature=true},
 	name = "icy ", prefix=true, instant_resolve=true,
@@ -203,15 +197,16 @@ newEntity{
 	rarity = 8,
 	cost = 8,
 	special_combat = {
-		melee_project={[DamageType.LIGHTNING_DAZE] = resolvers.mbonus_material(10, 10)},
+		melee_project={[DamageType.ITEM_LIGHTNING_DAZE] = resolvers.mbonus_material(25, 10)},
 	},
 	wielder = {
-		on_melee_hit={[DamageType.LIGHTNING] = resolvers.mbonus_material(10, 10)},
+		on_melee_hit={[DamageType.LIGHTNING] = resolvers.mbonus_material(20, 10)},
 		melee_project={
 			[DamageType.LIGHTNING] = resolvers.mbonus_material(5, 5),
 	},
 	},
 }
+
 newEntity{
 	power_source = {nature=true},
 	name = "acidic ", prefix=true, instant_resolve=true,
@@ -220,41 +215,47 @@ newEntity{
 	rarity = 8,
 	cost = 8,
 	special_combat = {
-		melee_project={[DamageType.ACID_BLIND] = resolvers.mbonus_material(10, 10)},
+		melee_project={[DamageType.ITEM_ACID_CORRODE] = resolvers.mbonus_material(20, 10)},
 	},
 	wielder = {
-		on_melee_hit={[DamageType.ACID] = resolvers.mbonus_material(10, 10)},
+		on_melee_hit={[DamageType.ACID] = resolvers.mbonus_material(25, 10)},
 		melee_project={
 			[DamageType.ACID] = resolvers.mbonus_material(5, 5),
 	},
 	},
 }
 
+
+----------------------------------------------------------------
+-- Greater Elemental - Prefix 
+----------------------------------------------------------------
+-- This is close to strictly better than the others in this category so it gets a higher rarity/level req
 newEntity{
 	power_source = {psionic=true},
-	name = " of gloom", suffix=true, instant_resolve=true,
+	name = " of gloom", prefix=true, instant_resolve=true,
 	keywords = {gloom=true},
-	level_range = {10, 50},
-	rarity = 14,
+	level_range = {30, 50},
+	rarity = 25,
 	cost = 12,
 	special_combat = {
-		melee_project={[DamageType.RANDOM_GLOOM] = resolvers.mbonus_material(7, 7)},
+		melee_project={[DamageType.ITEM_MIND_GLOOM] = resolvers.mbonus_material(25, 10)},
 	},
 	wielder = {
-		on_melee_hit={[DamageType.RANDOM_GLOOM] = resolvers.mbonus_material(10, 10)},
+		on_melee_hit={[DamageType.ITEM_MIND_GLOOM] = resolvers.mbonus_material(25, 10)},
 		melee_project={
-			[DamageType.RANDOM_GLOOM] = resolvers.mbonus_material(5, 5),
+			[DamageType.ITEM_MIND_GLOOM] = resolvers.mbonus_material(5, 5),
 	},
 	},
 }
 
+-- Needs something special
 newEntity{
 	power_source = {arcane=true},
 	name = "coruscating ", prefix=true, instant_resolve=true,
 	keywords = {coruscating=true},
-	level_range = {30, 50},
+	level_range = {10, 50},
 	greater_ego = 1,
-	rarity = 30,
+	rarity = 20,
 	cost = 60,
 	special_combat = {
 		melee_project = {
@@ -278,9 +279,9 @@ newEntity{
 	power_source = {arcane=true},
 	name = "crackling ", prefix=true, instant_resolve=true,
 	keywords = {crackling=true},
-	level_range = {30, 50},
+	level_range = {1, 50},
 	greater_ego = 1,
-	rarity = 30,
+	rarity = 20,
 	cost = 60,
 	special_combat = {
 		melee_project = {
@@ -295,7 +296,7 @@ newEntity{
 			[Stats.STAT_DEX] = resolvers.mbonus_material(5, 1),
 		},
 		on_melee_hit = {
-			[DamageType.LIGHTNING] = resolvers.mbonus_material(10, 10),
+			[DamageType.ITEM_LIGHTNING_DAZE] = resolvers.mbonus_material(10, 10),
 		},
 	},
 }
@@ -304,9 +305,9 @@ newEntity{
 	power_source = {arcane=true},
 	name = "corrosive ", prefix=true, instant_resolve=true,
 	keywords = {corrosive=true},
-	level_range = {30, 50},
+	level_range = {1, 50},
 	greater_ego = 1,
-	rarity = 30,
+	rarity = 20,
 	cost = 60,
 	special_combat = {
 		melee_project = {
@@ -321,11 +322,12 @@ newEntity{
 			[Stats.STAT_CON] = resolvers.mbonus_material(5, 1),
 		},
 		on_melee_hit = {
-			[DamageType.ACID] = resolvers.mbonus_material(10, 10),
+			[DamageType.ITEM_ACID_CORRODE] = resolvers.mbonus_material(10, 10),
 		},
 	},
 }
 
+-- Much like Gloom this is better than any of the others and has the strictest reqs
 newEntity{
 	power_source = {nature=true},
 	name = "wintry ", prefix=true, instant_resolve=true,
@@ -336,7 +338,7 @@ newEntity{
 	cost = 60,
 	special_combat = {
 		melee_project = {
-			[DamageType.COLD] = resolvers.mbonus_material(10, 10),
+			[DamageType.COLD] = resolvers.mbonus_material(20, 10),
 		},
 	},
 	wielder = {
@@ -347,11 +349,58 @@ newEntity{
 			[Stats.STAT_WIL] = resolvers.mbonus_material(5, 1),
 		},
 		on_melee_hit = {
-			[DamageType.COLD] = resolvers.mbonus_material(10, 10),
+			[DamageType.ICE] = resolvers.mbonus_material(10, 10),
 		},
 	},
 }
 
+
+----------------------------------------------------------------
+-- Lesser Misc
+----------------------------------------------------------------
+newEntity{
+	power_source = {technique=true},
+	name = "reinforced ", prefix=true, instant_resolve=true,
+	keywords = {reinforced=true},
+	level_range = {1, 50},
+	rarity = 8,
+	cost = 8,
+	special_combat = {
+		block = resolvers.mbonus_material(80, 20),
+	},
+	wielder = {
+		combat_armor = resolvers.mbonus_material(8, 4),
+	},
+}
+
+newEntity{
+	power_source = {nature=true},
+	name = " of resilience", suffix=true, instant_resolve=true,
+	keywords = {resilience=true},
+	level_range = {10, 50},
+	rarity = 10,
+	cost = 10,
+	wielder = {
+		max_life=resolvers.mbonus_material(60, 40),
+	},
+}
+
+newEntity{
+	power_source = {technique=true},
+	name = "deflecting ", prefix=true, instant_resolve=true,
+	keywords = {deflection=true},
+	level_range = {10, 50},
+	rarity = 10,
+	cost = 10,
+	wielder = {
+		combat_def=resolvers.mbonus_material(11, 4),
+		projectile_evasion=resolvers.mbonus_material(15, 4),
+	},
+}
+
+----------------------------------------------------------------
+-- Greater Prefix
+----------------------------------------------------------------
 newEntity{
 	power_source = {nature=true},
 	name = "living ", prefix=true, instant_resolve=true,
@@ -377,27 +426,131 @@ newEntity{
 	},
 }
 
+
 newEntity{
-	power_source = {psionic=true},
-	name = " of the forge", suffix=true, instant_resolve=true,
-	keywords = {forge=true},
+	power_source = {nature=true},
+	name = "blood-etched ", prefix=true, instant_resolve=true,
+	keywords = {etched=true},
 	level_range = {30, 50},
 	greater_ego = 1,
-	rarity = 28,
-	cost = 60,
+	rarity = 17,
+	cost = 30,
+	wielder = {
+		life_regen = resolvers.mbonus_material(30, 10, function(e, v) v=v/10 return 0, v end),
+		healing_factor = resolvers.mbonus_material(20, 10, function(e, v) v=v/100 return 0, v end),
+		inc_stats = {
+			[Stats.STAT_CON] = resolvers.mbonus_material(4, 3),
+		},
+	},
+}
+
+
+newEntity{
+	power_source = {arcane=true},
+	name = "warded ", prefix=true, instant_resolve=true,
+	keywords = {ward=true},
+	level_range = {30, 50},
+	rarity = 15,
+	greater_ego = 1,
+	cost = 5,
 	special_combat = {
-		melee_project={[DamageType.DREAMFORGE] = resolvers.mbonus_material(10, 10)},
+		special_on_hit = {desc="reduce the cooldown of your ward talent by 1", fct=function(combat, who, target)
+		if who.talents_cd[who.T_WARD] then
+			who.talents_cd[who.T_WARD] = who.talents_cd[who.T_WARD] - 1
+		end
+			
+		end},
 	},
 	wielder = {
-		inc_stats = {
-			[Stats.STAT_WIL] = resolvers.mbonus_material(4, 3),
+		wards = {
+			[DamageType.FIRE] = resolvers.mbonus_material(5, 1),
+			[DamageType.COLD] = resolvers.mbonus_material(5, 1),
+			[DamageType.LIGHTNING] = resolvers.mbonus_material(5, 1),
+			[DamageType.TEMPORAL] = resolvers.mbonus_material(5, 1),
+			[DamageType.BLIGHT] = resolvers.mbonus_material(5, 1),
 		},
+		learn_talent = {[Talents.T_WARD] = 1},
+	},
+}
+
+newEntity{
+	power_source = {arcane=true},
+	name = "cosmic ", prefix=true, instant_resolve=true,
+	keywords = {cosmic=true},
+	level_range = {30, 50},
+	greater_ego = 1,
+	rarity = 20,
+	cost = 60,
+	special_combat = {
+		burst_on_crit={
+			[DamageType.LIGHT] = resolvers.mbonus_material(30, 10),
+			[DamageType.DARKNESS] = resolvers.mbonus_material(30, 10),
+		},
+	},
+	wielder = {
 		resists={
-			[DamageType.FIRE] = resolvers.mbonus_material(10, 10),
-			[DamageType.MIND] = resolvers.mbonus_material(10, 10),
+			[DamageType.LIGHT] = resolvers.mbonus_material(10, 5),
+			[DamageType.DARKNESS] = resolvers.mbonus_material(10, 5),
 		},
-		on_melee_hit = {[DamageType.DREAMFORGE] = resolvers.mbonus_material(10, 10)},
-		psi_regen_when_hit = resolvers.mbonus_material(23, 7, function(e, v) v=v/10 return 0, v end),
+	},
+	on_block = {desc = "Unleash the fury of the cosmos, dealing light and darkness damage to your attacker", fct = function(self, who, target, type, dam, eff)
+			if not target or target:attr("dead") or not target.x or not target.y then return end
+			if who.turn_procs and who.turn_procs.shield_cosmic and who.turn_procs.shield_cosmic[target.uid] then return end
+
+			-- Set this *before* damage or reflect/martyr avoids the limit
+			if not who.turn_procs.shield_cosmic then who.turn_procs.shield_cosmic = {} end
+			who.turn_procs.shield_cosmic[target.uid] = true
+			
+			local tg = {type="hit", range=10}
+			local damage = 50 -- Rescale me later
+
+			who:project(tg, target.x, target.y, engine.DamageType.DARKNESS, damage)
+			who:project(tg, target.x, target.y, engine.DamageType.LIGHT, damage)
+			who:logCombat(target, "#Source# unleashes cosmic retribution at #Target#!")
+			
+
+	end,},
+}
+
+
+newEntity{
+	power_source = {technique=true},
+	name = "impervious ", prefix=true, instant_resolve=true,
+	keywords = {impervious=true},
+	level_range = {40, 50},
+	greater_ego = 1,
+	rarity = 18,
+	cost = 40,
+	special_combat = {
+		block = resolvers.mbonus_material(90, 30),
+	},
+	wielder = {
+		combat_armor = resolvers.mbonus_material(8, 4),
+		combat_physresist = resolvers.mbonus_material(10, 5),
+		inc_stats = {
+			[Stats.STAT_CON] = resolvers.mbonus_material(4, 3),
+		},
+	},
+}
+
+----------------------------------------------------------------
+-- Greater Suffix
+----------------------------------------------------------------
+newEntity{
+	power_source = {nature=true},
+	name = " of resistance", suffix=true, instant_resolve=true,
+	keywords = {resistance=true},
+	level_range = {30, 50},
+	greater_ego = 1,
+	rarity = 24,
+	cost = 20,
+	wielder = {
+		resists={
+			[DamageType.ACID] = resolvers.mbonus_material(8, 5),
+			[DamageType.LIGHTNING] = resolvers.mbonus_material(8, 5),
+			[DamageType.FIRE] = resolvers.mbonus_material(8, 5),
+			[DamageType.COLD] = resolvers.mbonus_material(8, 5),
+		},
 	},
 }
 
@@ -426,183 +579,6 @@ newEntity{
 }
 
 newEntity{
-	power_source = {arcane=true},
-	name = " of the sun", suffix=true, instant_resolve=true,
-	keywords = {sun=true},
-	level_range = {30, 50},
-	greater_ego = 1,
-	rarity = 20,
-	cost = 60,
-	resolvers.charmt(Talents.T_SUN_FLARE, 2, 20),
-	special_combat = {
-		melee_project={
-			[DamageType.LIGHT] = resolvers.mbonus_material(10, 10)
-		},
-	},
-	wielder = {
-		resists={
-			[DamageType.LIGHT] = resolvers.mbonus_material(10, 5),
-			[DamageType.DARKNESS] = resolvers.mbonus_material(10, 5),
-		},
-		on_melee_hit={[DamageType.LIGHT] = resolvers.mbonus_material(10, 10)},
-	},
-}
-
--- The rest
-newEntity{
-	power_source = {technique=true},
-	name = "reinforced ", prefix=true, instant_resolve=true,
-	keywords = {reinforced=true},
-	level_range = {1, 50},
-	rarity = 8,
-	cost = 8,
-	special_combat = {
-		block = resolvers.mbonus_material(80, 20),
-	},
-	wielder = {
-		combat_armor = resolvers.mbonus_material(8, 4),
-	},
-}
-
-newEntity{
-	power_source = {technique=true},
-	name = "impervious ", prefix=true, instant_resolve=true,
-	keywords = {impervious=true},
-	level_range = {40, 50},
-	greater_ego = 1,
-	rarity = 18,
-	cost = 40,
-	special_combat = {
-		block = resolvers.mbonus_material(90, 30),
-	},
-	wielder = {
-		combat_armor = resolvers.mbonus_material(8, 4),
-		combat_physresist = resolvers.mbonus_material(10, 5),
-		inc_stats = {
-			[Stats.STAT_CON] = resolvers.mbonus_material(4, 3),
-		},
-	},
-}
-
-newEntity{
-	power_source = {nature=true},
-	name = "spellplated ", prefix=true, instant_resolve=true,
-	keywords = {spellplated=true},
-	level_range = {30, 50},
-	greater_ego = 1,
-	rarity = 20,
-	cost = 18,
-	wielder = {
-		combat_mentalresist = resolvers.mbonus_material(10, 5),
-		combat_spellresist = resolvers.mbonus_material(10, 5),
-		inc_stats = {
-			[Stats.STAT_WIL] = resolvers.mbonus_material(4, 2),
-		},
-	},
-}
-
-newEntity{
-	power_source = {nature=true},
-	name = "blood-etched ", prefix=true, instant_resolve=true,
-	keywords = {etched=true},
-	level_range = {30, 50},
-	greater_ego = 1,
-	rarity = 17,
-	cost = 30,
-	wielder = {
-		life_regen = resolvers.mbonus_material(30, 10, function(e, v) v=v/10 return 0, v end),
-		healing_factor = resolvers.mbonus_material(20, 10, function(e, v) v=v/100 return 0, v end),
-		inc_stats = {
-			[Stats.STAT_CON] = resolvers.mbonus_material(4, 3),
-		},
-	},
-}
-
-newEntity{
-	power_source = {technique=true},
-	name = " of crushing", suffix=true, instant_resolve=true,
-	keywords = {crushing=true},
-	level_range = {30, 50},
-	greater_ego = 1,
-	rarity = 24,
-	cost = 20,
-	special_combat = {
-		dam = resolvers.mbonus_material(5, 5),
-	},
-	wielder = {
-		combat_dam = resolvers.mbonus_material(5, 5),
-		combat_physcrit = resolvers.mbonus_material(3, 3),
-	},
-}
-
-newEntity{
-	power_source = {nature=true},
-	name = " of resilience", suffix=true, instant_resolve=true,
-	keywords = {resilience=true},
-	level_range = {10, 50},
-	rarity = 10,
-	cost = 10,
-	wielder = {
-		max_life=resolvers.mbonus_material(60, 40),
-	},
-}
-
-newEntity{
-	power_source = {technique=true},
-	name = " of deflection", suffix=true, instant_resolve=true,
-	keywords = {deflection=true},
-	level_range = {10, 50},
-	rarity = 10,
-	cost = 10,
-	wielder = {
-		combat_def=resolvers.mbonus_material(11, 4),
-	},
-}
-
-newEntity{
-	power_source = {arcane=true},
-	name = " of displacement", suffix=true, instant_resolve=true,
-	keywords = {displacement=true},
-	level_range = {30, 50},
-	greater_ego = 1,
-	rarity = 25,
-	cost = 40,
-	resolvers.charmt(Talents.T_DISPLACEMENT_SHIELD, {2,3,4}, 40),
-	special_combat = {
-		melee_project={
-			[DamageType.ARCANE] = resolvers.mbonus_material(10, 10)
-		},
-	},
-	wielder = {
-		combat_def = resolvers.mbonus_material(10, 5),
-		inc_stats = {
-			[Stats.STAT_MAG] = resolvers.mbonus_material(5, 1),
-		},
-	},
-}
-
-newEntity{
-	power_source = {arcane=true},
-	name = " of the earth", suffix=true, instant_resolve=true,
-	keywords = {earth=true},
-	level_range = {30, 50},
-	greater_ego = 1,
-	rarity = 25,
-	cost = 40,
---	resolvers.charmt(Talents.T_STONE_WALL, {2,3,4,5}, 40),
-	special_combat = {
-		melee_project={
-			[DamageType.PHYSICAL] = resolvers.mbonus_material(10, 10)
-		},
-	},
-	wielder = {
-		combat_armor = resolvers.mbonus_material(10, 5),
-		combat_armor_hardiness = resolvers.mbonus_material(5, 5),
-		resists={[DamageType.PHYSICAL] = resolvers.mbonus_material(10, 10)},
-	},
-}
-
-newEntity{
 	power_source = {nature=true},
 	name = " of harmony", suffix=true, instant_resolve=true,
 	keywords = {harmony=true},
@@ -621,15 +597,71 @@ newEntity{
 
 newEntity{
 	power_source = {arcane=true},
-	name = " of faith", suffix=true, instant_resolve=true,
-	keywords = {faith=true},
+	name = " of radiance", suffix=true, instant_resolve=true,
+	keywords = {radiance=true},
 	level_range = {10, 50},
 	rarity = 14,
+	greater_ego = 1,
 	cost = 12,
-	resolvers.charmt(Talents.T_BARRIER, {2,3,4}, 40),
+	special_combat = {
+		melee_project={
+			[DamageType.LIGHT] = resolvers.mbonus_material(30, 10),
+		},
+	},
 	wielder = {
 		inc_stats = {
-			[Stats.STAT_WIL] = resolvers.mbonus_material(5, 1),
+			[Stats.STAT_MAG] = resolvers.mbonus_material(5, 1),
+		},
+		on_melee_hit = {
+			[DamageType.ITEM_LIGHT_BLIND] = resolvers.mbonus_material(30, 10),
 		},
 	},
 }
+
+
+newEntity{
+	power_source = {technique=true},
+	name = " of crushing", suffix=true, instant_resolve=true,
+	keywords = {crushing=true},
+	level_range = {30, 50},
+	greater_ego = 1,
+	rarity = 18,
+	cost = 20,
+	special_combat = {
+		dam = resolvers.mbonus_material(5, 5),
+		-- Just a retheme of Crippling, most of the weapon egos aren't getting copied though
+		special_on_crit = {desc="smash the target with your shield crippling them", fct=function(combat, who, target)
+			target:setEffect(target.EFF_CRIPPLE, 4, {src=who, apply_power=who:combatAttack(combat)})
+		end},
+	},
+
+	wielder = {
+		combat_dam = resolvers.mbonus_material(5, 5),
+		combat_physcrit = resolvers.mbonus_material(3, 3),
+	},
+
+}
+
+newEntity{
+	power_source = {nature=true},
+	name = " of earthen fury", suffix=true, instant_resolve=true,
+	keywords = {earth=true},
+	level_range = {30, 50},
+	greater_ego = 1,
+	rarity = 25,
+	cost = 40,
+	special_combat = {
+		special_on_hit = {desc="deal bonus physical damage equal to your armor", fct=function(combat, who, target)
+			local tg = {type="hit", range=1}
+			local damage = who:combatArmor()
+			who:project(tg, target.x, target.y, engine.DamageType.PHYSICAL, damage)
+		end
+		},
+	},
+	wielder = {
+		combat_armor = resolvers.mbonus_material(10, 5),
+		combat_armor_hardiness = resolvers.mbonus_material(5, 5),
+		resists={[DamageType.PHYSICAL] = resolvers.mbonus_material(10, 10)},
+	},
+}
+

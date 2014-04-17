@@ -354,6 +354,7 @@ function _M:generateRandart(data)
 	-----------------------------------------------------------
 	-- Add ego properties
 	-----------------------------------------------------------
+	
 	local nb_egos = data.egos or 3
 	local gr_egos = data.greater_egos_bias or math.floor(nb_egos*2/3) -- 2/3 greater egos by default
 	if o.egos and nb_egos > 0 then
@@ -382,6 +383,7 @@ function _M:generateRandart(data)
 				if ego.instant_resolve then ego:resolve(nil, nil, o) end -- Don't allow resolvers.generic here (conflict)
 				ego.instant_resolve = nil
 				ego.uid = nil
+
 				ego.name = nil
 				ego.unided_name = nil
 

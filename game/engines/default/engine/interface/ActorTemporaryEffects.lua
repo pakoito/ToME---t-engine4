@@ -93,7 +93,7 @@ end
 -- @param eff_id the effect to set
 -- @param dur the number of turns to go on
 -- @param p a table containing the effects parameters
--- @parm silent true to suppress messages
+-- @param silent true to suppress messages
 function _M:setEffect(eff_id, dur, p, silent)
 	local had = self.tmp[eff_id]
 
@@ -172,6 +172,17 @@ function _M:removeEffect(eff, silent, force)
 	if _M.tempeffect_def[eff].deactivate then _M.tempeffect_def[eff].deactivate(self, p) end
 	self:check("on_temporary_effect_removed", eff, _M.tempeffect_def[eff], p)
 end
+
+--- Copy an effect ensuring temporary values are managed properly
+-- @param eff_id the effect to copy
+-- @return either nil or the parameters table for the effect
+function _M:copyEffect(eff_id)
+	if not self then return nil end
+	local param = table.clone( self:hasEffect(eff_id) )
+	param.__tmpvals = nil
+
+	return param
+end 
 
 --- Removes the effect
 function _M:removeAllEffects()

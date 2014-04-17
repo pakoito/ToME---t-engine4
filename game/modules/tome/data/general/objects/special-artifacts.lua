@@ -65,10 +65,10 @@ newEntity{ base = "BASE_STAFF", define_as = "TELOS_SPIRE",
 		vim_on_crit = 6,
 	},
 	max_power = 15, power_regen = 1,
-	use_power = { name = "turn into a corrupted losgoroth (poison, disease, cut and confusion immune; converts half damage into life drain; does not require breath", power = 30,
+	use_power = { name = "turn into a corrupted losgoroth (poison, disease, cut and confusion immune; converts half damage into life drain; does not require breath", power = 15,
 		use = function(self, who)
 			game.logSeen(who, "%s brandishes %s, turning into a corrupted losgoroth!", who.name:capitalize(), self:getName())
-			who:setEffect(who.EFF_CORRUPT_LOSGOROTH_FORM, 9, {})
+			who:setEffect(who.EFF_CORRUPT_LOSGOROTH_FORM, 10, {})
 			return {id=true, used=true}
 		end
 	},

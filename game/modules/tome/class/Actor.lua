@@ -2164,10 +2164,15 @@ function _M:onTakeHit(value, src, death_note)
 		end
 		if self:getPositive() >= drain then
 			self:incPositive(- drain)
+			
+			-- Only calculate crit once per turn to avoid log spam
+			if not self.turn_procs.shield_of_light_heal then
+				local t = self:getTalentFromId(self.T_SHIELD_OF_LIGHT)
+				self.shield_of_light_heal = self:spellCrit(t.getHeal(self, t))
+				self.turn_procs.shield_of_light_heal = true
+			end
 
-			local t = self:getTalentFromId(self.T_SHIELD_OF_LIGHT)
-
-			self:heal(self:spellCrit(t.getHeal(self, t)), tal)
+			self:heal(self.shield_of_light_heal, tal)
 		end
 	end
 

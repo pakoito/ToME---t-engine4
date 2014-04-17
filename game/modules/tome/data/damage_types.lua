@@ -18,6 +18,11 @@
 -- darkgod@te4.org
 
 -- The basic stuff used to damage a grid
+
+-- Classifications for actor resist/damage
+local unliving = {"undead", "construct", "crystal"}
+local unnatural = {"demon", "elemental", "horror", "construct", "undead"}
+
 setDefaultProjector(function(src, x, y, type, dam, tmp, no_martyr)
 	if not game.level.map:isBound(x, y) then return 0 end
 
@@ -250,6 +255,7 @@ setDefaultProjector(function(src, x, y, type, dam, tmp, no_martyr)
 
 		-- reduce by resistance to entity type (Demon, Undead, etc)
 		if target.resists_actor_type and src and src.type then
+
 			local res = math.min(target.resists_actor_type[src.type] or 0, target.resists_cap_actor_type or 100)
 			if res ~= 0 then
 				print("[PROJECTOR] before entity", src.type, "resists dam", dam)
@@ -1089,7 +1095,6 @@ newDamageType{
 }
 
 -- Freezes target, checks for spellresistance and stun resistance
--- Used on melee items but abnormally strong, not currently checking accuracy
 newDamageType{
 	name = "freeze", type = "FREEZE",
 	projector = function(src, x, y, type, dam)
@@ -1124,7 +1129,6 @@ newDamageType{
 }
 
 -- Acid damage + blind chance
--- Used on melee items so check Accuracy too
 newDamageType{
 	name = "acid blind", type = "ACID_BLIND", text_color = "#GREEN#",
 	projector = function(src, x, y, type, dam)
@@ -1185,7 +1189,7 @@ newDamageType{
 		local target = game.level.map(x, y, Map.ACTOR)
 		if target and dam.daze > 0 and rng.percent(dam.daze) then
 			if target:canBe("stun") then
-				game:onTickEnd(function() target:setEffect(target.EFF_DAZED, 3, {src=src, apply_power=dam.power_check or math.max(src:combatSpellpower(), src:combatMindpower())}) end) -- Do it at the end so we don't break our own daze
+				game:onTickEnd(function() target:setEffect(target.EFF_DAZED, 3, {src=src, apply_power=dam.power_check or math.max(src:combatSpellpower(), src:combatMindpower(), src:combatAttack())}) end) -- Do it at the end so we don't break our own daze
 				if src:isTalentActive(src.T_HURRICANE) then
 					local t = src:getTalentFromId(src.T_HURRICANE)
 					t.do_hurricane(src, t, target)
@@ -1655,6 +1659,199 @@ newDamageType{
 	end,
 }
 
+----------------------------------------------------------------
+-- Item-specific damage types
+----------------------------------------------------------------
+-- Each uses the highest of Accuracy, Spellpower, or Mindpower for apply_power but typically uses the most thematic power for other effects
+-- tdesc is only used in item tooltips and replaces the normal melee_project display
+
+-- Name:  item - theme - debuff/effect
+
+newDamageType{
+	name = "item mind gloom", type = "ITEM_MIND_GLOOM",
+	tdesc = function(dam) 
+		return ("#LIGHT_GREEN#%d%%#LAST# chance to cause #YELLOW#random insanity#LAST#"):format(dam) 
+	end,
+	projector = function(src, x, y, type, dam)
+		local target = game.level.map(x, y, Map.ACTOR)
+		if target and rng.percent(dam) then
+			local check = math.max(src:combatAttack(), src:combatSpellpower(), src:combatMindpower())
+			if not src:checkHit(check, target:combatMentalResist()) then return end
+			local effect = rng.range(1, 3)
+			if effect == 1 then
+				-- confusion
+				if target:canBe("confusion") and not target:hasEffect(target.EFF_GLOOM_CONFUSED) then
+					target:setEffect(target.EFF_GLOOM_CONFUSED, 2, {power=70, no_ct_effect=true} )
+				end
+			elseif effect == 2 then
+				-- stun
+				if target:canBe("stun") and not target:hasEffect(target.EFF_GLOOM_STUNNED) then
+					target:setEffect(target.EFF_GLOOM_STUNNED, 2, {no_ct_effect=true})
+				end
+			elseif effect == 3 then
+				-- slow
+				if target:canBe("slow") and not target:hasEffect(target.EFF_GLOOM_SLOW) then
+					target:setEffect(target.EFF_GLOOM_SLOW, 2, {power=0.3, no_ct_effect=true})
+				end
+			end
+		end
+	end,
+}
+
+newDamageType{
+	name = "item darkness numbing", type = "ITEM_DARKNESS_NUMBING",
+	tdesc = function(dam) 
+		return ("#LIGHT_GREEN#%d%%#LAST# chance to #GREY#reduce damage#LAST#"):format(dam) 
+	end,
+	projector = function(src, x, y, type, dam)
+		local target = game.level.map(x, y, Map.ACTOR)
+		if target and rng.percent(dam) then
+				local check = math.max(src:combatAttack(), src:combatSpellpower(), src:combatMindpower())
+				local reduction = 15
+				target:setEffect(target.EFF_ITEM_NUMBING_DARKNESS, 4, {reduce = reduction, apply_power=check, no_ct_effect=true})
+		end
+	end,
+}
+
+newDamageType{
+	name = "item temporal energize", type = "ITEM_TEMPORAL_ENERGIZE",
+	tdesc = function(dam) 
+		return ("#LIGHT_GREEN#%d%%#LAST# chance to gain #LIGHT_STEEL_BLUE#%d%% of a turn#LAST#"):format(dam, 10) 
+	end,
+	projector = function(src, x, y, type, dam)
+		local target = game.level.map(x, y, Map.ACTOR)
+		if target and src and src.name and rng.percent(dam) then
+				if src.turn_procs and src.turn_procs.item_temporal_energize and src.turn_procs.item_temporal_energize > 5 then 
+					game.logSeen(target, "#LIGHT_STEEL_BLUE#%s can't gain any more energy this turn! ", src.name:capitalize())
+				return
+				end
+
+				local energy = (game.energy_to_act * 0.1)	
+				src.energy.value = src.energy.value + energy
+				--game.logSeen(target, "Time seems to bend and quicken energizing %s!", src.name:capitalize())
+
+				src.turn_procs.item_temporal_energize = 1 + (src.turn_procs.item_temporal_energize or 0)
+		end
+	end,
+}
+
+newDamageType{
+	name = "item acid corrode", type = "ITEM_ACID_CORRODE", text_color = "#GREEN#",
+	tdesc = function(dam) 
+		return ("#LIGHT_GREEN#%d%%#LAST# chance to #GREEN#corrode armor#LAST#"):format(dam) 
+	end,
+	projector = function(src, x, y, type, dam)
+		local target = game.level.map(x, y, Map.ACTOR)
+		if target and rng.percent(dam) then
+			local check = math.max(src:combatAttack(), src:combatSpellpower(), src:combatMindpower())
+			--local param = { atk=dam/3, armor=dam/3, defense=dam/3, src=src, apply_power = check, no_ct_effect=true }
+			target:setEffect(target.EFF_ITEM_ACID_CORRODE, 5, {pct = 0.3, no_ct_effect = true, apply_power = check})
+		end
+	end,
+}
+
+newDamageType{
+	name = "item light blind", type = "ITEM_LIGHT_BLIND",
+	tdesc = function(dam) 
+		return ("#LIGHT_GREEN#%d%%#LAST# chance to #YELLOW#blind#LAST#"):format(dam) 
+	end,
+	projector = function(src, x, y, type, dam)
+		local target = game.level.map(x, y, Map.ACTOR)
+		if target and rng.percent(dam) then
+			if target:canBe("blind") then
+				local check = math.max(src:combatAttack(), src:combatSpellpower(), src:combatMindpower())
+				target:setEffect(target.EFF_BLINDED, 4, {apply_power=(check), no_ct_effect=true})
+			else
+				--game.logSeen(target, "%s resists the blinding light!", target.name:capitalize())
+			end
+		end
+	end,
+}
+
+newDamageType{
+	name = "item lightning daze", type = "ITEM_LIGHTNING_DAZE",
+	tdesc = function(dam) 
+		return ("#LIGHT_GREEN#%d%%#LAST# chance to #ROYAL_BLUE#daze#LAST#"):format(dam) 
+	end,
+	projector = function(src, x, y, type, dam)
+		local target = game.level.map(x, y, Map.ACTOR)
+		if target and rng.percent(dam) then
+			if target:canBe("stun") then
+				local check = math.max(src:combatAttack(), src:combatSpellpower(), src:combatMindpower())
+				target:setEffect(target.EFF_DAZED, 4, {apply_power=check, no_ct_effect=true})
+			else
+				--game.logSeen(target, "%s resists the daze!", target.name:capitalize())
+			end
+		end
+	end,
+}
+
+-- Note:  This spams a lot of magic debuffs.  
+newDamageType{
+	name = "item blight disease", type = "ITEM_BLIGHT_DISEASE", text_color = "#DARK_GREEN#",
+	tdesc = function(dam) 
+		return ("#LIGHT_GREEN#%d%%#LAST# chance to #DARK_GREEN#disease#LAST#"):format(dam) 
+	end,
+	projector = function(src, x, y, type, dam)
+		local target = game.level.map(x, y, Map.ACTOR)
+		if target and target:canBe("disease") and rng.percent(dam) then
+			local check = math.max(src:combatSpellpower(), src:combatMindpower(), src:combatAttack())
+			local disease_power = math.min(30, dam / 3)
+			local disease_dam = 0
+			local eff = rng.table{{target.EFF_ROTTING_DISEASE, "con"}, {target.EFF_DECREPITUDE_DISEASE, "dex"}, {target.EFF_WEAKNESS_DISEASE, "str"}}
+			target:setEffect(eff[1], 5, { src = src, apply_power = check, no_ct_effect=true, [eff[2]] = disease_power, dam = disease_dam })
+		end
+	end,
+}
+
+newDamageType{
+	name = "item manaburn arcane", type = "ITEM_ANTIMAGIC_MANABURN", text_color = "#PURPLE#",
+	tdesc = function(dam)
+		return ("#PURPLE#%d#LAST# damage based on #PURPLE#arcane resource#LAST#"):format(dam) 
+	end,
+	projector = function(src, x, y, type, dam)
+		local target = game.level.map(x, y, Map.ACTOR)
+		if target then
+			-- Note:  Standardize this conversion somewhere in Actor.lua
+			local mana = dam
+			local vim = dam / 2
+			local positive = dam / 4
+			local negative = dam / 4
+
+			mana = math.min(target:getMana(), mana)
+			vim = math.min(target:getVim(), vim)
+			positive = math.min(target:getPositive(), positive)
+			negative = math.min(target:getNegative(), negative)
+
+			target:incMana(-mana)
+			target:incVim(-vim)
+			target:incPositive(-positive)
+			target:incNegative(-negative)
+
+			local dam = math.max(mana, vim * 2, positive * 4, negative * 4)
+			return DamageType:get(DamageType.ARCANE).projector(src, x, y, DamageType.ARCANE, dam)
+		end
+		return 0
+	end,
+}
+
+newDamageType{
+	name = "item nature slow", type = "ITEM_NATURE_SLOW", text_color = "#LIGHT_GREEN#",
+	tdesc = function(dam)
+		return ("#LIGHT_GREEN#%d%% nature#LAST# slow"):format(dam) 
+	end,
+	projector = function(src, x, y, type, dam)
+		local target = game.level.map(x, y, Map.ACTOR)
+		if target then
+			target:setEffect(target.EFF_SLOW, 3, {power=dam / 100, no_ct_effect=true})
+		end
+	end,
+}
+
+
+
+------------------------------------------------------------------------------------
+
 -- gBlind
 newDamageType{
 	name = "blinding", type = "RANDOM_BLIND",
@@ -1665,7 +1862,7 @@ newDamageType{
 			if target:canBe("blind") then
 				target:setEffect(target.EFF_BLINDED, 4, {apply_power=(dam.power_check or math.max(src:combatSpellpower(), src:combatPhysicalpower())), no_ct_effect=true})
 			else
-				game.logSeen(target, "%s resists!", target.name:capitalize())
+				game.logSeen(target, "%s resists the blind!", target.name:capitalize())
 			end
 		end
 	end,
@@ -1697,7 +1894,7 @@ newDamageType{
 			if target:canBe("pin") then
 				target:setEffect(target.EFF_PINNED, dam.dur, {apply_power=src:combatPhysicalpower()})
 			else
-				game.logSeen(target, "%s resists!", target.name:capitalize())
+				game.logSeen(target, "%s resists the pin!", target.name:capitalize())
 			end
 		end
 	end,
@@ -1902,6 +2099,7 @@ newDamageType{
 }
 
 -- Corrupted blood, blight damage + potential diseases
+-- Should no longer be used on items, use ITEM_BLIGHT_DISEASE
 newDamageType{
 	name = "infective blight", type = "CORRUPTED_BLOOD", text_color = "#DARK_GREEN#",
 	projector = function(src, x, y, type, dam)
@@ -1946,7 +2144,7 @@ newDamageType{
 			if target:canBe("stun") then
 				target:setEffect(target.EFF_STUNNED, 2, {src=src, apply_power=src:combatSpellpower(), min_dur=1})
 			else
-				game.logSeen(target, "%s resists!", target.name:capitalize())
+				game.logSeen(target, "%s resists the stun!", target.name:capitalize())
 			end
 		end
 	end,
@@ -2015,7 +2213,7 @@ newDamageType{
 			if target:canBe("pin") then
 				target:setEffect(target.EFF_PINNED, 2, {apply_power=src:combatSpellpower(), min_dur=1}, reapplied)
 			else
-				game.logSeen(target, "%s resists!", target.name:capitalize())
+				game.logSeen(target, "%s resists the pin!", target.name:capitalize())
 			end
 		end
 	end,

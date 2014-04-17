@@ -753,7 +753,7 @@ function _M:attackTargetWith(target, weapon, damtype, mult, force_dam)
 
 	if hitted and crit and weapon and weapon.special_on_crit and weapon.special_on_crit.fct and (not target.dead or weapon.special_on_crit.on_kill) then
 		weapon.special_on_crit.fct(weapon, self, target, dam)
-	end
+      end
 
 	if hitted and weapon and weapon.special_on_kill and weapon.special_on_kill.fct and target.dead then
 		weapon.special_on_kill.fct(weapon, self, target, dam)

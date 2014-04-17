@@ -32,7 +32,6 @@ newEntity{
 		melee_project= { [DamageType.FIRE] = resolvers.mbonus_material(10, 5) },
 		combat = {
 			burst_on_crit= { [DamageType.FIRE] = resolvers.mbonus_material(10, 5) },
-			convert_damage = { [DamageType.FIRE] = resolvers.mbonus_material(25, 25) },
 			talent_on_hit = { [Talents.T_FIRE_BREATH] = {level=resolvers.genericlast(function(e) return e.material_level end), chance=10} },
 		},
 	},
@@ -50,7 +49,6 @@ newEntity{
 		melee_project= { [DamageType.ACID] = resolvers.mbonus_material(10, 5) },
 		combat = {
 			burst_on_crit= { [DamageType.ACID] = resolvers.mbonus_material(10, 5) },
-			convert_damage = { [DamageType.ACID] = resolvers.mbonus_material(25, 25) },
 			talent_on_hit = { [Talents.T_ACID_BREATH] = {level=resolvers.genericlast(function(e) return e.material_level end), chance=10} },
 		},
 	},
@@ -68,7 +66,6 @@ newEntity{
 		melee_project= { [DamageType.NATURE] = resolvers.mbonus_material(10, 5) },
 		combat = {
 			burst_on_crit= { [DamageType.NATURE] = resolvers.mbonus_material(10, 5) },
-			convert_damage = { [DamageType.NATURE] = resolvers.mbonus_material(25, 25) },
 			talent_on_hit = { [Talents.T_POISON_BREATH] = {level=resolvers.genericlast(function(e) return e.material_level end), chance=10} },
 		},
 	},
@@ -103,7 +100,6 @@ newEntity{
 		melee_project= { [DamageType.MIND] = resolvers.mbonus_material(10, 5) },
 		combat = {
 			burst_on_crit= { [DamageType.MIND] = resolvers.mbonus_material(10, 5) },
-			convert_damage = { [DamageType.MIND] = resolvers.mbonus_material(25, 25) },
 			talent_on_hit = { [Talents.T_PSYCHIC_LOBOTOMY] = {level=resolvers.genericlast(function(e) return e.material_level end), chance=20} },
 		},
 	},
@@ -175,7 +171,6 @@ newEntity{
 		melee_project= { [DamageType.DARKNESS] = resolvers.mbonus_material(10, 5) },
 		combat = {
 			burst_on_crit= { [DamageType.DARKNESS] = resolvers.mbonus_material(10, 5) },
-			convert_damage = { [DamageType.DARKNESS] = resolvers.mbonus_material(25, 25) },
 			talent_on_hit = { [Talents.T_MOONLIGHT_RAY] = {level=resolvers.genericlast(function(e) return e.material_level end), chance=20} },
 		},
 	},
@@ -193,7 +188,6 @@ newEntity{
 		melee_project= { [DamageType.LIGHT] = resolvers.mbonus_material(10, 5) },
 		combat = {
 			burst_on_crit= { [DamageType.LIGHT] = resolvers.mbonus_material(10, 5) },
-			convert_damage = { [DamageType.LIGHT] = resolvers.mbonus_material(25, 25) },
 			talent_on_hit = { [Talents.T_SEARING_LIGHT] = {level=resolvers.genericlast(function(e) return e.material_level end), chance=20} },
 		},
 	},
@@ -211,7 +205,6 @@ newEntity{
 		melee_project= { [DamageType.TEMPORAL] = resolvers.mbonus_material(10, 5) },
 		combat = {
 			burst_on_crit= { [DamageType.TEMPORAL] = resolvers.mbonus_material(10, 5) },
-			convert_damage = { [DamageType.TEMPORAL] = resolvers.mbonus_material(25, 25) },
 			talent_on_hit = { [Talents.T_QUANTUM_SPIKE] = {level=resolvers.genericlast(function(e) return e.material_level end), chance=20} },
 		},
 	},

@@ -474,7 +474,6 @@ newEntity{ base = "BASE_SHIELD",
 	cost = 400,
 	material_level = 3,
 	metallic = false,
-	special_desc = function(self) return "When you block an attack, there is a 30% of pulling in the attacker." end,
 	special_combat = {
 		dam = resolvers.rngavg(25,35),
 		block = resolvers.rngavg(90, 120),
@@ -490,7 +489,7 @@ newEntity{ base = "BASE_SHIELD",
 		resists = { [DamageType.BLIGHT] = 15, [DamageType.DARKNESS] = 30, },
 		stamina_regen = 2,
 	},
-	on_block = function(self, who, src, type, dam, eff)
+	on_block = {desc = "30% chance of pulling in the attacker", fct = function(self, who, src, type, dam, eff)
 		if rng.percent(30) then
 			if not src then return end
 
@@ -500,29 +499,81 @@ newEntity{ base = "BASE_SHIELD",
 				src:setEffect(src.EFF_CONSTRICTED, 6, {src=who})
 			end
 		end
-	end,
+	end,}
 }
 
 newEntity{ base = "BASE_LIGHT_ARMOR",
 	power_source = {technique=true},
 	unique = true,
 	name = "Rogue Plight", image = "object/artifact/armor_rogue_plight.png",
+	define_as = "ROGUE_PLIGHT",
 	unided_name = "blackened leather armour",
 	desc = [[No rogue blades shall incapacitate the wearer of this armour.]],
 	level_range = {25, 40},
 	rarity = 270,
 	cost = 200,
+	sentient = true,
+	global_speed = 0.25, -- act every 4th turn
 	require = { stat = { str=22 }, },
 	material_level = 3,
+	on_wear = function(self, who)
+		self.worn_by = who
+	end,
+	on_takeoff = function(self, who)
+		self.worn_by = nil
+	end,
+	special_desc = function(self) return "Transfers a bleed, poison, or wound to its source or a nearby enemy every 4 turns." 
+	end,
 	wielder = {
 		combat_def = 6,
 		combat_armor = 7,
 		fatigue = 7,
-		stun_immune = 0.3,
-		combat_physresist = 35,
+		ignore_direct_crits = 30,
 		inc_stats = { [Stats.STAT_WIL] = 5, [Stats.STAT_CON] = 4, },
-		resists={[DamageType.BLIGHT] = 35},
+		resists={[DamageType.NATURE] = 35},
 	},
+	act = function(self)
+		self:useEnergy()
+	
+		if not self.worn_by then return end -- items act even when not equipped
+		local who = self.worn_by
+
+		-- Make sure the item is worn
+		-- This should be redundant but whatever
+		local o, item, inven_id = who:findInAllInventoriesBy("define_as", "ROGUE_PLIGHT")
+		if not o or not who:getInven(inven_id).worn then return end
+		
+		local Map = require "engine.Map"
+		
+		for eff_id, p in pairs(who.tmp) do
+			-- p only has parameters, we need to get the effect definition (e) to check subtypes
+			local e = who.tempeffect_def[eff_id]
+			if e.subtype and (e.subtype.bleed or e.subtype.poison or e.subtype.wound) then	
+				
+				-- Copy the effect parameters then change only the source
+				-- This will preserve everything passed to the debuff in setEffect but will use the new source for +damage%, etc
+				local effectParam = who:copyEffect(eff_id)
+				effectParam.src = who
+					
+				if p.src and p.src.setEffect and not p.src.dead then -- Most debuffs don't define a source
+					p.src:setEffect(eff_id, p.dur, effectParam)
+					who:removeEffect(eff_id)
+					game.logPlayer(who, "#CRIMSON#Rogue Plight transfers an effect to its source!")
+					return true
+				else 
+					-- If there is no source move the debuff to an adjacent enemy instead
+					-- If there is no source or adjacent enemy the effect fails		
+					for _, coor in pairs(util.adjacentCoords(who.x, who.y)) do
+						local act = game.level.map(coor[1], coor[2], Map.ACTOR)
+						if act then
+							act:setEffect(eff_id, p.dur, effectParam)
+							who:removeEffect(eff_id)
+							game.logPlayer(who, "#CRIMSON#Rogue Plight transfers an effect to a nearby enemy!")
+							return true
+						end		
+			end end end end		
+		return true	
+		end,
 }
 
 newEntity{
@@ -880,6 +931,7 @@ newEntity{ base = "BASE_HELM",
 	end,
 	on_takeoff = function(self)
 		self.worn_by = nil
+
 	end,
 }
 
@@ -1842,7 +1894,7 @@ newEntity{ base = "BASE_ARROW",
 	material_level = 4,
 	require = { stat = { dex=24 }, },
 	combat = {
-		capacity = 10,
+		capacity = 18,
 		tg_type = "beam",
 		travel_speed = 3,
 		dam = 34,
@@ -1972,7 +2024,7 @@ newEntity{ base = "BASE_SHOT",
 	material_level = 4,
 	require = { stat = { dex=28 }, },
 	combat = {
-		capacity = 7,
+		capacity = 20,
 		dam = 32,
 		apr = 15,
 		physcrit = 10,
@@ -2572,7 +2624,7 @@ newEntity{ base = "BASE_SHOT",
 	material_level = 4,
 	require = { stat = { dex=28 }, },
 	combat = {
-		capacity = 6,
+		capacity = 18,
 		dam = 32,
 		apr = 15,
 		physcrit = 10,
@@ -4036,7 +4088,6 @@ newEntity{ base = "BASE_SHIELD", --Thanks SageAcrin!
 	cost = 60,
 	material_level = 1,
 	metallic = false,
-	special_desc = function(self) return "When you block an attack, there is a chance that a blast of icy cold water will spray at the target." end,
 	special_combat = {
 		dam = 18,
 		block = 48,
@@ -4056,7 +4107,7 @@ newEntity{ base = "BASE_SHIELD", --Thanks SageAcrin!
 		learn_talent = { [Talents.T_BLOCK] = 2, },
 		max_air = 20,
 	},
-	on_block = function(self, who, target, type, dam, eff)
+	on_block = {desc = "Chance that a blast of icy cold water will spray at the target.", fct = function(self, who, target, type, dam, eff)
 		if rng.percent(30) then
 			if not target or target:attr("dead") or not target.x or not target.y then return end
 
@@ -4066,7 +4117,7 @@ newEntity{ base = "BASE_SHIELD", --Thanks SageAcrin!
 			game.level.map:particleEmitter(who.x, who.y, burst.radius, "breath_cold", {radius=burst.radius, tx=target.x-who.x, ty=target.y-who.y})
 			who:logCombat(target, "A wave of icy water bursts out from #Source#'s shield towards #Target#!")
 		end
-	end,
+	end,},
 }
 
 
@@ -4114,7 +4165,7 @@ newEntity{ base = "BASE_SHOT", --Thanks Grayswandir!
 	material_level = 4,
 	require = { stat = { dex=28 }, },
 	combat = {
-		capacity = 10,
+		capacity = 20,
 		dam = 38,
 		apr = 15,
 		physcrit = 10,
@@ -4140,7 +4191,7 @@ newEntity{ base = "BASE_SHOT", --Thanks Grayswandir!
 	material_level = 4,
 	require = { stat = { dex=28 }, },
 	combat = {
-		capacity = 12,
+		capacity = 25,
 		dam = 39,
 		apr = 15,
 		physcrit = 10,
@@ -5949,7 +6000,6 @@ newEntity{ base = "BASE_SHIELD",
 	cost = 400,
 	material_level = 4,
 	metallic = false,
-	special_desc = function(self) return "When you block an attack, there is a 30% chance of petrifying the attacker." end,
 	special_combat = {
 		dam = 40,
 		block = 180,
@@ -5964,7 +6014,7 @@ newEntity{ base = "BASE_SHIELD",
 		learn_talent = { [Talents.T_BLOCK] = 4, },
 		resists = { [DamageType.PHYSICAL] = 10, [DamageType.ACID] = 10, [DamageType.LIGHTNING] = 10, [DamageType.FIRE] = 10,},
 	},
-	on_block = function(self, who, src, type, dam, eff)
+	on_block = {desc = "30% chance of petrifying the attacker.", fct = function(self, who, src, type, dam, eff)
 		if rng.percent(30) then
 			if not src then return end
 			game.logSeen(src, "The eye locks onto %s, freezing it in place!", src.name:capitalize())
@@ -5972,7 +6022,7 @@ newEntity{ base = "BASE_SHIELD",
 				src:setEffect(who.EFF_STONED, 5, {})
 			end
 		end
-	end,
+	end,}
 }
 
 -- No longer hits your own projectiles
@@ -6121,8 +6171,8 @@ newEntity{ base = "BASE_GREATMAUL",
 		return ("%s: %s"):format(self.Gem.name:capitalize(), self.gemDesc or ("Write a description for this gem's properties!"))
 	end,	
 	cost = 1000,
-	material_level = 1, -- Changes to gem material level on socket
-	evel_range = {1, 15},
+	material_level = 2, -- Changes to gem material level on socket
+	level_range = {1, 30},
 	rarity = 280,
 	combat = {
 		dam = 10,

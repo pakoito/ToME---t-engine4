@@ -120,9 +120,7 @@ newEntity{ theme={mental=true}, name="psi regen", points = 1, rarity = 16, level
 ----------------------------------------------------------------
 -- Misc
 ----------------------------------------------------------------
-newEntity{ theme={mental=true}, name="summon regen", points = 1, rarity = 16, level_range = {1, 50},
-	wielder = { nature_summon_regen = resolvers.randartmax(1, 5), },
-}
+
 newEntity{ theme={mental=true}, name="summon heal", points = 1, rarity = 16, level_range = {1, 50},
 	wielder = { heal_on_nature_summon  = resolvers.randartmax(10, 50), },
 }
@@ -426,39 +424,7 @@ newEntity{ theme={temporal=true}, name="temporal burst (crit)", points = 6, rari
 ----------------------------------------------------------------
 -- damage conversion
 ----------------------------------------------------------------
-newEntity{ theme={mind=true, mental=true}, name="mind conversion", points = 1, rarity = 36, level_range = {1, 50},
-	combat = { convert_damage = {[DamageType.MIND] = resolvers.randartmax(10, 50), }, },
-}
-newEntity{ theme={acid=true}, name="acid conversion", points = 1, rarity = 28, level_range = {1, 50},
-	combat = { convert_damage = {[DamageType.ACID] = resolvers.randartmax(10, 50), }, },
-}
-newEntity{ theme={lightning=true}, name="lightning conversion", points = 1, rarity = 28, level_range = {1, 50},
-	combat = { convert_damage = {[DamageType.LIGHTNING] = resolvers.randartmax(10, 50), }, },
-}
-newEntity{ theme={fire=true}, name="fire conversion", points = 1, rarity = 28, level_range = {1, 50},
-	combat = { convert_damage = {[DamageType.FIRE] = resolvers.randartmax(10, 50), }, },
-}
-newEntity{ theme={cold=true}, name="cold conversion", points = 1, rarity = 28, level_range = {1, 50},
-	combat = { convert_damage = {[DamageType.COLD] = resolvers.randartmax(10, 50), }, },
-}
-newEntity{ theme={light=true}, name="light conversion", points = 1, rarity = 28, level_range = {1, 50},
-	combat = { convert_damage = {[DamageType.LIGHT] = resolvers.randartmax(10, 50), }, },
-}
-newEntity{ theme={dark=true}, name="dark conversion", points = 1, rarity = 28, level_range = {1, 50},
-	combat = { convert_damage = {[DamageType.DARKNESS] = resolvers.randartmax(10, 50), }, },
-}
-newEntity{ theme={blight=true}, name="blight conversion", points = 1, rarity = 28, level_range = {1, 50},
-	combat = { convert_damage = {[DamageType.BLIGHT] = resolvers.randartmax(10, 50), }, },
-}
-newEntity{ theme={nature=true}, name="nature conversion", points = 1, rarity = 28, level_range = {1, 50},
-	combat = { convert_damage = {[DamageType.NATURE] = resolvers.randartmax(10, 50), }, },
-}
-newEntity{ theme={arcane=true}, name="arcane conversion", points = 2, rarity = 36, level_range = {1, 50},
-	combat = { convert_damage = {[DamageType.ARCANE] = resolvers.randartmax(10, 50), }, },
-}
-newEntity{ theme={temporal=true}, name="temporal conversion", points = 2, rarity = 36, level_range = {1, 50},
-	combat = { convert_damage = {[DamageType.TEMPORAL] = resolvers.randartmax(10, 50), }, },
-}
+-- Removed due to essentially being downsides more often than not, double dipping defenses and creating massive log spam
 ----------------------------------------------------------------
 -- Elemental Retribution
 ----------------------------------------------------------------

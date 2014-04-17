@@ -25,6 +25,51 @@ local Chat = require "engine.Chat"
 local Map = require "engine.Map"
 local Level = require "engine.Level"
 
+---------- Item specific 
+newEffect{
+	name = "ITEM_NUMBING_DARKNESS", image = "effects/bane_blinded.png",
+	desc = "Numbing Darkness",
+	long_desc = function(self, eff) return ("The target is losing hope, all damage it does is reduced by %d%%."):format(eff.reduce) end,
+	type = "magic",
+	subtype = { darkness=true,}, no_ct_effect = true,
+	status = "detrimental",
+	parameters = {power=10, reduce=5},
+	on_gain = function(self, err) return "#Target# is weakened by the darkness!", "+Numbing Poison" end,
+	on_lose = function(self, err) return "#Target# regains their energy.", "-Darkness" end,
+	on_timeout = function(self, eff)
+
+	end,
+	activate = function(self, eff)
+		eff.tmpid = self:addTemporaryValue("numbed", eff.reduce)
+	end,
+	deactivate = function(self, eff)
+		self:removeTemporaryValue("numbed", eff.tmpid)
+	end,
+}
+
+newEffect{
+	name = "ITEM_ACID_CORRODE", image = "talents/acidic_skin.png",
+	desc = "Armor Corroded",
+	long_desc = function(self, eff) return ("The target has been splashed with acid, reducing armour by %d%% (#RED#%d#LAST#)."):format(eff.pct*100 or 0, eff.reduce or 0) end,
+	type = "magical",
+	subtype = { acid=true, sunder=true },
+	status = "detrimental",
+	parameters = {pct = 0.3},
+	on_gain = function(self, err) return "#Target#'s armor corrodes!" end,
+	on_lose = function(self, err) return "#Target# is fully armored again." end,
+	on_timeout = function(self, eff)
+	end,
+	activate = function(self, eff)
+		local armor = self.combat_armor * eff.pct
+		eff.reduce = armor
+		self:effectTemporaryValue(eff, "combat_armor", -armor)
+		--if eff.armor then eff.armorid = self:addTemporaryValue("combat_armor", -eff.armor) end
+	end,
+	deactivate = function(self, eff)
+
+	end,
+}
+
 newEffect{
 	name = "MANASURGE", image = "talents/rune__manasurge.png",
 	desc = "Surging mana",
@@ -1606,14 +1651,14 @@ newEffect{
 	type = "magical",
 	subtype = {disease=true, blight=true},
 	status = "detrimental",
-	parameters = {con = 1, dam = 1},
+	parameters = {con = 1, dam = 0},
 	on_gain = function(self, err) return "#Target# is afflicted by a rotting disease!" end,
 	on_lose = function(self, err) return "#Target# is free from the rotting disease." end,
 	-- Damage each turn
 	on_timeout = function(self, eff)
 		if self:attr("purify_disease") then self:heal(eff.dam, eff.src)
-		else DamageType:get(DamageType.BLIGHT).projector(eff.src, self.x, self.y, DamageType.BLIGHT, eff.dam, {from_disease=true})
-		end
+		else if eff.dam > 0 then DamageType:get(DamageType.BLIGHT).projector(eff.src, self.x, self.y, DamageType.BLIGHT, eff.dam, {from_disease=true})
+		end end
 	end,
 	-- Lost of CON
 	activate = function(self, eff)
@@ -1631,14 +1676,14 @@ newEffect{
 	type = "magical",
 	subtype = {disease=true, blight=true},
 	status = "detrimental",
-	parameters = {dex = 1, dam = 1},
+	parameters = {dex = 1, dam = 0},
 	on_gain = function(self, err) return "#Target# is afflicted by a decrepitude disease!" end,
 	on_lose = function(self, err) return "#Target# is free from the decrepitude disease." end,
 	-- Damage each turn
 	on_timeout = function(self, eff)
 		if self:attr("purify_disease") then self:heal(eff.dam, eff.src)
-		else DamageType:get(DamageType.BLIGHT).projector(eff.src, self.x, self.y, DamageType.BLIGHT, eff.dam, {from_disease=true})
-		end
+		else if eff.dam > 0 then DamageType:get(DamageType.BLIGHT).projector(eff.src, self.x, self.y, DamageType.BLIGHT, eff.dam, {from_disease=true})
+		end end
 	end,
 	-- Lost of CON
 	activate = function(self, eff)
@@ -1656,14 +1701,14 @@ newEffect{
 	type = "magical",
 	subtype = {disease=true, blight=true},
 	status = "detrimental",
-	parameters = {str = 1, dam  = 1},
+	parameters = {str = 1, dam = 0},
 	on_gain = function(self, err) return "#Target# is afflicted by a weakness disease!" end,
 	on_lose = function(self, err) return "#Target# is free from the weakness disease." end,
 	-- Damage each turn
 	on_timeout = function(self, eff)
 		if self:attr("purify_disease") then self:heal(eff.dam, eff.src)
-		else DamageType:get(DamageType.BLIGHT).projector(eff.src, self.x, self.y, DamageType.BLIGHT, eff.dam, {from_disease=true})
-		end
+		else if eff.dam > 0 then DamageType:get(DamageType.BLIGHT).projector(eff.src, self.x, self.y, DamageType.BLIGHT, eff.dam, {from_disease=true})
+		end end
 	end,
 	-- Lost of CON
 	activate = function(self, eff)

@@ -51,52 +51,65 @@ It is said the Conclave created this weapon for their warmaster during the dark 
 		damrange = 1.4,
 		melee_project={[DamageType.ICE] = 25}, -- Iceblock HP is based on damage, since were adding iceblock pierce we want this to be less generous
 		special_on_hit = {desc="Create a Winter Storm that gradually expands, dealing cold damage to your enemies each turn and reducing their turn energy by 20%.  Melee attacks will relocate the storm on top of your target and increase its duration.", on_kill=1, fct=function(combat, who, target)
-			 local self, item, inven_id = who:findInAllInventoriesBy("define_as", "LONGSWORD_WINTERTIDE")
-			 if not self or not who:getInven(inven_id).worn then return end
+			 
+
+			local Object = require "mod.class.Object"
+			local Map = require "engine.Map"
+
+			-- special_on_hit doesn't know what item triggered it, so find it
+			local self, item, inven_id = who:findInAllInventoriesBy("define_as", "LONGSWORD_WINTERTIDE")
+			if not self or not who:getInven(inven_id).worn then return end
 			
-			 if self.winterStorm and self.winterStorm.duration <= 0 then
-				 self.winterStorm = nil
-				 --return
-			 end
-			 
-			 if (self.winterStorm and (game.level.id ~= self.winterStorm.checkZone) ) then
+			if who.turn_procs.wintertide_sword then return end
+
+			-- The reference to winterStorm is lost sometimes on reload but since we know only one can ever exist we can just check the map effects and set the reference every proc
+			self.winterStorm = nil
+			for k, eff in pairs(game.level.map.effects) do
+				if eff and eff.is_wintertide then
+					self.winterStorm = eff
+				end
+			end
+
+			-- Who knows if this is necessary
+			if self.winterStorm and self.winterStorm.duration <= 0 then
 				self.winterStorm = nil
-			 end
+			end
+
+			who.turn_procs.wintertide_sword = true
 			 
-			 if not self.winterStorm then
-				local stormDam = who:combatStatScale("str", 20, 80, 0.75) -- does this need a require?
+			-- If the map has no Winter Storm then create one
+			if not self.winterStorm then
+				local stormDam = who:combatStatScale("str", 20, 80, 0.75)
 				 self.winterStorm = game.level.map:addEffect(who,
 				 target.x, target.y, 5,
 				 engine.DamageType.WINTER, {dam=stormDam, x=target.x, y=target.y}, -- Winter is cold damage+energy reduction, enemy only
 				 1,
 				 5, nil,
-				 {type="icestorm", only_one=true},
-				 function(e)	
+				 {type="icestorm", only_one=true, friendlyfire = 0},
+				 function(e)
+				 	 -- Increase the radius by 0.2 each time the effect ticks (1000 energy?)	
 					 if e.radius < 4 then
 						e.radius = e.radius + 0.2
-						 
-						 -- this is a hack to fix the effect breaking if you reload with it active, whatever is going on is very weird but the table on the item no longer points to this
-						local self2, item, inven_id = e.src:findInAllInventoriesBy("define_as", "LONGSWORD_WINTERTIDE")
-						if not self2 then return end
-						self2.winterStorm = e
 					 end
 					 return true
 				 end,
 			 false)
-				self.winterStorm.checkZone = game.level.id
+
+				self.winterStorm.is_wintertide = true
 			else
-				-- move the storm on top of the target
+				-- The storm already exists so move it on top of the target and increase its duration
 				self.winterStorm.x = target.x
 				self.winterStorm.y = target.y
-				if self.winterStorm.duration < 5 then -- duration can be extended forever while meleeing 
-					self.winterStorm.duration = self.winterStorm.duration + 1
+				if self.winterStorm.duration < 7 then -- duration can be extended forever while meleeing
+					self.winterStorm.duration = self.winterStorm.duration + 2
 				end
+				game.level.map.changed = true
 			end
 			
 			end
+			 
 			
 		},	
-		
 	},
 	wielder = {
 		iceblock_pierce=35, -- this can be generous because of how melee specific the item is
@@ -168,7 +181,7 @@ It is said the Conclave created this weapon for their warmaster during the dark 
 		end
 	},
 	on_wear = function(self, who)
-		--self.winterStorm = nil
+		self.winterStorm = nil
 	end,
 	on_pickup = function(self, who)
 		self.winterStorm = nil

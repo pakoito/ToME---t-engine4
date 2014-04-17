@@ -93,24 +93,6 @@ newEntity{
 }
 
 newEntity{
-	power_source = {psionic=true},
-	name = " of the forge", suffix=true, instant_resolve=true,
-	keywords = {forge=true},
-	level_range = {30, 50},
-	greater_ego = 1,
-	rarity = 40,
-	cost = 50,
-	wielder = {
-		on_melee_hit={[DamageType.DREAMFORGE] = resolvers.mbonus_material(20, 10)},
-		melee_project={[DamageType.DREAMFORGE] = resolvers.mbonus_material(20, 10)},
-		resists={
-			[DamageType.FIRE] = resolvers.mbonus_material(5, 5),
-			[DamageType.MIND] = resolvers.mbonus_material(5, 5),
-	},
-	},
-}
-
-newEntity{
 	power_source = {technique=true},
 	name = "burglar's ", prefix=true, instant_resolve=true,
 	keywords = {burglar=true},

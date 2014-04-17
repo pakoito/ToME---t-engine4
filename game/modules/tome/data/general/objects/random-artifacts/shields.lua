@@ -79,29 +79,32 @@ newEntity{ theme={temporal=true}, name="temporal melee", points = 2, rarity = 24
 ----------------------------------------------------------------
 -- Melee damage Projection (rare)
 ----------------------------------------------------------------
-newEntity{ theme={physical=true}, name="physical gravity melee", points = 2, rarity = 20, level_range = {1, 50},
-	special_combat = { melee_project = {[DamageType.GRAVITY] = resolvers.randartmax(4, 40), }, },
+newEntity{ theme={blight=true}, name="corrupted blood melee", points = 2, rarity = 20, level_range = {1, 50},
+	special_combat = { melee_project = {[DamageType.ITEM_BLIGHT_DISEASE] = resolvers.randartmax(20, 40), }, },
 }
-newEntity{ theme={acid=true}, name="acid blind melee", points = 2, rarity = 20, level_range = {1, 50},
-	special_combat = { melee_project = {[DamageType.ACID_BLIND] = resolvers.randartmax(4, 40), }, },
+newEntity{ theme={temporal=true}, name="temporal energize melee", points = 2, rarity = 20, level_range = {1, 50},
+	special_combat = { melee_project = {[DamageType.ITEM_TEMPORAL_ENERGIZE] = resolvers.randartmax(20, 40), }, },
+}
+newEntity{ theme={mind=true}, name="gloom mind melee", points = 2, rarity = 20, level_range = {1, 50},
+	special_combat = { melee_project = {[DamageType.ITEM_MIND_GLOOM] = resolvers.randartmax(20, 40), }, },
+}
+newEntity{ theme={acid=true}, name="acid corrode melee", points = 2, rarity = 20, level_range = {1, 50},
+	special_combat = { melee_project = {[DamageType.ITEM_ACID_CORRODE] = resolvers.randartmax(20, 40), }, },
+}
+newEntity{ theme={light=true}, name="light blind melee", points = 2, rarity = 20, level_range = {1, 50},
+	special_combat = { melee_project = {[DamageType.ITEM_LIGHT_BLIND] = resolvers.randartmax(20, 40), }, },
 }
 newEntity{ theme={lightning=true}, name="lightning daze melee", points = 2, rarity = 20, level_range = {1, 50},
-	special_combat = { melee_project = {[DamageType.LIGHTNING_DAZE] = resolvers.randartmax(4, 40), }, },
-}
-newEntity{ theme={fire=true}, name="burn melee", points = 2, rarity = 20, level_range = {1, 50},
-	special_combat = { melee_project = {[DamageType.FIREBURN] = resolvers.randartmax(4, 40), }, },
-}
-newEntity{ theme={cold=true}, name="ice melee", points = 2, rarity = 20, level_range = {1, 50},
-	special_combat = { melee_project = {[DamageType.ICE] = resolvers.randartmax(4, 40), }, },
+	special_combat = { melee_project = {[DamageType.ITEM_LIGHTNING_DAZE] = resolvers.randartmax(20, 40), }, },
 }
 newEntity{ theme={antimagic=true}, name="manaburn melee", points = 2, rarity = 18, level_range = {1, 50},
-	special_combat = { melee_project = {[DamageType.MANABURN] = resolvers.randartmax(4, 40), }, },
+	special_combat = { melee_project = {[DamageType.ITEM_ANTIMAGIC_MANABURN] = resolvers.randartmax(10, 40), }, },
 }
 newEntity{ theme={nature=true, antimagic=true}, name="slime melee", points = 2, rarity = 18, level_range = {1, 50},
-	special_combat = { melee_project = {[DamageType.SLIME] = resolvers.randartmax(4, 40), }, },
+	special_combat = { melee_project = {[DamageType.ITEM_NATURE_SLOW] = resolvers.randartmax(20, 40), }, },
 }
-newEntity{ theme={nature=true}, name="insidious poison melee", points = 2, rarity = 20, level_range = {1, 50},
-	special_combat = { melee_project = {[DamageType.INSIDIOUS_POISON] = resolvers.randartmax(10, 50), }, },  -- this gets divided by 7 for damage
+newEntity{ theme={dark=true}, name="dark numbing melee", points = 2, rarity = 24, level_range = {1, 50},
+	special_combat = { melee_project = {[DamageType.ITEM_DARKNESS_NUMBING] = resolvers.randartmax(20, 40), }, },
 }
 ----------------------------------------------------------------
 -- Melee damage burst
@@ -184,39 +187,7 @@ newEntity{ theme={temporal=true}, name="temporal burst (crit)", points = 6, rari
 ----------------------------------------------------------------
 -- Melee damage conversion
 ----------------------------------------------------------------
-newEntity{ theme={mind=true, mental=true}, name="mind conversion", points = 1, rarity = 36, level_range = {1, 50},
-	special_combat = { convert_damage = {[DamageType.MIND] = resolvers.randartmax(10, 50), }, },
-}
-newEntity{ theme={acid=true}, name="acid conversion", points = 1, rarity = 28, level_range = {1, 50},
-	special_combat = { convert_damage = {[DamageType.ACID] = resolvers.randartmax(10, 50), }, },
-}
-newEntity{ theme={lightning=true}, name="lightning conversion", points = 1, rarity = 28, level_range = {1, 50},
-	special_combat = { convert_damage = {[DamageType.LIGHTNING] = resolvers.randartmax(10, 50), }, },
-}
-newEntity{ theme={fire=true}, name="fire conversion", points = 1, rarity = 28, level_range = {1, 50},
-	special_combat = { convert_damage = {[DamageType.FIRE] = resolvers.randartmax(10, 50), }, },
-}
-newEntity{ theme={cold=true}, name="cold conversion", points = 1, rarity = 28, level_range = {1, 50},
-	special_combat = { convert_damage = {[DamageType.COLD] = resolvers.randartmax(10, 50), }, },
-}
-newEntity{ theme={light=true}, name="light conversion", points = 1, rarity = 28, level_range = {1, 50},
-	special_combat = { convert_damage = {[DamageType.LIGHT] = resolvers.randartmax(10, 50), }, },
-}
-newEntity{ theme={dark=true}, name="dark conversion", points = 1, rarity = 28, level_range = {1, 50},
-	special_combat = { convert_damage = {[DamageType.DARKNESS] = resolvers.randartmax(10, 50), }, },
-}
-newEntity{ theme={blight=true}, name="blight conversion", points = 1, rarity = 28, level_range = {1, 50},
-	special_combat = { convert_damage = {[DamageType.BLIGHT] = resolvers.randartmax(10, 50), }, },
-}
-newEntity{ theme={nature=true}, name="nature conversion", points = 1, rarity = 28, level_range = {1, 50},
-	special_combat = { convert_damage = {[DamageType.NATURE] = resolvers.randartmax(10, 50), }, },
-}
-newEntity{ theme={arcane=true}, name="arcane conversion", points = 2, rarity = 36, level_range = {1, 50},
-	special_combat = { convert_damage = {[DamageType.ARCANE] = resolvers.randartmax(10, 50), }, },
-}
-newEntity{ theme={temporal=true}, name="temporal conversion", points = 2, rarity = 36, level_range = {1, 50},
-	special_combat = { convert_damage = {[DamageType.TEMPORAL] = resolvers.randartmax(10, 50), }, },
-}
+-- Removed due to essentially being downsides more often than not, double dipping defenses and creating massive log spam
 ----------------------------------------------------------------
 -- Slaying
 ----------------------------------------------------------------
