@@ -92,7 +92,7 @@ function _M:targetMode(v, msg, co, typ)
 	self.target_mode = v
 
 	if not v then
-		Map:setViewerFaction(self.always_target == true and self.player.faction or nil)
+		Map:setViewerFaction((self.always_target == true or self.always_target == "old") and self.player.faction or nil)
 		if msg then self.log(type(msg) == "string" and msg or "Tactical display disabled. Press shift+'t' to enable.") end
 		self.level.map.changed = true
 		self.targetmode_trigger_hotkey = nil

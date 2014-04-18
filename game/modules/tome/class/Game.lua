@@ -370,7 +370,7 @@ function _M:loaded()
 	if self.player then self.player.changed = true end
 	self.key = engine.KeyBind.new()
 
-	if self.always_target == true then Map:setViewerFaction(self.player.faction) end
+	if self.always_target == true or self.always_target == "old" then Map:setViewerFaction(self.player.faction) end
 	if self.player and config.settings.cheat then self.player.__cheated = true end
 	self:updateCurrentChar()
 
@@ -578,7 +578,7 @@ end
 function _M:save()
 	self.total_playtime = (self.total_playtime or 0) + (os.time() - (self.last_update or self.real_starttime))
 	self.last_update = os.time()
-	return class.save(self, self:defaultSavedFields{difficulty=true, permadeath=true, to_re_add_actors=true, party=true, _chronoworlds=true, total_playtime=true, on_level_load_fcts=true, visited_zones=true, bump_attack_disabled=true, show_npc_list=true}, true)
+	return class.save(self, self:defaultSavedFields{difficulty=true, permadeath=true, to_re_add_actors=true, party=true, _chronoworlds=true, total_playtime=true, on_level_load_fcts=true, visited_zones=true, bump_attack_disabled=true, show_npc_list=true, always_target=true}, true)
 end
 
 function _M:updateCurrentChar()
@@ -1840,17 +1840,21 @@ do return end
 
 		TACTICAL_DISPLAY = function()
 			if self.always_target == true then
+				self.always_target = "old"
+				Map:setViewerFaction(self.player.faction)
+				self.log("Showing big healthbars and tactical borders.")
+			elseif self.always_target == "old" then
 				self.always_target = "health"
 				Map:setViewerFaction(nil)
 				self.log("Showing healthbars only.")
-			elseif self.always_target == nil then
-				self.always_target = true
-				Map:setViewerFaction(self.player.faction)
-				self.log("Showing healthbars and tactical borders.")
 			elseif self.always_target == "health" then
 				self.always_target = nil
 				Map:setViewerFaction(nil)
 				self.log("Showing no tactical information.")
+			elseif self.always_target == nil then
+				self.always_target = true
+				Map:setViewerFaction(self.player.faction)
+				self.log("Showing small healthbars and tactical borders.")
 			end
 		end,
 
