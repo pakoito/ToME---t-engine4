@@ -542,7 +542,7 @@ function _M:display(x, y, nb_keyframe, always_show, prevfbo)
 
 	self._map:toScreen(self.display_x, self.display_y, nb_keyframe, always_show, self.changed)
 	self:displayParticles(nb_keyframe)
-	self:displayEffects(prevfbo)
+	self:displayEffects(prevfbo, nb_keyframe)
 
 	self.display_x, self.display_y = ox, oy
 
@@ -1030,7 +1030,7 @@ function _M:addEffect(src, x, y, duration, damtype, dam, radius, dir, angle, ove
 end
 
 --- Display the overlay effects, called by self:display()
-function _M:displayEffects(prevfbo)
+function _M:displayEffects(prevfbo, nb_keyframes)
 	local sx, sy = self._map:getScroll()
 	for i, e in ipairs(self.effects) do
 		-- Dont bother with obviously out of screen stuff
@@ -1050,7 +1050,20 @@ function _M:displayEffects(prevfbo)
 			-- We have a fbo/shader pair, so we display everything inside it and apply the shader to get nice borders and such
 			else
 				if not e.overlay.effect_shader_tex then
-					e.overlay.effect_shader_tex = Tiles:loadImage(e.overlay.effect_shader):glTexture()
+					e.overlay.effect_shader_tex = {}
+					if type(e.overlay.effect_shader) == "table" then
+						for i = 1, #e.overlay.effect_shader do
+							e.overlay.effect_shader_tex[i] = Tiles:loadImage(e.overlay.effect_shader[i]):glTexture()
+							e.overlay.effect_shader_tex.cur = 1
+							e.overlay.effect_shader_tex.cnt = 0
+							e.overlay.effect_shader_tex.max = e.overlay.effect_shader.max
+						end
+					else
+						e.overlay.effect_shader_tex[1] = Tiles:loadImage(e.overlay.effect_shader):glTexture()
+						e.overlay.effect_shader_tex.cur = 1
+						e.overlay.effect_shader_tex.cnt = 0
+						e.overlay.effect_shader_tex.max = 1
+					end
 				end
 
 				self.fbo:use(true, 0, 0, 0, 0)
@@ -1063,12 +1076,18 @@ function _M:displayEffects(prevfbo)
 					end
 				end
 				self.fbo:use(false, prevfbo)
-				e.overlay.effect_shader_tex:bind(1, false)
+				e.overlay.effect_shader_tex[e.overlay.effect_shader_tex.cur]:bind(1, false)
 				self.fbo_shader.shad:use(true)
 				self.fbo_shader.shad:uniTileSize(self.tile_w, self.tile_h)
 				self.fbo_shader.shad:uniScrollOffset(0, 0)
 				self.fbo:toScreen(self.display_x + sx, self.display_y + sy, self.viewport.width, self.viewport.height, self.fbo_shader.shad, 1, 1, 1, 1, true)
 				self.fbo_shader.shad:use(false)
+
+				e.overlay.effect_shader_tex.cnt = e.overlay.effect_shader_tex.cnt + nb_keyframes
+				if e.overlay.effect_shader_tex.cnt >= e.overlay.effect_shader_tex.max then
+					e.overlay.effect_shader_tex.cnt = e.overlay.effect_shader_tex.cnt - e.overlay.effect_shader_tex.max
+					e.overlay.effect_shader_tex.cur = util.boundWrap(e.overlay.effect_shader_tex.cur + 1, 1, #e.overlay.effect_shader_tex)
+				end
 			end
 		end
 	end

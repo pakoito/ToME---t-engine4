@@ -866,6 +866,229 @@ function _M:alterMakeMapObject(tiles, mo, z, lastmo)
 	return mo, z, lastmo
 end
 
+local f_self = nil
+local f_danger2 = nil
+local f_danger1 = nil
+local f_powerful = nil
+local f_friend = nil
+local f_enemy = nil
+local f_neutral = nil
+local sf_self = nil
+local sf_danger2 = nil
+local sf_danger1 = nil
+local sf_powerful = nil
+local sf_friend = nil
+local sf_enemy = nil
+local sf_neutral = nil
+local ssf_self = nil
+local ssf_danger2 = nil
+local ssf_danger1 = nil
+local ssf_powerful = nil
+local ssf_friend = nil
+local ssf_enemy = nil
+local ssf_neutral = nil
+local ichat = nil
+
+function _M:smallTacticalFrame(map, x, y, w, h, zoom, on_map, tlx, tly)
+	if config.settings.tome.small_frame_side then
+		local friend = -100
+		if self.faction then
+			if not map.actor_player then friend = Faction:factionReaction(map.view_faction, self.faction)
+			else friend = map.actor_player:reactionToward(self) end
+		end
+
+		local sx = w * .015625
+		local dx = w * .0625 - sx
+		local sy = h * .03125
+		local dy = h * .953125 - sy
+		if friend < 0 then
+			sx = w * .9375
+		end
+		local lp = math.max(0, self.life) / self.max_life + 0.0001
+		if lp > .75 then -- green
+			core.display.drawQuad(x + sx, y + sy, dx, dy, 129, 180, 57, 128)
+			core.display.drawQuad(x + sx, y + sy + dy * (1-lp), dx, dy * lp, 50, 220, 77, 255)
+		elseif lp > .5 then -- yellow
+			core.display.drawQuad(x + sx, y + sy, dx, dy, 175, 175, 10, 128)
+			core.display.drawQuad(x + sx, y + sy + dy * (1-lp), dx, dy * lp, 240, 252, 35, 255)
+		elseif lp > .25 then -- orange
+			core.display.drawQuad(x + sx, y + sy, dx, dy, 185, 88, 0, 128)
+			core.display.drawQuad(x + sx, y + sy + dy * (1-lp), dx, dy * lp, 255, 156, 21, 255)
+		else -- red
+			core.display.drawQuad(x + sx, y + sy, dx, dy, 167, 55, 39, 128)
+			core.display.drawQuad(x + sx, y + sy + dy * (1-lp), dx, dy * lp, 235, 0, 0, 255)
+		end
+
+		if not ssf_self then
+			ssf_self = game.level.map.tilesTactic:get(nil, 0,0,0, 0,0,0, "side_"..map.faction_self)
+			ssf_powerful = game.level.map.tilesTactic:get(nil, 0,0,0, 0,0,0, "side_"..map.faction_powerful)
+			ssf_danger2 = game.level.map.tilesTactic:get(nil, 0,0,0, 0,0,0, "side_"..map.faction_danger2)
+			ssf_danger1 = game.level.map.tilesTactic:get(nil, 0,0,0, 0,0,0, "side_"..map.faction_danger1)
+			ssf_friend = game.level.map.tilesTactic:get(nil, 0,0,0, 0,0,0, "side_"..map.faction_friend)
+			ssf_enemy = game.level.map.tilesTactic:get(nil, 0,0,0, 0,0,0, "side_"..map.faction_enemy)
+			ssf_neutral = game.level.map.tilesTactic:get(nil, 0,0,0, 0,0,0, "side_"..map.faction_neutral)
+		end
+
+		if self.faction then
+			if self == map.actor_player then
+				ssf_self:toScreen(x, y, w, h)
+			elseif map:faction_danger_check(self) then
+				if friend >= 0 then ssf_powerful:toScreen(x, y, w, h)
+				else
+					if map:faction_danger_check(self, true) then
+						ssf_danger2:toScreen(x, y, w, h)
+					else
+						ssf_danger1:toScreen(x, y, w, h)
+					end
+				end
+			elseif friend > 0 then
+				ssf_friend:toScreen(x, y, w, h)
+			elseif friend < 0 then
+				ssf_enemy:toScreen(x, y, w, h)
+			else
+				ssf_neutral:toScreen(x, y, w, h)
+			end
+		end
+	else
+		local sx = w * .078125
+		local dx = w * .90625 - sx
+		local sy = h * .9375
+		local dy = h * .984375 - sy
+		local lp = math.max(0, self.life) / self.max_life + 0.0001
+		if lp > .75 then -- green
+			core.display.drawQuad(x + sx, y + sy, dx, dy, 129, 180, 57, 128)
+			core.display.drawQuad(x + sx, y + sy, dx * lp, dy, 50, 220, 77, 255)
+		elseif lp > .5 then -- yellow
+			core.display.drawQuad(x + sx, y + sy, dx, dy, 175, 175, 10, 128)
+			core.display.drawQuad(x + sx, y + sy, dx * lp, dy, 240, 252, 35, 255)
+		elseif lp > .25 then -- orange
+			core.display.drawQuad(x + sx, y + sy, dx, dy, 185, 88, 0, 128)
+			core.display.drawQuad(x + sx, y + sy, dx * lp, dy, 255, 156, 21, 255)
+		else -- red
+			core.display.drawQuad(x + sx, y + sy, dx, dy, 167, 55, 39, 128)
+			core.display.drawQuad(x + sx, y + sy, dx * lp, dy, 235, 0, 0, 255)
+		end
+
+		if not sf_self then
+			sf_self = map.tilesTactic:get(nil, 0,0,0, 0,0,0, "small_"..map.faction_self)
+			sf_powerful = map.tilesTactic:get(nil, 0,0,0, 0,0,0, "small_"..map.faction_powerful)
+			sf_danger2 = map.tilesTactic:get(nil, 0,0,0, 0,0,0, "small_"..map.faction_danger2)
+			sf_danger1 = map.tilesTactic:get(nil, 0,0,0, 0,0,0, "small_"..map.faction_danger1)
+			sf_friend = map.tilesTactic:get(nil, 0,0,0, 0,0,0, "small_"..map.faction_friend)
+			sf_enemy = map.tilesTactic:get(nil, 0,0,0, 0,0,0, "small_"..map.faction_enemy)
+			sf_neutral = map.tilesTactic:get(nil, 0,0,0, 0,0,0, "small_"..map.faction_neutral)
+		end
+
+		if self.faction then
+			local friend
+			if not map.actor_player then friend = Faction:factionReaction(map.view_faction, self.faction)
+			else friend = map.actor_player:reactionToward(self) end
+
+			if self == map.actor_player then
+				sf_self:toScreen(x, y, w, h)
+			elseif map:faction_danger_check(self) then
+				if friend >= 0 then sf_powerful:toScreen(x, y, w, h)
+				else
+					if map:faction_danger_check(self, true) then
+						sf_danger2:toScreen(x, y, w, h)
+					else
+						sf_danger1:toScreen(x, y, w, h)
+					end
+				end
+			elseif friend > 0 then
+				sf_friend:toScreen(x, y, w, h)
+			elseif friend < 0 then
+				sf_enemy:toScreen(x, y, w, h)
+			else
+				sf_neutral:toScreen(x, y, w, h)
+			end
+		end
+	end
+end
+
+function _M:bigTacticalFrame(map, x, y, w, h, zoom, on_map, tlx, tly)
+	-- Tactical info
+	if game.level and game.always_target then
+		-- Tactical life info
+		if on_map then
+			if config.settings.tome.small_frame_side then
+				local dw = w * 0.1
+				local lp = math.max(0, self.life) / self.max_life + 0.0001
+				if lp > .75 then -- green
+					core.display.drawQuad(x + 3, y + 3, dw, h - 6, 129, 180, 57, 128)
+					core.display.drawQuad(x + 3, y + 3 + (h - 6) * (1 - lp), dw, (h - 6) * lp, 50, 220, 77, 255)
+				elseif lp > .5 then -- yellow
+					core.display.drawQuad(x + 3, y + 3, dw, h - 6, 175, 175, 10, 128)
+					core.display.drawQuad(x + 3, y + 3 + (h - 6) * (1 - lp), dw, (h - 6) * lp, 240, 252, 35, 255)
+				elseif lp > .25 then -- orange
+					core.display.drawQuad(x + 3, y + 3, dw, h - 6, 185, 88, 0, 128)
+					core.display.drawQuad(x + 3, y + 3 + (h - 6) * (1 - lp), dw, (h - 6) * lp, 255, 156, 21, 255)
+				else -- red
+					core.display.drawQuad(x + 3, y + 3, dw, h - 6, 167, 55, 39, 128)
+					core.display.drawQuad(x + 3, y + 3 + (h - 6) * (1 - lp), dw, (h - 6) * lp, 235, 0, 0, 255)
+				end
+			else
+				local dh = h * 0.1
+				local lp = math.max(0, self.life) / self.max_life + 0.0001
+				if lp > .75 then -- green
+					core.display.drawQuad(x + 3, y + h - dh, w - 6, dh, 129, 180, 57, 128)
+					core.display.drawQuad(x + 3, y + h - dh, (w - 6) * lp, dh, 50, 220, 77, 255)
+				elseif lp > .5 then -- yellow
+					core.display.drawQuad(x + 3, y + h - dh, w - 6, dh, 175, 175, 10, 128)
+					core.display.drawQuad(x + 3, y + h - dh, (w - 6) * lp, dh, 240, 252, 35, 255)
+				elseif lp > .25 then -- orange
+					core.display.drawQuad(x + 3, y + h - dh, w - 6, dh, 185, 88, 0, 128)
+					core.display.drawQuad(x + 3, y + h - dh, (w - 6) * lp, dh, 255, 156, 21, 255)
+				else -- red
+					core.display.drawQuad(x + 3, y + h - dh, w - 6, dh, 167, 55, 39, 128)
+					core.display.drawQuad(x + 3, y + h - dh, (w - 6) * lp, dh, 235, 0, 0, 255)
+				end
+			end
+		end
+	end
+
+	-- Tactical info
+	if game.level and game.level.map.view_faction then
+		local map = game.level.map
+		if on_map then
+			if not f_self then
+				f_self = game.level.map.tilesTactic:get(nil, 0,0,0, 0,0,0, map.faction_self)
+				f_powerful = game.level.map.tilesTactic:get(nil, 0,0,0, 0,0,0, map.faction_powerful)
+				f_danger2 = game.level.map.tilesTactic:get(nil, 0,0,0, 0,0,0, map.faction_danger2)
+				f_danger1 = game.level.map.tilesTactic:get(nil, 0,0,0, 0,0,0, map.faction_danger1)
+				f_friend = game.level.map.tilesTactic:get(nil, 0,0,0, 0,0,0, map.faction_friend)
+				f_enemy = game.level.map.tilesTactic:get(nil, 0,0,0, 0,0,0, map.faction_enemy)
+				f_neutral = game.level.map.tilesTactic:get(nil, 0,0,0, 0,0,0, map.faction_neutral)
+			end
+
+			if self.faction then
+				local friend
+				if not map.actor_player then friend = Faction:factionReaction(map.view_faction, self.faction)
+				else friend = map.actor_player:reactionToward(self) end
+
+				if self == map.actor_player then
+					f_self:toScreen(x, y, w, h)
+				elseif map:faction_danger_check(self) then
+					if friend >= 0 then f_powerful:toScreen(x, y, w, h)
+					else
+						if map:faction_danger_check(self, true) then
+							f_danger2:toScreen(x, y, w, h)
+						else
+							f_danger1:toScreen(x, y, w, h)
+						end
+					end
+				elseif friend > 0 then
+					f_friend:toScreen(x, y, w, h)
+				elseif friend < 0 then
+					f_enemy:toScreen(x, y, w, h)
+				else
+					f_neutral:toScreen(x, y, w, h)
+				end
+			end
+		end
+	end
+end
+
 --- Attach or remove a display callback
 -- Defines particles to display
 function _M:defineDisplayCallback()
@@ -874,145 +1097,13 @@ function _M:defineDisplayCallback()
 	local backps = self:getParticlesList(true)
 	local ps = self:getParticlesList()
 
-	local f_self = nil
-	local f_danger2 = nil
-	local f_danger1 = nil
-	local f_powerful = nil
-	local f_friend = nil
-	local f_enemy = nil
-	local f_neutral = nil
-	local sf_self = nil
-	local sf_danger2 = nil
-	local sf_danger1 = nil
-	local sf_powerful = nil
-	local sf_friend = nil
-	local sf_enemy = nil
-	local sf_neutral = nil
-	local ichat = nil
-
 	local function tactical(x, y, w, h, zoom, on_map, tlx, tly)
 		if game.level and game.level.map.view_faction and game.always_target and game.always_target ~= "old" then
-			local map = game.level.map
 			if on_map then
-				local sx = w * .078125
-				local dx = w * .90625 - sx
-				local sy = h * .9375
-				local dy = h * .984375 - sy
-				local lp = math.max(0, self.life) / self.max_life + 0.0001
-				if lp > .75 then -- green
-					core.display.drawQuad(x + sx, y + sy, dx, dy, 129, 180, 57, 128)
-					core.display.drawQuad(x + sx, y + sy, dx * lp, dy, 50, 220, 77, 255)
-				elseif lp > .5 then -- yellow
-					core.display.drawQuad(x + sx, y + sy, dx, dy, 175, 175, 10, 128)
-					core.display.drawQuad(x + sx, y + sy, dx * lp, dy, 240, 252, 35, 255)
-				elseif lp > .25 then -- orange
-					core.display.drawQuad(x + sx, y + sy, dx, dy, 185, 88, 0, 128)
-					core.display.drawQuad(x + sx, y + sy, dx * lp, dy, 255, 156, 21, 255)
-				else -- red
-					core.display.drawQuad(x + sx, y + sy, dx, dy, 167, 55, 39, 128)
-					core.display.drawQuad(x + sx, y + sy, dx * lp, dy, 235, 0, 0, 255)
-				end
-
-				if not sf_self then
-					sf_self = game.level.map.tilesTactic:get(nil, 0,0,0, 0,0,0, "small_"..map.faction_self)
-					sf_powerful = game.level.map.tilesTactic:get(nil, 0,0,0, 0,0,0, "small_"..map.faction_powerful)
-					sf_danger2 = game.level.map.tilesTactic:get(nil, 0,0,0, 0,0,0, "small_"..map.faction_danger2)
-					sf_danger1 = game.level.map.tilesTactic:get(nil, 0,0,0, 0,0,0, "small_"..map.faction_danger1)
-					sf_friend = game.level.map.tilesTactic:get(nil, 0,0,0, 0,0,0, "small_"..map.faction_friend)
-					sf_enemy = game.level.map.tilesTactic:get(nil, 0,0,0, 0,0,0, "small_"..map.faction_enemy)
-					sf_neutral = game.level.map.tilesTactic:get(nil, 0,0,0, 0,0,0, "small_"..map.faction_neutral)
-				end
-
-				if self.faction then
-					local friend
-					if not map.actor_player then friend = Faction:factionReaction(map.view_faction, self.faction)
-					else friend = map.actor_player:reactionToward(self) end
-
-					if self == map.actor_player then
-						sf_self:toScreen(x, y, w, h)
-					elseif map:faction_danger_check(self) then
-						if friend >= 0 then sf_powerful:toScreen(x, y, w, h)
-						else
-							if map:faction_danger_check(self, true) then
-								sf_danger2:toScreen(x, y, w, h)
-							else
-								sf_danger1:toScreen(x, y, w, h)
-							end
-						end
-					elseif friend > 0 then
-						sf_friend:toScreen(x, y, w, h)
-					elseif friend < 0 then
-						sf_enemy:toScreen(x, y, w, h)
-					else
-						sf_neutral:toScreen(x, y, w, h)
-					end
-				end
+				self:smallTacticalFrame(game.level.map, x, y, w, h, zoom, on_map, tlx, tly)
 			end
 		else
-			-- Tactical info
-			if game.level and game.always_target then
-				-- Tactical life info
-				if on_map then
-					local dh = h * 0.1
-					local lp = math.max(0, self.life) / self.max_life + 0.0001
-	--				if game.party:hasMember(self) and fully_rested then -- blue (party members only)
-	--					core.display.drawQuad(x + 3, y + h - dh, (w - 6) * lp, dh, 26, 131, 162, 255)
-					if lp > .75 then -- green
-						core.display.drawQuad(x + 3, y + h - dh, w - 6, dh, 129, 180, 57, 128)
-						core.display.drawQuad(x + 3, y + h - dh, (w - 6) * lp, dh, 50, 220, 77, 255)
-					elseif lp > .5 then -- yellow
-						core.display.drawQuad(x + 3, y + h - dh, w - 6, dh, 175, 175, 10, 128)
-						core.display.drawQuad(x + 3, y + h - dh, (w - 6) * lp, dh, 240, 252, 35, 255)
-					elseif lp > .25 then -- orange
-						core.display.drawQuad(x + 3, y + h - dh, w - 6, dh, 185, 88, 0, 128)
-						core.display.drawQuad(x + 3, y + h - dh, (w - 6) * lp, dh, 255, 156, 21, 255)
-					else -- red
-						core.display.drawQuad(x + 3, y + h - dh, w - 6, dh, 167, 55, 39, 128)
-						core.display.drawQuad(x + 3, y + h - dh, (w - 6) * lp, dh, 235, 0, 0, 255)
-					end
-				end
-			end
-
-			-- Tactical info
-			if game.level and game.level.map.view_faction then
-				local map = game.level.map
-				if on_map then
-					if not f_self then
-						f_self = game.level.map.tilesTactic:get(nil, 0,0,0, 0,0,0, map.faction_self)
-						f_powerful = game.level.map.tilesTactic:get(nil, 0,0,0, 0,0,0, map.faction_powerful)
-						f_danger2 = game.level.map.tilesTactic:get(nil, 0,0,0, 0,0,0, map.faction_danger2)
-						f_danger1 = game.level.map.tilesTactic:get(nil, 0,0,0, 0,0,0, map.faction_danger1)
-						f_friend = game.level.map.tilesTactic:get(nil, 0,0,0, 0,0,0, map.faction_friend)
-						f_enemy = game.level.map.tilesTactic:get(nil, 0,0,0, 0,0,0, map.faction_enemy)
-						f_neutral = game.level.map.tilesTactic:get(nil, 0,0,0, 0,0,0, map.faction_neutral)
-					end
-
-					if self.faction then
-						local friend
-						if not map.actor_player then friend = Faction:factionReaction(map.view_faction, self.faction)
-						else friend = map.actor_player:reactionToward(self) end
-
-						if self == map.actor_player then
-							f_self:toScreen(x, y, w, h)
-						elseif map:faction_danger_check(self) then
-							if friend >= 0 then f_powerful:toScreen(x, y, w, h)
-							else
-								if map:faction_danger_check(self, true) then
-									f_danger2:toScreen(x, y, w, h)
-								else
-									f_danger1:toScreen(x, y, w, h)
-								end
-							end
-						elseif friend > 0 then
-							f_friend:toScreen(x, y, w, h)
-						elseif friend < 0 then
-							f_enemy:toScreen(x, y, w, h)
-						else
-							f_neutral:toScreen(x, y, w, h)
-						end
-					end
-				end
-			end
+			self:bigTacticalFrame(game.level.map, x, y, w, h, zoom, on_map, tlx, tly)
 		end
 
 		-- Chat

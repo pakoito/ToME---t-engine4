@@ -265,6 +265,16 @@ function _M:generateListUi()
 		self.c_list:drawItem(item)
 	end,}
 
+
+	local zone = Textzone.new{width=self.c_desc.w, height=self.c_desc.h, text=string.toTString"Toggles between a bottom or side display for tactial healthbars.#WHITE#"}
+	list[#list+1] = { zone=zone, name=string.toTString"#GOLD##{bold}#Healthbars position.#WHITE##{normal}#", status=function(item)
+		return tostring(config.settings.tome.small_frame_side and "Sides" or "Bottom")
+	end, fct=function(item)
+		config.settings.tome.small_frame_side = not config.settings.tome.small_frame_side
+		game:saveSettings("tome.small_frame_side", ("tome.small_frame_side = %s\n"):format(tostring(config.settings.tome.small_frame_side)))
+		self.c_list:drawItem(item)
+	end,}
+
 	self.list = list
 end
 

@@ -120,7 +120,8 @@ newTalent{
 			DamageType.WAVE, {dam=t.getDamage(self, t), x=self.x, y=self.y},
 			1,
 			5, nil,
-			engine.Entity.new{alpha=100, display='', color_br=30, color_bg=60, color_bb=200},
+			MapEffect.new{color_br=30, color_bg=60, color_bb=200, effect_shader="shader_images/water_effect1.png"},
+--			MapEffect.new{color_br=30, color_bg=60, color_bb=200, effect_shader={"shader_images/water_effect1.png","shader_images/water_effect2.png", max=6}},
 			function(e)
 				e.radius = e.radius + 0.5
 				return true

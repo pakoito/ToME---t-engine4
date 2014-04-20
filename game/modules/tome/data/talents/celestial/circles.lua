@@ -41,7 +41,7 @@ newTalent{
 			DamageType.SHIFTINGSHADOWS, self:spellCrit(t.getDamage(self, t)),
 			self:getTalentRadius(t),
 			5, nil,
-			engine.Entity.new{alpha=75, display='', color_br=60, color_bg=10, color_bb=60},
+			MapEffect.new{color_br=255, color_bg=255, color_bb=255, effect_shader="shader_images/moonlight_effect.png"},
 			nil, self:spellFriendlyFire(true)
 		)
 		game:playSoundNear(self, "talents/arcane")
@@ -83,7 +83,7 @@ newTalent{
 			DamageType.BLAZINGLIGHT, self:spellCrit(t.getDamage(self, t)),
 			radius,
 			5, nil,
-			engine.Entity.new{alpha=75, display='', color_br=250, color_bg=200, color_bb=10},
+			MapEffect.new{color_br=255, color_bg=255, color_bb=255, effect_shader="shader_images/sunlight_effect.png"},
 			nil, self:spellFriendlyFire(true)
 		)
 		game:playSoundNear(self, "talents/arcane")
@@ -122,7 +122,7 @@ newTalent{
 			DamageType.SANCTITY, 1,
 			self:getTalentRadius(t),
 			5, nil,
-			engine.Entity.new{alpha=75, display='', color_br=150, color_bg=10, color_bb=200},
+			MapEffect.new{color_br=255, color_bg=255, color_bb=255, effect_shader="shader_images/sunlight_effect.png"},
 			nil, self:spellFriendlyFire(true)
 		)
 		game:playSoundNear(self, "talents/arcane")
@@ -160,7 +160,7 @@ newTalent{
 			DamageType.WARDING, self:spellCrit(t.getDamage(self, t)),
 			self:getTalentRadius(t),
 			5, nil,
-			engine.Entity.new{alpha=75, display='', color_br=200, color_bg=200, color_bb=200},
+			MapEffect.new{color_br=255, color_bg=255, color_bb=255, effect_shader="shader_images/sunlight_effect.png"},
 			nil, self:spellFriendlyFire(true)
 		)
 		game:playSoundNear(self, "talents/arcane")
