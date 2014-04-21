@@ -102,6 +102,7 @@ newEntity{ base = "BASE_SLING",
 newEntity{
 	define_as = "BASE_SHOT",
 	slot = "QUIVER",
+	moddable_tile = "shotbag",
 	type = "ammo", subtype="shot",
 	add_name = " (#COMBAT_AMMO#)",
 	display = "{", color=colors.UMBER, image = resolvers.image_material("shot", "metal"),

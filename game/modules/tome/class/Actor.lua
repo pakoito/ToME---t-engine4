@@ -1006,7 +1006,7 @@ function _M:smallTacticalFrame(map, x, y, w, h, zoom, on_map, tlx, tly)
 	end
 end
 
-function _M:bigTacticalFrame(map, x, y, w, h, zoom, on_map, tlx, tly)
+function _M:bigTacticalFrame(x, y, w, h, zoom, on_map, tlx, tly)
 	-- Tactical info
 	if game.level and game.always_target then
 		-- Tactical life info
@@ -1103,7 +1103,7 @@ function _M:defineDisplayCallback()
 				self:smallTacticalFrame(game.level.map, x, y, w, h, zoom, on_map, tlx, tly)
 			end
 		else
-			self:bigTacticalFrame(game.level.map, x, y, w, h, zoom, on_map, tlx, tly)
+			self:bigTacticalFrame(x, y, w, h, zoom, on_map, tlx, tly)
 		end
 
 		-- Chat
@@ -3309,6 +3309,8 @@ function _M:updateModdableTile()
 			if i[1].moddable_tile_ornament then add[#add+1] = {image = base..(i[1].moddable_tile_ornament):format("left")..".png", auto_tall=1} end
 		end
 	end
+
+	i = self.inven[self.INVEN_QUIVER]; if i and i[1] and i[1].moddable_tile then add[#add+1] = {image = base..(i[1].moddable_tile)..".png", auto_tall=1} end
 
 	self:triggerHook{"Actor:updateModdableTile:front", base=base, add=add}
 

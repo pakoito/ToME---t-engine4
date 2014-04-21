@@ -103,6 +103,7 @@ newEntity{ base = "BASE_LONGBOW",
 newEntity{
 	define_as = "BASE_ARROW",
 	slot = "QUIVER",
+	moddable_tile = "quiver",
 	type = "ammo", subtype="arrow",
 	add_name = " (#COMBAT_AMMO#)",
 	display = "{", color=colors.UMBER, image = resolvers.image_material("arrow", "wood"),

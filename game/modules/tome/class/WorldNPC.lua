@@ -93,7 +93,7 @@ function _M:defineDisplayCallback()
 				self:smallTacticalFrame(game.level.map, x, y, w, h, zoom, on_map, tlx, tly)
 			end
 		else
-			self:bigTacticalFrame(game.level.map, x, y, w, h, zoom, on_map, tlx, tly)
+			self:bigTacticalFrame(x, y, w, h, zoom, on_map, tlx, tly)
 		end
 
 		local e
