@@ -1289,6 +1289,7 @@ newEffect{
 			local def = self.tempeffect_def[self.EFF_CURSE_OF_NIGHTMARES]
 			eff.nightmareChance = (eff.nightmareChance or 0) + def.getNightmareChance(eff.level)
 
+
 			-- invoke the nightmare
 			if rng.percent(eff.nightmareChance) then
 				local radius = def.getNightmareRadius(eff.level)
@@ -1310,7 +1311,7 @@ newEffect{
 					DamageType.NIGHTMARE, 1,
 					radius,
 					5, nil,
-					engine.Entity.new{alpha=80, display='', color_br=134, color_bg=60, color_bb=134},
+					engine.MapEffect.new{color_br=134, color_bg=60, color_bb=134, effect_shader="shader_images/darkness_effect.png"},
 					function(e)
 						-- attempt one summon per turn
 						if not e.src:canBe("summon") then return end

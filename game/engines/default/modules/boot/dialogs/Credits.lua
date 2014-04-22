@@ -109,6 +109,7 @@ local credits = {
 	{"Jules 'Quicksilver' Bean"},
 	{"Madmonk"},
 	{"Neil Stevens"},
+	{"Sebastian 'Sebsebeleb' Vråle"},
 	{"Shani"},
 	{"Shibari"},
 	{"Tiger Eye"},

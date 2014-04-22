@@ -85,7 +85,7 @@ newEntity{ base = "BASE_NPC_WORM", define_as = "CARRION_WORM_MASS",
 			engine.DamageType.BLIGHT, self:getStr(90, true),
 			2,
 			5, nil,
-			engine.Entity.new{alpha=50, display='', color_br=30, color_bg=180, color_bb=60}
+			engine.MapEffect.new{color_br=150, color_bg=255, color_bb=150, effect_shader="shader_images/poison_effect.png"}
 		)
 		game.logSeen(self, "%s exudes a corrupted gas as it dies.", self.name:capitalize())
 	end,

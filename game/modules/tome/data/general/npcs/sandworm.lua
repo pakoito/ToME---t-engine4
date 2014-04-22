@@ -161,7 +161,7 @@ newEntity{ base = "BASE_NPC_SANDWORM",
 			engine.DamageType.ACID, self:getStr(90, true),
 			3,
 			5, nil,
-			{type="vapour"}
+			engine.MapEffect.new{color_br=150, color_bg=150, color_bb=150, effect_shader="shader_images/poison_effect.png"}
 		)
 		game.logSeen(self, "%s explodes in an acidic cloud.", self.name:capitalize())
 	end,

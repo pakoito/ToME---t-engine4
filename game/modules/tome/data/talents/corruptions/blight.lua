@@ -167,7 +167,7 @@ newTalent{
 			DamageType.POISON, {dam=dam, apply_power=actor:combatSpellpower()},
 			radius,
 			5, nil,
-			engine.Entity.new{alpha=100, display='', color_br=20, color_bg=220, color_bb=70},
+			MapEffect.new{color_br=20, color_bg=220, color_bb=70, effect_shader="shader_images/poison_effect.png"},
 			function(e)
 				e.x = e.src.x
 				e.y = e.src.y

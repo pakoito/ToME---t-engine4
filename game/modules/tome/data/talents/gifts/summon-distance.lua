@@ -339,7 +339,7 @@ newTalent{
 			DamageType.POISON, {dam=self:combatTalentMindDamage(t, 10, 60), apply_power=self:combatMindpower()},
 			self:getTalentRadius(t),
 			5, nil,
-			{type="vapour"},
+			MapEffect.new{color_br=255, color_bg=255, color_bb=255, effect_shader="shader_images/poison_effect.png"},
 			nil, false, false
 		)
 	end,
