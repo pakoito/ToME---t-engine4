@@ -34,7 +34,7 @@ newEntity{
 	cost = 4,
 	wielder = {
 		combat_physcrit = resolvers.mbonus_material(10, 5),
-		combat_critical_power = resolvers.mbonus_material(20, 10),
+		combat_critical_power = resolvers.mbonus_material(10, 10),
 	},
 }
 
@@ -112,7 +112,7 @@ newEntity{
 		vim_on_crit = resolvers.mbonus_material(5, 1),
 		max_vim =  resolvers.mbonus_material(30, 10),
 		melee_project = {
-			[DamageType.CORRUPTED_BLOOD] = resolvers.mbonus_material(15, 5),
+			[DamageType.ITEM_BLIGHT_DISEASE] = resolvers.mbonus_material(15, 5),
 	},
 	},
 }
@@ -206,7 +206,7 @@ newEntity{
 		combat_def = resolvers.mbonus_material(10, 5),
 		lite = resolvers.mbonus_material(3, 2),
 		melee_project = {
-			[DamageType.LIGHT_BLIND] = resolvers.mbonus_material(15, 5),
+			[DamageType.ITEM_LIGHT_BLIND] = resolvers.mbonus_material(15, 5),
 	},
 	},
 	resolvers.charmt(Talents.T_ILLUMINATE, {1,2}, 6),
@@ -588,9 +588,6 @@ newEntity{
 	greater_ego = 1,
 	rarity = 30,
 	cost = 60,
-	combat = {
-		dam = resolvers.mbonus_material(10, 5),
-	},
 	wielder = {
 		combat_physcrit = resolvers.mbonus_material(8, 6),
 		max_mana = resolvers.mbonus_material(100, 20),
@@ -632,9 +629,6 @@ newEntity{
 	greater_ego = 1,
 	rarity = 35,
 	cost = 60,
-	combat = {
-		dam = resolvers.mbonus_material(8, 4),
-	},
 	wielder = {
 		combat_atk = resolvers.mbonus_material(10, 5),
 		combat_dam = resolvers.mbonus_material(10, 5),
@@ -642,9 +636,6 @@ newEntity{
 		combat_physcrit = resolvers.mbonus_material(5, 5),
 		combat_spellcrit = resolvers.mbonus_material(5, 5),
 		combat_critical_power = resolvers.mbonus_material(10, 10),
-		melee_project = {
-			[DamageType.RANDOM_SILENCE] = resolvers.mbonus_material(10, 10),
-		},
 	},
 }
 

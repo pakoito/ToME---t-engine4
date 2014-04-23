@@ -135,7 +135,6 @@ newEntity{
 		melee_project= { [DamageType.LIGHTNING] = resolvers.mbonus_material(10, 5) },
 		combat = {
 			burst_on_crit= { [DamageType.LIGHTNING] = resolvers.mbonus_material(10, 5) },
-			convert_damage = { [DamageType.LIGHTNING] = resolvers.mbonus_material(25, 25) },
 			talent_on_hit = { [Talents.T_LIGHTNING_BREATH] = {level=resolvers.genericlast(function(e) return e.material_level end), chance=10} },
 		},
 	},
@@ -167,11 +166,11 @@ newEntity{
 	cost = 5,
 	wielder = {
 		inc_damage= { [DamageType.DARKNESS] = resolvers.mbonus_material(8, 3), },
-		resists = { [DamageType.DARKNESS] = resolvers.mbonus_material(5, 5), },
-		melee_project= { [DamageType.DARKNESS] = resolvers.mbonus_material(10, 5) },
+		resists = { [DamageType.DARKNESS] = resolvers.mbonus_material(10, 5), },
+		melee_project= { [DamageType.DARKNESS] = resolvers.mbonus_material(15, 5) },
 		combat = {
-			burst_on_crit= { [DamageType.DARKNESS] = resolvers.mbonus_material(10, 5) },
-			talent_on_hit = { [Talents.T_MOONLIGHT_RAY] = {level=resolvers.genericlast(function(e) return e.material_level end), chance=20} },
+			melee_project= { [DamageType.ITEM_DARKNESS_NUMBING] = resolvers.mbonus_material(10, 5) },
+			--talent_on_hit = { [Talents.T_MOONLIGHT_RAY] = {level=resolvers.genericlast(function(e) return e.material_level end), chance=20} },
 		},
 	},
 }
@@ -184,11 +183,11 @@ newEntity{
 	cost = 5,
 	wielder = {
 		inc_damage= { [DamageType.LIGHT] = resolvers.mbonus_material(8, 3), },
-		resists = { [DamageType.LIGHT] = resolvers.mbonus_material(5, 5), },
-		melee_project= { [DamageType.LIGHT] = resolvers.mbonus_material(10, 5) },
+		resists = { [DamageType.LIGHT] = resolvers.mbonus_material(10, 5), },
+		melee_project= { [DamageType.LIGHT] = resolvers.mbonus_material(15, 5) },
 		combat = {
-			burst_on_crit= { [DamageType.LIGHT] = resolvers.mbonus_material(10, 5) },
-			talent_on_hit = { [Talents.T_SEARING_LIGHT] = {level=resolvers.genericlast(function(e) return e.material_level end), chance=20} },
+			melee_project= { [DamageType.ITEM_LIGHT_BLIND] = resolvers.mbonus_material(10, 5) },
+			--talent_on_hit = { [Talents.T_SEARING_LIGHT] = {level=resolvers.genericlast(function(e) return e.material_level end), chance=20} },
 		},
 	},
 }
@@ -201,11 +200,11 @@ newEntity{
 	cost = 5,
 	wielder = {
 		inc_damage= { [DamageType.TEMPORAL] = resolvers.mbonus_material(8, 3), },
-		resists = { [DamageType.TEMPORAL] = resolvers.mbonus_material(5, 5), },
-		melee_project= { [DamageType.TEMPORAL] = resolvers.mbonus_material(10, 5) },
+		resists = { [DamageType.TEMPORAL] = resolvers.mbonus_material(10, 5), },
+		melee_project= { [DamageType.TEMPORAL] = resolvers.mbonus_material(15, 5) },
 		combat = {
-			burst_on_crit= { [DamageType.TEMPORAL] = resolvers.mbonus_material(10, 5) },
-			talent_on_hit = { [Talents.T_QUANTUM_SPIKE] = {level=resolvers.genericlast(function(e) return e.material_level end), chance=20} },
+			melee_project= { [DamageType.ITEM_TEMPORAL_ENERGIZE] = resolvers.mbonus_material(10, 5) },
+			--talent_on_hit = { [Talents.T_QUANTUM_SPIKE] = {level=resolvers.genericlast(function(e) return e.material_level end), chance=20} },
 		},
 	},
 }
@@ -306,7 +305,7 @@ newEntity{
 		combat_spellcrit = resolvers.mbonus_material(15, 5),
 		combat_mindcrit = resolvers.mbonus_material(15, 5),
 		combat_physcrit = resolvers.mbonus_material(15, 5),
-		combat_critical_power = resolvers.mbonus_material(35, 5),
+		combat_critical_power = resolvers.mbonus_material(10, 5),
 		combat = {
 			physcrit = resolvers.mbonus_material(10, 4),
 			dam = resolvers.mbonus_material(7, 3),
@@ -396,7 +395,7 @@ newEntity{
 	power_source = {antimagic=true},
 	name = " of butchering", suffix=true, instant_resolve=true,
 	keywords = {butchering=true},
-	level_range = {30, 50},
+	level_range = {10, 50},
 	greater_ego = 1,
 	rarity = 30,
 	cost = 60,
@@ -406,12 +405,62 @@ newEntity{
 		},
 		combat_spellresist = resolvers.mbonus_material(15, 8),
 		combat_atk = resolvers.mbonus_material(10, 4),
+		combat_apr = resolvers.mbonus_material(10, 5),
 		combat_dam = resolvers.mbonus_material(10, 4),
 		combat = {
 			apr = resolvers.mbonus_material(10, 5),
 			melee_project={
-				[DamageType.SLIME] = resolvers.mbonus_material(15, 3),
-				[DamageType.ACID] = resolvers.mbonus_material(24, 4),
+				[DamageType.ITEM_NATURE_SLOW] = resolvers.mbonus_material(15, 10),
+				[DamageType.ITEM_ACID_CORRODE] = resolvers.mbonus_material(15, 10),
+			},
+		},
+	},
+}
+
+newEntity{
+	power_source = {antimagic=true},
+	name = " of the verdant", suffix=true, instant_resolve=true,
+	keywords = {verdant_avenger=true},
+	level_range = {30, 50},
+	greater_ego = 1,
+	rarity = 40,
+	cost = 60,
+	wielder = {
+		talents_types_mastery = { ["wild-gift/antimagic"] = 0.2},
+		resists={
+			[DamageType.BLIGHT] = resolvers.mbonus_material(15, 5),
+			[DamageType.DARKNESS] = resolvers.mbonus_material(15, 5),
+			[DamageType.ARCANE] = resolvers.mbonus_material(15, 5),
+		},
+		damage_affinity={
+			[DamageType.NATURE] = resolvers.mbonus_material(10, 5),
+		},
+		combat_spellresist = resolvers.mbonus_material(15, 8),
+		combat = {
+			-- This is essentially like Cripple and Dominate, a bonus attack.  Except it can hit at range and spawns a gimpy ooze.  THIS IS SO COOL
+			talent_on_crit = { [Talents.T_CALL_OF_THE_OOZE] = {level=2, chance=20} },
+		},
+	},
+}
+
+newEntity{
+	power_source = {antimagic=true},
+	name = "scouring ", prefix=true, instant_resolve=true,
+	keywords = {scouring=true},
+	level_range = {20, 50},
+	greater_ego = 1,
+	rarity = 30,
+	cost = 60,
+	wielder = {
+		combat_spellresist = resolvers.mbonus_material(15, 8),
+		on_melee_hit = {
+			[DamageType.ITEM_ANTIMAGIC_SCOURING] = resolvers.mbonus_material(20, 15), 
+			[DamageType.ITEM_ANTIMAGIC_MANABURN] = resolvers.mbonus_material(20, 15),
+		},
+		combat = {
+			melee_project={
+				[DamageType.ITEM_ANTIMAGIC_SCOURING] = resolvers.mbonus_material(20, 15),
+				[DamageType.ITEM_ANTIMAGIC_MANABURN] = resolvers.mbonus_material(20, 15),
 			},
 		},
 	},
@@ -502,7 +551,7 @@ newEntity{
 	power_source = {arcane=true},
 	name = " of dispersion", suffix=true, instant_resolve=true,
 	keywords = {dispersion=true},
-	level_range = {40, 50},
+	level_range = {20, 50},
 	greater_ego = 1,
 	rarity = 35,
 	cost = 70,
@@ -552,15 +601,16 @@ newEntity{
 	rarity = 30,
 	cost = 80,
 	resolvers.charmt(Talents.T_RUINED_EARTH, 3, 20),
+	use_no_energy = true,
 	wielder = {
 		combat_mentalresist = resolvers.mbonus_material(10, -15),
 		combat_mindpower = resolvers.mbonus_material(7, 3),
 		melee_project = {
 			[DamageType.MIND] = resolvers.mbonus_material(30, 10),
 			[DamageType.DARKNESS] = resolvers.mbonus_material(30, 10),
+			[DamageType.ITEM_MIND_GLOOM] = resolvers.mbonus_material(15, 10),
 		},
 		combat = {
-             burst_on_crit = { [DamageType.RANDOM_GLOOM] = resolvers.mbonus_material(10, 10), },
 			 talent_on_hit = { [Talents.T_REPROACH] = {level=resolvers.genericlast(function(e) return e.material_level end), chance=10} },
 		},
 	},
@@ -628,6 +678,7 @@ newEntity{
 	},
 }
 
+-- On use removed so it doesn't conflict with other on_uses (its pretty bad, they're really good)
 newEntity{
 	power_source = {technique=true},
 	name = "archer's ", prefix=true, instant_resolve=true,
@@ -636,14 +687,14 @@ newEntity{
 	greater_ego = 1,
 	rarity = 17,
 	cost = 35,
-	resolvers.charmt(Talents.T_STEADY_SHOT, 3, 20),
+--	resolvers.charmt(Talents.T_STEADY_SHOT, 3, 20),
 	wielder = {
 		inc_stats = {
-			[Stats.STAT_DEX] = resolvers.mbonus_material(3, 2),
-			[Stats.STAT_CUN] = resolvers.mbonus_material(3, 2),
+			[Stats.STAT_DEX] = resolvers.mbonus_material(7, 2),
+			[Stats.STAT_CUN] = resolvers.mbonus_material(7, 2),
 		},
 		combat_atk = resolvers.mbonus_material(5, 5),
-		combat_apr = resolvers.mbonus_material(5, 5),
+		combat_apr = resolvers.mbonus_material(10, 5),
 		combat = {
 			apr = resolvers.mbonus_material(5, 5),
 			atk = resolvers.mbonus_material(5, 5),

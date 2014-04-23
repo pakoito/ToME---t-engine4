@@ -71,52 +71,53 @@ newTalent{
 	no_energy = true,
 	cooldown = 15,
 	positive = 20,
-	tactical = { ATTACK=0.5, DISABLE=2, HEAL=2 },
-	range = 1,
+	tactical = { DISABLE=2, HEAL=2 },
+	range = 5,
 	requires_target = true,
 	getPower = function(self, t) return self:combatTalentScale(t, 10, 50) end,
-	getDamage = function(self, t) return self:combatTalentWeaponDamage(t, 0.2, 0.7) end,
 	on_pre_use = function(self, t, silent) if not self:hasTwoHandedWeapon() then if not silent then game.logPlayer(self, "You require a two handed weapon to use this talent.") end return false end return true end,
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t)}
 		local x, y, target = self:getTarget(tg)
 		if not x or not y or not target then return nil end
-		if core.fov.distance(self.x, self.y, x, y) > 1 then return nil end
-		local hit = self:attackTarget(target, nil, t.getDamage(self, t), true)
-		if hit then
-			target:setEffect(target.EFF_MARK_OF_LIGHT, 5, {apply_power=self:combatSpellpower(), src=self, power=t.getPower(self, t)})
-		end
+		if core.fov.distance(self.x, self.y, x, y) > 5 then return nil end
+		target:setEffect(target.EFF_MARK_OF_LIGHT, 5, {src=self, power=t.getPower(self, t)})
+		
 		return true
 	end,
 	info = function(self, t)
-		local damage = t.getDamage(self, t)
-		return ([[You swifty thrust the hilt of your 2H weapon into your target, dealing %d%% weapon damage.
-		If the attack hits the creature is marked with light for 5 turns. All melee hits you deal to it will heal you for %d%% of the damage done.]]):
-		format(100 * damage, t.getPower(self, t))
+		return ([[You mark a target with light for 5 turns, causing all melee hits you deal to it to heal you for %d%% of the damage done.]]):
+		format(t.getPower(self, t))
 	end,
 }
 
+-- Sustain because dealing damage is not strictly beneficial (radiants) and because 2H needed some sustain cost
 newTalent{
 	name = "Righteous Strength",
 	type = {"celestial/crusader",3},
 	require = divi_req3,
 	points = 5,
-	mode = "passive",
+	mode = "sustained",
+	sustain_positive = 20,
 	getArmor = function(self, t) return self:combatTalentScale(t, 5, 30) end,
 	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 10, 120) end,
 	getCrit = function(self, t) return self:combatTalentScale(t, 3, 10, 0.75) end,
 	getPower = function(self, t) return self:combatTalentScale(t, 5, 15) end,
+	activate = function(self, t)
+		local ret = {}
+		self:talentTemporaryValue(ret, "combat_physcrit", t.getCrit(self, t))
+		return ret
+	end,
+	deactivate = function(self, t, p)
+		return true
+	end,
 	callbackOnCrit = function(self, t, kind, dam, chance, target)
 		if not self:hasTwoHandedWeapon() then return end
 		if kind ~= "physical" or not target then return end
 		if self.turn_procs.righteous_strength then return end
 		self.turn_procs.righteous_strength = true
-
 		target:setEffect(target.EFF_LIGHTBURN, 5, {apply_power=self:combatSpellpower(), src=self, dam=t.getDamage(self, t)/5, armor=t.getArmor(self, t)})
 		self:setEffect(self.EFF_RIGHTEOUS_STRENGTH, 4, {power=t.getPower(self, t), max_power=t.getPower(self, t) * 3})
-	end,
-	passives = function(self, t, p)
-		self:talentTemporaryValue(p, "combat_physcrit", t.getCrit(self, t))
 	end,
 	info = function(self, t)
 		return ([[While wielding a two handed weapon, your critical strike chance is increased by %d%%, and your melee criticals instill you with righteous strength, increasing all physical and light damage you deal by %d%%, stacking up to 3 times.

@@ -106,11 +106,83 @@ newEntity{
 	cost = 8,
 	wielder = {
 		on_melee_hit={
-			[DamageType.SLIME] = resolvers.mbonus_material(8, 2),
+			[DamageType.ITEM_NATURE_SLOW] = resolvers.mbonus_material(8, 2),
 		},
 		inc_damage={
 			[DamageType.NATURE] = resolvers.mbonus_material(8, 2),
+		}
+	},
+}
+
+newEntity{
+	power_source = {antimagic=true},
+	name = "manaburning ", prefix=true, instant_resolve=true,
+	keywords = {manaburning=true},
+	level_range = {1, 50},
+	rarity = 20,
+	cost = 40,
+	combat = {
+		melee_project = {
+			[DamageType.ITEM_ANTIMAGIC_MANABURN] = resolvers.mbonus_material(15, 10),
 		},
+	},
+}
+
+newEntity{
+	power_source = {antimagic=true},
+	name = "inquisitor's ", prefix=true, instant_resolve=true,
+	keywords = {inquisitors=true},
+	level_range = {30, 50},
+	rarity = 45,
+	greater_ego = 1,
+	cost = 40,
+	combat = {
+		melee_project = {
+			[DamageType.ITEM_ANTIMAGIC_MANABURN] = resolvers.mbonus_material(15, 10),
+		},
+		special_on_crit = {desc="burns latent spell energy", fct=function(combat, who, target)
+			local turns = 1 + math.ceil(who:combatMindpower() / 20)
+			local check = math.max(who:combatSpellpower(), who:combatMindpower(), who:combatAttack())
+			if not who:checkHit(check, target:combatMentalResist()) then game.logSeen(target, "%s resists!", target.name:capitalize()) return nil end
+
+			local tids = {}
+			for tid, lev in pairs(target.talents) do
+				local t = target:getTalentFromId(tid)
+				if t and not target.talents_cd[tid] and t.mode == "activated" and t.is_spell and not t.innate then tids[#tids+1] = t end
+			end
+
+			local t = rng.tableRemove(tids)
+			if not t then return nil end
+			local damage = t.mana or t.vim or t.positive or t.negative or t.paradox or 0
+			target.talents_cd[t.id] = turns
+
+			local tg = {type="hit", range=1}
+			damage = util.getval(damage, target, t)
+			if type(damage) ~= "number" then damage = 0 end
+			who:project(tg, target.x, target.y, engine.DamageType.ARCANE, damage)
+
+			game.logSeen(target, "%s's %s has been #ORCHID#burned#LAST#!", target.name:capitalize(), t.name)
+		end},
+	},
+}
+
+
+newEntity{
+	power_source = {antimagic=true},
+	name = " of persecution", suffix=true, instant_resolve=true,
+	keywords = {disruption=true},
+	level_range = {30, 50},
+	greater_ego = 1,
+	rarity = 50,
+	cost = 40,
+	combat = {
+		inc_damage_type = {
+			unnatural=resolvers.mbonus_material(25, 5),
+		},
+		special_on_hit = {desc="disrupts spell-casting", fct=function(combat, who, target)
+			local check = math.max(who:combatSpellpower(), who:combatMindpower(), who:combatAttack())
+			target:setEffect(target.EFF_SPELL_DISRUPTION, 10, {src=who, power = 10, max = 50, apply_power=check})
+		end},
 	},
 }
 
@@ -133,23 +205,6 @@ newEntity{
 			[DamageType.MIND] = resolvers.mbonus_material(8, 2),
 			[DamageType.DARKNESS] = resolvers.mbonus_material(8, 2),
 		},
-	},
-}
-
-newEntity{
-	power_source = {psionic=true},
-	name = "radiant ", prefix=true, instant_resolve=true,
-	keywords = {radiant=true},
-	level_range = {1, 50},
-	rarity = 4,
-	cost = 8,
-	combat = {
-		melee_project = { [DamageType.LIGHT] = resolvers.mbonus_material(8, 2), },
-	},
-	wielder = {
-		combat_mindpower = resolvers.mbonus_material(4, 1),
-		combat_mindcrit = resolvers.mbonus_material(4, 1),
-		lite = resolvers.mbonus_material(1, 1),
 	},
 }
 
@@ -644,7 +699,7 @@ newEntity{
 	cost = 10,  -- cost is very low to discourage players from splitting them to make extra gold..  because that would be tedious and unfun
 	combat = {
 		physcrit = resolvers.mbonus_material(10, 2),
-		melee_project = { [DamageType.ACID_BLIND]= resolvers.mbonus_material(15, 5), [DamageType.SLIME]= resolvers.mbonus_material(15, 5),},
+		melee_project = { [DamageType.ITEM_ACID_CORRODE]= resolvers.mbonus_material(15, 5), [DamageType.ITEM_NATURE_SLOW]= resolvers.mbonus_material(15, 5),},
 	},
 	resolvers.charm("divide the mindstar in two", 1,
 		function(self, who)

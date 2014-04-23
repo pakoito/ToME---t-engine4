@@ -413,6 +413,9 @@ newEntity{
 	wielder = {
 		combat_spellpower = resolvers.mbonus_material(3, 3),
 		combat_spellcrit = resolvers.mbonus_material(3, 3),
+		inc_stats = {
+			[Stats.STAT_MAG] = resolvers.mbonus_material(5, 1),
+		},
 		inc_damage = {
 			[DamageType.FIRE] = resolvers.mbonus_material(4, 4),
 			[DamageType.COLD] = resolvers.mbonus_material(4, 4),
@@ -560,8 +563,8 @@ newEntity{
 			[DamageType.DARKNESS] = resolvers.mbonus_material(10, 5),
 		},
 		on_melee_hit = {
-			[DamageType.LIGHT] = resolvers.mbonus_material(10, 5),
-			[DamageType.DARKNESS] = resolvers.mbonus_material(10, 5),
+			[DamageType.ITEM_LIGHT_BLIND] = resolvers.mbonus_material(10, 5),
+			[DamageType.ITEM_DARKNESS_NUMBING] = resolvers.mbonus_material(10, 5),
 		},
 		melee_project={
 			[DamageType.LIGHT] = resolvers.mbonus_material(10, 5),

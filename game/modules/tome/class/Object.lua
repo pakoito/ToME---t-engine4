@@ -1190,7 +1190,7 @@ function _M:getTextualDesc(compare_with, use_actor)
 		compare_fields(w, compare_with, field, "damage_backfire", "%+d%%", "Damage Backlash: ", nil, true)
 		
 		compare_fields(w, compare_with, field, "resist_unseen", "%-d%%", "Reduce all damage from unseen attackers: ")
-		
+
 		if w.undead then
 			desc:add("The wearer is treated as an undead.", true)
 		end
@@ -1425,6 +1425,11 @@ function _M:getTextualDesc(compare_with, use_actor)
 		desc:add(talents[tid][3] and {"color","GREEN"} or {"color","WHITE"}, ("Talent on hit(mindpower): %s (%d%% chance level %d)."):format(self:getTalentFromId(tid).name, talents[tid][1], talents[tid][2]), {"color","LAST"}, true)
 	end
 
+	if self.use_no_energy then
+		desc:add("Activating this item is instant.", true)
+	end
+
+
 	if self.curse then
 		local t = use_actor:getTalentFromId(use_actor.T_DEFILING_TOUCH)
 		if t and t.canCurseItem(use_actor, t, self) then
@@ -1433,6 +1438,7 @@ function _M:getTextualDesc(compare_with, use_actor)
 	end
 
 	self:triggerHook{"Object:descMisc", compare_with=compare_with, compare_fields=compare_fields, compare_table_fields=compare_table_fields, desc=desc, object=self}
+
 
 	local use_desc = self:getUseDesc(use_actor)
 	if use_desc then desc:merge(use_desc:toTString()) end

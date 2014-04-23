@@ -322,27 +322,34 @@ newEntity{ theme={temporal=true}, name="temporal melee", points = 2, rarity = 24
 ----------------------------------------------------------------
 -- ranged damage Projection (rare)
 ----------------------------------------------------------------
-newEntity{ theme={physical=true}, name="physical gravity ranged", points = 2, rarity = 20, level_range = {1, 50},
-	combat = { ranged_project = {[DamageType.GRAVITY] = resolvers.randartmax(2, 20), }, },
+newEntity{ theme={blight=true}, name="corrupted blood melee", points = 2, rarity = 20, level_range = {1, 50},
+	combat = { ranged_project = {[DamageType.ITEM_BLIGHT_DISEASE] = resolvers.randartmax(20, 40), }, },
 }
-newEntity{ theme={acid=true}, name="acid blind ranged", points = 2, rarity = 20, level_range = {1, 50},
-	combat = { ranged_project = {[DamageType.ACID_BLIND] = resolvers.randartmax(2, 20), }, },
+newEntity{ theme={temporal=true}, name="temporal energize melee", points = 2, rarity = 20, level_range = {1, 50},
+	combat = { ranged_project = {[DamageType.ITEM_TEMPORAL_ENERGIZE] = resolvers.randartmax(20, 40), }, },
 }
-newEntity{ theme={lightning=true}, name="lightning daze ranged", points = 2, rarity = 20, level_range = {1, 50},
-	combat = { ranged_project = {[DamageType.LIGHTNING_DAZE] = resolvers.randartmax(2, 20), }, },
+newEntity{ theme={mind=true}, name="gloom mind melee", points = 2, rarity = 20, level_range = {1, 50},
+	combat = { ranged_project = {[DamageType.ITEM_MIND_GLOOM] = resolvers.randartmax(20, 40), }, },
 }
-newEntity{ theme={cold=true}, name="ice ranged", points = 2, rarity = 20, level_range = {1, 50},
-	combat = { ranged_project = {[DamageType.ICE] = resolvers.randartmax(2, 20), }, },
+newEntity{ theme={acid=true}, name="acid corrode melee", points = 2, rarity = 20, level_range = {1, 50},
+	combat = { ranged_project = {[DamageType.ITEM_ACID_CORRODE] = resolvers.randartmax(20, 40), }, },
 }
-newEntity{ theme={antimagic=true}, name="manaburn ranged", points = 2, rarity = 18, level_range = {1, 50},
-	combat = { ranged_project = {[DamageType.MANABURN] = resolvers.randartmax(2, 20), }, },
+newEntity{ theme={light=true}, name="light blind melee", points = 2, rarity = 20, level_range = {1, 50},
+	combat = { ranged_project = {[DamageType.ITEM_LIGHT_BLIND] = resolvers.randartmax(20, 40), }, },
 }
-newEntity{ theme={nature=true, antimagic=true}, name="slime ranged", points = 2, rarity = 18, level_range = {1, 50},
-	combat = { ranged_project = {[DamageType.SLIME] = resolvers.randartmax(2, 20), }, },
+newEntity{ theme={lightning=true}, name="lightning daze melee", points = 2, rarity = 20, level_range = {1, 50},
+	combat = { ranged_project = {[DamageType.ITEM_LIGHTNING_DAZE] = resolvers.randartmax(20, 40), }, },
 }
-newEntity{ theme={nature=true}, name="insidious poison ranged", points = 2, rarity = 20, level_range = {1, 50},
-	combat = { ranged_project = {[DamageType.INSIDIOUS_POISON] = resolvers.randartmax(5, 25), }, },  -- this gets divided by 7 for damage
+newEntity{ theme={antimagic=true}, name="manaburn melee", points = 2, rarity = 18, level_range = {1, 50},
+	combat = { ranged_project = {[DamageType.ITEM_ANTIMAGIC_MANABURN] = resolvers.randartmax(10, 40), }, },
 }
+newEntity{ theme={nature=true, antimagic=true}, name="slime melee", points = 2, rarity = 18, level_range = {1, 50},
+	combat = { ranged_project = {[DamageType.ITEM_NATURE_SLOW] = resolvers.randartmax(20, 40), }, },
+}
+newEntity{ theme={dark=true}, name="dark numbing melee", points = 2, rarity = 24, level_range = {1, 50},
+	combat = { ranged_project = {[DamageType.ITEM_DARKNESS_NUMBING] = resolvers.randartmax(20, 40), }, },
+}
+
 ----------------------------------------------------------------
 -- damage burst
 ----------------------------------------------------------------

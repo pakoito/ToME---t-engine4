@@ -2427,14 +2427,29 @@ newEffect{
 	parameters = { power=10, kind="kinetic" },
 	activate = function(self, eff)
 		if eff.kind == "kinetic" then
-			eff.sid = self:addTemporaryValue("flat_damage_armor", {[DamageType.PHYSICAL] = eff.power, [DamageType.ACID] = eff.power})
-			eff.what = "physical and acid"
+			eff.sid = self:addTemporaryValue("flat_damage_armor", {
+				[DamageType.PHYSICAL] = eff.power,
+				[DamageType.ACID] = eff.power,
+				[DamageType.NATURE] = eff.power,
+				[DamageType.TEMPORAL] = eff.power,
+			})
+			eff.what = "physical, nature, acid, temporal"
 		elseif eff.kind == "thermal" then
-			eff.sid = self:addTemporaryValue("flat_damage_armor", {[DamageType.FIRE] = eff.power, [DamageType.COLD] = eff.power})
-			eff.what = "fire and cold"
+			eff.sid = self:addTemporaryValue("flat_damage_armor", {
+				[DamageType.FIRE] = eff.power, 
+				[DamageType.COLD] = eff.power,
+				[DamageType.LIGHT] = eff.power,
+				[DamageType.ARCANE] = eff.power,
+				})
+			eff.what = "fire, cold, light, arcane"
 		elseif eff.kind == "charged" then
-			eff.sid = self:addTemporaryValue("flat_damage_armor", {[DamageType.LIGHTNING] = eff.power, [DamageType.BLIGHT] = eff.power})
-			eff.what = "lightning and blight"
+			eff.sid = self:addTemporaryValue("flat_damage_armor", {
+				[DamageType.LIGHTNING] = eff.power, 
+				[DamageType.BLIGHT] = eff.power,
+				[DamageType.MIND] = eff.power,
+				[DamageType.DARKNESS] = eff.power,
+				})
+			eff.what = "lightning, blight, mind, darkness"
 		end
 	end,
 	deactivate = function(self, eff)

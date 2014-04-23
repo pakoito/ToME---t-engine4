@@ -474,9 +474,12 @@ newEntity{
 	rarity = 7,
 	cost = 6,
 	wielder = {
-		on_melee_hit={[DamageType.SLIME] = resolvers.mbonus_material(7, 3)},
+		on_melee_hit={
+			[DamageType.ITEM_NATURE_SLOW] = resolvers.mbonus_material(7, 3),
+			[DamageType.ITEM_ANTIMAGIC_MANABURN] = resolvers.mbonus_material(7, 3)
+		},
 		melee_project={
-			[DamageType.SLIME] = resolvers.mbonus_material(7, 3),
+			[DamageType.ITEM_NATURE_SLOW] = resolvers.mbonus_material(7, 3),
 	},
 	},
 }

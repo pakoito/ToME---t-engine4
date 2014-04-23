@@ -670,7 +670,7 @@ newTalent{
 	require = racial_req3,
 	points = 5,
 	mode = "passive",
-	getPen = function(self, t) return self:combatTalentLimit(t, 50, 7, 25) end,
+	getPen = function(self, t) return self:combatTalentLimit(t, 20, 7, 15) end,
 	passives = function(self, t, p)
 		self:talentTemporaryValue(p, "resists_pen", {all = t.getPen(self, t)})
 	end,

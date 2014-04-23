@@ -190,7 +190,7 @@ newBirthDescriptor{
 		"#GOLD##{bold}#Nightmare mode#WHITE##{normal}#",
 		"Unfair game setting",
 		"All zone levels increased by 50% + 3",
-		"All creature talent levels increased by 50%",
+		"All creature talent levels increased by 30%",
 		"Player can earn Nightmare version of achievements if also playing in Roguelike or Adventure permadeath mode.",
 	},
 	descriptor_choices =
@@ -212,8 +212,8 @@ newBirthDescriptor{
 	{
 		"#GOLD##{bold}#Insane mode#WHITE##{normal}#",
 		"Similar rules to Nightmare, but with more random bosses!",
-		"All zone levels increased by 50% + 5",
-		"All creature talent levels increased by 50%",
+		"All zone levels increased by 50% + 6",
+		"All creature talent levels increased by 30%",
 		"Rare creatures are far more frequent and random bosses start to appear",
 		"Nonrandom bosses will have randomly selected talents",
 		"All enemies have 20% more life",

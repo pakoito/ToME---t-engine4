@@ -2756,7 +2756,7 @@ newEntity{ base = "BASE_GREATSWORD",
 		apr = 5,
 		physcrit = 10,
 		dammod = {str=1.25},
-		convert_damage={[DamageType.FIREBURN] = 50, [DamageType.BLIGHT] = 10,},
+		convert_damage={[DamageType.FIREBURN] = 50},
 		lifesteal = 8, --Won't affect the burn damage, so it gets to have a bit more
 	},
 	wielder = {
@@ -2770,7 +2770,7 @@ newEntity{ base = "BASE_GREATSWORD",
 		inc_stats = { [Stats.STAT_STR] = 5, [Stats.STAT_CUN] = 3 },
 	},
 	max_power = 25, power_regen = 1,
-	use_power = {name="accelerate burns, instantly inflicting 125% of all burn damage", power = 25, --wherein Pure copies Catalepsy
+	use_power = {name="accelerate burns, instantly inflicting 125% of all burn damage", power = 10, --wherein Pure copies Catalepsy
 	use=function(combat, who, target)
 		local tg = {type="ball", range=5, radius=1, selffire=false}
 		local x, y = who:getTarget(tg)
@@ -3161,7 +3161,7 @@ newEntity{ base = "BASE_WHIP", define_as = "HYDRA_BITE",
 		physcrit = 14,
 		dammod = {str=1.1},
 		talent_on_hit = { [Talents.T_LIGHTNING_BREATH_HYDRA] = {level=1, chance=10}, [Talents.T_ACID_BREATH] = {level=1, chance=10}, [Talents.T_POISON_BREATH] = {level=1, chance=10} },
-		convert_damage = {[DamageType.NATURE]=25,[DamageType.ACID]=25,[DamageType.LIGHTNING]=25},
+		--convert_damage = {[DamageType.NATURE]=25,[DamageType.ACID]=25,[DamageType.LIGHTNING]=25},
 		special_on_hit = {desc="hit up to two adjacent enemies",on_kill=1, fct=function(combat, who, target)
 				local o, item, inven_id = who:findInAllInventoriesBy("define_as", "HYDRA_BITE")
 				if not o or not who:getInven(inven_id).worn then return end
@@ -3266,7 +3266,7 @@ newEntity{ base = "BASE_GAUNTLETS",
 				physspeed = 0.2,
 				dammod = {dex=0.4, str=-0.6, cun=0.4,},
 				damrange = 0.3,
-				melee_project={[DamageType.RANDOM_SILENCE] = 15, [DamageType.MANABURN] = 20,},
+				melee_project={[DamageType.RANDOM_SILENCE] = 15, [DamageType.ITEM_ANTIMAGIC_MANABURN] = 20,},
 				talent_on_hit = { [Talents.T_DESTROY_MAGIC] = {level=3, chance=100}, [Talents.T_MANA_CLASH] = {level=1, chance=5} },
 			},
 		}
@@ -3285,7 +3285,7 @@ newEntity{ base = "BASE_GAUNTLETS",
 				physspeed = 0.2,
 				dammod = {dex=0.4, str=-0.6, cun=0.4,},
 				damrange = 0.3,
-				melee_project={[DamageType.RANDOM_SILENCE] = 17, [DamageType.MANABURN] = 35,},
+				melee_project={[DamageType.RANDOM_SILENCE] = 17, [DamageType.ITEM_ANTIMAGIC_MANABURN] = 35,},
 				talent_on_hit = { [Talents.T_DESTROY_MAGIC] = {level=4, chance=100}, [Talents.T_MANA_CLASH] = {level=2, chance=10} },
 			},
 		}
@@ -3305,7 +3305,7 @@ newEntity{ base = "BASE_GAUNTLETS",
 				physspeed = 0.2,
 				dammod = {dex=0.4, str=-0.6, cun=0.4,},
 				damrange = 0.3,
-				melee_project={[DamageType.RANDOM_SILENCE] = 20, [DamageType.MANABURN] = 50,},
+				melee_project={[DamageType.RANDOM_SILENCE] = 20, [DamageType.ITEM_ANTIMAGIC_MANABURN] = 50,},
 				talent_on_hit = { [Talents.T_DESTROY_MAGIC] = {level=5, chance=100}, [Talents.T_MANA_CLASH] = {level=3, chance=15}, [Talents.T_AURA_OF_SILENCE] = {level=1, chance=10} },
 			},
 		}
@@ -3419,10 +3419,10 @@ newEntity{ base = "BASE_SHIELD",
 			local grids = who:project(tg, target.x, target.y, engine.DamageType.LITE_LIGHT, 30 + who:getWil()*0.5)
 			game.level.map:particleEmitter(target.x, target.y, tg.radius, "ball_light", {radius=tg.radius})
 		end},
-		melee_project = {[DamageType.RANDOM_BLIND]=20},
+		melee_project = {[DamageType.ITEM_LIGHT_BLIND]=30},
 	},
 	wielder = {
-		combat_armor = 5,
+		combat_armor = 15,
 		combat_def = 17,
 		combat_def_ranged = 17,
 		fatigue = 12,
@@ -4270,6 +4270,7 @@ newEntity{ base = "BASE_GREATMAUL",
 	},
 	wielder = {
 		inc_damage= {[DamageType.NATURE] = 25},
+		inc_stats = {[Stats.STAT_CON] = 6,},
 		combat_spellresist=15,
 	},
 	on_wear = function(self, who)
@@ -4420,7 +4421,7 @@ newEntity{ base = "BASE_MASSIVE_ARMOR", --Thanks SageAcrin!
 			[DamageType.DARKNESS] = 20,
 		},
 		combat_def = 15,
-		combat_armor = 20,
+		combat_armor = 40,
 		confusion_immune = 1,
 		fear_immune = 1,
 		combat_mentalresist = 25,
@@ -4432,7 +4433,7 @@ newEntity{ base = "BASE_MASSIVE_ARMOR", --Thanks SageAcrin!
 		talents_types_mastery = {
 			["cursed/gloom"] = 0.2,
 		},
-		on_melee_hit={[DamageType.RANDOM_GLOOM] = 14}, --Thanks Edge2054!
+		on_melee_hit={[DamageType.ITEM_MIND_GLOOM] = 20}, --Thanks Edge2054!
 	},
 	max_power = 25, power_regen = 1,
 	use_talent = { id = Talents.T_DOMINATE, level = 2, power = 15 },
@@ -4453,8 +4454,8 @@ newEntity{ base = "BASE_TOOL_MISC", --Sorta Thanks Donkatsu!
 	sentient=true,
 	use_no_energy = true,
 	wielder = {
-		resists={[DamageType.BLIGHT] = 10, [DamageType.NATURE] = 10},
-		inc_damage={[DamageType.NATURE] = 10},
+		resists={[DamageType.BLIGHT] = 20, [DamageType.NATURE] = 20},
+		inc_damage={[DamageType.NATURE] = 20},
 		talents_types_mastery = { ["wild-gift/call"] = 0.1, ["wild-gift/harmony"] = 0.1, },
 		inc_stats = {[Stats.STAT_WIL] = 7, [Stats.STAT_CON] = 6,},
 		combat_mindpower=7,
@@ -5520,7 +5521,7 @@ newEntity{ base = "BASE_GREATSWORD",
 		end},
 	},
 	wielder = {
-		inc_stats = { [Stats.STAT_STR] = 10, [Stats.STAT_DEX] = 5, },
+		inc_stats = { [Stats.STAT_STR] = 10, [Stats.STAT_DEX] = 5, [Stats.STAT_CON] = 15 },
 		talents_types_mastery = {
 			["technique/2hweapon-cripple"] = 0.2,
 		},
@@ -5689,7 +5690,7 @@ newEntity{ base = "BASE_GLOVES",
 			physcrit = 4,
 			dammod = {dex=0.4, str=-0.6, cun=0.4 },
 			talent_on_hit = { T_SLIME_SPIT = {level=1, chance=35} },
-			convert_damage = { [DamageType.SLIME] = 40,},
+			convert_damage = { [DamageType.ITEM_NATURE_SLOW] = 40,},
 		},
 	},
 }
@@ -6159,7 +6160,7 @@ newEntity{ base = "BASE_SHIELD",
 
 -- Thanks to Naghyal's Beholder code for the basic socket skeleton
 newEntity{ base = "BASE_GREATMAUL",
-	power_source = {arcane=true}, -- Should really make this only arcane for some gems
+	power_source = {arcane=true},
 	unique = true,
 	color = colors.BLUE,
 	name = "Tirakai's Maul",
@@ -6456,9 +6457,11 @@ newEntity{ base = "BASE_GREATMAUL",
 		physcrit = 0,
 		dammod = {str=1.2},
 		crushing_blow=1,
+
 	},
 	wielder = {
 		combat_critical_power = 10,
+		inc_stats = { [Stats.STAT_STR] = 5, [Stats.STAT_CON] = 5, },
 	},
 }
 

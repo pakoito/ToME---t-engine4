@@ -445,3 +445,17 @@ newEntity{
 		max_psi = resolvers.mbonus_material(20, 20),
 		},
 }
+
+-- Noble's hate the common folk.  or common hydras.  or something.
+newEntity{
+	power_source = {technique=true},
+	name = "noble's ", prefix=true, instant_resolve=true,
+	keywords = {noble=true},
+	level_range = {10, 50},
+	greater_ego = 1,
+	rarity = 20,
+	cost = 40,
+	wielder = {
+		resists_actor_type = {["summoned"] = resolvers.mbonus_material(30, 15),},
+	},
+}

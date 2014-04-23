@@ -982,3 +982,9 @@ end
 function _M:getEntityKind()
 	return "entity"
 end
+
+--- Putting this here to avoid errors, not sure if appropriate
+function _M:checkClassification(type_str)
+	return false
+end
+

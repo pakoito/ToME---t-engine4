@@ -24,13 +24,44 @@ local Chat = require "engine.Chat"
 local Map = require "engine.Map"
 local Level = require "engine.Level"
 
+-- Item specific
+newEffect{
+	name = "ITEM_ANTIMAGIC_SCOURED", image = "talents/acidic_skin.png",
+	desc = "Scoured",
+	long_desc = function(self, eff) return ("Scoured by natural acid, reducing their offensive power ratings by %d%%."):format(eff.pct*100 or 0) end,
+	type = "physical",
+	subtype = { acid=true },
+	status = "detrimental",
+	parameters = {pct = 0.3, spell = 0, mind = 0, phys = 0, power_str = ""},
+	on_gain = function(self, err) return "#Target#'s powers is greatly reduced!" end,
+	on_lose = function(self, err) return "#Target# is fully powered again." end,
+	on_timeout = function(self, eff)
+	end,
+	activate = function(self, eff)
+		--[[ Changed method
+		eff.spell = self.combat_spellpower * eff.pct
+		eff.mind = self.combat_mindpower * eff.pct
+		eff.phys = self.combat_dam * eff.pct
+
+		eff.power_str = "Physical:  "..eff.phys.."\nSpell:  "..eff.spell.."\nMind:  "..eff.mind
+
+		self:effectTemporaryValue(eff, "combat_spell", -eff.spell)
+		self:effectTemporaryValue(eff, "combat_mindpower", -eff.mind)
+		self:effectTemporaryValue(eff, "combat_dam", -eff.phys)
+		--]]
+		self:effectTemporaryValue(eff, "scoured", 1)
+	end,
+	deactivate = function(self, eff)
+
+	end,
+}
 
 newEffect{
 	name = "DELIRIOUS_CONCUSSION", image = "talents/slippery_moss.png",
 	desc = "Concussion",
 	long_desc = function(self, eff) return ("The target can't think straight, causing their actions to fail."):format() end,
 	type = "physical",
-	subtype = { mental=true },
+	subtype = { concussion=true },
 	status = "detrimental",
 	parameters = {},
 	on_gain = function(self, err) return "#Target#'s brain isn't quite working right!", "+Concussion" end,

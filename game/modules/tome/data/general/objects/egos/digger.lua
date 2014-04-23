@@ -122,7 +122,7 @@ newEntity{
 	wielder = {
 		combat_dam = resolvers.mbonus_material(5, 5),
 		combat_apr = resolvers.mbonus_material(4, 4),
-		combat_critical_power = resolvers.mbonus_material(15, 15),
+		combat_critical_power = resolvers.mbonus_material(10, 10),
 	},
 	resolvers.generic(function(e) e.digspeed = math.ceil(e.digspeed / 2) end),
 }
@@ -249,7 +249,7 @@ newEntity{
 		combat_mentalresist = resolvers.mbonus_material(10, 5),
 		combat_physresist = resolvers.mbonus_material(10, 5),
 		combat_spellresist = resolvers.mbonus_material(10, 5),
-		max_life = resolvers.mbonus_material(70, 40),
+		max_life = resolvers.mbonus_material(50, 40),
 	},
 }
 

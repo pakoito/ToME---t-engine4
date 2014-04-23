@@ -233,10 +233,12 @@ newEntity{
 			[Stats.STAT_WIL] = resolvers.mbonus_material(6, 1),
 		},
 		resists_pen = {
-			[DamageType.TEMPORAL] = resolvers.mbonus_material(10, 5),
+			[DamageType.TEMPORAL] = resolvers.mbonus_material(5, 5),
+			[DamageType.PHYSICAL] = resolvers.mbonus_material(10, 5),
 		},
 		inc_damage = {
-			[DamageType.TEMPORAL] = resolvers.mbonus_material(10, 5),
+			[DamageType.TEMPORAL] = resolvers.mbonus_material(5, 5),
+			[DamageType.PHYSICAL] = resolvers.mbonus_material(10, 5),
 		},
 		talents_types_mastery = {
 			["chronomancy/temporal-combat"] = resolvers.mbonus_material(1, 1, function(e, v) v=v/10 return 0, v end),
@@ -256,7 +258,6 @@ newEntity{
 	cost = 40,
 	combat = {
 		talent_on_hit = { [Talents.T_SHOOT] = {level=1, chance=10} },
-		convert_damage = { [DamageType.TEMPORAL] = resolvers.mbonus_material(25, 25),}
 	}
 }
 
@@ -327,7 +328,7 @@ newEntity{
 	},
 	combat = {
 		ranged_project={
-			[DamageType.ACID_BLIND] = resolvers.mbonus_material(15, 5),
+			[DamageType.ITEM_ACID_CORRODE] = resolvers.mbonus_material(15, 5),
 		},
 	},
 }
@@ -376,7 +377,7 @@ newEntity{
 	},
 	combat = {
 		ranged_project={
-			[DamageType.LIGHTNING_DAZE] = resolvers.mbonus_material(15, 5),
+			[DamageType.ITEM_LIGHTNING_DAZE] = resolvers.mbonus_material(15, 5),
 		},
 	},
 }
@@ -441,7 +442,7 @@ newEntity{
 			["wild-gift/antimagic"] = resolvers.mbonus_material(1, 1, function(e, v) v=v/10 return 0, v end),
 		},
 		ranged_project = { 
-			[DamageType.MANABURN] = resolvers.mbonus_material(20, 5),
+			[DamageType.ITEM_ANTIMAGIC_MANABURN] = resolvers.mbonus_material(20, 5),
 		},
 	},
 }
@@ -476,25 +477,5 @@ newEntity{
 -- Psionic Egos ---------------------------------------
 -------------------------------------------------------
 -- **  NEED SOME LESSER ** --
+-- Ammo has a lot of these
 
--- Greater
-newEntity{
-	power_source = {psionic=true},
-	name = "psychic's ", prefix=true, instant_resolve=true,
-	keywords = {psychic=true},
-	level_range = {30, 50},
-	greater_ego = 1,
-	rarity = 30,
-	cost = 30,
-	wielder = {
-		combat_mindpower = resolvers.mbonus_material(10, 5),
-		inc_stats = {
-			[Stats.STAT_CUN] = resolvers.mbonus_material(6, 1),
-			[Stats.STAT_WIL] = resolvers.mbonus_material(6, 1),
-		},
-		inc_damage={ [DamageType.MIND] = resolvers.mbonus_material(14, 8), },
-	},
-	combat = {
-		ranged_project={[DamageType.MIND] = resolvers.mbonus_material(15, 5)},
-	},
-}

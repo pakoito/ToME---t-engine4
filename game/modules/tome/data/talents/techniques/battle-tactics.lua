@@ -25,7 +25,6 @@ newTalent{
 	points = 5,
 	cooldown = 20,
 	stamina = 25,
-	no_energy = true,
 	tactical = { ATTACK = 3 },
 	getdur = function(self,t) return math.floor(self:combatTalentLimit(t, 20, 5.3, 10.5)) end, -- Limit to <20
 	getchance = function(self,t) return self:combatLimit(self:combatTalentStatDamage(t, "dex", 10, 90),100, 6.8, 6.8, 61, 61) end, -- Limit < 100%
@@ -95,6 +94,8 @@ newTalent{
 	end,
 }
 
+-- Banned from NPCs because they tend to ignore stamina costs and in general uncapped scaling resistance is dangerous at high talent levels
+-- More ideally numbers could be tweaked to make it sane on NPCs, but it would actually be pretty complicated to do
 newTalent{
 	name = "True Grit",
 	type = {"technique/battle-tactics", 4},
@@ -104,6 +105,7 @@ newTalent{
 	cooldown = 30,
 	sustain_stamina = 70,
 	tactical = { BUFF = 2 },
+	no_npc_use = true,
 	do_turn = function(self, t)
 		local p = self:isTalentActive(t.id)
 		if p.resid then self:removeTemporaryValue("resists", p.resid) end

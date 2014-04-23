@@ -328,3 +328,23 @@ newEntity{
 		max_life = resolvers.mbonus_material(40, 20),
 	},
 }
+
+-- The "unnatural" classification partly exists to add another in-theme defense for anti-magic that isn't reactive like healing
+-- 
+newEntity{
+	power_source = {antimagic=true},
+	name = " of natural resilience", suffix=true, instant_resolve=true,
+	keywords = {natural_resilience=true},
+	level_range = {30, 50},
+	rarity = 20,
+	cost = 10,
+	greater_ego = 1,
+	wielder = {
+		resists_actor_type = {unnatural=resolvers.mbonus_material(10, 5)},
+		resists={
+			[DamageType.NATURE] = resolvers.mbonus_material(10, 10),
+			[DamageType.BLIGHT] = resolvers.mbonus_material(10, 10),
+		},
+		max_life = resolvers.mbonus_material(40, 20),
+	},
+}

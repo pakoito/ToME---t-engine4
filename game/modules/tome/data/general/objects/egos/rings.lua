@@ -566,6 +566,10 @@ newEntity{
 			[DamageType.BLEED] = resolvers.mbonus_material(20, 20),
 			[DamageType.ITEM_MIND_GLOOM] = resolvers.mbonus_material(10, 10),
 		},
+		ranged_project = {
+			[DamageType.BLEED] = resolvers.mbonus_material(20, 20),
+			[DamageType.ITEM_MIND_GLOOM] = resolvers.mbonus_material(10, 10),
+		},
 		inc_stats = {
 			[Stats.STAT_CUN] = resolvers.mbonus_material(9, 1),
 		},
@@ -602,7 +606,7 @@ newEntity{
 	rarity = 15,
 	cost = 30,
 	use_no_energy = true,
-	resolvers.charmt(Talents.T_DISENGAGE, 2, 30),
+	resolvers.charmt(Talents.T_DISENGAGE, 2, 10),
 	wielder = {
 		combat_atk = resolvers.mbonus_material(10, 7),
 		combat_apr = resolvers.mbonus_material(10, 7),
@@ -638,10 +642,10 @@ newEntity{
 	cost = 60,
 	wielder = {
 		melee_project = {
-			[DamageType.ITEM_LIGHT_BLIND] = resolvers.mbonus_material(45, 10),
+			[DamageType.ITEM_LIGHT_BLIND] = resolvers.mbonus_material(35, 10),
 		},
 		ranged_project = {
-			[DamageType.ITEM_LIGHT_BLIND] = resolvers.mbonus_material(45, 10),
+			[DamageType.ITEM_LIGHT_BLIND] = resolvers.mbonus_material(35, 10),
 		},
 	},
 }

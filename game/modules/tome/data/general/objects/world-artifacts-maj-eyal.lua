@@ -211,9 +211,9 @@ newEntity{ base = "BASE_LONGBOW",
 		apr = 12,
 	},
 	wielder = {
-		inc_damage={ [DamageType.PHYSICAL] = 12, },
+		inc_damage={ [DamageType.PHYSICAL] = 30, },
 		lite = 1,
-		inc_stats = { [Stats.STAT_DEX] = 5, [Stats.STAT_WIL] = 4,  },
+		inc_stats = { [Stats.STAT_DEX] = 10, [Stats.STAT_WIL] = 10,  },
 		ranged_project={[DamageType.LIGHT] = 30},
 	},
 	on_wear = function(self, who)
@@ -228,6 +228,7 @@ newEntity{ base = "BASE_LONGBOW",
 	end,
 }
 
+-- Broken for its tier, Archery has very rarely had broken for its tier, its fine
 newEntity{ base = "BASE_LONGBOW",
 	power_source = {arcane=true, nature=true},
 	name = "Corpsebow", unided_name = "rotting longbow", unique=true, image = "object/artifact/bow_corpsebow.png",
@@ -243,13 +244,14 @@ newEntity{ base = "BASE_LONGBOW",
 	},
 	wielder = {
 		disease_immune = 0.5,
-		ranged_project = {[DamageType.ITEM_BLIGHT_DISEASE] = 50},
-
-		inc_damage={ [DamageType.BLIGHT] = 10, },
-		talent_cd_reduction={
-			[Talents.T_CYST_BURST] = 2,
-		},
+		ranged_project = {
+			[DamageType.ITEM_BLIGHT_DISEASE] = 40,
+			[DamageType.BLIGHT] = 20
+		}, -- ITEM_BLIGHT_DISEASE doesn't do damage, so this is big
+		inc_damage={ [DamageType.BLIGHT] = 40, }, -- Hacky method of scaling the damage on the active because the diseases do no DPS
 	},
+	max_power = 20, power_regen = 1,
+	use_talent = { id = Talents.T_CYST_BURST, level = 5, power = 10 },
 	on_wear = function(self, who)
 		if who.descriptor and who.descriptor.race == "Undead" then
 			local Stats = require "engine.interface.ActorStats"
@@ -294,6 +296,7 @@ newEntity{ base = "BASE_LONGSWORD",
 	},
 }
 
+-- 2H advantage:  Ridiculous item vs. Orc
 newEntity{ base = "BASE_GREATSWORD",
 	power_source = {nature=true, technique=true},
 	unique = true,
@@ -311,11 +314,13 @@ newEntity{ base = "BASE_GREATSWORD",
 		apr = 4,
 		physcrit = 18,
 		dammod = {str=1.2},
+		inc_damage_type = {["humanoid/orc"]=25},
 	},
 	wielder = {
+		resists_actor_type = {["humanoid/orc"]=15},
 		stamina_regen = 1,
 		life_regen = 0.5,
-		inc_stats = { [Stats.STAT_STR] = 7, [Stats.STAT_DEX] = 7 },
+		inc_stats = { [Stats.STAT_STR] = 7, [Stats.STAT_DEX] = 7, [Stats.STAT_CON] = 7 },
 		esp = {["humanoid/orc"]=1},
 	},
 }
@@ -864,7 +869,7 @@ It seems somebody well versed in antimagic could use it to its fullest potential
 		apr = 4,
 		physcrit = 20,
 		dammod = {str=1},
-		melee_project = { [DamageType.MANABURN] = 50 },
+		melee_project = { [DamageType.ITEM_ANTIMAGIC_MANABURN] = 50 },
 	},
 	wielder = {
 		talent_cd_reduction={
@@ -872,8 +877,9 @@ It seems somebody well versed in antimagic could use it to its fullest potential
 			[Talents.T_MANA_CLASH] = 2,
 		},
 		resists = {
-			all = 10,
-			[DamageType.PHYSICAL] = - 10,
+			all = 15,
+			[DamageType.PHYSICAL] = - 15,
+			[DamageType.BLIGHT] = 15,
 		},
 	},
 	on_wear = function(self, who)
@@ -989,7 +995,7 @@ newEntity{ base = "BASE_AMULET", --Thanks Grayswandir!
 			[DamageType.LIGHT] = 25,
 		},
 		lite=1,
-		on_melee_hit = {[DamageType.RANDOM_BLIND]=10},
+		on_melee_hit = {[DamageType.ITEM_LIGHT_BLIND]=30},
 	},
 	max_power = 24, power_regen = 1,
 	use_power = { name = "create a reflective shield (50% reflection rate)", power = 24,

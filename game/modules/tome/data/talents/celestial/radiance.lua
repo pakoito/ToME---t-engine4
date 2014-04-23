@@ -93,7 +93,7 @@ newTalent{
 	range = function(self) return radianceRadius(self) end,
 	tactical = { ATTACKAREA = {LIGHT=1} },
 	sustain_positive = 10,
-	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 1, 50) end,
+	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 1, 35) end,
 	getDaze = function(self, t) return self:combatTalentLimit(t, 35, 5, 20) end,
 	activate = function(self, t)
 		local daze = nil
@@ -112,7 +112,7 @@ newTalent{
 }
 
 newTalent{
-	name = "Light Burst",
+	name = "Judgement",
 	type = {"celestial/radiance", 4},
 	require = divi_req4,
 	points = 5,
@@ -125,7 +125,7 @@ newTalent{
 	getExplosionDamage = function(self, t) return self:combatTalentSpellDamage(t, 20, 150) end,
 	action = function(self, t)
 
-		local tg = {type="ball", range=self:getTalentRange(t), radius = self:getTalentRadius(t), selffire = false, talent=t}
+		local tg = {type="ball", range=self:getTalentRange(t), radius = self:getTalentRadius(t), selffire = false, friendlyfire = false, talent=t}
 
 		local movedam = self:spellCrit(t.getMoveDamage(self, t))
 		local dam = self:spellCrit(t.getExplosionDamage(self, t))
@@ -147,10 +147,7 @@ newTalent{
 				function(self, src, target)
 					local DT = require("engine.DamageType")
 					local grids = src:project({type="ball", radius=1, x=self.x, y=self.y}, self.x, self.y, DT.JUDGEMENT, self.def.dam)
-
-						
 					game.level.map:particleEmitter(self.x, self.y, 1, "sunburst", {radius=1, grids=grids, tx=self.x, ty=self.y})
-					
 					game:playSoundNear(self, "talents/lightning")
 				end
 			)

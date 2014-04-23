@@ -294,7 +294,8 @@ function _M:display()
 	h = h + self.font_h
 
 	if player.life < 0 then
-		self:mouseTooltip(self.TOOLTIP_LIFE, self:makeTextureBar("#c00000#Life:", "???", 0, player.max_life, player.life_regen * util.bound((player.healing_factor or 1), 0, 2.5), x, h, 255, 255, 255, colors.DARK_RED, colors.VERY_DARK_RED)) h = h + self.font_h
+		--self:mouseTooltip(self.TOOLTIP_LIFE, self:makeTextureBar("#c00000#Life:", "???", 0, player.max_life, player.life_regen * util.bound((player.healing_factor or 1), 0, 2.5), x, h, 255, 255, 255, colors.DARK_RED, colors.VERY_DARK_RED)) h = h + self.font_h
+		self:mouseTooltip(self.TOOLTIP_LIFE, self:makeTextureBar("#c00000#Life:", nil, player.life, player.max_life, player.life_regen * util.bound((player.healing_factor or 1), 0, 2.5), x, h, 255, 255, 255, colors.DARK_RED, colors.VERY_DARK_RED)) h = h + self.font_h	
 	else
 		self:mouseTooltip(self.TOOLTIP_LIFE, self:makeTextureBar("#c00000#Life:", nil, player.life, player.max_life, player.life_regen * util.bound((player.healing_factor or 1), 0, 2.5), x, h, 255, 255, 255, colors.DARK_RED, colors.VERY_DARK_RED)) h = h + self.font_h
 	end

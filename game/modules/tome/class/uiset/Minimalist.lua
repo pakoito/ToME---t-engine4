@@ -516,7 +516,37 @@ function _M:computePadding(what, x1, y1, x2, y2)
 	size.x2 = x2
 	size.y1 = y1
 	size.y2 = y2
+	-- This is Marson's code to make you not get stuck under UI elements
+	-- I have tested and love it but I don't understand it very well, may be oversights
+	--if config.settings.marson.view_scrolling == "No Hiding" then
+		if x2 <= Map.viewport.width / 4 then
+			Map.viewport_padding_4 = math.max(Map.viewport_padding_4, math.ceil(x2 / Map.tile_w))
+		end
+		if x1 >= (Map.viewport.width / 4) * 3 then
+			Map.viewport_padding_6 = math.max(Map.viewport_padding_6, math.ceil((Map.viewport.width - x1) / Map.tile_w))
+		end
+		if y2 <= Map.viewport.height / 4 then
+			Map.viewport_padding_8 = math.max(Map.viewport_padding_8, math.ceil(y2 / Map.tile_h))
+		end
+		if y1 >= (Map.viewport.height / 4) * 3 then
+			Map.viewport_padding_2 = math.max(Map.viewport_padding_2, math.ceil((Map.viewport.height - y1) / Map.tile_h))
+		end
+
 	if x1 <= 0 then
+			size.orient = "right"
+		end
+		if x2 >= Map.viewport.width then
+			size.orient = "left"
+		end
+		if y1 <= 0 then
+			size.orient = "down"
+		end
+		if y2 >= Map.viewport.height then
+			size.orient = "up"
+		end
+	--[[
+	else
+		if x1 <= 0 then
 		Map.viewport_padding_4 = math.max(Map.viewport_padding_4, math.floor((x2 - x1) / Map.tile_w))
 		size.left = true
 	end
@@ -538,6 +568,7 @@ function _M:computePadding(what, x1, y1, x2, y2)
 	elseif size.left then size.orient = "right"
 	elseif size.right then size.orient = "left"
 	end
+	end --]]
 end
 
 function _M:showResourceTooltip(x, y, w, h, id, desc, is_first)
@@ -641,7 +672,8 @@ function _M:displayResources(scale, bx, by, a)
 		if not self.res.life or self.res.life.vc ~= player.life or self.res.life.vm ~= player.max_life or self.res.life.vr ~= life_regen then
 			self.res.life = {
 				vc = player.life, vm = player.max_life, vr = life_regen,
-				cur = {core.display.drawStringBlendedNewSurface(font_sha, (player.life < 0) and "???" or ("%d/%d"):format(player.life, player.max_life), 255, 255, 255):glTexture()},
+				--cur = {core.display.drawStringBlendedNewSurface(font_sha, (player.life < 0) and "???" or ("%d/%d"):format(player.life, player.max_life), 255, 255, 255):glTexture()},
+				cur = {core.display.drawStringBlendedNewSurface(font_sha, ("%d/%d"):format(player.life, player.max_life), 255, 255, 255):glTexture()},
 				regen={core.display.drawStringBlendedNewSurface(sfont_sha, ("%+0.2f"):format(life_regen), 255, 255, 255):glTexture()},
 			}
 		end
@@ -1501,6 +1533,9 @@ function _M:displayParty(scale, bx, by)
 				local def = game.party.members[a]
 
 				local text = "#GOLD##{bold}#"..a.name.."\n#WHITE##{normal}#Life: "..math.floor(100 * a.life / a.max_life).."%\nLevel: "..a.level.."\n"..def.title
+				if a.summon_time then
+					text = text.."\nTurns remaining: "..a.summon_time
+				end
 				local is_first = is_first
 				local desc_fct = function(button, mx, my, xrel, yrel, bx, by, event)
 					if is_first then
@@ -1537,6 +1572,27 @@ function _M:displayParty(scale, bx, by)
 						p = (game.player == a) and portrait_lev or portrait_unsel_lev
 					end
 					p[1]:toScreenFull(x, y, p[6], p[7], p[2], p[3])
+					-- Display turns remaining on summon's portrait — Marson
+					if a.summon_time and a.name ~= "shadow" then
+						local gtxt = self.party[a].txt_summon_time
+						if not gtxt or self.party[a].cur_summon_time ~= a.summon_time then
+							local txt = tostring(a.summon_time)
+							local fw, fh = self.buff_font_small:size(txt)
+							self.party[a].txt_summon_time = self.buff_font_small:draw(txt, fw, colors.WHITE.r, colors.WHITE.g, colors.WHITE.b, true)[1]
+							gtxt = self.party[a].txt_summon_time
+							gtxt.fw, gtxt.fh = fw, fh
+							self.party[a].cur_summon_time = a.summon_time
+						end
+						if shader then
+							shader:use(true)
+							shader:uniOutlineSize(0.7, 0.7)
+							shader:uniTextSize(gtxt._tex_w, gtxt._tex_h)
+						else
+							gtxt._tex:toScreenFull(x-gtxt.fw+36+1, y-2+1, gtxt.w, gtxt.h, gtxt._tex_w, gtxt._tex_h, 0, 0, 0, self.shadow or 0.6)
+						end
+						gtxt._tex:toScreenFull(x-gtxt.fw+36, y-2, gtxt.w, gtxt.h, gtxt._tex_w, gtxt._tex_h)
+						if shader then shader:use(false) end					
+					end
 				end, desc_fct}
 			end
 

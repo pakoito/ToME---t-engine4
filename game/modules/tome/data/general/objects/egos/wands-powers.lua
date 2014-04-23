@@ -34,9 +34,9 @@ newEntity{
 	rarity = 8,
 
 	charm_power_def = {add=8, max=10, floor=true},
-	resolvers.charm("reveal the area around you dispelling darkness and detecting the presence of nearby creatures (rad %d)", 15, function(self, who)
+	resolvers.charm("reveal the area around you dispelling darkness and detecting the presence of nearby creatures (rad %d)", 6, function(self, who)
 		local rad = self:getCharmPower(who)
-		who:setEffect(who.EFF_SENSE, 2, {
+		who:setEffect(who.EFF_SENSE, 3, {
 			range = rad,
 			actor = 1,
 		})
@@ -102,7 +102,7 @@ newEntity{
 	rarity = 6,
 
 	charm_power_def = {add=25, max=600, floor=true},
-	resolvers.charm(function(self) return ("fire a bolt of a random element (dam %d-%d)"):format(self:getCharmPower(who)/2, self:getCharmPower(who)) end, 6, function(self, who)
+	resolvers.charm(function(self) return ("fire a bolt of a random element (dam %d-%d)"):format(self:getCharmPower(who)/2, self:getCharmPower(who)) end, 10, function(self, who)
 		local tg = {type="bolt", range=8}
 		local x, y = who:getTarget(tg)
 		if not x or not y then return nil end

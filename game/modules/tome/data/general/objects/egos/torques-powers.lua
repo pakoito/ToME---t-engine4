@@ -25,6 +25,8 @@ Torques
 *mind wave
 ]]
 
+-- This is too important to nerf, but it should be noted that all charm powers have to be balanced against its existence, same as the teleport amulet
+-- In order for non-teleport charms to be worth wasting the charm CD on they need to be very good, because the opportunity cost is *not just the item slot*
 newEntity{
 	name = " of psychoportation", addon=true, instant_resolve=true,
 	keywords = {psyport=true},
@@ -48,8 +50,8 @@ newEntity{
 	rarity = 7,
 
 	charm_power_def = {add=3, max=200, floor=true},
-	resolvers.charm("setup a psionic shield, reducing all physical and acid damage by %d for 6 turns", 20, function(self, who)
-		who:setEffect(who.EFF_PSIONIC_SHIELD, 6, {kind="kinetic", power=self:getCharmPower(who)})
+	resolvers.charm("setup a psionic shield, reducing all physical, nature, temporal and acid damage by %d for 6 turns", 20, function(self, who)
+		who:setEffect(who.EFF_PSIONIC_SHIELD, 7, {kind="kinetic", power=self:getCharmPower(who)})
 		game.logSeen(who, "%s uses %s!", who.name:capitalize(), self:getName{no_count=true})
 		return {id=true, used=true}
 	end),
@@ -62,8 +64,8 @@ newEntity{
 	rarity = 7,
 
 	charm_power_def = {add=3, max=200, floor=true},
-	resolvers.charm("setup a psionic shield, reducing all fire and cold damage by %d for 6 turns", 20, function(self, who)
-		who:setEffect(who.EFF_PSIONIC_SHIELD, 6, {kind="thermal", power=self:getCharmPower(who)})
+	resolvers.charm("setup a psionic shield, reducing all fire, cold, light, and arcane damage by %d for 6 turns", 20, function(self, who)
+		who:setEffect(who.EFF_PSIONIC_SHIELD, 7, {kind="thermal", power=self:getCharmPower(who)})
 		game.logSeen(who, "%s uses %s!", who.name:capitalize(), self:getName{no_count=true})
 		return {id=true, used=true}
 	end),
@@ -76,8 +78,8 @@ newEntity{
 	rarity = 8,
 
 	charm_power_def = {add=3, max=200, floor=true},
-	resolvers.charm("setup a psionic shield, reducing all lightning and blight damage by %d for 6 turns", 20, function(self, who)
-		who:setEffect(who.EFF_PSIONIC_SHIELD, 6, {kind="charged", power=self:getCharmPower(who)})
+	resolvers.charm("setup a psionic shield, reducing all lightning, blight, mind, and darkness damage by %d for 6 turns", 20, function(self, who)
+		who:setEffect(who.EFF_PSIONIC_SHIELD, 7, {kind="charged", power=self:getCharmPower(who)})
 		game.logSeen(who, "%s uses %s!", who.name:capitalize(), self:getName{no_count=true})
 		return {id=true, used=true}
 	end),
@@ -90,7 +92,7 @@ newEntity{
 	rarity = 12,
 
 	charm_power_def = {add=1, max=5, floor=true},
-	resolvers.charm("absorb and nullify at most %d detrimental mental status effects in the next 10 turns", 20, function(self, who)
+	resolvers.charm("absorb and nullify at most %d detrimental mental status effects in the next 10 turns", 10, function(self, who)
 		who:setEffect(who.EFF_CLEAR_MIND, 10, {power=self:getCharmPower(who)})
 		game.logSeen(who, "%s uses %s!", who.name:capitalize(), self:getName{no_count=true})
 		return {id=true, used=true}

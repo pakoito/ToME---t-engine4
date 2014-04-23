@@ -54,6 +54,15 @@ newTalent{
 			self.damage_shield_absorb = self.damage_shield_absorb + shield_power
 			self.damage_shield_absorb_max = self.damage_shield_absorb_max + shield_power
 			shield.dur = math.max(2, shield.dur)
+
+			-- Limit the number of times a shield can be extended, Bathe in Light also uses this code
+			if shield.dur_extended then
+				shield.dur_extended = shield.dur_extended + 1
+				if shield.dur_extended >= 20 then
+					game.logPlayer(self, "#DARK_ORCHID#Your damage shield cannot be extended any farther and has exploded.")
+					self:removeEffect(self.EFF_DAMAGE_SHIELD)
+				end
+			else shield.dur_extended = 1 end
 		end
 
 	end,
@@ -75,11 +84,11 @@ newTalent{
 	points = 5,
 	random_ego = "attack",
 	cooldown = 6,
-	positive = 10,
+	positive = 15,
 	tactical = { ATTACK = 2 },
 	requires_target = true,
 	range = function(self, t) return 2 + math.max(0, self:combatStatScale("str", 0.8, 8)) end,
-	getDamage = function(self, t) return self:combatTalentWeaponDamage(t, 0.9, 2.5) end,
+	getDamage = function(self, t) return self:combatTalentWeaponDamage(t, 0.9, 2) end,
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t), talent=t}
 		local x, y = self:getTarget(tg)
@@ -88,6 +97,10 @@ newTalent{
 		local target = game.level.map(x, y, Map.ACTOR)
 		if target then
 			self:attackTarget(target, nil, t.getDamage(self, t), true)
+			if self:getTalentLevel(t) >= 4 and core.fov.distance(self.x, self.y, target.x, target.y) > 3 then 
+				self:attackTarget(target, nil, t.getDamage(self, t), true)
+			end
+
 		else
 			return
 		end
@@ -96,6 +109,7 @@ newTalent{
 	info = function(self, t)
 		local damage = t.getDamage(self, t)
 		return ([[In a pure display of power, you project a melee attack, doing %d%% damage.
+		At talent level 4 you will strike an additional time if the target is over range 3.
 		The range will increase with your Strength.]]):
 		format(100 * damage)
 	end,
@@ -159,7 +173,7 @@ newTalent{
 	require = divi_req4, no_sustain_autoreset = true,
 	points = 5,
 	mode = "sustained",
-	sustain_positive = 30,
+	sustain_positive = 20,
 	cooldown = 30,
 	tactical = { DEFEND = 2 },
 	getLife = function(self, t) return self.max_life * self:combatTalentLimit(t, 1.5, 0.09, 0.4) end, -- Limit < 150% max life (to survive a large string of hits between turns)

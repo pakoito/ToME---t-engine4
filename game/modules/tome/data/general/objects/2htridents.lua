@@ -33,7 +33,7 @@ newEntity{
 	desc = [[A two-handed massive trident.
 Tridents require the exotic weapons mastery talent to use correctly.]],
 	twohanded = true,
-	ego_bonus_mult = 0.2,
+	ego_bonus_mult = 0.4,
 	randart_able = "/data/general/objects/random-artifacts/melee.lua",
 	egos = "/data/general/objects/egos/weapon.lua", egos_chance = { prefix=resolvers.mbonus(40, 5), suffix=resolvers.mbonus(40, 5) },
 }

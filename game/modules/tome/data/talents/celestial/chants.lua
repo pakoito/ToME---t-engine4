@@ -40,7 +40,7 @@ newTalent{
 	tactical = { BUFF = 2 },
 	range = 10,
 	getResists = function(self, t) return self:combatTalentSpellDamage(t, 5, 70) end,
-	getLifePct = function(self, t) return math.min(0.55, self:combatTalentScale(t, 0.05, 0.25, 1)) end,
+	getLifePct = function(self, t) return math.min(0.55, self:combatTalentScale(t, 0.05, 0.20, 1)) end,
 	getDamageOnMeleeHit = function(self, t) return self:combatTalentSpellDamage(t, 5, 25) end,
 	activate = function(self, t)
 		cancelChants(self)
@@ -112,7 +112,7 @@ newTalent{
 	info = function(self, t)
 		local range = -t.getDamageChange(self, t)
 		local damageonmeleehit = t.getDamageOnMeleeHit(self, t)
-		return ([[You chant the glory of the Sun, reducing the damage enemies 3 or more spaces away deal by %d%%.
+		return ([[You chant the glory of the Sun, reducing the damage enemies 2 or more spaces away deal by %d%%.
 		In addition, this talent surrounds you with a shield of light, dealing %0.2f light damage to anything that attacks you.
 		You may only have one Chant active at once.
 		The damage reduction will increase with talent level and light damage will increase with your Spellpower.]]):
@@ -135,7 +135,7 @@ newTalent{
 	tactical = { BUFF = 2 },
 	no_energy = true,
 	range = 10,
-	getResists = function(self, t) return math.min(35, self:combatTalentSpellDamage(t, 5, 30)) end,
+	getResists = function(self, t) return math.min(35, self:combatTalentSpellDamage(t, 5, 25)) end,
 	getDamageOnMeleeHit = function(self, t) return self:combatTalentSpellDamage(t, 5, 25) end,
 	activate = function(self, t)
 		cancelChants(self)
@@ -174,7 +174,7 @@ newTalent{
 	require = divi_req4,
 	points = 5,
 	cooldown = 12,
-	sustain_positive = 20,
+	sustain_positive = 5,
 	no_energy = true,
 	dont_provide_pool = true,
 	tactical = { BUFF = 2 },
@@ -208,6 +208,7 @@ newTalent{
 		In addition, this talent surrounds you with a shield of light, dealing %0.2f light damage to anything that attacks you.
 		Your lite radius is also increased by %d.
 		You may only have one Chant active at once.
+		This chant costs less power to sustain.
 		The effects will increase with your Spellpower.]]):
 		format(damageinc, damDesc(self, DamageType.LIGHT, damage), lite)
 	end,

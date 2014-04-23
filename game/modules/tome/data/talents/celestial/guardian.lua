@@ -31,7 +31,7 @@ newTalent{
 	sustain_positive = 10,
 	tactical = { BUFF = 2 },
 	range = 10,
-	getHeal = function(self, t) return self:combatTalentSpellDamage(t, 5, 18) end,
+	getHeal = function(self, t) return self:combatTalentSpellDamage(t, 5, 22) end,
 	getShieldDamage = function(self, t) return self:combatTalentWeaponDamage(t, 0.1, 0.8, self:getTalentLevel(self.T_SHIELD_EXPERTISE)) end,
 	activate = function(self, t)
 		local shield = self:hasShield()

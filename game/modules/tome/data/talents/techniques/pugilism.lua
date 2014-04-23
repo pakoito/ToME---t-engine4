@@ -38,8 +38,8 @@ newTalent{
 	no_npc_use = true, -- They dont need it since it auto switches anyway
 	no_unlearn_last = true,
 	getAttack = function(self, t) return self:getDex(25, true) end,
-	getDamage = function(self, t) return self:combatStatScale("dex", 5, 50) end,
-	getFlatReduction = function(self, t) return self:combatStatLimit("str", 20, 1, 12) end, -- limit because high flat reduction can fuck melee players
+	getDamage = function(self, t) return self:combatStatScale("dex", 5, 35) end,
+	getFlatReduction = function(self, t) return 2+math.min(35, self:combatStatScale("str", 1, 30)) end, -- limit because high flat reduction can fuck melee players
 	activate = function(self, t)
 		cancelStances(self)
 		local ret = {

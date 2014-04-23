@@ -156,6 +156,7 @@ newEntity{ base = "BASE_HEAVY_ARMOR",
 	},
 }
 
+-- Randart rings are REALLY good, these need to be brought up to par
 newEntity{ base = "BASE_RING",
 	power_source = {technique=true},
 	define_as = "PRIDE_GLORY",
@@ -175,6 +176,7 @@ newEntity{ base = "BASE_RING",
 		combat_dam = 10,
 		combat_def = 5,
 		combat_armor = 10,
+		combat_armor_hardiness = 20,
 		fatigue = -15,
 		talent_cd_reduction={
 			[Talents.T_RUSH]=6,
@@ -265,17 +267,17 @@ newEntity{ base = "BASE_GREATSWORD",
 			if not rng.percent(10) then return end
 			who:setEffect(who.EFF_FRENZY, 3, {crit=12, power=0.3, dieat=0.25})
 		end},
+		inc_damage_type = {living=20},
 	},
 	wielder = {
-		see_invisible = 25,
-		inc_stats = { [Stats.STAT_CON] = 5, [Stats.STAT_STR] = 5, [Stats.STAT_DEX] = 5, },
+		inc_stats = { [Stats.STAT_CON] = 15, [Stats.STAT_STR] = 15, [Stats.STAT_DEX] = 5, },
 		talents_types_mastery = {
 			["technique/2hweapon-cripple"] = 0.2,
 			["technique/2hweapon-offense"] = 0.2,
+			["technique/2hweapon-assault"] = 0.2,
 		},
+		resists_actor_type = {living=20},
 	},
-	max_power = 60, power_regen = 1,
-	use_talent = { id = Talents.T_UNSTOPPABLE, level = 1, power = 60 },
 }
 
 newEntity{ base = "BASE_WHIP",
@@ -424,7 +426,7 @@ newEntity{ base = "BASE_CLOAK", define_as="GLACIAL_CLOAK",
 				engine.DamageType.ICE, dam,
 				radius,
 				5, nil,
-				engine.Entity.new{alpha=100, display='', color_br=30, color_bg=60, color_bb=200},
+				engine.MapEffect.new{color_br=255, color_bg=255, color_bb=255, effect_shader="shader_images/ice_effect.png"},
 				function(e)
 					e.radius = e.radius
 					return true
@@ -457,7 +459,7 @@ newEntity{ base = "BASE_GREATMAUL", define_as="ROTTING_MAUL",
 		physspeed=1.2,
 		dammod = {str=1.4},
 		convert_damage = {[DamageType.BLIGHT] = 20},
-		melee_project={[DamageType.CORRUPTED_BLOOD] = 30},
+		melee_project={[DamageType.ITEM_BLIGHT_DISEASE] = 50},
 		special_on_hit = {desc="Damage nearby creatures", on_kill=1, fct=function(combat, who, target)
 			local o, item, inven_id = who:findInAllInventoriesBy("define_as", "ROTTING_MAUL")
 			local dam = rng.avg(1,2) * (70+ who:getStr())

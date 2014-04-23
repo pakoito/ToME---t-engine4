@@ -1674,18 +1674,37 @@ function _M:tooltip(x, y, seen_by)
 	if self.faction and Faction.factions[self.faction] then ts:add("Faction: ") ts:merge(factcolor:toTString()) ts:add(("%s (%s, %d)"):format(Faction.factions[self.faction].name, factstate, factlevel), {"color", "WHITE"}, true) end
 	if game.player ~= self then ts:add("Personal reaction: ") ts:merge(pfactcolor:toTString()) ts:add(("%s, %d"):format(pfactstate, pfactlevel), {"color", "WHITE"} ) end
 
+	ts:add(true, {"color", "ORANGE"}, "Sustained Talents: ",{"color", "WHITE"})
 	for tid, act in pairs(self.sustain_talents) do
 		if act then ts:add(true, "- ", {"color", "LIGHT_GREEN"}, self:getTalentFromId(tid) and self:getTalentFromId(tid).name or "???", {"color", "WHITE"} ) end
 	end
+
+	if ts[#ts-1] == "Sustained Talents: " then table.remove(ts) table.remove(ts) table.remove(ts) table.remove(ts) end
+
+	ts:add(true, {"color", "ORANGE"}, "Temporary Status Effects: ",{"color", "WHITE"})
 	for eff_id, p in pairs(self.tmp) do
 		local e = self.tempeffect_def[eff_id]
 		local dur = p.dur + 1
 		if e.status == "detrimental" then
-			if act then ts:add(true, "- ", {"color", "LIGHT_RED"}, (e.decrease > 0) and ("%s(%d)"):format(e.desc,dur) or e.desc, {"color", "WHITE"} ) end
+			if e.type == "physical" then
+				if act then ts:add(true, "- ", {"color", "LIGHT_RED"}, (e.decrease > 0) and ("%s(%d)"):format(e.desc,dur) or e.desc, {"color", "WHITE"} ) end
+			elseif e.type == "magical" then
+				if act then ts:add(true, "- ", {"color", "DARK_ORCHID"}, (e.decrease > 0) and ("%s(%d)"):format(e.desc,dur) or e.desc, {"color", "WHITE"} ) end
+			elseif e.type == "mental" then
+				if act then ts:add(true, "- ", {"color", "YELLOW"}, (e.decrease > 0) and ("%s(%d)"):format(e.desc,dur) or e.desc, {"color", "WHITE"} ) end
+			elseif e.type == "other" then
+				if act then ts:add(true, "- ", {"color", "ORCHID"}, (e.decrease > 0) and ("%s(%d)"):format(e.desc,dur) or e.desc, {"color", "WHITE"} ) end
+
+			else
+				if act then ts:add(true, "- ", {"color", "LIGHT_RED"}, (e.decrease > 0) and ("%s(%d)"):format(e.desc,dur) or e.desc, {"color", "WHITE"} ) end
+
+			end		
 		else
 			if act then ts:add(true, "- ", {"color", "LIGHT_GREEN"}, (e.decrease > 0) and ("%s(%d)"):format(e.desc,dur) or e.desc, {"color", "WHITE"} ) end
 		end
 	end
+
+	if ts[#ts-1] == "Temporary Status Effects: " then table.remove(ts) table.remove(ts) table.remove(ts) table.remove(ts) end
 
 	return ts
 end
@@ -4841,6 +4860,32 @@ function _M:checkSetTalentAuto(tid, v, opt)
 		self:setTalentAuto(tid, false)
 		Dialog:simplePopup("Automatic use disabled", t.name:capitalize().." will not be automatically used.")
 	end
+end
+
+	
+
+-- Classifications for actor resist/damage
+-- Thanks to grayswandir for this really neat code structure
+_M.classifications = {
+	unliving = {undead = true, construct = true, crystal = true},
+	unnatural = {demon = true, elemental = true, horror = true, construct = true, undead = true},
+	living = function(self) return not self:checkClassification('unliving') end,
+	natural = function(self) return not self:checkClassification('unnatural') end,
+	summoned = function(self) return (self.summoner ~= nil) end
+,}
+ 
+--- Check if the actor is a certain type or in an arbitrary set of classifications
+-- @param string representing the classification to check
+-- @return whether the actor is in this classification
+function _M:checkClassification(type_str)
+	-- Living and Natural are defined as not being Unliving or not Unnatural
+	-- Thus, all actors are in one category or the other
+	if not self.type or not type_str then return end
+	if (tostring(self.type).."/"..tostring(self.subtype) == type_str) or self.type == type_str then return true end
+	local class = _M.classifications[type_str]
+	if not class then return false end
+	if type(class) == 'function' then return class(self) end
+	return class[self.type or "unknown"]
 end
 
 --- How much experience is this actor worth

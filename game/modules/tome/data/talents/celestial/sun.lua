@@ -72,6 +72,7 @@ newTalent{
 -- Core class defense to be compared with Bone Shield, Aegis, Indiscernable Anatomy, etc
 -- Moderate offensive scaler
 -- The CD reduction effects more abilities on the class than it doesn't
+-- Banned from NPCs due to sheer scaling insanity
 newTalent{
 	name = "Suncloak",
 	type = {"celestial/sun", 2},
@@ -81,10 +82,11 @@ newTalent{
 	positive = -15,
 	tactical = { BUFF = 2 },
 	direct_hit = true,
+	no_npc_use = true,
 	requires_target = true,
 	range = 10,
 	getCap = function(self, t) return math.max(50, 100 - self:getTalentLevelRaw(t) * 10) end,
-	getHaste = function(self, t) return math.min(1, self:combatTalentSpellDamage(t, 0.2, 0.8)) end,
+	getHaste = function(self, t) return math.min(0.9, self:combatTalentSpellDamage(t, 0.2, 0.7)) end,
 	action = function(self, t)
 		self:setEffect(self.EFF_SUNCLOAK, 6, {cap=t.getCap(self, t), haste=t.getHaste(self, t)})
 		game:playSoundNear(self, "talents/flame")

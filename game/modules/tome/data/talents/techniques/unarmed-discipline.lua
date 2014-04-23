@@ -17,57 +17,73 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
+-- We don't have to worry much about this vs. players since it requires combo points to be really effective and the AI isn't very bright
 newTalent{
-	name = "Push Kick",
+	name = "Combination Kick",
 	type = {"technique/unarmed-discipline", 1},
+	short_name = "PUSH_KICK",
 	require = techs_dex_req1,
 	points = 5,
-	cooldown = 6,
-	stamina = 12,
-	tactical = { ATTACK = { PHYSICAL = 2 }, ESCAPE = { knockback = 2 } },
+	random_ego = "attack",
+	cooldown = 10,
+	stamina = 40,
+	message = "@Source@ unleashes a flurry of disrupting kicks.",
+	tactical = { ATTACK = { weapon = 2 }, },
 	requires_target = true,
-	getDamage = function(self, t) return self:combatTalentPhysicalDamage(t, 10, 100) * getUnarmedTrainingBonus(self) end,
-	getPush = function(self, t) return math.ceil(self:combatTalentScale(t, 1.1, 2.1)) end,
+	--on_pre_use = function(self, t, silent) if not self:hasEffect(self.EFF_COMBO) then if not silent then game.logPlayer(self, "You must have a combo going to use this ability.") end return false end return true end,
+	getStrikes = function(self, t) return self:getCombo() end,
+	getDamage = function(self, t) return self:combatTalentWeaponDamage(t, 0.1, 0.4) + getStrikingStyle(self, dam) end,
+	checkType = function(self, t, talent)
+		if talent.is_spell and self:getTalentLevel(t) < 3 then
+			return false
+		end
+		if talent.is_mind and self:getTalentLevel(t) < 5 then
+			return false
+		end
+
+		return true
+	end,
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t)}
 		local x, y, target = self:getTarget(tg)
 		if not x or not y or not target then return nil end
 		if core.fov.distance(self.x, self.y, x, y) > 1 then return nil end
 
-		local hit = target:checkHit(self:combatAttack(), target:combatDefense(), 0, 95) and not self:checkEvasion(target)
-		-- Try to knockback !
-		if hit then
-			local can = function(target)
-				if target:checkHit(self:combatAttack(), target:combatPhysicalResist(), 0, 95, 5 - self:getTalentLevel(t) / 2) and target:canBe("knockback") then
-					self:project(target, target.x, target.y, DamageType.PHYSICAL, t.getDamage(self, t))
-					return true
-				else
-					self:project(target, target.x, target.y, DamageType.PHYSICAL, t.getDamage(self, t))
-					game.logSeen(target, "%s resists the knockback!", target.name:capitalize())
-				end
-
-			end
-
-			if can(target) then target:knockback(self.x, self.y, t.getPush(self, t), can) end
-
-			-- move the attacker back
-			self:knockback(target.x, target.y, 1)
-			self:breakGrapples()
-			self:buildCombo()
-
+		-- breaks active grapples if the target is not grappled
+		if target:isGrappled(self) then
+			grappled = true
 		else
-			self:logCombat(target, "#Source# misses #Target#.")
+			self:breakGrapples()
 		end
+
+		local talents = {}
+
+		for i = 1, t.getStrikes(self, t) do
+			local hit = self:attackTarget(target, nil, t.getDamage(self, t), true)
+			if hit then
+				for tid, active in pairs(target.sustain_talents) do
+					if active then
+						local talent = target:getTalentFromId(tid)
+						if t.checkType(self, t, talent) then talents[tid] = talent.name end
+					end
+				end
+			end
+		end
+
+		for k, v in pairs(talents) do
+			target:forceUseTalent(k, {ignore_energy=true})
+		end
+
+		self:clearCombo()
 
 		return true
 	end,
 	info = function(self, t)
-		local damage = t.getDamage(self, t)
-		local push = t.getPush(self, t)
-		return ([[A push kick that knocks the target back %d tiles, moves you back 1 tile, and inflicts %0.2f physical damage.  If another creature is in the way, that creature will be affected as well.  Targets knocked into other targets may take extra damage.
-		This will earn one combo point, and break any grapples you're maintaining.
-		The damage will scale with your Physical Power.]]):
-		format(push, damDesc(self, DamageType.PHYSICAL, (damage)))
+		local damage = t.getDamage(self, t) * 100
+		return ([[Unleash a flurry of disruptive kicks at your target's vulnerable areas.  For each combo point you attack for %d%% weapon damage and deactivate one physical sustain.
+			At talent level 3 Magical sustains will also be effected.
+			At talent level 5 Mental sustains will also be effected.]])
+		:format(damage)
 	end,
 }
 

@@ -427,13 +427,13 @@ function _M:addedToLevel(level, x, y)
 		if game.difficulty == game.DIFFICULTY_NIGHTMARE and not game.party:hasMember(self) then
 			-- Increase talent level
 			for tid, lev in pairs(self.talents) do
-				self:learnTalent(tid, true, math.ceil(lev / 2))
+				self:learnTalent(tid, true, math.floor(lev / 3))
 			end
 			self:attr("difficulty_boosted", 1)
 		elseif game.difficulty == game.DIFFICULTY_INSANE and not game.party:hasMember(self) then
 			-- Increase talent level
 			for tid, lev in pairs(self.talents) do
-				self:learnTalent(tid, true, lev / 2)
+				self:learnTalent(tid, true, math.floor(lev / 3))
 			end
 			-- Give unrand bosses extra classes
 			if not self.randboss and self.rank >= 3.5 then

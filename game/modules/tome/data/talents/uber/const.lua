@@ -47,7 +47,7 @@ uberTalent{
 			DamageType.BLOODSPRING, {dam={dam=100 + self:getCon() * 3, healfactor=0.5}, x=self.x, y=self.y, st=DamageType.DRAINLIFE, power=50 + self:getCon() * 2},
 			1,
 			5, nil,
-			MapEffect.new{color_br=255, color_bg=60, color_bb=90, effect_shader="shader_images/darkness_effect.png"},
+			MapEffect.new{color_br=255, color_bg=20, color_bb=20, effect_shader="shader_images/darkness_effect.png"},
 			function(e)
 				e.radius = e.radius + 0.5
 				return true

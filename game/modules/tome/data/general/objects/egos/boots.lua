@@ -81,6 +81,7 @@ newEntity{
 	greater_ego = 1,
 	rarity = 18,
 	cost = 40,
+	use_no_energy = true,
 	wielder = {
 		inc_stats = {
 			[Stats.STAT_MAG] = resolvers.mbonus_material(2, 2),
@@ -172,6 +173,7 @@ newEntity{
 	greater_ego = 1,
 	rarity = 18,
 	cost = 40,
+	use_no_energy = true,
 	resolvers.charmt(Talents.T_DISENGAGE, {1,2,3}, 15),
 	wielder = {
 		inc_stats = {
@@ -191,7 +193,7 @@ newEntity{
 	cost = 20,
 	wielder = {
 		combat_dam = resolvers.mbonus_material(3, 3),
-		combat_apr = resolvers.mbonus_material(3, 3),
+		combat_apr = resolvers.mbonus_material(10, 3),
 		combat_physcrit = resolvers.mbonus_material(3, 3),
 	},
 }
@@ -265,6 +267,22 @@ newEntity{
 	},
 }
 
+
+newEntity{
+	power_source = {arcane=true},
+	name = "undeterred ", prefix=true, instant_resolve=true,
+	keywords = {undeterred=true},
+	level_range = {10, 50},
+	greater_ego = 1,
+	rarity = 15,
+	cost = 60,
+	wielder = {
+			stun_immune = resolvers.mbonus_material(30, 20, function(e, v) v=v/100 return 0, v end),
+			silence_immune = resolvers.mbonus_material(30, 20, function(e, v) v=v/100 return 0, v end),
+			confusion_immune = resolvers.mbonus_material(30, 20, function(e, v) v=v/100 return 0, v end),
+	},	
+}
+
 newEntity{
 	power_source = {technique=true},
 	name = "reinforced ", prefix=true, instant_resolve=true,
@@ -311,7 +329,8 @@ newEntity{
 	greater_ego = 1,
 	rarity = 30,
 	cost = 60,
-	resolvers.charmt(Talents.T_HEAVE, {2,3,4}, 15),
+	use_no_energy = true,
+	resolvers.charmt(Talents.T_HEAVE, {2,3,4}, 10),
 	wielder = {
 		inc_stats = {
 			[Stats.STAT_STR] = resolvers.mbonus_material(7, 3),

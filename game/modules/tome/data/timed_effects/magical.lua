@@ -63,7 +63,6 @@ newEffect{
 		local armor = self.combat_armor * eff.pct
 		eff.reduce = armor
 		self:effectTemporaryValue(eff, "combat_armor", -armor)
-		--if eff.armor then eff.armorid = self:addTemporaryValue("combat_armor", -eff.armor) end
 	end,
 	deactivate = function(self, eff)
 

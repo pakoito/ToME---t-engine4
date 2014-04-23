@@ -493,8 +493,8 @@ newEntity{ theme={misc=true, mental=true}, name="demon telepathy", points = 2, r
 ----------------------------------------------------------------
 -- Melee damage Projection (rare)
 ----------------------------------------------------------------
-newEntity{ theme={blight=true}, name="corrupted blood melee", points = 2, rarity = 20, level_range = {1, 50},
-	wielder = { melee_project = {[DamageType.ITEM_BLIGHT_DISEASE] = resolvers.randartmax(10, 40), }, },
+newEntity{ theme={blight=true}, name="corrupted blood melee", points = 2, rarity = 25, level_range = {1, 50},
+	wielder = { melee_project = {[DamageType.ITEM_BLIGHT_DISEASE] = resolvers.randartmax(10, 30), }, },
 }
 newEntity{ theme={acid=true}, name="acid corrode melee", points = 2, rarity = 20, level_range = {1, 50},
 	wielder = { melee_project = {[DamageType.ITEM_ACID_CORRODE] = resolvers.randartmax(15, 40), }, },
@@ -529,6 +529,18 @@ newEntity{ theme={physical=true, defense=true}, name="die at greater", points = 
 
 newEntity{ theme={physical = true, misc = true, defense=true}, name="ignore crit greater", points = 1, rarity = 15, level_range = {20, 50},
 	wielder = { ignore_direct_crits = resolvers.randartmax(5, 15), },
+}
+
+-- These save powers are a somewhat hacky way to help player resists continue scaling in higher difficulty/ID/whatever
+-- With a min level of 30 and high rarity they won't have a dramatic impact on normal
+newEntity{ theme={defense=true, physical=true}, name="save physical", points = 1, rarity = 18, level_range = {40, 50},
+	wielder = { combat_physresist = resolvers.randartmax(10, 25), },
+}
+newEntity{ theme={defense=true, spell=true, antimagic=true}, name="save spell", points = 1, rarity = 18, level_range = {40, 50},
+	wielder = { combat_spellresist = resolvers.randartmax(10, 25), },
+}
+newEntity{ theme={defense=true, mental=true}, name="save mental", points = 1, rarity = 18, level_range = {40, 50},
+	wielder = { combat_mentalresist = resolvers.randartmax(10, 25), },
 }
 
 

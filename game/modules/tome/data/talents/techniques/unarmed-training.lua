@@ -53,7 +53,8 @@ newTalent{
 	end,
 }
 
--- generic unarmed training
+-- This is by far the most powerful weapon tree in the game, loosely because you lose 2 weapon slots to make use of it and weapon stats are huge
+-- Regardless, it gives much less damage than most weapon trees and is slightly more frontloaded
 newTalent{
 	name = "Unarmed Mastery",
 	type = {"technique/unarmed-training", 1},
@@ -78,11 +79,11 @@ newTalent{
 	require = techs_cun_req2,
 	mode = "sustained",
 	points = 5,
-	--sustain_stamina = 50,
+	sustain_stamina = 20,
 	cooldown = 18,
 	tactical = { BUFF = 2 },
 	getStr = function(self, t) return math.ceil(self:combatTalentScale(t, 1.5, 7.5, 0.75) + self:combatTalentStatDamage(t, "cun", 2, 10)) end,
-	getCon = function(self, t) return math.ceil(self:combatTalentScale(t, 1.5, 7.5, 0.75) + self:combatTalentStatDamage(t, "dex", 5, 20)) end,
+	getCon = function(self, t) return math.ceil(self:combatTalentScale(t, 1.5, 7.5, 0.75) + self:combatTalentStatDamage(t, "dex", 5, 25)) end,
 	activate = function(self, t)
 		return {
 			stat1 = self:addTemporaryValue("inc_stats", {[self.STAT_CON] = t.getCon(self, t)}),
@@ -105,7 +106,7 @@ newTalent{
 	require = techs_cun_req3,
 	mode = "passive",
 	points = 5,
-	getPower = function(self, t) return self:combatTalentScale(t, 0.6, 2.5, 0.75) end,
+	getPower = function(self, t) return self:combatTalentScale(t, 0.3, 2, 0.75) end,
 	do_reflexes = function(self, t)
 		self:setEffect(self.EFF_REFLEXIVE_DODGING, 1, {power=t.getPower(self, t)})
 	end,
@@ -123,13 +124,13 @@ newTalent{
 	points = 5,
 	mode = "sustained",
 	cooldown = 10,
-	no_energy = true, -- annoying when sustains take energy without a good reason
+	no_energy = true,
 	tactical = { BUFF = 2 },
 	getDefensePct = function(self, t)
-		return self:combatTalentLimit(t, 1, 0.05, 0.9) -- ugly, fix later
+		return self:combatTalentScale(t, 0.15, 0.9) -- God scaling this is weird
 	end,
 	getDamageReduction = function(self, t) 
-		return t.getDefensePct(self, t) * self:combatDefense() / 100
+		return math.min(0.8, t.getDefensePct(self, t) * self:combatDefense() / 100)
 	end,
 	getDamagePct = function(self, t)
 		return 0.2
@@ -145,7 +146,7 @@ newTalent{
 		if ( cb.value > (t.getDamagePct(self, t) * self.max_life) ) then
 			local damageReduction = cb.value * t.getDamageReduction(self, t)
 			cb.value = cb.value - damageReduction
-			game.logPlayer(self, "#GREEN#You twist your body in complex ways mitigating the blow by " .. math.ceil(damageReduction) .. ".")
+			game.logPlayer(self, "#GREEN#You twist your body in complex ways mitigating the blow by #ORCHID#" .. math.ceil(damageReduction) .. "#LAST#.")
 		end
 		return cb.value
 	end, 

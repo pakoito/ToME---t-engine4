@@ -214,9 +214,14 @@ local function archery_projectile(tx, ty, tg, self, tmp)
 		end
 
 		if ammo and ammo.inc_damage_type then
-			for t, idt in pairs(ammo.inc_damage_type) do
-				if target.type.."/"..target.subtype == t or target.type == t then dam = dam + dam * idt / 100 break end
+                       local inc = 0
+
+			for k, v in pairs(ammo.inc_damage_type) do
+				if target:checkClassification(tostring(k)) then inc = math.max(inc, v) end
 			end
+
+			dam = dam + dam * inc / 100
+
 			print("[ATTACK] after inc by type", dam)
 		end
 

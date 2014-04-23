@@ -238,7 +238,7 @@ newEntity{
 			if #tgts <= 0 then return end
 			local a, id = rng.table(tgts)
 			table.remove(tgts, id)
-			local dam = 30 + (who:combatSpellpower())
+			local dam = 30 + (who:combatSpellpower())*2
 
 			who:project(tg, a.x, a.y, engine.DamageType.LIGHTNING, rng.avg(1, dam, 3))
 			game.level.map:particleEmitter(x, y, math.max(math.abs(a.x-x), math.abs(a.y-y)), "lightning", {tx=a.x-x, ty=a.y-y})
@@ -384,6 +384,7 @@ newEntity{
 	},
 	combat = {
 		melee_project = {
+			[DamageType.BLIGHT] = resolvers.mbonus_material(15, 5),
 			[DamageType.ITEM_BLIGHT_DISEASE] = resolvers.mbonus_material(15, 5),
 		},
 		talent_on_hit = { [Talents.T_EPIDEMIC] = {level=1, chance=10} },
@@ -612,15 +613,15 @@ newEntity{
 
 newEntity{
 	power_source = {antimagic=true},
-	name = " of banishment", suffix=true, instant_resolve=true,
+	name = " of persecution", suffix=true, instant_resolve=true,
 	keywords = {banishment=true},
 	level_range = {1, 50},
 	rarity = 20,
 	cost = 20,
 	combat = {
-		inc_damage_type = {demon=resolvers.mbonus_material(25, 5)},
-		inc_damage_type = {undead=resolvers.mbonus_material(25, 5)},
-		inc_damage_type = {construct=resolvers.mbonus_material(25, 5)},
+		inc_damage_type = {
+			unnatural=resolvers.mbonus_material(25, 5),
+		},
 	},
 	wielder = {
 		inc_stats = { [Stats.STAT_WIL] = resolvers.mbonus_material(6, 1), },
@@ -719,9 +720,7 @@ newEntity{
 	cost = 40,
 	combat = {
 		inc_damage_type = {
-			undead=resolvers.mbonus_material(25, 5),
-			construct=resolvers.mbonus_material(25, 5),
-			demon=resolvers.mbonus_material(25, 5),
+			unnatural=resolvers.mbonus_material(25, 5),
 		},
 		special_on_hit = {desc="disrupts spell-casting", fct=function(combat, who, target)
 			local check = math.max(who:combatSpellpower(), who:combatMindpower(), who:combatAttack())
@@ -769,8 +768,7 @@ newEntity{
 	cost = 20,
 	combat = {
 		melee_project={[DamageType.DARKNESS] = resolvers.mbonus_material(15, 5)},
-		inc_damage_type = {humanoid=resolvers.mbonus_material(25, 5)},
-		inc_damage_type = {animal=resolvers.mbonus_material(25, 5)},
+		inc_damage_type = {living=resolvers.mbonus_material(15, 5)},
 	},
 }
 
@@ -836,9 +834,6 @@ newEntity{
 	cost = 15,
 	greater_ego = 1,
 	wielder = {
-		on_melee_hit = {
-			[DamageType.MIND] = resolvers.mbonus_material(15, 5),
-		},
 	},
 	combat = {
 		special_on_hit = {desc="25% chance to put talents on cooldown", fct=function(combat, who, target)

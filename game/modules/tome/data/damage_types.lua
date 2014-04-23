@@ -19,9 +19,7 @@
 
 -- The basic stuff used to damage a grid
 
--- Classifications for actor resist/damage
-local unliving = {"undead", "construct", "crystal"}
-local unnatural = {"demon", "elemental", "horror", "construct", "undead"}
+
 
 setDefaultProjector(function(src, x, y, type, dam, tmp, no_martyr)
 	if not game.level.map:isBound(x, y) then return 0 end
@@ -135,11 +133,14 @@ setDefaultProjector(function(src, x, y, type, dam, tmp, no_martyr)
 			if src.getVim and src:attr("demonblood_dam") then inc = inc + ((src.demonblood_dam or 0) * (src:getVim() or 0)) end
 
 			-- Increases damage for the entity type (Demon, Undead, etc)
-			if target.type and src.inc_damage_actor_type then
-				local incEntity = src.inc_damage_actor_type[target.type]
-				if incEntity and incEntity ~= 0 then
+			if target.type and src and src.inc_damage_actor_type then
+				local increase = 0
+				for k, v in pairs(src.inc_damage_actor_type) do
+					if target:checkClassification(tostring(k)) then increase = math.max(increase, v) end
+				end
+				if increase and increase~= 0 then
 					print("[PROJECTOR] before inc_damage_actor_type", dam + (dam * inc / 100))
-					inc = inc + src.inc_damage_actor_type[target.type]
+					inc = inc + increase
 					print("[PROJECTOR] after inc_damage_actor_type", dam + (dam * inc / 100))
 				end
 			end
@@ -254,9 +255,16 @@ setDefaultProjector(function(src, x, y, type, dam, tmp, no_martyr)
 		end
 
 		-- reduce by resistance to entity type (Demon, Undead, etc)
+		-- Summoned, Unnatural, Unliving still go into this table, we just parse them differently in checkClassification
 		if target.resists_actor_type and src and src.type then
+			local res = 0
 
-			local res = math.min(target.resists_actor_type[src.type] or 0, target.resists_cap_actor_type or 100)
+			for k, v in pairs(target.resists_actor_type) do
+				if src:checkClassification(tostring(k)) then res = math.max(res, v) end
+			end
+
+			res = math.min(res, target.resists_cap_actor_type or 90) 
+			
 			if res ~= 0 then
 				print("[PROJECTOR] before entity", src.type, "resists dam", dam)
 				if res >= 100 then dam = 0
@@ -378,12 +386,12 @@ setDefaultProjector(function(src, x, y, type, dam, tmp, no_martyr)
 			end
 		end
 
-		-- Chant of Fortress, reduces damage from attackers over range 3
+		-- Chant of Fortress, reduces damage from attackers over range 2
 		if target.isTalentActive and target:isTalentActive(target.T_CHANT_OF_FORTRESS) and target:knowTalent(target.T_CHANT_OF_FORTRESS) then
 			if src and src.x and src.y then
 				-- assume instantaneous projection and check range to source
 				local t = target:getTalentFromId(target.T_CHANT_OF_FORTRESS)
-				if core.fov.distance(target.x, target.y, src.x, src.y) > 3 then
+				if core.fov.distance(target.x, target.y, src.x, src.y) > 2 then
 					t = target:getTalentFromId(target.T_CHANT_OF_FORTRESS)
 					dam = dam * (100 + t.getDamageChange(target, t)) / 100
 					print("[PROJECTOR] Chant of Fortress (source) dam", dam)
@@ -1722,7 +1730,7 @@ newDamageType{
 		local target = game.level.map(x, y, Map.ACTOR)
 		if target and src and src.name and rng.percent(dam) then
 				if src.turn_procs and src.turn_procs.item_temporal_energize and src.turn_procs.item_temporal_energize > 5 then 
-					game.logSeen(target, "#LIGHT_STEEL_BLUE#%s can't gain any more energy this turn! ", src.name:capitalize())
+					game.logSeen(src, "#LIGHT_STEEL_BLUE#%s can't gain any more energy this turn! ", src.name:capitalize())
 				return
 				end
 
@@ -1796,7 +1804,7 @@ newDamageType{
 		local target = game.level.map(x, y, Map.ACTOR)
 		if target and target:canBe("disease") and rng.percent(dam) then
 			local check = math.max(src:combatSpellpower(), src:combatMindpower(), src:combatAttack())
-			local disease_power = math.min(30, dam / 3)
+			local disease_power = math.min(30, dam / 2)
 			local disease_dam = 0
 			local eff = rng.table{{target.EFF_ROTTING_DISEASE, "con"}, {target.EFF_DECREPITUDE_DISEASE, "dex"}, {target.EFF_WEAKNESS_DISEASE, "str"}}
 			target:setEffect(eff[1], 5, { src = src, apply_power = check, no_ct_effect=true, [eff[2]] = disease_power, dam = disease_dam })
@@ -1847,6 +1855,21 @@ newDamageType{
 		end
 	end,
 }
+
+-- Mostly used on specific egos
+newDamageType{
+	name = "item antimagic scouring", type = "ITEM_ANTIMAGIC_SCOURING", text_color = "#ORCHID#",
+	tdesc = function(dam)
+		return ("#LIGHT_GREEN#%d%%#LAST# chance to #ORCHID#reduce power ratings#LAST# by %d%%"):format(dam, 30) 
+	end,
+	projector = function(src, x, y, type, dam)
+		local target = game.level.map(x, y, Map.ACTOR)
+		if target then
+			target:setEffect(target.EFF_ITEM_ANTIMAGIC_SCOURED, 3, {pct = 0.3, no_ct_effect=true})
+		end
+	end,
+}
+
 
 
 
