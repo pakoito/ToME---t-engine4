@@ -447,6 +447,24 @@ function _M:unlearnTalent(t_id, nb)
 	return true
 end
 
+--- Force passives update
+function _M:updateTalentPassives(tid)
+	if not self:knowTalent(tid) then return end
+
+	local t = self:getTalentFromId(tid)	
+	if not t.passives then return end
+
+	self.talents_learn_vals[t.id] = self.talents_learn_vals[t.id] or {}
+	local p = self.talents_learn_vals[t.id]
+
+	if p.__tmpvals then for i = 1, #p.__tmpvals do
+		self:removeTemporaryValue(p.__tmpvals[i][1], p.__tmpvals[i][2])
+	end end
+
+	self.talents_learn_vals[t.id] = {}
+	t.passives(self, t, self.talents_learn_vals[t.id])
+end
+
 --- Checks the talent if learnable
 -- @param t the talent to check
 -- @param offset the level offset to check, defaults to 1
