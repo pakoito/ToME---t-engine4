@@ -106,6 +106,7 @@ function _M:display(x, y, nb_keyframes, screen_x, screen_y, offset_x, offset_y, 
 	local first = true
 	for i=1, #self.uis do
 		ui = self.uis[i]
+		ui.dest_area = ui.dest_area or {}
 		ui.dest_area.h = self.dest_area.h
 		if offset_y <= total_h + self.uis[i].h then 
 			ui:display(x, current_y, nb_keyframes, x, current_y, offset_x, offset_y, local_x, local_y) 
