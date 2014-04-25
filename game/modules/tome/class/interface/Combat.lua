@@ -392,24 +392,19 @@ function _M:attackTargetWith(target, weapon, damtype, mult, force_dam)
 		repelled = t.isRepelled(target, t)
 	end
 
-
-
 	-- If hit is over 0 it connects, if it is 0 we still have 50% chance
 	local hitted = false
 	local crit = false
 	local evaded = false
 
-		 print("[SKIRMISHER] Buckler Expertise check")
-  if target:knowTalent(target.T_SKIRMISHER_BUCKLER_EXPERTISE) then
-	local t = target:getTalentFromId(target.T_SKIRMISHER_BUCKLER_EXPERTISE)
-	if t.shouldEvade(target, t) then
-	  game.logSeen(target, "%s deflects the attack.", target.name:capitalize())
-	  print("[SKIRMISHER] attack evaded")
-	  t.onEvade(target, t, self)
-	  repelled = true -- Possibly not the best way to block this
-	  --return self:combatSpeed(weapon), false
+	if target:knowTalent(target.T_SKIRMISHER_BUCKLER_EXPERTISE) then
+		local t = target:getTalentFromId(target.T_SKIRMISHER_BUCKLER_EXPERTISE)
+		if t.shouldEvade(target, t) then
+			game.logSeen(target, "%s deflects the attack.", target.name:capitalize())
+			t.onEvade(target, t, self)
+			repelled = true
+		end
 	end
-  end
 
 	if repelled then
 		self:logCombat(target, "#Target# repels an attack from #Source#.")
@@ -460,10 +455,7 @@ function _M:attackTargetWith(target, weapon, damtype, mult, force_dam)
 		end
 
 		if target:hasEffect(target.EFF_COUNTERSTRIKE) then
-			dam = dam * 2
-			local eff = target.tmp[target.EFF_COUNTERSTRIKE]
-			eff.nb = eff.nb - 1
-			if eff.nb == 0 then target:removeEffect(target.EFF_COUNTERSTRIKE) end
+			dam = target:callEffect(target.EFF_COUNTERSTRIKE, "onStrike", dam, self)
 			print("[ATTACK] after counterstrike", dam)
 		end
 

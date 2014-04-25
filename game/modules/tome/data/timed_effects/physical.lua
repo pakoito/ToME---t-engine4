@@ -1992,6 +1992,16 @@ newEffect{
 	parameters = { nb=1 },
 	on_gain = function(self, eff) return nil, "+Counter" end,
 	on_lose = function(self, eff) return nil, "-Counter" end,
+	onStrike = function(self, eff, dam, src)
+		eff.nb = eff.nb - 1
+		if eff.nb <= 0 then self:removeEffect(self.EFF_COUNTERSTRIKE) end
+
+		if self.x and src.x and core.fov.distance(self.x, self.y, src.x, src.y) >= 5 then
+			game:setAllowedBuild("rogue_skirmisher", true)
+		end
+
+		return dam * 2
+	end,
 	activate = function(self, eff)
 		eff.tmpid = self:addTemporaryValue("counterstrike", 1)
 		eff.def = self:addTemporaryValue("combat_def", -eff.power)

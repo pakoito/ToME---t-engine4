@@ -41,7 +41,8 @@ newTalent{
 			DamageType.SHIFTINGSHADOWS, self:spellCrit(t.getDamage(self, t)),
 			self:getTalentRadius(t),
 			5, nil,
-			MapEffect.new{color_br=255, color_bg=255, color_bb=255, effect_shader="shader_images/moonlight_effect.png"},
+--MAKE IT SMALLER
+			MapEffect.new{zdepth=6, overlay_particle={zdepth=6, only_one=true, type="circle", args={img="moon_circle", radius=self:getTalentRadius(t)}}, color_br=255, color_bg=255, color_bb=255, effect_shader="shader_images/moonlight_effect.png"},
 			nil, self:spellFriendlyFire(true)
 		)
 		game:playSoundNear(self, "talents/arcane")

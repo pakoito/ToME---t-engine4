@@ -196,7 +196,7 @@ newBirthDescriptor{
 	type = "subclass",
 	name = "Skirmisher",
 	locked = function() return profile.mod.allow_build.rogue_skirmisher end,
-	locked_desc = "----WRITE ME----",
+	locked_desc = "Fleet of foot and strong of throw, overwhelming every foe, from afar we counter, strike and thud, in the chaos'd skirmish spilling blood.",
 	desc = {
 		"While able to take maximum advantage of their sling by using deft movements to avoid and confuse enemies that try to get close, the Skirmisher truly excels when fighting other ranged users.",
 		"They have mastered the use of their shield as well as their sling and are nearly impossible to defeat in a standoff.",

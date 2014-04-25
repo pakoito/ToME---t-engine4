@@ -62,6 +62,7 @@ local credits = {
 	{"Evan 'Fortescue' Williams"},
 	{"Hetdegon"},
 	{"John 'Benli' Truchard"},
+	{"Nicolas 'DarkGod' Casalini"},
 	{"Shoob"},
 	{"Taylor 'PureQuestion' Miller"},
 	{"Thomas 'Tomisgo' Cretan"},

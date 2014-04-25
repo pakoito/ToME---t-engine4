@@ -49,7 +49,7 @@ newTalent{
 				DamageType.MUCUS, {dam=t.getDamage(self, t), self_equi=t.getEqui(self, t), equi=1, bonus_level = 0},
 				rad,
 				5, nil,
-				{type="mucus"},
+				{zdepth=6, type="mucus"},
 				nil, true
 			)
 			if eff then

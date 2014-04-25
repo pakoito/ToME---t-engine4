@@ -1029,16 +1029,23 @@ function _M:addEffect(src, x, y, duration, damtype, dam, radius, dir, angle, ove
 		update_fct=update_fct, selffire=selffire, friendlyfire=friendlyfire,
 	}
 
+	local overlay_particle = nil
 	if overlay and not overlay.__CLASSNAME then
+		overlay_particle = overlay
+	elseif overlay then
+		if overlay.overlay_particle then overlay_particle = overlay.overlay_particle end
+	end
+
+	if overlay_particle then
 		e.particles = {}
-		if overlay.only_one then
-			e.particles[#e.particles+1] = self:particleEmitter(x, y, 1, overlay.type, overlay.args, nil, overlay.zdepth)
+		if overlay_particle.only_one then
+			e.particles[#e.particles+1] = self:particleEmitter(x, y, 1, overlay_particle.type, overlay_particle.args, nil, overlay_particle.zdepth)
 			e.particles_only_one = true
 		else
-			e.fake_overlay = overlay
+			e.fake_overlay = overlay_particle
 			for lx, ys in pairs(grids) do
 				for ly, _ in pairs(ys) do
-					e.particles[#e.particles+1] = self:particleEmitter(lx, ly, 1, overlay.type, overlay.args, nil, overlay.zdepth)
+					e.particles[#e.particles+1] = self:particleEmitter(lx, ly, 1, overlay_particle.type, overlay_particle.args, nil, overlay_particle.zdepth)
 				end
 			end
 		end

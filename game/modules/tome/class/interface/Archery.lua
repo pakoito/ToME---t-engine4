@@ -204,10 +204,7 @@ local function archery_projectile(tx, ty, tg, self, tmp)
 		print("[ATTACK ARCHERY] after range", dam)
 
 		if target:hasEffect(target.EFF_COUNTERSTRIKE) then
-			dam = dam * 2
-			local eff = target.tmp[target.EFF_COUNTERSTRIKE]
-			eff.nb = eff.nb - 1
-			if eff.nb == 0 then target:removeEffect(target.EFF_COUNTERSTRIKE) end
+			dam = target:callEffect(target.EFF_COUNTERSTRIKE, "onStrike", dam, self)
 			print("[ATTACK] after counterstrike", dam)
 		end
 
