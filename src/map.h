@@ -79,6 +79,8 @@ typedef struct {
 	GLubyte *seens_map;
 	int seens_map_w, seens_map_h;
 
+	int *z_callbacks;
+
 	GLuint seens_texture;
 
 	int mo_list_ref;

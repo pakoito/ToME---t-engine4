@@ -456,7 +456,7 @@ newTalent{
 			DamageType.GOLEM_FIREBURN, dam,
 			self:getTalentRadius(t),
 			5, nil,
-			engine.Entity.new{alpha=100, display='', color_br=200, color_bg=60, color_bb=30},
+			MapEffect.new{zdepth=6, alpha=85, color_br=200, color_bg=60, color_bb=30, effect_shader="shader_images/fire_effect.png"},
 			function(e)
 				e.x = e.src.x
 				e.y = e.src.y

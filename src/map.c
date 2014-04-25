@@ -28,7 +28,6 @@
 #include "map.h"
 #include "main.h"
 #include "script.h"
-//#include "shaders.h"
 #include "useshader.h"
 
 #include "assert.h"
@@ -768,6 +767,9 @@ static int map_new(lua_State *L)
 		}
 	}
 
+	map->z_callbacks = calloc(zdepth, sizeof(int));
+	for (i = 0; i < zdepth; i++) map->z_callbacks[i] = LUA_NOREF;
+
 	return 1;
 }
 
@@ -797,6 +799,11 @@ static int map_free(lua_State *L)
 	free(map->grids_lites);
 	free(map->grids_important);
 
+	for (i = 0; i < map->zdepth; i++) {
+		if (map->z_callbacks[i] != LUA_NOREF) luaL_unref(L, LUA_REGISTRYINDEX, map->z_callbacks[i]);
+	}
+	free(map->z_callbacks);
+
 	free(map->colors);
 	free(map->texcoords);
 	free(map->vertices);
@@ -811,6 +818,20 @@ static int map_free(lua_State *L)
 
 	lua_pushnumber(L, 1);
 	return 1;
+}
+
+static int map_set_z_callback(lua_State *L)
+{
+	map_type *map = (map_type*)auxiliar_checkclass(L, "core{map}", 1);
+	int z = luaL_checknumber(L, 2);
+
+	if (map->z_callbacks[z] != LUA_NOREF) luaL_unref(L, LUA_REGISTRYINDEX, map->z_callbacks[z]);
+
+	if (lua_isfunction(L, 3)) {
+		lua_pushvalue(L, 3);
+		map->z_callbacks[z] = luaL_ref(L, LUA_REGISTRYINDEX);
+	}
+	return 0;
 }
 
 static int map_set_zoom(lua_State *L)
@@ -1571,6 +1592,7 @@ static int map_to_screen(lua_State *L)
 	int nb_keyframes = luaL_checknumber(L, 4);
 	bool always_show = lua_toboolean(L, 5);
 	bool changed = lua_toboolean(L, 6);
+	// id 7 is fbo to be passed back to z-callbacks
 	int i = 0, j = 0, z = 0;
 	int vert_idx = 0;
 	int col_idx = 0;
@@ -1655,6 +1677,32 @@ static int map_to_screen(lua_State *L)
 					}
 				}
 			}
+		}
+
+		if (map->z_callbacks[z] != LUA_NOREF) {
+			/* Draw remaining ones */
+			if (vert_idx) glDrawArrays(GL_QUADS, 0, (vert_idx) / 2);
+			/* Reset */
+			vert_idx = 0;
+			col_idx = 0;
+			cur_tex = 0;
+
+			lua_rawgeti(L, LUA_REGISTRYINDEX, map->z_callbacks[z]);
+			lua_checkstack(L, 4);
+			lua_pushnumber(L, z);
+			lua_pushnumber(L, nb_keyframes);
+			lua_pushvalue(L, 7);
+			if (lua_pcall(L, 3, 1, 0))
+			{
+				printf("Map z-callback error: Z %d: %s\n", z, lua_tostring(L, -1));
+				lua_pop(L, 1);
+			}
+			if (lua_isboolean(L, -1)) {
+				glTexCoordPointer(2, GL_FLOAT, 0, texcoords);
+				glVertexPointer(2, GL_FLOAT, 0, vertices);
+				glColorPointer(4, GL_FLOAT, 0, colors);
+			}
+			lua_pop(L, 1);
 		}
 	}
 
@@ -1838,6 +1886,7 @@ static const struct luaL_Reg map_reg[] =
 	{"setShown", map_set_shown},
 	{"setObscure", map_set_obscure},
 	{"setGrid", map_set_grid},
+	{"zCallback", map_set_z_callback},
 	{"cleanSeen", map_clean_seen},
 	{"cleanRemember", map_clean_remember},
 	{"cleanLite", map_clean_lite},

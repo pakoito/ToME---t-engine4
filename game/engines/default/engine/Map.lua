@@ -204,6 +204,7 @@ function _M:init(w, h)
 	for i = 0, w * h - 1 do self.map[i] = {} end
 
 	self.particles = {}
+	self.particles_todel = {}
 	self.emotes = {}
 
 	self:loaded()
@@ -212,6 +213,8 @@ end
 --- Serialization
 function _M:save()
 	return class.save(self, {
+		z_effects = true,
+		z_particles = true,
 		fbo_shader = true,
 		fbo = true,
 		_check_entities = true,
@@ -239,6 +242,12 @@ function _M:makeCMap()
 	}
 	for i, ps in ipairs(self.path_strings) do
 		self._fovcache.path_caches[ps] = core.fov.newCache(self.w, self.h)
+	end
+
+	for z = 0, self.zdepth - 1 do
+		self._map:zCallback(z, function(z, nb_keyframe, prevfbo)
+			return self:zDisplay(z, nb_keyframe, prevfbo)
+		end)
 	end
 end
 
@@ -327,6 +336,12 @@ function _M:loaded()
 
 	self.changed = true
 	self.finished = true
+
+	self.z_effects = {}
+	self.z_particles = {}
+	for z = 0, self.zdepth - 1 do self.z_effects[z] = {} self.z_particles[z] = {} end
+	for i, e in ipairs(self.effects) do if e.overlay then self.z_effects[e.overlay.zdepth][e] = true end end
+	for i, e in ipairs(self.particles) do if e.zdepth then self.z_particles[e.zdepth][e] = true end end
 
 	self:redisplay()
 end
@@ -540,16 +555,22 @@ function _M:display(x, y, nb_keyframe, always_show, prevfbo)
 	local ox, oy = self.display_x, self.display_y
 	self.display_x, self.display_y = x or self.display_x, y or self.display_y
 
-	self._map:toScreen(self.display_x, self.display_y, nb_keyframe, always_show, self.changed)
-	self:displayParticles(nb_keyframe)
-	self:displayEffects(prevfbo, nb_keyframe)
+	self._map:toScreen(self.display_x, self.display_y, nb_keyframe, always_show, self.changed, prevfbo)
 
 	self.display_x, self.display_y = ox, oy
+
+	self:removeParticleEmitters()
 
 	-- If nothing changed, return the same surface as before
 	if not self.changed then return end
 	self.changed = false
 	self.clean_fov = true
+end
+
+--- Called by the engine map draw code for each z-layer
+function _M:zDisplay(z, nb_keyframe, prevfbo)
+	self:displayParticles(z, nb_keyframe)
+	self:displayEffects(z, prevfbo, nb_keyframe)
 end
 
 --- Sets checks if a grid lets sight pass through
@@ -1011,30 +1032,33 @@ function _M:addEffect(src, x, y, duration, damtype, dam, radius, dir, angle, ove
 	if overlay and not overlay.__CLASSNAME then
 		e.particles = {}
 		if overlay.only_one then
-			e.particles[#e.particles+1] = self:particleEmitter(x, y, 1, overlay.type, overlay.args)
+			e.particles[#e.particles+1] = self:particleEmitter(x, y, 1, overlay.type, overlay.args, nil, overlay.zdepth)
 			e.particles_only_one = true
 		else
 			e.fake_overlay = overlay
 			for lx, ys in pairs(grids) do
 				for ly, _ in pairs(ys) do
-					e.particles[#e.particles+1] = self:particleEmitter(lx, ly, 1, overlay.type, overlay.args)
+					e.particles[#e.particles+1] = self:particleEmitter(lx, ly, 1, overlay.type, overlay.args, nil, overlay.zdepth)
 				end
 			end
 		end
 	end
+	-- If nothing set, display on the last z-layer
+	if e.overlay and not e.overlay.zdepth then e.overlay.zdepth = self.zdepth - 1 end
 
 	table.insert(self.effects, e)
+	if e.overlay then self.z_effects[e.overlay.zdepth][e] = true end
 
 	self.changed = true
 	return e
 end
 
 --- Display the overlay effects, called by self:display()
-function _M:displayEffects(prevfbo, nb_keyframes)
+function _M:displayEffects(z, prevfbo, nb_keyframes)
 	local sx, sy = self._map:getScroll()
-	for i, e in ipairs(self.effects) do
+	for e, _ in pairs(self.z_effects[z]) do
 		-- Dont bother with obviously out of screen stuff
-		if e.overlay and e.x + e.radius >= self.mx and e.x - e.radius < self.mx + self.viewport.mwidth and e.y + e.radius >= self.my and e.y - e.radius < self.my + self.viewport.mheight then
+		if e.overlay and e.overlay.zdepth == z and e.x + e.radius >= self.mx and e.x - e.radius < self.mx + self.viewport.mwidth and e.y + e.radius >= self.my and e.y - e.radius < self.my + self.viewport.mheight then
 			local s = self.tilesEffects:get(e.overlay.display, e.overlay.color_r, e.overlay.color_g, e.overlay.color_b, e.overlay.color_br, e.overlay.color_bg, e.overlay.color_bb, e.overlay.image, e.overlay.alpha)
 
 			-- If we dont have a special fbo/shader or no shader image to use, just display with simple quads
@@ -1129,7 +1153,7 @@ function _M:processEffects()
 						e.particles = {}
 						for lx, ys in pairs(e.grids) do
 							for ly, _ in pairs(ys) do
-								e.particles[#e.particles+1] = self:particleEmitter(lx, ly, 1, e.fake_overlay.type, e.fake_overlay.args)
+								e.particles[#e.particles+1] = self:particleEmitter(lx, ly, 1, e.fake_overlay.type, e.fake_overlay.args, nil, e.zdepth)
 							end
 						end
 					end
@@ -1138,11 +1162,15 @@ function _M:processEffects()
 		end
 	end
 
+	if #todel > 0 then table.sort(todel) end
 	for i = #todel, 1, -1 do
 		if self.effects[todel[i]].particles then
 			for j, ps in ipairs(self.effects[todel[i]].particles) do self:removeParticleEmitter(ps) end
 		end
-		table.remove(self.effects, todel[i])
+		local e = table.remove(self.effects, todel[i])
+		if e.overlay then
+			self.z_effects[e.overlay.zdepth][e] = nil
+		end
 	end
 end
 
@@ -1197,12 +1225,15 @@ end
 -------------------------------------------------------------
 
 --- Add a new particle emitter
-function _M:particleEmitter(x, y, radius, def, args, shader)
+function _M:particleEmitter(x, y, radius, def, args, shader, zdepth)
 	local e = Particles.new(def, radius, args, shader)
 	e.x = x
 	e.y = y
+	e.zdepth = zdepth
 
 	self.particles[#self.particles+1] = e
+	if not e.zdepth then e.zdepth = self.zdepth - 1 end
+	self.z_particles[e.zdepth][e] = true
 	return e
 end
 
@@ -1211,25 +1242,43 @@ function _M:addParticleEmitter(e, x, y)
 	if self.particles[e] then return false end
 	if x and y then e.x, e.y = x, y end
 	self.particles[#self.particles+1] = e
+	if not e.zdepth then e.zdepth = self.zdepth - 1 end
+	self.z_particles[e.zdepth][e] = true
 	return e
 end
 
 --- Removes a particle emitter from the map
 function _M:removeParticleEmitter(e)
-	for i = 1, #self.particles do if self.particles[i] == e then table.remove(self.particles, i) return true end end
+	for i = 1, #self.particles do if self.particles[i] == e then
+		table.insert(self.particles_todel, i)
+		return true
+	end end
 	return false
 end
 
+--- Now remove all t he ones registered for removal
+function _M:removeParticleEmitters()
+	if #self.particles_todel == 0 then return end
+	table.sort(self.particles_todel)
+
+	for i = #self.particles_todel, 1, -1 do
+		local e = table.remove(self.particles, self.particles_todel[i])
+		self.z_particles[e.zdepth][e] = nil
+
+		if e.on_remove then e:on_remove() end
+		e.dead = true
+	end
+	self.particles_todel = {}
+end
+
 --- Display the particle emitters, called by self:display()
-function _M:displayParticles(nb_keyframes)
+function _M:displayParticles(z, nb_keyframes)
 	nb_keyframes = nb_keyframes or 1
 	local adx, ady
 	local alive
-	local e
 	local dx, dy = self.display_x, self.display_y
-	for i = #self.particles, 1, -1 do
-		e = self.particles[i]
-		if e and e.ps then
+	for e, _ in pairs(self.z_particles[z]) do
+		if e.ps then
 			adx, ady = 0, 0
 			if e.x and e.y then
 				-- Make sure we display on the real screen coords: handle current move anim position
@@ -1259,14 +1308,10 @@ function _M:displayParticles(nb_keyframes)
 				end
 
 				if not alive then
-					table.remove(self.particles, i)
-					if e.on_remove then e:on_remove() end
-					e.dead = true
+					self:removeParticleEmitter(e)
 				end
 			else
-				table.remove(self.particles, i)
-				if e.on_remove then e:on_remove() end
-				e.dead = true
+				self:removeParticleEmitter(e)
 			end
 		end
 	end

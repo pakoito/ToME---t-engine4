@@ -101,7 +101,7 @@ newTalent{
 			DamageType.CAUSTIC_MIRE, {dam=self:spellCrit(t.getDamage(self, t)), dur=2, slow=t.getSlow(self, t)},
 			self:getTalentRadius(t),
 			5, nil,
-			{type="mucus"},
+			{zdepth=6, type="mucus"},
 			nil, self:spellFriendlyFire()
 		)
 
