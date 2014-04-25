@@ -268,6 +268,23 @@ function _M:onEntityMerge(a)
 	end
 end
 
+-- This seems like the only reasonable place to do projectile deflection
+-- we're also going to prevent phasing projectiles from stopping anywhere but their target
+function _M:projectDoStop(typ, tg, damtype, dam, particles, lx, ly, tmp, rx, ry, projectile)
+	-- Deflection check
+	local target = game.level.map:call(lx, ly, Map.ACTOR)
+	if target and target.getTalentFromId and target ~= projectile.src then
+		if target:knowTalent(target.T_SKIRMISHER_BUCKLER_MASTERY) then
+			local t = target:getTalentFromId(target.T_SKIRMISHER_BUCKLER_MASTERY)
+			lx, ly = t.offsetTarget(target, t, lx, ly, projectile)	
+			print("[SKIRMISHER] Deflected a projectile")
+		end
+	end
+
+	return engine.interface.ActorProject.projectDoStop(self, typ, tg, damtype, dam, particles, lx, ly, tmp, rx, ry, projectile)
+end
+
+
 --- Try to remove all "un-needed" effects, fields, ... for a clean export
 function _M:stripForExport()
 	self.distance_map = {}
@@ -1912,6 +1929,19 @@ function _M:onTakeHit(value, src, death_note)
 		end
 	end
 
+	-- Reduce damage and trigger for Trained Reactions
+	--print("[onTakeHit] Before Trained Reactions ", value)
+	if self:attr("incoming_reduce") then
+		value = value * (100-self:attr("incoming_reduce")) / 100
+		print("[onTakeHit] After Trained Reactions effect reduction ", value)
+	end
+	
+	if self:knowTalent(self.T_SKIRMISHER_TRAINED_REACTIONS) then
+		local t = self:getTalentFromId(self.T_SKIRMISHER_TRAINED_REACTIONS)
+		value = t.onHit(self, t, value)
+		print("[onTakeHit] After Trained Reactions life% trigger ", value)
+	end
+  
 	if value > 0 and self:knowTalent(self.T_MITOSIS) and self:isTalentActive(self.T_MITOSIS) then
 		local t = self:getTalentFromId(self.T_MITOSIS)
 		local chance = t.getChance(self, t)
@@ -3130,6 +3160,8 @@ function _M:onStatChange(stat, v)
 	elseif stat == self.STAT_STR then
 		self:checkEncumbrance()
 	end
+
+	self:fireTalentCheck("callbackOnStatChange", stat, v)
 end
 
 function _M:recomputeGlobalSpeed()
@@ -3638,7 +3670,28 @@ function _M:canWearObject(o, try_slot)
 --		return nil, "requires antimagic"
 --	end
 
-	return engine.interface.ActorInventory.canWearObject(self, o, try_slot)
+	local oldreq = nil
+	if o.subtype == "shield" and self:knowTalent(self.T_SKIRMISHER_BUCKLER_EXPERTISE) then
+		oldreq = rawget(o, "require")
+		o.require = table.clone(oldreq or {}, true)
+		if o.require.stat and o.require.stat.str then
+			o.require.stat.cun, o.require.stat.str = o.require.stat.str, nil
+		end
+		if o.require.talent then for i, tr in ipairs(o.require.talent) do
+			if tr[1] == self.T_ARMOUR_TRAINING then
+				o.require.talent[i] = {self.T_SKIRMISHER_BUCKLER_EXPERTISE, 1}
+				break
+			end
+		end end
+	end
+
+	local ok, reason = engine.interface.ActorInventory.canWearObject(self, o, try_slot)
+
+	if oldreq then
+		o.require = oldreq
+	end
+
+	return ok, reason
 end
 
 function _M:lastLearntTalentsMax(what)
@@ -3775,7 +3828,7 @@ function _M:learnPool(t)
 	if t.equilibrium or t.sustain_equilibrium then
 		self:checkPool(t.id, self.T_EQUILIBRIUM_POOL)
 	end
-	if t.stamina or t.sustain_stamina then
+	if util.getval(t.stamina, self, t) or t.sustain_stamina then
 		self:checkPool(t.id, self.T_STAMINA_POOL)
 	end
 	if t.vim or t.sustain_vim or t.drain_vim then
@@ -3970,6 +4023,12 @@ end
 -- Overwrite incStamina to set up Adrenaline Surge
 local previous_incStamina = _M.incStamina
 function _M:incStamina(stamina)
+
+	if self:knowTalent(self.T_SKIRMISHER_THE_ETERNAL_WARRIOR) then
+		local t = self:getTalentFromId(self.T_SKIRMISHER_THE_ETERNAL_WARRIOR)
+		t.onIncStamina(self, t, stamina)
+	end
+
 	if stamina < 0 and self:hasEffect(self.EFF_ADRENALINE_SURGE) then
 		local stamina_cost = math.abs(stamina)
 		if self.stamina - stamina_cost < 0 then
@@ -4147,7 +4206,7 @@ function _M:preUseTalent(ab, silent, fake)
 			if not silent then game.logPlayer(self, "You do not have enough souls to cast %s.", ab.name) end
 			return false
 		end
-		if ab.stamina and self:getStamina() < util.getval(ab.stamina, self, ab) * (100 + self:combatFatigue()) / 100 and (not self:hasEffect(self.EFF_ADRENALINE_SURGE) or self.life < util.getval(ab.stamina, self, ab) * (100 + self:combatFatigue()) / 100) then
+		if util.getval(ab.stamina, self, ab) and self:getStamina() < util.getval(ab.stamina, self, ab) * (100 + self:combatFatigue()) / 100 and (not self:hasEffect(self.EFF_ADRENALINE_SURGE) or self.life < util.getval(ab.stamina, self, ab) * (100 + self:combatFatigue()) / 100) then
 			if not silent then game.logPlayer(self, "You do not have enough stamina to use %s.", ab.name) end
 			return false
 		end
@@ -4314,6 +4373,7 @@ local sustainCallbackCheck = {
 	callbackOnArcheryHit = "talents_on_archery_hit",
 	callbackOnArcheryMiss = "talents_on_archery_miss",
 	callbackOnCrit = "talents_on_crit",
+	callbackOnStatChange = "talents_on_stat_change",
 }
 _M.sustainCallbackCheck = sustainCallbackCheck
 
@@ -4491,7 +4551,7 @@ function _M:postUseTalent(ab, ret, silent)
 		if ab.soul and not self:attr("zero_resource_cost") then
 			trigger = true; self:incSoul(-util.getval(ab.soul, self, ab))
 		end
-		if ab.stamina and not self:attr("zero_resource_cost") then
+		if util.getval(ab.stamina, self, ab) and not self:attr("zero_resource_cost") then
 			trigger = true; self:incStamina(-util.getval(ab.stamina, self, ab) * (100 + self:combatFatigue()) / 100)
 		end
 		-- Vim is not affected by fatigue
@@ -4640,6 +4700,9 @@ function _M:breakStepUp()
 	if self:hasEffect(self.EFF_REFLEXIVE_DODGING) then
 		self:removeEffect(self.EFF_REFLEXIVE_DODGING)
 	end
+	if self:hasEffect(self.EFF_SKIRMISHER_DIRECTED_SPEED) then
+		self:removeEffect(self.EFF_SKIRMISHER_DIRECTED_SPEED)
+	end
 end
 
 --- Breaks lightning speed if active
@@ -4705,7 +4768,7 @@ function _M:getTalentFullDescription(t, addlevel, config, fake_mastery)
 	if not config.ignore_ressources then
 		if t.mana then d:add({"color",0x6f,0xff,0x83}, "Mana cost: ", {"color",0x7f,0xff,0xd4}, ""..math.round(util.getval(t.mana, self, t) * (100 + 2 * self:combatFatigue()) / 100, 0.1), true) end
 		if t.soul then d:add({"color",0x6f,0xff,0x83}, "Soul cost: ", {"color",190,190,190}, ""..math.round(util.getval(t.soul, self, t), 0.1), true) end
-		if t.stamina then d:add({"color",0x6f,0xff,0x83}, "Stamina cost: ", {"color",0xff,0xcc,0x80}, ""..math.round(util.getval(t.stamina, self, t) * (100 + self:combatFatigue()) / 100, 0.1), true) end
+		if util.getval(t.stamina, self, t) then d:add({"color",0x6f,0xff,0x83}, "Stamina cost: ", {"color",0xff,0xcc,0x80}, ""..math.round(util.getval(t.stamina, self, t) * (100 + self:combatFatigue()) / 100, 0.1), true) end
 		if t.equilibrium then d:add({"color",0x6f,0xff,0x83}, "Equilibrium cost: ", {"color",0x00,0xff,0x74}, ""..math.round(util.getval(t.equilibrium, self, t), 0.1), true) end
 		if t.vim then d:add({"color",0x6f,0xff,0x83}, "Vim cost: ", {"color",0x88,0x88,0x88}, ""..math.round(util.getval(t.vim, self, t), 0.1), true) end
 		if t.positive then d:add({"color",0x6f,0xff,0x83}, "Positive energy cost: ", {"color",255, 215, 0}, ""..math.round(util.getval(t.positive, self, t) * (100 + self:combatFatigue()) / 100, 0.1), true) end
