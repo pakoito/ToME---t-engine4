@@ -320,3 +320,6 @@ newBirthDescriptor{
 		life_rating = 2,
 	},
 }
+
+
+

@@ -263,7 +263,7 @@ newTalent{
 			DamageType.TEMPORAL, t.getDamage(self, t),
 			3,
 			5, nil,
-			engine.Entity.new{alpha=75, display='', color_br=200, color_bg=200, color_bb=0},
+			engine.MapEffect.new{alpha=85, color_br=200, color_bg=200, color_bb=0, effect_shader="shader_images/paradox_effect.png"},
 			nil, false
 		)
 		return true

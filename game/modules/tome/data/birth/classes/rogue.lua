@@ -31,6 +31,7 @@ newBirthDescriptor{
 			Rogue = "allow",
 			Shadowblade = "allow",
 			Marauder = "allow",
+			Skirmisher = "allow",
 		},
 	},
 	copy = {
@@ -59,6 +60,7 @@ newBirthDescriptor{
 		["technique/combat-techniques-passive"]={false, 0.3},
 		["technique/combat-training"]={true, 0.3},
 		["technique/field-control"]={false, 0},
+		["technique/acrobatics"]={true, 0.3},
 		["cunning/stealth"]={true, 0.3},
 		["cunning/trapping"]={true, 0.3},
 		["cunning/dirty"]={true, 0.3},
@@ -187,5 +189,59 @@ newBirthDescriptor{
 			{type="armor", subtype="light", name="rough leather armour", autoreq=true, ego_chance=-1000},
 			{type="armor", subtype="head", name="iron helm", autoreq=true, ego_chance=-1000},
 		},
+	},
+}
+
+newBirthDescriptor{
+	type = "subclass",
+	name = "Skirmisher",
+	locked = function() return profile.mod.allow_build.rogue_skirmisher end,
+	locked_desc = "----WRITE ME----",
+	desc = {
+		"While able to take maximum advantage of their sling by using deft movements to avoid and confuse enemies that try to get close, the Skirmisher truly excels when fighting other ranged users.",
+		"They have mastered the use of their shield as well as their sling and are nearly impossible to defeat in a standoff.",
+		"Their most important stats are: Dexterity and Cunning",
+		"#GOLD#Stat modifiers:",
+		"#LIGHT_BLUE# * +0 Strength, +4 Dexterity, +0 Constitution",
+		"#LIGHT_BLUE# * +0 Magic, +1 Willpower, +4 Cunning",
+		"#GOLD#Life per level:#LIGHT_BLUE# +0",
+	},
+	power_source = {technique=true},
+	stats = {dex = 4, cun = 4, wil = 1},
+	talents_types = {
+		-- class
+		["technique/skirmisher-slings"]={true, 0.3},
+		["technique/buckler-training"]={true, 0.3},
+		["cunning/called-shots"]={true, 0.3},
+		["technique/tireless-combatant"]={true, 0.3},
+		["cunning/trapping"]={false, 0.1},
+
+		-- generic
+		["technique/acrobatics"]={true, 0.3},
+		["cunning/survival"]={true, 0.3},
+		["technique/combat-training"]={true, 0.3},
+		["technique/field-control"]={false, 0.1},
+	},
+	unlockable_talents_types = {
+		["cunning/poisons"]={false, 0.2, "rogue_poisons"},
+	},
+	talents = {
+		[ActorTalents.T_SKIRMISHER_VAULT] = 1,
+		[ActorTalents.T_SHOOT] = 1,
+		[ActorTalents.T_SKIRMISHER_KNEECAPPER] = 1,
+		[ActorTalents.T_SKIRMISHER_SLING_SUPREMACY] = 1,
+		[ActorTalents.T_SKIRMISHER_BUCKLER_EXPERTISE] = 1,
+	},
+	copy = {
+		resolvers.equip{
+			id=true,
+			{type="armor", subtype="light", name="rough leather armour", autoreq=true,ego_chance=-1000},
+			{type="weapon", subtype="sling", name="rough leather sling", autoreq=true, ego_chance=-1000},
+			{type="armor", subtype="shield", name="iron shield", autoreq=false, ego_chance=-1000, ego_chance=-1000},
+			{type="ammo", subtype="shot", name="pouch of iron shots", autoreq=true, ego_chance=-1000},
+		},
+	},
+	copy_add = {
+		life_rating = 0,
 	},
 }

@@ -26,6 +26,12 @@ newTalent{
 	innate = true,
 	points = 1,
 	cooldown = 0,
+	stamina = function(self, t)
+		if not self:hasArcheryWeapon("sling") or not self:isTalentActive("T_SKIRMISHER_BOMBARDMENT") then return nil end
+
+		local b = self:getTalentFromId("T_SKIRMISHER_BOMBARDMENT")
+		return b.shot_stamina(self, b)
+	end,
 	range = archery_range,
 	message = "@Source@ shoots!",
 	requires_target = true,
@@ -43,15 +49,54 @@ newTalent{
 		end
 	end,
 	action = function(self, t)
-		local targets = self:archeryAcquireTargets(nil, {one_shot=true})
-		if not targets then return end
-		self:archeryShoot(targets, t, nil, {use_psi_archery = t.use_psi_archery(self, t)})
-		return true
+		-- Most of the time use the normal shoot.
+		if not self:hasArcheryWeapon("sling") or not self:isTalentActive("T_SKIRMISHER_BOMBARDMENT") then
+			local targets = self:archeryAcquireTargets(nil, {one_shot=true})
+			if not targets then return end
+			self:archeryShoot(targets, t, nil, {use_psi_archery = t.use_psi_archery(self, t)})
+			return true
+		end
+
+		local weapon, ammo, offweapon = self:hasArcheryWeapon()
+		if not weapon then return nil end
+		local infinite = ammo.infinite or self:attr("infinite_ammo")
+		if not ammo or (ammo.combat.shots_left <= 0 and not infinite) then
+			game.logPlayer(self, "You do not have enough ammo left!")
+			return nil
+		end
+
+		-- Bombardment.
+		local weapon = self:hasArcheryWeapon("sling")
+		local bombardment = self:getTalentFromId("T_SKIRMISHER_BOMBARDMENT")
+		local shots = bombardment.bullet_count(self, bombardment)
+
+		-- Do targeting.
+		local old_target_forced = game.target.forced
+		local tg = {type = "bolt", range = archery_range(self),	talent = t}
+		local x, y, target = self:getTarget(tg)
+		if not x or not y then return end
+		game.target.forced = {x, y, target}
+
+		-- Fire all shots.
+		local i
+		for i = 1, shots do
+			local targets = self:archeryAcquireTargets(nil, {no_energy=true, one_shot=true})
+			if not targets then break end
+			self:archeryShoot(targets, t, nil, {use_psi_archery = t.use_psi_archery(self, t)})
+		end
+
+		local speed = self:combatSpeed(weapon)
+		self:useEnergy(game.energy_to_act * (speed or 1))
+
+		game.target.forced = old_target_forced
+
+		return i ~= 1
 	end,
 	info = function(self, t)
-		return ([[Shoot your bow or sling!]])
+		return ([[Shoot your bow, sling or other missile launcher!]])
 	end,
 }
+
 newTalent{
 	name = "Reload",
 	type = {"technique/archery-base", 1},

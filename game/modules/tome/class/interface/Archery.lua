@@ -36,14 +36,12 @@ function _M:archeryAcquireTargets(tg, params)
 	if self.can_offshoot and not weapon and offweapon then weapon, offweapon = offweapon, nil end
 	if not weapon then
 		game.logPlayer(self, "You must wield a bow or a sling (%s)!", ammo)
-		print("== no weapon")
 		return nil
 	end
 	local infinite = ammo.infinite or self:attr("infinite_ammo") or params.infinite
 
 	if not ammo or (ammo.combat.shots_left <= 0 and not infinite) then
 		game.logPlayer(self, "You do not have enough ammo left!")
-		print("== no ammo")
 		return nil
 	end
 

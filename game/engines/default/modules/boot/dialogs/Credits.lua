@@ -105,6 +105,7 @@ local credits = {
 	{"Code Helpers", title=1},
 	{"Antagonist"},
 	{"Graziel"},
+	{"Grayswandir"},
 	{"Hachem Muche"},
 	{"Jules 'Quicksilver' Bean"},
 	{"Madmonk"},
@@ -118,7 +119,7 @@ local credits = {
 	false,
 
 	{"Community Managers", title=2},
-	{"Aura of the Dawn"},
+	{"Bradley 'AuraOfTheDawn' Kersey"},
 	{"Faeryan"},
 	{"Lord Xandor"},
 	{"Michael 'Dekar' Olscher"},

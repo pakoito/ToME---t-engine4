@@ -126,7 +126,7 @@ newTalent{
 			DamageType.WASTING, t.getDamage(self, t),
 			tg.radius,
 			5, nil,
-			engine.Entity.new{alpha=100, display='', color_br=176, color_bg=196, color_bb=222},
+			engine.MapEffect.new{color_br=180, color_bg=100, color_bb=255, effect_shader="shader_images/magic_effect.png"},
 			function(e)
 				e.x = e.src.x
 				e.y = e.src.y

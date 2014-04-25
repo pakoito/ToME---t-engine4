@@ -121,7 +121,7 @@ newTalent{
 			DamageType.REPULSION, t.getDamage(self, t),
 			tg.radius,
 			5, nil,
-			engine.Entity.new{alpha=50, display='', color_br=200, color_bg=120, color_bb=0},
+			engine.MapEffect.new{color_br=200, color_bg=120, color_bb=0, effect_shader="shader_images/paradox_effect.png"},
 			function(e)
 				e.x = e.src.x
 				e.y = e.src.y

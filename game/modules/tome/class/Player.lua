@@ -238,7 +238,7 @@ function _M:describeFloor(x, y, force)
 
 	-- Autopickup money
 	if self:getInven(self.INVEN_INVEN) and not self.no_inventory_access then
-		local i, nb = 1, 0
+		local i, nb = game.level.map:getObjectTotal(x, y), 0
 		local obj = game.level.map:getObject(x, y, i)
 		while obj do
 			local desc = true
@@ -254,9 +254,9 @@ function _M:describeFloor(x, y, force)
 			if desc then
 				if self:attr("auto_id") and obj:getPowerRank() <= self.auto_id then obj:identify(true) end
 				nb = nb + 1
-				i = i + 1
 				game.logSeen(self, "There is an item here: %s", obj:getName{do_color=true})
 			end
+			i = i - 1
 			obj = game.level.map:getObject(x, y, i)
 		end
 	end

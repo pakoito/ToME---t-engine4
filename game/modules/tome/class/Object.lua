@@ -40,6 +40,31 @@ _M.projectile_class = "mod.class.Projectile"
 
 _M.logCombat = Combat.logCombat
 
+function _M:getRequirementDesc(who)
+	local base_getRequirementDesc = engine.Object.getRequirementDesc
+	if self.subtype == "shield" and who:knowTalent(who.T_SKIRMISHER_BUCKLER_EXPERTISE) then
+		local oldreq = rawget(self, "require")
+		self.require = table.clone(oldreq, true)
+		if self.require.stat and self.require.stat.str then
+			self.require.stat.cun, self.require.stat.str = self.require.stat.str, nil
+		end
+		if self.require.talent then for i, tr in ipairs(self.require.talent) do
+			if tr[1] == who.T_ARMOUR_TRAINING then
+				self.require.talent[i] = {who.T_SKIRMISHER_BUCKLER_EXPERTISE, 1}
+				break
+			end
+		end end
+
+		local desc = base_getRequirementDesc(self, who)
+
+		self.require = oldreq
+
+		return desc
+	else
+		return base_getRequirementDesc(self, who)
+	end
+end
+
 function _M:init(t, no_default)
 	t.encumber = t.encumber or 0
 
@@ -1717,7 +1742,7 @@ function _M:on_prepickup(who, idx)
 	end
 	if who.player and self.lore then
 		game.level.map:removeObject(who.x, who.y, idx)
-		game.party:learnLore(self.lore)
+		game.party:learnLore(sselflf.lore)
 		return true
 	end
 	if who.player and self.force_lore_artifact then

@@ -44,6 +44,36 @@ newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="techniqu
 newTalentType{ allow_random=true, type="technique/mobility", name = "mobility", generic = true, description = "Controlling your movements on the battlefields is the sure way to victory." }
 newTalentType{ allow_random=true, type="technique/thuggery", name = "thuggery", generic = true, description = "Whatever wins the day, wins the day." }
 
+-- Skirmisher
+newTalentType {
+  type = "technique/acrobatics",
+  name = "Acrobatics",
+  generic = true,
+  allow_random = true,
+  description = "For light footed Rogues who prefer flight to fighting fair!",
+}
+
+newTalentType {
+  type = "technique/buckler-training",
+  name = "Buckler Training",
+  allow_random = true,
+  description = "Mastery over their shields separates Skirmishers from Archers, and gives them an edge.",
+}
+
+newTalentType {
+  type = "technique/skirmisher-slings",
+  name = "Skirmisher - Slings",
+  allow_random = true,
+  description = "Slings! Pow Pow!",
+}
+
+newTalentType {
+  type = "technique/tireless-combatant",
+  name = "Tireless Combatant",
+  allow_random = true,
+  description = "Your will carries you through the most difficult struggles, allowing you to fight on when others would have collapsed from exhaustion.",
+}
+
 -- Unarmed Combat
 newTalentType{ is_unarmed=true, allow_random=true, type="technique/pugilism", name = "pugilism", description = "Unarmed Boxing techniques that may not be practiced in massive armor or while a weapon or shield is equipped." }
 newTalentType{ is_unarmed=true, allow_random=true, type="technique/finishing-moves", name = "finishing moves", description = "Finishing moves that use combo points and may not be practiced in massive armor or while a weapon or shield is equipped." }
@@ -208,6 +238,28 @@ techs_cun_req5 = {
 	level = function(level) return 16 + (level-1)  end,
 }
 
+-- Generic requires for techs_wil based on talent level
+techs_wil_req1 = {
+	stat = { wil=function(level) return 12 + (level-1) * 2 end },
+	level = function(level) return 0 + (level-1)  end,
+}
+techs_wil_req2 = {
+	stat = { wil=function(level) return 20 + (level-1) * 2 end },
+	level = function(level) return 4 + (level-1)  end,
+}
+techs_wil_req3 = {
+	stat = { wil=function(level) return 28 + (level-1) * 2 end },
+	level = function(level) return 8 + (level-1)  end,
+}
+techs_wil_req4 = {
+	stat = { wil=function(level) return 36 + (level-1) * 2 end },
+	level = function(level) return 12 + (level-1)  end,
+}
+techs_wil_req5 = {
+	stat = { wil=function(level) return 44 + (level-1) * 2 end },
+	level = function(level) return 16 + (level-1)  end,
+}
+
 -- Archery range talents
 archery_range = function(self, t)
 	local weapon, ammo, offweapon = self:hasArcheryWeapon()
@@ -244,6 +296,34 @@ cancelStances = function(self)
 	self.cancelling_stances = nil
 end
 
+damDesc = function(self, type, dam)
+	-- Increases damage
+	if self.inc_damage then
+		local inc = (self.inc_damage.all or 0) + (self.inc_damage[type] or 0)
+		dam = dam + (dam * inc / 100)
+	end
+	return dam
+end
+
+-- Archery range talents
+archery_range = function(self, t)
+	local weapon, ammo, offweapon = self:hasArcheryWeapon()
+	if not weapon or not weapon.combat then return 1 end
+	return math.min(weapon.combat.range or 6, offweapon and offweapon.combat and offweapon.combat.range or 40)
+end
+
+-- Use the appropriate amount of stamina. Return false if we don't have enough.
+use_stamina = function(self, cost)
+  cost = cost * (1 + self:combatFatigue() * 0.01)
+  local available = self:getStamina()
+  if self:hasEffect("EFF_ADRENALINE_SURGE") then
+	  available = available + self.life
+  end
+  if cost > available then return end
+  self:incStamina(-cost)
+  return true
+end
+
 load("/data/talents/techniques/2hweapon.lua")
 load("/data/talents/techniques/2h-assault.lua")
 load("/data/talents/techniques/strength-of-the-berserker.lua")
@@ -263,6 +343,11 @@ load("/data/talents/techniques/excellence.lua")
 load("/data/talents/techniques/magical-combat.lua")
 load("/data/talents/techniques/mobility.lua")
 load("/data/talents/techniques/thuggery.lua")
+
+load("/data/talents/techniques/skirmisher-slings.lua")
+load("/data/talents/techniques/buckler-training.lua")
+load("/data/talents/techniques/acrobatics.lua")
+load("/data/talents/techniques/tireless-combatant.lua")
 
 load("/data/talents/techniques/pugilism.lua")
 load("/data/talents/techniques/unarmed-discipline.lua")

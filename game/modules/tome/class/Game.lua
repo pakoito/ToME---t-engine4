@@ -2287,6 +2287,7 @@ unlocks_list = {
 	cosmetic_class_alchemist_drolem = "Class feature: Alchemist's Drolem",
 
 	rogue_marauder = "Class: Marauder",
+	rogue_skirmisher = "Class: Skirmisher",
 	rogue_poisons = "Class tree: Poisons",
 
 	divine_anorithil = "Class: Anorithil",

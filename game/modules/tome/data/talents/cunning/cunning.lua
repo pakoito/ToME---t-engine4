@@ -32,6 +32,14 @@ newTalentType{ allow_random=true, type="cunning/survival", name = "survival", ge
 newTalentType{ allow_random=true, type="cunning/tactical", name = "tactical", description = "Tactical combat abilities." }
 newTalentType{ allow_random=true, type="cunning/scoundrel", name = "scoundrel", generic = true, description = "The use of ungentlemanly techniques." }
 
+-- Skirmisher
+newTalentType {
+  type = "cunning/called-shots",
+  name = "Called Shots",
+  allow_random = true,
+  description = "Inflict maximum pain to specific places on your enemies.",
+}
+
 -- Generic requires for cunning based on talent level
 cuns_req1 = {
 	stat = { cun=function(level) return 12 + (level-1) * 2 end },
@@ -84,3 +92,4 @@ load("/data/talents/cunning/survival.lua")
 load("/data/talents/cunning/shadow-magic.lua")
 load("/data/talents/cunning/ambush.lua")
 load("/data/talents/cunning/scoundrel.lua")
+load("/data/talents/cunning/called-shots.lua")

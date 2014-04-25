@@ -331,7 +331,7 @@ newTalent{
 			DamageType.WEAKNESS, { incDamage=incDamage, dur=3 },
 			range,
 			5, nil,
-			engine.MapEffect.new{color_br=255, color_bg=255, color_bb=255, effect_shader="shader_images/darkness_effect.png"}
+			engine.MapEffect.new{alpha=100, color_br=120, color_bg=120, color_bb=120, effect_shader="shader_images/darkness_effect.png"}
 		)
 
 		return true

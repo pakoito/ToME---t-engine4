@@ -392,10 +392,25 @@ function _M:attackTargetWith(target, weapon, damtype, mult, force_dam)
 		repelled = t.isRepelled(target, t)
 	end
 
+
+
 	-- If hit is over 0 it connects, if it is 0 we still have 50% chance
 	local hitted = false
 	local crit = false
 	local evaded = false
+
+		 print("[SKIRMISHER] Buckler Expertise check")
+  if target:knowTalent(target.T_SKIRMISHER_BUCKLER_EXPERTISE) then
+	local t = target:getTalentFromId(target.T_SKIRMISHER_BUCKLER_EXPERTISE)
+	if t.shouldEvade(target, t) then
+	  game.logSeen(target, "%s deflects the attack.", target.name:capitalize())
+	  print("[SKIRMISHER] attack evaded")
+	  t.onEvade(target, t, self)
+	  repelled = true -- Possibly not the best way to block this
+	  --return self:combatSpeed(weapon), false
+	end
+  end
+
 	if repelled then
 		self:logCombat(target, "#Target# repels an attack from #Source#.")
 	elseif self:checkEvasion(target) then
@@ -1099,6 +1114,9 @@ end
 -- This is how much % of a blow we can reduce with armor
 function _M:combatArmorHardiness()
 	local add = 0
+	if self:knowTalent(self.T_SKIRMISHER_BUCKLER_EXPERTISE) then
+		add = add + self:callTalent(self.T_SKIRMISHER_BUCKLER_EXPERTISE, "getHardiness")
+	end
 	if self:hasHeavyArmor() and self:knowTalent(self.T_ARMOUR_TRAINING) then
 		local at = Talents:getTalentFromId(Talents.T_ARMOUR_TRAINING)
 		add = add + at.getArmorHardiness(self, at)
@@ -1521,8 +1539,9 @@ end
 
 --- Gets fatigue
 function _M:combatFatigue()
-	if self.fatigue < 0 then return 0 end
-	if self:knowTalent(self.T_NO_FATIGUE) then return 0 end
+	local min = self.min_fatigue or 0
+	if self.fatigue < min then return min end
+	if self:knowTalent(self.T_NO_FATIGUE) then return min end
 	return self.fatigue
 end
 
@@ -1882,7 +1901,7 @@ function _M:combatMentalResist(fake)
 	if self:attr("dazed") then d = d / 2 end
 	
 	local nm = self:hasEffect(self.EFF_CURSE_OF_NIGHTMARES)
-	if nm and rng.percent(20) then
+	if nm and rng.percent(20) and not fake then
 		d = d * (1-self.tempeffect_def.EFF_CURSE_OF_NIGHTMARES.getVisionsReduction(nm, nm.level)/100)
 	end	
 	return self:rescaleCombatStats(d)
