@@ -19,10 +19,12 @@
 
 base_size = 64
 
-local basesize = 2 * radius * (engine.Map.tile_w + engine.Map.tile_h) / 2 + engine.Map.tile_w * 1.8
+local speed = speed or 0.023
+local a = a or 60
+local basesize = 2 * radius * (engine.Map.tile_w + engine.Map.tile_h) / 2 + engine.Map.tile_w * 1.8 * (oversize or 1)
 
 return {
-	system_rotation = 0, system_rotationv = 0.023,
+	system_rotation = 0, system_rotationv = speed,
 
 	base = 1000,
 
@@ -34,7 +36,7 @@ return {
 	r = {255, 255}, rv = {0, 0}, ra = {0, 0},
 	g = {255, 255}, gv = {0, 0}, ga = {0, 0},
 	b = {255, 255}, bv = {0, 0}, ba = {0, 0},
-	a = {60, 60}, av = {0, 0}, aa = {0, 0},
+	a = {a, a}, av = {0, 0}, aa = {0, 0},
 
 }, function(self)
 	self.ps:emit(1)

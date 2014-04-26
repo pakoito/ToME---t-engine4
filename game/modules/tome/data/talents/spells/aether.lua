@@ -153,10 +153,12 @@ newTalent{
 		local tg = self:getTalentTarget(t)
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
+		local _ _, _, _, x, y = self:canProject(tg, x, y)
+
 		local list = {}
 		self:project(tg, x, y, function(px, py) list[#list+1] = {x=px, y=py} end)
 
-		self:setEffect(self.EFF_AETHER_BREACH, t.getNb(self, t), {src = self, list=list, level=game.zone.short_name.."-"..game.level.level, dam=self:spellCrit(t.getDamage(self, t))})
+		self:setEffect(self.EFF_AETHER_BREACH, t.getNb(self, t), {src=self, x=x, y=y, radius=tg.radius, list=list, level=game.zone.short_name.."-"..game.level.level, dam=self:spellCrit(t.getDamage(self, t))})
 
 		game:playSoundNear(self, "talents/arcane")
 		return true

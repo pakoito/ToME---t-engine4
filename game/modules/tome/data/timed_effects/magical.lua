@@ -2054,8 +2054,13 @@ newEffect{
 		game:playSoundNear(self, "talents/arcane")
 	end,
 	activate = function(self, eff)
+		eff.particle = Particles.new("circle", eff.radius, {a=150, speed=0.15, img="aether_breach", radius=eff.radius})
+		eff.particle.zdepth = 6
+		game.level.map:addParticleEmitter(eff.particle, eff.x, eff.y)
 	end,
 	deactivate = function(self, eff)
+		if game.zone.short_name.."-"..game.level.level ~= eff.level then return end
+		game.level.map:removeParticleEmitter(eff.particle)
 	end,
 }
 

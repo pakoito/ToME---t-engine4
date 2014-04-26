@@ -1036,8 +1036,8 @@ function _M:addEffect(src, x, y, duration, damtype, dam, radius, dir, angle, ove
 		if overlay.overlay_particle then overlay_particle = overlay.overlay_particle end
 	end
 
-	if overlay_particle then
-		e.particles = {}
+	while overlay_particle do
+		e.particles = e.particles or {}
 		if overlay_particle.only_one then
 			e.particles[#e.particles+1] = self:particleEmitter(x, y, 1, overlay_particle.type, overlay_particle.args, nil, overlay_particle.zdepth)
 			e.particles_only_one = true
@@ -1049,6 +1049,7 @@ function _M:addEffect(src, x, y, duration, damtype, dam, radius, dir, angle, ove
 				end
 			end
 		end
+		overlay_particle = overlay_particle.overlay_particle
 	end
 	-- If nothing set, display on the last z-layer
 	if e.overlay and not e.overlay.zdepth then e.overlay.zdepth = self.zdepth - 1 end
@@ -1171,10 +1172,10 @@ function _M:processEffects()
 
 	if #todel > 0 then table.sort(todel) end
 	for i = #todel, 1, -1 do
-		if self.effects[todel[i]].particles then
-			for j, ps in ipairs(self.effects[todel[i]].particles) do self:removeParticleEmitter(ps) end
-		end
 		local e = table.remove(self.effects, todel[i])
+		if e.particles then
+			for j, ps in ipairs(e.particles) do self:removeParticleEmitter(ps) end
+		end
 		if e.overlay then
 			self.z_effects[e.overlay.zdepth][e] = nil
 		end
