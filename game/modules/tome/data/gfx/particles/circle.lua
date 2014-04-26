@@ -27,6 +27,7 @@ local appear = appear or 0
 local nb = 0
 
 return {
+--	blend_mode=core.particles.BLEND_ADDITIVE,
 	system_rotation = 0, system_rotationv = speed,
 	generator = function()
 	if nb == 0 and appear > 0 then
@@ -48,7 +49,7 @@ return {
 	else
 		return {
 			trail = 0,
-			life = 1000,
+			life = limit_life or 1000,
 			size = basesize, sizev = 0, sizea = 0,
 
 			x = 0, xv = 0, xa = 0,
@@ -64,6 +65,9 @@ return {
 	end
 end, },
 function(self)
-	self.ps:emit(1)
-	nb = nb + 1
+	if nb < 2 or not limit_life then
+		if self.ps:emit(1) > 0 then
+			nb = nb + 1
+		end
+	end
 end, 1, "particles_images/"..img, true

@@ -83,7 +83,7 @@ newTalent{
 			DamageType.DARKNESS, t.getDamageOnSpot(self, t),
 			self:getTalentRadius(t),
 			5, nil,
-			{type="shadow_zone"},
+			{type="shadow_zone", overlay_particle={zdepth=6, only_one=true, type="circle", args={oversize=0.7, a=60, appear=8, speed=-0.5, img="moon_circle", radius=self:getTalentRadius(t)}}},
 			nil, self:spellFriendlyFire()
 		)
 
@@ -164,6 +164,7 @@ newTalent{
 
 		local _ _, _, _, x, y = self:canProject(tg, x, y)
 		game.level.map:particleEmitter(x, y, tg.radius, "shadow_flash", {radius=tg.radius, grids=grids, tx=x, ty=y})
+		game.level.map:particleEmitter(x, y, tg.radius, "circle", {oversize=0.7, a=60, limit_life=16, appear=8, speed=-0.5, img="darkness_celestial_circle", radius=self:getTalentRadius(t)})
 		game:playSoundNear(self, "talents/fireflash")
 		return true
 	end,

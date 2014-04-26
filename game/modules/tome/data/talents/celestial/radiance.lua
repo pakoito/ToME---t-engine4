@@ -98,9 +98,14 @@ newTalent{
 	activate = function(self, t)
 		local daze = nil
 		if self:getTalentLevel(t) >= 4 then daze = t.getDaze(self, t) end
-		return {dam=t.getDamage(self, t), daze=daze}
+		return {
+			particle = self:addParticles(Particles.new("circle", 1, {toback=true, oversize=1, a=20, appear=4, speed=-0.2, img="sun_circle", radius=self:getTalentRange(t)})),
+			dam=t.getDamage(self, t),
+			daze=daze,
+		}
 	end,
 	deactivate = function(self, t, p)
+		self:removeParticles(p.particle)
 		return true
 	end,
 	info = function(self, t)

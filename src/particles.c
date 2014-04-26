@@ -480,12 +480,16 @@ static int particles_emit(lua_State *L)
 	particles_type *ps = l->ps;
 	if (!ps || !ps->init) return 0;
 	int nb = luaL_checknumber(L, 2);
-	if (!nb) return 0;
+	if (!nb) {
+		lua_pushnumber(L, 0);
+		return 1;
+	}
 //	printf("Emitting %d particles out of %d for system %x\n", nb, ps->nb, (int)ps);
 
 	nb = (nb * ps->density) / 100;
 	if (!nb) nb = 1;
 
+	int emited = 0;
 	int i;
 	for (i = 0; i < ps->nb; i++)
 	{
@@ -599,10 +603,12 @@ static int particles_emit(lua_State *L)
 			p->oy = p->y;
 
 			nb--;
+			emited++;
 			if (!nb) break;
 		}
 	}
-	return 0;
+	lua_pushnumber(L, emited);
+	return 1;
 }
 
 static const struct luaL_Reg particleslib[] =

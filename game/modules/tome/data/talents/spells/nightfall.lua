@@ -105,7 +105,8 @@ newTalent{
 			DamageType.CIRCLE_DEATH, {dam=self:spellCrit(t.getDamage(self, t)), dur=t.getBaneDur(self,t), ff=isFF(self)},
 			self:getTalentRadius(t),
 			5, nil,
-			{type="circle_of_death", overlay_particle={zdepth=6, only_one=true, type="circle", args={oversize=1, a=190, appear=8, speed=-0.03, img="darkness_circle", radius=self:getTalentRadius(t)}}},
+			{type="circle_of_death", overlay_particle={zdepth=6, only_one=true, type="circle", args={oversize=1, a=80, appear=8, speed=-0.05, img="necromantic_circle", radius=self:getTalentRadius(t)}}},
+--			{zdepth=6, only_one=true, type="circle", args={oversize=1, a=130, appear=8, speed=-0.03, img="arcane_circle", radius=self:getTalentRadius(t)}},
 			nil, false
 		)
 
