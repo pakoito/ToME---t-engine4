@@ -1742,7 +1742,7 @@ function _M:on_prepickup(who, idx)
 	end
 	if who.player and self.lore then
 		game.level.map:removeObject(who.x, who.y, idx)
-		game.party:learnLore(sselflf.lore)
+		game.party:learnLore(self.lore)
 		return true
 	end
 	if who.player and self.force_lore_artifact then
