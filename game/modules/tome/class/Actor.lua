@@ -268,23 +268,6 @@ function _M:onEntityMerge(a)
 	end
 end
 
--- This seems like the only reasonable place to do projectile deflection
--- we're also going to prevent phasing projectiles from stopping anywhere but their target
-function _M:projectDoStop(typ, tg, damtype, dam, particles, lx, ly, tmp, rx, ry, projectile)
-	-- Deflection check
-	local target = game.level.map:call(lx, ly, Map.ACTOR)
-	if target and target.getTalentFromId and target ~= projectile.src then
-		if target:knowTalent(target.T_SKIRMISHER_BUCKLER_MASTERY) then
-			local t = target:getTalentFromId(target.T_SKIRMISHER_BUCKLER_MASTERY)
-			lx, ly = t.offsetTarget(target, t, lx, ly, projectile)	
-			print("[SKIRMISHER] Deflected a projectile")
-		end
-	end
-
-	return engine.interface.ActorProject.projectDoStop(self, typ, tg, damtype, dam, particles, lx, ly, tmp, rx, ry, projectile)
-end
-
-
 --- Try to remove all "un-needed" effects, fields, ... for a clean export
 function _M:stripForExport()
 	self.distance_map = {}
