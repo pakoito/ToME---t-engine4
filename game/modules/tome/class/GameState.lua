@@ -1503,7 +1503,7 @@ local random_zone_themes = {
 		load_grids = {"/data/general/grids/underground.lua"},
 		getDoor = function(self) return "UNDERGROUND_FLOOR" end,
 		getFloor = function(self) return "UNDERGROUND_FLOOR" end,
-		getWall = function(self) return {"UNDERGROUND_TREE","UNDERGROUND_TREE2","UNDERGROUND_TREE3","UNDERGROUND_TREE4","UNDERGROUND_TREE5","UNDERGROUND_TREE6","UNDERGROUND_TREE7","UNDERGROUND_TREE8","UNDERGROUND_TREE9","UNDERGROUND_TREE10","UNDERGROUND_TREE11","UNDERGROUND_TREE12","UNDERGROUND_TREE13","UNDERGROUND_TREE14","UNDERGROUND_TREE15","UNDERGROUND_TREE16","UNDERGROUND_TREE17","UNDERGROUND_TREE18","UNDERGROUND_TREE19","UNDERGROUND_TREE20",} end,
+		getWall = function(self) return "UNDERGROUND_TREE" end,
 		getUp = function(self) return "UNDERGROUND_LADDER_UP" end,
 		getDown = function(self) return "UNDERGROUND_LADDER_DOWN" end,
 	} end },
