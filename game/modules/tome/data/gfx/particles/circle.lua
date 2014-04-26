@@ -23,6 +23,9 @@ local speed = speed or 0.023
 local a = (a or 60) / 255
 local basesize = 2 * radius * (engine.Map.tile_w + engine.Map.tile_h) / 2 + engine.Map.tile_w * 1.8 * (oversize or 1)
 local appear = appear or 0
+local r = (r or 255) / 255
+local g = (g or 255) / 255
+local b = (b or 255) / 255
 
 local nb = 0
 
@@ -41,9 +44,9 @@ return {
 			dir = 0, dirv = dirv, dira = 0,
 			vel = 0, velv = 0, vela = 0,
 
-			r = 1, rv = 0, ra = 0,
-			g = 1, gv = 0, ga = 0,
-			b = 1, bv = 0, ba = 0,
+			r = r, rv = 0, ra = 0,
+			g = g, gv = 0, ga = 0,
+			b = b, bv = 0, ba = 0,
 			a = a, av = 0, aa = 0,
 		}
 	else
@@ -57,9 +60,9 @@ return {
 			dir = 0, dirv = dirv, dira = 0,
 			vel = 0, velv = 0, vela = 0,
 
-			r = 1, rv = 0, ra = 0,
-			g = 1, gv = 0, ga = 0,
-			b = 1, bv = 0, ba = 0,
+			r = r, rv = 0, ra = 0,
+			g = g, gv = 0, ga = 0,
+			b = b, bv = 0, ba = 0,
 			a = a, av = 0, aa = 0,
 		}
 	end
