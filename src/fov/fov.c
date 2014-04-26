@@ -2687,7 +2687,7 @@ void fov_create_los_line(fov_settings_type *settings, void *map, void *source, f
                 }
 
                 /* being "pinched" isn't blocked, because one can still look diagonally */
-                if (mb0 && b1 || b0 && mb1 ||
+                if ((mb0 && b1) || (b0 && mb1) ||
                         gabs * (lower_slope - upper_slope) > GRID_EPSILON ||
                         gy*((float)(sy - ty) + (float)(tx - sx)*lower_slope - gy*0.5f) > -GRID_EPSILON ||
                         gy*((float)(sy - ty) + (float)(tx - sx)*upper_slope + gy*0.5f) <  GRID_EPSILON)
@@ -2808,7 +2808,7 @@ void fov_create_los_line(fov_settings_type *settings, void *map, void *source, f
                 }
 
                 /* being "pinched" isn't blocked, because one can still look diagonally */
-                if (mb0 && b1 || b0 && mb1 ||
+                if ((mb0 && b1) || (b0 && mb1) ||
                         gabs * (lower_slope - upper_slope) > GRID_EPSILON ||
                         gx*((float)(sx - tx) + (float)(ty - sy)*lower_slope - gx*0.5f) > -GRID_EPSILON ||
                         gx*((float)(sx - tx) + (float)(ty - sy)*upper_slope + gx*0.5f) <  GRID_EPSILON)

@@ -196,7 +196,7 @@ newTalent{
 		local trap = Trap.new{
 			name = "glyph of explosion",
 			type = "elemental", id_by_type=true, unided_name = "trap",
-			display = '^', color=colors.GOLD, image = "trap/trap_glyph_explosion_01_64.png",
+			display = '^', color=colors.GOLD, image = "trap/trap_glyph_explosion_02_64.png",
 			dam = dam,
 			canTrigger = function(self, x, y, who)
 				if who:reactionToward(self.summoner) < 0 then return mod.class.Trap.canTrigger(self, x, y, who) end
