@@ -41,7 +41,7 @@ newTalent{
 			DamageType.SHIFTINGSHADOWS, self:spellCrit(t.getDamage(self, t)),
 			self:getTalentRadius(t),
 			5, nil,
-			MapEffect.new{zdepth=6, overlay_particle={zdepth=6, only_one=true, type="circle", args={oversize=0, img="darkness_celestial_circle", radius=self:getTalentRadius(t)}}, color_br=255, color_bg=255, color_bb=255, effect_shader="shader_images/darkness_effect.png"},
+			MapEffect.new{zdepth=6, overlay_particle={zdepth=6, only_one=true, type="circle", args={appear=8, oversize=0, img="darkness_celestial_circle", radius=self:getTalentRadius(t)}}, color_br=255, color_bg=255, color_bb=255, effect_shader="shader_images/darkness_effect.png"},
 			nil, self:spellFriendlyFire(true)
 		)
 		game:playSoundNear(self, "talents/arcane")
@@ -83,7 +83,7 @@ newTalent{
 			DamageType.BLAZINGLIGHT, self:spellCrit(t.getDamage(self, t)),
 			radius,
 			5, nil,
-			MapEffect.new{zdepth=6, overlay_particle={zdepth=6, only_one=true, type="circle", args={img="sun_circle", radius=self:getTalentRadius(t)}}, color_br=255, color_bg=255, color_bb=255, effect_shader="shader_images/sunlight_effect.png"},
+			MapEffect.new{zdepth=6, overlay_particle={zdepth=6, only_one=true, type="circle", args={appear=8, img="sun_circle", radius=self:getTalentRadius(t)}}, color_br=255, color_bg=255, color_bb=255, effect_shader="shader_images/sunlight_effect.png"},
 			nil, self:spellFriendlyFire(true)
 		)
 		game:playSoundNear(self, "talents/arcane")
@@ -122,7 +122,7 @@ newTalent{
 			DamageType.SANCTITY, 1,
 			self:getTalentRadius(t),
 			5, nil,
-			MapEffect.new{zdepth=6, overlay_particle={zdepth=6, only_one=true, type="circle", args={img="sun_circle", radius=self:getTalentRadius(t)}}, color_br=255, color_bg=255, color_bb=255, effect_shader="shader_images/sunlight_effect.png"},
+			MapEffect.new{zdepth=6, overlay_particle={zdepth=6, only_one=true, type="circle", args={appear=8, img="sun_circle", radius=self:getTalentRadius(t)}}, color_br=255, color_bg=255, color_bb=255, effect_shader="shader_images/sunlight_effect.png"},
 			nil, self:spellFriendlyFire(true)
 		)
 		game:playSoundNear(self, "talents/arcane")
@@ -160,7 +160,7 @@ newTalent{
 			DamageType.WARDING, self:spellCrit(t.getDamage(self, t)),
 			self:getTalentRadius(t),
 			5, nil,
-			MapEffect.new{zdepth=6, overlay_particle={zdepth=6, only_one=true, type="circle", args={oversize=0, img="moon_circle", radius=self:getTalentRadius(t)}}, color_br=255, color_bg=255, color_bb=255, effect_shader="shader_images/moonlight_effect.png"},
+			MapEffect.new{zdepth=6, overlay_particle={zdepth=6, only_one=true, type="circle", args={appear=8, oversize=0, img="moon_circle", radius=self:getTalentRadius(t)}}, color_br=255, color_bg=255, color_bb=255, effect_shader="shader_images/moonlight_effect.png"},
 			nil, self:spellFriendlyFire(true)
 		)
 		game:playSoundNear(self, "talents/arcane")

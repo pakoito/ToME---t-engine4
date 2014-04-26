@@ -20,24 +20,50 @@
 base_size = 64
 
 local speed = speed or 0.023
-local a = a or 60
+local a = (a or 60) / 255
 local basesize = 2 * radius * (engine.Map.tile_w + engine.Map.tile_h) / 2 + engine.Map.tile_w * 1.8 * (oversize or 1)
+local appear = appear or 0
+
+local nb = 0
 
 return {
 	system_rotation = 0, system_rotationv = speed,
+	generator = function()
+	if nb == 0 and appear > 0 then
+		return {
+			trail = 0,
+			life = appear,
+			size = basesize * 3, sizev = -basesize * 2 / appear, sizea = 0,
 
-	base = 1000,
+			x = 0, xv = 0, xa = 0,
+			y = 0, yv = 0, ya = 0,
+			dir = 0, dirv = dirv, dira = 0,
+			vel = 0, velv = 0, vela = 0,
 
-	angle = { 0, 0 }, anglev = { 0, 0 }, anglea = { 0, 0 },
+			r = 1, rv = 0, ra = 0,
+			g = 1, gv = 0, ga = 0,
+			b = 1, bv = 0, ba = 0,
+			a = a, av = 0, aa = 0,
+		}
+	else
+		return {
+			trail = 0,
+			life = 1000,
+			size = basesize, sizev = 0, sizea = 0,
 
-	life = { 100, 100 },
-	size = { basesize, basesize }, sizev = {0, 0}, sizea = {0, 0},
+			x = 0, xv = 0, xa = 0,
+			y = 0, yv = 0, ya = 0,
+			dir = 0, dirv = dirv, dira = 0,
+			vel = 0, velv = 0, vela = 0,
 
-	r = {255, 255}, rv = {0, 0}, ra = {0, 0},
-	g = {255, 255}, gv = {0, 0}, ga = {0, 0},
-	b = {255, 255}, bv = {0, 0}, ba = {0, 0},
-	a = {a, a}, av = {0, 0}, aa = {0, 0},
-
-}, function(self)
+			r = 1, rv = 0, ra = 0,
+			g = 1, gv = 0, ga = 0,
+			b = 1, bv = 0, ba = 0,
+			a = a, av = 0, aa = 0,
+		}
+	end
+end, },
+function(self)
 	self.ps:emit(1)
+	nb = nb + 1
 end, 1, "particles_images/"..img, true
