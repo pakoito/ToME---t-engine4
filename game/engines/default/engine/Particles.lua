@@ -24,6 +24,7 @@ require "engine.class"
 module(..., package.seeall, class.make)
 
 local __particles_gl = {}
+setmetatable(__particles_gl, {__mode="v"})
 
 --- Make a particle emitter
 function _M:init(def, radius, args, shader)
@@ -39,6 +40,7 @@ end
 function _M:save()
 	return class.save(self, {
 		ps = true,
+		gl_texture = true,
 	})
 end
 
@@ -95,6 +97,7 @@ function _M:loaded()
 	end
 
 	self.ps = core.particles.newEmitter("/data/gfx/particles/"..self.def..".lua", args, self.zoom, config.settings.particles_density or 100, gl, sha, islast)
+	self.gl_texture = gl
 
 	if sub_particle then
 		self:setSub(sub_particle, 1, sub_particle_args)

@@ -90,4 +90,4 @@ function(self)
 			nb = nb + 1
 		end
 	end
-end, 1, "particles_images/"..img, true
+end, 1, "particles_images/"..img
