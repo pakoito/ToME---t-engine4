@@ -32,7 +32,7 @@ local nb = empty_start and -1 or 0
 
 return {
 --	blend_mode=core.particles.BLEND_ADDITIVE,
-	system_rotation = rng.range(0, 360), system_rotationv = speed,
+	system_rotation = base_rot or rng.range(0, 360), system_rotationv = speed,
 	generator = function()
 	if nb == -1 then
 		return {

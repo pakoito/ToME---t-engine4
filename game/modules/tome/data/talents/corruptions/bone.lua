@@ -72,7 +72,7 @@ newTalent{
 
 			DamageType:get(DamageType.PHYSICAL).projector(self, target.x, target.y, DamageType.PHYSICAL, dam)
 			if target:canBe("pin") then
-				target:setEffect(target.EFF_PINNED, t.getDuration(self, t), {apply_power=self:combatSpellpower()})
+				target:setEffect(target.EFF_BONE_GRAB, t.getDuration(self, t), {apply_power=self:combatSpellpower()})
 			else
 				game.logSeen(target, "%s resists the bone!", target.name:capitalize())
 			end
