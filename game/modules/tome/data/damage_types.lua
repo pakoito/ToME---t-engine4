@@ -416,6 +416,13 @@ setDefaultProjector(function(src, x, y, type, dam, tmp, no_martyr)
 
 		local hd = {"DamageProjector:final", src=src, x=x, y=y, type=type, dam=dam, tmp=tmp, no_martyr=no_martyr}
 		if src:triggerHook(hd) then dam = hd.dam if hd.stopped then return hd.stopped end end
+		if target.fireTalentCheck then
+			local ret = target:fireTalentCheck("callbackOnTakeDamage", src, x, y, type, dam, tmp, no_martyr)
+			if ret then
+				if ret.dam then dam = ret.dam end
+				if ret.stopped then return ret.stopped end
+			end
+		end
 
 		local source_talent = src.__projecting_for and src.__projecting_for.project_type and (src.__projecting_for.project_type.talent_id or src.__projecting_for.project_type.talent) and src.getTalentFromId and src:getTalentFromId(src.__projecting_for.project_type.talent or src.__projecting_for.project_type.talent_id)
 		local dead
