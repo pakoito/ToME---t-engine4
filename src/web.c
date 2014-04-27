@@ -369,6 +369,8 @@ static void handle_event(WebEvent *event) {
 				lua_pop(he_L, 1);
 			}
 			break;
+		case TE4_WEB_EVENT_DELETE_TEXTURE:
+			break;
 	}
 }
 

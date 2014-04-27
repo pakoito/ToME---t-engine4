@@ -513,7 +513,7 @@ newEffect{
 newEffect{
 	name = "SLOW", image = "talents/slow.png",
 	desc = "Slow",
-	long_desc = function(self, eff) return ("Reduces global action speed by %d%%."):format( eff.power * 100) end,
+	long_desc = function(self, eff) return ("Reduces global action speed by %d%%."):format(eff.power * 100) end,
 	type = "physical",
 	subtype = { slow=true },
 	status = "detrimental",

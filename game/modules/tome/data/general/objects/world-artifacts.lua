@@ -548,7 +548,7 @@ newEntity{ base = "BASE_LIGHT_ARMOR",
 		for eff_id, p in pairs(who.tmp) do
 			-- p only has parameters, we need to get the effect definition (e) to check subtypes
 			local e = who.tempeffect_def[eff_id]
-			if e.subtype and (e.subtype.bleed or e.subtype.poison or e.subtype.wound) then	
+			if e.status == "detrimental" and e.subtype and (e.subtype.bleed or e.subtype.poison or e.subtype.wound) then	
 				
 				-- Copy the effect parameters then change only the source
 				-- This will preserve everything passed to the debuff in setEffect but will use the new source for +damage%, etc
@@ -571,9 +571,12 @@ newEntity{ base = "BASE_LIGHT_ARMOR",
 							game.logPlayer(who, "#CRIMSON#Rogue Plight transfers an effect to a nearby enemy!")
 							return true
 						end		
-			end end end end		
+					end
+				end
+			end
+		end	
 		return true	
-		end,
+	end,
 }
 
 newEntity{

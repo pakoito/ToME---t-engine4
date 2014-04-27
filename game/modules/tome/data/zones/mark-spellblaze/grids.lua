@@ -35,8 +35,8 @@ newEntity{ base = "ALTAR",
 			who:removeObject(inven, item, true)
 			local o = game.zone:makeEntityByName(game.level, "object", "CORRUPTED_SANDQUEEN_HEART", true)
 			o:identify(true)
-			who:addObject(inven, o)
-			who:sortInven(inven)
+			who:addObject(who.INVEN_INVEN, o)
+			who:sortInven(who.INVEN_INVEN)
 			game.log("#GREEN#You put the heart on the altar. The heart shrivels and shakes, vibrating with new corrupt forces.")
 		end, "Cancel", "Corrupt", nil, true)
 	end,

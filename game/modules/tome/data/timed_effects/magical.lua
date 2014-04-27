@@ -2636,7 +2636,7 @@ newEffect{
 	name = "ILLUMINATION",
 	desc = "Illumination ", image = "talents/illumination.png",
 	long_desc = function(self, eff) return ("The target glows in the light, reducing its stealth and invisibility power by %d, defense by %d and looses all evasion bonus from being unseen."):format(eff.power, eff.def) end,
-	type = "physical",
+	type = "magical",
 	subtype = { sun=true },
 	status = "detrimental",
 	parameters = { power=20, def=20 },
@@ -2654,7 +2654,7 @@ newEffect{
 	name = "LIGHT_BURST",
 	desc = "Light Burst ", image = "talents/light_burst.png",
 	long_desc = function(self, eff) return ("The is invigorated when dealing damage with Searing Sight."):format() end,
-	type = "physical",
+	type = "magical",
 	subtype = { sun=true },
 	status = "beneficial",
 	parameters = { max=1 },
@@ -2664,9 +2664,9 @@ newEffect{
 
 newEffect{
 	name = "LIGHT_BURST_SPEED",
-	desc = "Light Burst Speed ", image = "effects/light_burst_speed.png",
-	long_desc = function(self, eff) return ("The is invigorated from Searing Sight, increasing movement speed by %d%%."):format(eff.charges * 10) end,
-	type = "physical",
+	desc = "Light Burst Speed", image = "effects/light_burst_speed.png",
+	long_desc = function(self, eff) return ("The target is invigorated from Searing Sight, increasing movement speed by %d%%."):format(eff.charges * 10) end,
+	type = "magical",
 	subtype = { sun=true },
 	status = "beneficial",
 	parameters = {},
@@ -2688,5 +2688,28 @@ newEffect{
 	end,
 	deactivate = function(self, eff)
 		self:removeTemporaryValue("movement_speed", eff.tmpid)
+	end,
+}
+
+newEffect{
+	name = "HEALING_INVERSION",
+	desc = "Healing Inversion", image = "talents/healing_inversion.png",
+	long_desc = function(self, eff) return ("All healing done to the target will instead turn into %d%% blight damage."):format(eff.power) end,
+	type = "magical",
+	subtype = { heal=true },
+	status = "detrimental",
+	parameters = { power=10 },
+	on_gain = function(self, err) return nil, "+Healing Inversion" end,
+	on_lose = function(self, err) return nil, "-Healing Inversion" end,
+	callbackOnHeal = function(self, eff, value, src)
+		local dam = value * eff.power / 100
+		DamageType:get(DamageType.BLIGHT).projector(eff.src or self, self.x, self.y, DamageType.BLIGHT, dam)
+		return {value=0}
+	end,
+	activate = function(self, eff)
+		eff.particle = self:addParticles(Particles.new("circle", 1, {oversize=0.7, a=90, appear=8, speed=-2, img="necromantic_circle", radius=0}))
+	end,
+	deactivate = function(self, eff)
+		self:removeParticles(eff.particle)
 	end,
 }

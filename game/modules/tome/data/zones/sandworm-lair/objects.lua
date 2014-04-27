@@ -35,7 +35,8 @@ newEntity{
 	type = "corpse", subtype = "heart", image = "object/artifact/queen_heart.png",
 	name = "Heart of the Sandworm Queen", unique=true, unided_name="pulsing organ",
 	display = "*", color=colors.VIOLET,
-	desc = [[The heart of the Sandworm Queen, ripped from her dead body. You could ... consume it, should you feel mad enough.]],
+	desc = [[The heart of the Sandworm Queen, ripped from her dead body.
+You could ... consume it, should you feel mad enough or you could try to corrupt it somewhere.]],
 	cost = 3000,
 	quest = 1,
 
