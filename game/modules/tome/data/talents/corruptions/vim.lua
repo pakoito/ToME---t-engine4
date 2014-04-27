@@ -117,8 +117,10 @@ newTalent{
 			actors[#actors+1] = target
 		end)
 		local _ _, x, y = self:canProject(tg, x, y)
-		game.level.map:particleEmitter(x, y, 1, "demon_teleport")
-		game.level.map:particleEmitter(self.x, self.y, 1, "demon_teleport")
+		game.level.map:particleEmitter(x, y, tg.radius, "circle", {empty_start=8, oversize=1, a=80, appear=8, limit_life=11, speed=5, img="green_demon_fire_circle", radius=tg.radius})
+		game.level.map:particleEmitter(x, y, tg.radius, "circle", {oversize=1, a=80, appear=8, limit_life=11, speed=5, img="demon_fire_circle", radius=tg.radius})
+		game.level.map:particleEmitter(self.x, self.y, tg.radius, "circle", {appear_size=2, empty_start=8, oversize=1, a=80, appear=11, limit_life=8, speed=5, img="green_demon_fire_circle", radius=tg.radius})
+		game.level.map:particleEmitter(self.x, self.y, tg.radius, "circle", {appear_size=2, oversize=1, a=80, appear=8, limit_life=11, speed=5, img="demon_fire_circle", radius=tg.radius})
 
 		for i, a in ipairs(actors) do
 			local tx, ty = util.findFreeGrid(self.x, self.y, 20, true, {[Map.ACTOR]=true})

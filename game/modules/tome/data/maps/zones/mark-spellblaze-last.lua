@@ -38,9 +38,9 @@ checkConnectivity({55,24}, "entrance", "boss-area", "boss-area")
 -- defineTile section
 defineTile("#", "BURNT_TREE")
 defineTile("~", "LAVA")
-defineTile("+", "ALTAR")
+defineTile("+", "ALTAR_CORRUPT")
 defineTile(".", "BURNT_GROUND")
-defineTile("@", "ALTAR", nil, "GRAND_CORRUPTOR")
+defineTile("@", "ALTAR_CORRUPT", nil, "GRAND_CORRUPTOR")
 
 -- addSpot section
 

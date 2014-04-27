@@ -23,21 +23,38 @@ local speed = speed or 0.023
 local a = (a or 60) / 255
 local basesize = 2 * radius * (engine.Map.tile_w + engine.Map.tile_h) / 2 + engine.Map.tile_w * 1.8 * (oversize or 1)
 local appear = appear or 0
+local appear_size = appear_size or 3
 local r = (r or 255) / 255
 local g = (g or 255) / 255
 local b = (b or 255) / 255
 
-local nb = 0
+local nb = empty_start and -1 or 0
 
 return {
 --	blend_mode=core.particles.BLEND_ADDITIVE,
-	system_rotation = 0, system_rotationv = speed,
+	system_rotation = rng.range(0, 360), system_rotationv = speed,
 	generator = function()
-	if nb == 0 and appear > 0 then
+	if nb == -1 then
+		return {
+			trail = 0,
+			life = empty_start,
+			size = 1, sizev = 0, sizea = 0,
+
+			x = 0, xv = 0, xa = 0,
+			y = 0, yv = 0, ya = 0,
+			dir = 0, dirv = dirv, dira = 0,
+			vel = 0, velv = 0, vela = 0,
+
+			r = 0, rv = 0, ra = 0,
+			g = 0, gv = 0, ga = 0,
+			b = 0, bv = 0, ba = 0,
+			a = 0, av = 0, aa = 0,
+		}
+	elseif nb == 0 and appear > 0 then
 		return {
 			trail = 0,
 			life = appear,
-			size = basesize * 3, sizev = -basesize * 2 / appear, sizea = 0,
+			size = basesize * appear_size, sizev = -basesize * (appear_size - 1) / appear, sizea = 0,
 
 			x = 0, xv = 0, xa = 0,
 			y = 0, yv = 0, ya = 0,

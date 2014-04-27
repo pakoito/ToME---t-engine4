@@ -24,6 +24,7 @@ newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="corrupti
 newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="corruption/bone", name = "bone", description = "Harness the power of bones." }
 newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="corruption/hexes", name = "hexes", generic = true, description = "Hex your foes, hindering and crippling them." }
 newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="corruption/curses", name = "curses", generic = true, description = "Curse your foes, hindering and crippling them." }
+newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="corruption/vile-life", name = "vile life", generic = true, description = "Manipulate life for your vile needs." }
 newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="corruption/plague", name = "plague", description = "Spread diseases to your foes." }
 newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="corruption/scourge", name = "scourge", description = "Bring pain and destruction to the world." }
 newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="corruption/reaving-combat", name = "reaving combat", description = "Enhanced melee combat through the dark arts." }
@@ -106,3 +107,4 @@ load("/data/talents/corruptions/blight.lua")
 load("/data/talents/corruptions/shadowflame.lua")
 load("/data/talents/corruptions/vim.lua")
 load("/data/talents/corruptions/torment.lua")
+load("/data/talents/corruptions/vile-life.lua")

@@ -22,3 +22,22 @@ load("/data/general/grids/forest.lua")
 load("/data/general/grids/water.lua")
 load("/data/general/grids/lava.lua")
 load("/data/general/grids/burntland.lua")
+
+newEntity{ base = "ALTAR",
+	define_as = "ALTAR_CORRUPT",
+	on_move = function(self, x, y, who)
+		if not who.player then return end
+		local o, inven, item = who:findInAllInventoriesBy("define_as", "SANDQUEEN_HEART")
+		if not o then return end
+
+		require("engine.ui.Dialog"):yesnoPopup("Heart of the Sandworm Queen", "The altar seems to react to the heart. You feel you could corrupt it here.", function(ret)
+			if ret then return end
+			who:removeObject(inven, item, true)
+			local o = game.zone:makeEntityByName(game.level, "object", "CORRUPTED_SANDQUEEN_HEART", true)
+			o:identify(true)
+			who:addObject(inven, o)
+			who:sortInven(inven)
+			game.log("#GREEN#You put the heart on the altar. The heart shrivels and shakes, vibrating with new corrupt forces.")
+		end, "Cancel", "Corrupt", nil, true)
+	end,
+}
