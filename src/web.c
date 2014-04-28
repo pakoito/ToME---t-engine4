@@ -393,7 +393,7 @@ void te4_web_init(lua_State *L) {
 	auxiliar_newclass(L, "web{view}", view_reg);
 	luaL_openlib(L, "core.webview", weblib, 0);
 	lua_pushstring(L, "kind");
-	lua_pushstring(L, "awesomium");
+	lua_pushstring(L, "cef3");
 	lua_settable(L, -3);
 	lua_settop(L, 0);
 }
