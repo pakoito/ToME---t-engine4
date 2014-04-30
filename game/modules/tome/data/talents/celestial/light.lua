@@ -72,7 +72,7 @@ newTalent{
 			DamageType.HEALING_POWER, self:spellCrit(t.getHeal(self, t)),
 			self:getTalentRadius(t),
 			5, nil,
-			{overlay_particle={zdepth=6, only_one=true, type="circle", args={img="sun_circle", a=100, speed=0.04, radius=self:getTalentRadius(t)}}, type="healing_vapour"},
+			{overlay_particle={zdepth=6, only_one=true, type="circle", args={img="sun_circle", a=10, speed=0.04, radius=self:getTalentRadius(t)}}, type="healing_vapour"},
 			nil, true
 		)
 		game:playSoundNear(self, "talents/heal")

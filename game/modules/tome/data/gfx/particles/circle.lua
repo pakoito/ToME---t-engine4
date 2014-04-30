@@ -19,9 +19,13 @@
 
 base_size = 64
 
+local shader = shader or false
+
+if shader then use_shader = {type="volumetric_aura"} end
+
 local speed = speed or 0.023
 local a = (a or 60) / 255
-local basesize = 2 * radius * (engine.Map.tile_w + engine.Map.tile_h) / 2 + engine.Map.tile_w * 1.8 * (oversize or 1)
+local basesize = (shader and 1.75 or 1) * 2 * radius * (engine.Map.tile_w + engine.Map.tile_h) / 2 + engine.Map.tile_w * 1.8 * (oversize or 1)
 local appear = appear or 0
 local appear_size = appear_size or 3
 local r = (r or 255) / 255
@@ -31,7 +35,7 @@ local b = (b or 255) / 255
 local nb = empty_start and -1 or 0
 
 return {
---	blend_mode=core.particles.BLEND_ADDITIVE,
+	blend_mode = shader and core.particles.BLEND_ADDITIVE or nil,
 	system_rotation = base_rot or rng.range(0, 360), system_rotationv = speed,
 	generator = function()
 	if nb == -1 then
