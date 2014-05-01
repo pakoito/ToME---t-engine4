@@ -760,6 +760,15 @@ function fs.exists(path)
 	return oldfsexists(path)
 end
 
+local oldfsgetrealpath = fs.getRealPath
+function fs.getRealPath(path)
+	local p = oldfsgetrealpath(path)
+	if not p then return p end
+	local sep = fs.getPathSeparator()
+	local doublesep = sep..sep
+	return p:gsub(doublesep, sep)
+end
+
 tstring = {}
 tstring.is_tstring = true
 
