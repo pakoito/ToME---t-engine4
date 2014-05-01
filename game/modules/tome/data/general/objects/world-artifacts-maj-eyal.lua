@@ -1100,6 +1100,9 @@ newEntity{ base = "BASE_MASSIVE_ARMOR", -- Thanks SageAcrin!
 	require = { stat = { str=24 }, },
 	cost = 300,
 	material_level = 2,
+	moddable_tile = "special/wooden_cuirass",
+	moddable_tile_big = true,
+
 	encumber = 12,
 	metallic=false,
 	wielder = {
