@@ -56,7 +56,7 @@ newTalent{
 			else
 				game.logSeen(target, "%s resists the disease!", target.name:capitalize())
 			end
-			game.level.map:particleEmitter(px, py, 1, "slime")
+			game.level.map:particleEmitter(px, py, 1, "circle", {oversize=0.7, a=200, limit_life=8, appear=8, speed=-2, img="disease_circle", radius=0})
 		end)
 		game:playSoundNear(self, "talents/slime")
 
@@ -133,8 +133,8 @@ newTalent{
 						target:setEffect(disease.id, 6, {src=self, dam=disease.params.dam, str=disease.params.str, dex=disease.params.dex, con=disease.params.con, heal_factor=disease.params.heal_factor, resist=disease.params.resist, apply_power=self:combatSpellpower()})
 					end
 				end
-				game.level.map:particleEmitter(px, py, 1, "slime")
 			end)
+			game.level.map:particleEmitter(x, y,self:getTalentRadius(t), "circle", {oversize=0.7, a=200, limit_life=8, appear=8, speed=-2, img="disease_circle", radius=self:getTalentRadius(t)})
 		end
 		game:playSoundNear(self, "talents/slime")
 
@@ -202,8 +202,8 @@ newTalent{
 			elseif #diseases > 0 then
 				game.logSeen(target, "%s resists the stun!", target.name:capitalize())
 			end
-			game.level.map:particleEmitter(px, py, 1, "slime")
 		end)
+		game.level.map:particleEmitter(x, y, t.getRadius(self, t), "circle", {oversize=0.7, a=200, limit_life=8, appear=8, speed=-2, img="blight_circle", radius=t.getRadius(self, t)})
 		game:playSoundNear(self, "talents/slime")
 
 		return true
@@ -276,7 +276,7 @@ newTalent{
 			local target = game.level.map(px, py, engine.Map.ACTOR)
 			if not target or (self:reactionToward(target) >= 0) then return end
 			target:setEffect(self.EFF_EPIDEMIC, 6, {src=self, dam=self:spellCrit(self:combatTalentSpellDamage(t, 15, 70)), heal_factor=t.healloss(self,t), resist=t.disfact(self,t), apply_power=self:combatSpellpower()})
-			game.level.map:particleEmitter(px, py, 1, "slime")
+			game.level.map:particleEmitter(px, py, 1, "circle", {oversize=0.7, a=200, limit_life=8, appear=8, speed=-2, img="disease_circle", radius=0})
 		end)
 		game:playSoundNear(self, "talents/slime")
 
