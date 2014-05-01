@@ -297,6 +297,7 @@ static void handle_event(WebEvent *event) {
 			break;
 
 		case TE4_WEB_EVENT_DOWNLOAD_REQUEST:
+			printf("[WEBCORE] download request %ld = %s :: %s :: %s\n", event->data.download_request.id, event->data.download_request.url, event->data.download_request.name, event->data.download_request.mime);
 			lua_rawgeti(he_L, LUA_REGISTRYINDEX, event->handlers);
 			lua_pushstring(he_L, "on_download_request");
 			lua_gettable(he_L, -2);
@@ -311,6 +312,7 @@ static void handle_event(WebEvent *event) {
 			break;
 
 		case TE4_WEB_EVENT_DOWNLOAD_UPDATE:
+			printf("[WEBCORE] download update %ld = %ld :: %ld :: %d :: %ld\n", event->data.download_update.id, event->data.download_update.got, event->data.download_update.total, event->data.download_update.percent, event->data.download_update.speed);
 			lua_rawgeti(he_L, LUA_REGISTRYINDEX, event->handlers);
 			lua_pushstring(he_L, "on_download_update");
 			lua_gettable(he_L, -2);
@@ -326,12 +328,13 @@ static void handle_event(WebEvent *event) {
 			break;
 
 		case TE4_WEB_EVENT_DOWNLOAD_FINISH:
+			printf("[WEBCORE] download finish %ld\n", event->data.download_finish.id);
 			lua_rawgeti(he_L, LUA_REGISTRYINDEX, event->handlers);
 			lua_pushstring(he_L, "on_download_finish");
 			lua_gettable(he_L, -2);
 			lua_remove(he_L, -2);
 			if (!lua_isnil(he_L, -1)) {
-				lua_pushnumber(he_L, event->data.download_update.id);
+				lua_pushnumber(he_L, event->data.download_finish.id);
 				docall(he_L, 1, 0);
 			} else lua_pop(he_L, 1);
 			break;
