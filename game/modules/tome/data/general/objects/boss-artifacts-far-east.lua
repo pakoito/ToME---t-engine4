@@ -495,6 +495,9 @@ newEntity{ base = "BASE_LIGHT_ARMOR",
 	rarity = 250,
 	cost = 300,
 	material_level=5,
+	moddable_tile = "special/molten_skin",
+	moddable_tile_big = true,
+
 	wielder = {
 		combat_spellpower = 15,
 		combat_spellcrit = 10,
