@@ -648,7 +648,7 @@ static int lua_fov_line_step(lua_State *L)
 
 	fov_line_data *line = &(lua_line->line);
 	bool dont_stop_at_end = lua_toboolean(L, 2);
-	if (!dont_stop_at_end && line->dest_t == line->t || line->dest_t == 0) return 0;
+	if ((!dont_stop_at_end && line->dest_t == line->t) || line->dest_t == 0) return 0;
 
 	bool is_corner_blocked = false;
 	float fx, fy, x0, y0, fx2, fy2, dx, dy;
@@ -1194,7 +1194,7 @@ static int lua_hex_fov_line_step(lua_State *L)
 
 	hex_fov_line_data *line = &(lua_line->line);
 	bool dont_stop_at_end = lua_toboolean(L, 2);
-	if (!dont_stop_at_end && line->dest_t == line->t || line->dest_t == 0) return 0;
+	if ((!dont_stop_at_end && line->dest_t == line->t) || line->dest_t == 0) return 0;
 
 	line->t += 1;
 	float fx = INV_SQRT_3_2 * (line->source_x + (float)line->t * line->step_x + line->eps_x);

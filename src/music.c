@@ -76,7 +76,7 @@ void openal_get_devices()
 	char *defaultDevice=NULL;
 	char *deviceList=NULL;
 
-	if (alcIsExtensionPresent(NULL, (ALubyte*)"ALC_ENUMERATION_EXT") == AL_TRUE)
+	if (alcIsExtensionPresent(NULL, (const ALCchar*)"ALC_ENUMERATION_EXT") == AL_TRUE)
 	{ // try out enumeration extension
 		deviceList = (char *)alcGetString(NULL, ALC_DEVICE_SPECIFIER);
 

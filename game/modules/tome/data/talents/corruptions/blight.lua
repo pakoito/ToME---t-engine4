@@ -101,7 +101,9 @@ newTalent{
 					end
 				end
 			end
-		end, nil, {type="slime"})
+		end)
+		local _ _, x, y = self:canProject(tg, x, y)
+		game.level.map:particleEmitter(x, y, tg.radius, "circle", {zdepth=6, oversize=1, a=130, appear=8, limit_life=8, speed=5, img="green_demon_fire_circle", radius=tg.radius})
 		game:playSoundNear(self, "talents/slime")
 		return true
 	end,

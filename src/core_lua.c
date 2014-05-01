@@ -429,7 +429,7 @@ static int lua_key_get_clipboard(lua_State *L)
 		if (str)
 		{
 			lua_pushstring(L, str);
-			free(str);
+			SDL_free(str);
 		}
 		else
 			lua_pushnil(L);
@@ -786,7 +786,7 @@ static int sdl_surface_drawstring_newsurface_aa(lua_State *L)
 	return 1;
 }
 
-static font_make_texture_line(lua_State *L, SDL_Surface *s, int id, bool is_separator, int id_real_line, char *line_data, int line_data_size, bool direct_uid_draw, int realsize)
+static void font_make_texture_line(lua_State *L, SDL_Surface *s, int id, bool is_separator, int id_real_line, char *line_data, int line_data_size, bool direct_uid_draw, int realsize)
 {
 	lua_createtable(L, 0, 9);
 
@@ -1018,7 +1018,7 @@ static int sdl_font_draw(lua_State *L)
 					}
 				}
 				// Extra data
-				else if ((*(next+1) == '&')) {
+				else if (*(next+1) == '&') {
 					line_data = next + 2;
 					line_data_size = codestop - (next+2);
 				}

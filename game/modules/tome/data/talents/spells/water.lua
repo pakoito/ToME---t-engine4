@@ -158,6 +158,11 @@ newTalent{
 	getDuration = function(self, t) return 4 + math.ceil(self:getTalentLevel(t)) end,
 	getPower = function(self, t) return util.bound(50 + self:combatTalentSpellDamage(t, 50, 450), 0, 500) / 500 end,
 	on_pre_use = function(self, t, silent) if self:attr("is_shivgoroth") then if not silent then game.logPlayer(self, "You are already a Shivgoroth!") end return false end return true end,
+	on_unlearn = function(self, t)
+		if self:getTalentLevel(t) == 0 then
+			self:removeEffect(self.EFF_SHIVGOROTH_FORM, true, true)
+		end
+	end,
 	action = function(self, t)
 		self:setEffect(self.EFF_SHIVGOROTH_FORM, t.getDuration(self, t), {power=t.getPower(self, t), lvl=self:getTalentLevelRaw(t)})
 		game:playSoundNear(self, "talents/tidalwave")

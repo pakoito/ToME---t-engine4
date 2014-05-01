@@ -46,7 +46,7 @@ newTalent{
 					self:project(tg2, px, py, DamageType.ICE, self:spellCrit(t.getDamage(self, t)))
 					game.level.map:particleEmitter(self.x, self.y, math.max(math.abs(px-self.x), math.abs(py-self.y)), "ice_beam", {tx=px-self.x, ty=py-self.y})
 				else
-					local tg2 = {type="bolt", range=self:getTalentRange(t), talent=t, display={particle="ice_shards"}}
+					local tg2 = {type="bolt", range=self:getTalentRange(t), talent=t, display={particle="arrow", particle_args={tile="particles_images/ice_shards"}}}
 					self:projectile(tg2, px, py, DamageType.ICE, self:spellCrit(t.getDamage(self, t)), {type="freeze"})
 				end
 			end

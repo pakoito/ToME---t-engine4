@@ -513,7 +513,7 @@ newEffect{
 newEffect{
 	name = "SLOW", image = "talents/slow.png",
 	desc = "Slow",
-	long_desc = function(self, eff) return ("Reduces global action speed by %d%%."):format( eff.power * 100) end,
+	long_desc = function(self, eff) return ("Reduces global action speed by %d%%."):format(eff.power * 100) end,
 	type = "physical",
 	subtype = { slow=true },
 	status = "detrimental",
@@ -874,6 +874,35 @@ newEffect{
 		eff.tmpid = self:addTemporaryValue("never_move", 1)
 	end,
 	deactivate = function(self, eff)
+		self:removeTemporaryValue("never_move", eff.tmpid)
+	end,
+}
+
+newEffect{
+	name = "BONE_GRAB", image = "talents/bone_grab.png",
+	desc = "Pinned to the ground",
+	long_desc = function(self, eff) return "The target is pinned to the ground, unable to move." end,
+	type = "physical",
+	subtype = { pin=true },
+	status = "detrimental",
+	parameters = {},
+	on_gain = function(self, err) return "#Target# is pinned to the ground.", "+Bone Grab" end,
+	on_lose = function(self, err) return "#Target# is no longer pinned.", "-Bone Grab" end,
+	activate = function(self, eff)
+		eff.tmpid = self:addTemporaryValue("never_move", 1)
+
+		if not self.add_displays then
+			self.add_displays = { Entity.new{image='npc/bone_grab_pin.png', display=' ', display_on_seen=true } }
+			eff.added_display = true
+		end
+		self:removeAllMOs()
+		game.level.map:updateMap(self.x, self.y)
+	end,
+	deactivate = function(self, eff)
+		if eff.added_display then self.add_displays = nil end
+		self:removeAllMOs()
+		game.level.map:updateMap(self.x, self.y)
+
 		self:removeTemporaryValue("never_move", eff.tmpid)
 	end,
 }

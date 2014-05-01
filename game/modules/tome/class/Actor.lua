@@ -1797,6 +1797,9 @@ function _M:onHeal(value, src)
 		end
 	end
 
+	local ret = self:fireTalentCheck("callbackOnHeal", value, src)
+	if ret then value = ret.value end
+
 --	print("[HEALING]", self.uid, self.name, "for", value)
 	if (not self.resting and (not game.party:hasMember(self) or not game:getPlayer(true).resting)) and value + psi_heal >= 1 and not self:attr("silent_heal") then
 		if game.level.map.seens(self.x, self.y) then
@@ -4357,6 +4360,8 @@ local sustainCallbackCheck = {
 	callbackOnArcheryMiss = "talents_on_archery_miss",
 	callbackOnCrit = "talents_on_crit",
 	callbackOnStatChange = "talents_on_stat_change",
+	callbackOnTakeDamage = "talents_on_take_damage",
+	callbackOnHeal = "talents_on_heal",
 }
 _M.sustainCallbackCheck = sustainCallbackCheck
 

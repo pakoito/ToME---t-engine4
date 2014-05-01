@@ -57,6 +57,7 @@ static int lua_is_hex(lua_State *L)
 		lua_settable(L, LUA_REGISTRYINDEX);
 		lua_pushnumber(L, 0);
 	}
+	return 1;
 }
 
 static int map_object_new(lua_State *L)

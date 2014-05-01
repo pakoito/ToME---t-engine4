@@ -33,14 +33,14 @@ newTalent{
 	requires_target = true,
 	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 20, 200) end,
 	action = function(self, t)
-		local tg = {type="bolt", range=self:getTalentRange(t), talent=t, display={particle="stone_shards", trail="earthtrail"}}
+		local tg = {type="bolt", range=self:getTalentRange(t), talent=t, display={particle="arrow", particle_args={tile="particles_images/earthen_missiles"}}}
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
 		local damage = t.getDamage(self, t)
 		self:projectile(tg, x, y, DamageType.SPLIT_BLEED, self:spellCrit(damage), nil)
 		game:playSoundNear(self, "talents/earth")
 		--missile #2
-		local tg2 = {type="bolt", range=self:getTalentRange(t), talent=t, display={particle="stone_shards", trail="earthtrail"}}
+		local tg2 = {type="bolt", range=self:getTalentRange(t), talent=t, display={particle="arrow", particle_args={tile="particles_images/earthen_missiles"}}}
 		local x, y = self:getTarget(tg2)
 		if x and y then
 			self:projectile(tg2, x, y, DamageType.SPLIT_BLEED, self:spellCrit(damage), nil)
@@ -48,7 +48,7 @@ newTalent{
 		end
 		--missile #3 (Talent Level 5 Bonus Missile)
 		if self:getTalentLevel(t) >= 5 then
-			local tg3 = {type="bolt", range=self:getTalentRange(t), talent=t, display={particle="stone_shards", trail="earthtrail"}}
+			local tg3 = {type="bolt", range=self:getTalentRange(t), talent=t, display={particle="arrow", particle_args={tile="particles_images/earthen_missiles"}}}
 			local x, y = self:getTarget(tg3)
 			if x and y then
 				self:projectile(tg3, x, y, DamageType.SPLIT_BLEED, self:spellCrit(damage), nil)

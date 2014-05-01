@@ -100,8 +100,8 @@ newTalent{
 	end,
 	action = function(self, t)
 		local tg = self:getTalentTarget(t)
-		local grids = self:project(tg, self.x, self.y, DamageType.BLOOD_BOIL, self:spellCrit(self:combatTalentSpellDamage(t, 28, 190)))
-		game.level.map:particleEmitter(self.x, self.y, tg.radius, "ball_blood", {radius=tg.radius})
+		self:project(tg, self.x, self.y, DamageType.BLOOD_BOIL, self:spellCrit(self:combatTalentSpellDamage(t, 28, 190)))
+		game.level.map:particleEmitter(self.x, self.y, tg.radius, "circle", {oversize=1, a=180, appear=8, limit_life=8, speed=-3, img="blood_circle", radius=tg.radius})
 		game:playSoundNear(self, "talents/slime")
 		return true
 	end,

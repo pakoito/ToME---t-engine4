@@ -36,6 +36,7 @@ newTalent{
 			local target = game.level.map(tx, ty, Map.ACTOR)
 			if not target then return end
 			target:setEffect(target.EFF_CURSE_DEFENSELESSNESS, 10, {power=self:combatTalentSpellDamage(t, 30, 60), apply_power=self:combatSpellpower()})
+			game.level.map:particleEmitter(tx, ty, 1, "circle", {base_rot=0, oversize=0.7, a=130, limit_life=8, appear=8, speed=0, img="curse_gfx", radius=0})
 		end)
 		game:playSoundNear(self, "talents/slime")
 		return true
@@ -66,6 +67,7 @@ newTalent{
 			local target = game.level.map(tx, ty, Map.ACTOR)
 			if not target then return end
 			target:setEffect(target.EFF_CURSE_IMPOTENCE, 10, {power=t.imppower(self,t), apply_power=self:combatSpellpower()})
+			game.level.map:particleEmitter(tx, ty, 1, "circle", {base_rot=0, oversize=0.7, a=130, limit_life=8, appear=8, speed=0, img="curse_gfx_02", radius=0})
 		end)
 		game:playSoundNear(self, "talents/slime")
 		return true
@@ -95,6 +97,7 @@ newTalent{
 			local target = game.level.map(tx, ty, Map.ACTOR)
 			if not target then return end
 			target:setEffect(target.EFF_CURSE_DEATH, 10, {src=self, dam=self:combatTalentSpellDamage(t, 10, 70), apply_power=self:combatSpellpower()})
+			game.level.map:particleEmitter(tx, ty, 1, "circle", {base_rot=0, oversize=0.7, a=130, limit_life=8, appear=8, speed=0, img="curse_gfx_03", radius=0})
 		end)
 		game:playSoundNear(self, "talents/slime")
 		return true
@@ -124,6 +127,7 @@ newTalent{
 			local target = game.level.map(tx, ty, Map.ACTOR)
 			if not target then return end
 			target:setEffect(target.EFF_CURSE_VULNERABILITY, 7, {power=self:combatTalentSpellDamage(t, 10, 40), apply_power=self:combatSpellpower()})
+			game.level.map:particleEmitter(tx, ty, 1, "circle", {base_rot=0, oversize=0.7, a=130, limit_life=8, appear=8, speed=0, img="curse_gfx_04", radius=0})
 		end)
 		game:playSoundNear(self, "talents/slime")
 		return true

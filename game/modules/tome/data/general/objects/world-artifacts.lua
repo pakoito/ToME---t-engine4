@@ -437,6 +437,8 @@ newEntity{ base = "BASE_SHIELD",
 	power_source = {technique=true},
 	unique = true,
 	name = "Titanic", image = "object/artifact/shield_titanic.png",
+	moddable_tile = "special/%s_titanic",
+	moddable_tile_big = true,
 	unided_name = "huge shield",
 	desc = [[This shield made of the darkest stralite is huge, heavy and very solid.]],
 	color = colors.GREY,
@@ -473,6 +475,8 @@ newEntity{ base = "BASE_SHIELD",
 	require = { stat = { str=20 }, },
 	cost = 400,
 	material_level = 3,
+	moddable_tile = "special/%s_black_mesh",
+	moddable_tile_big = true,
 	metallic = false,
 	special_combat = {
 		dam = resolvers.rngavg(25,35),
@@ -548,7 +552,7 @@ newEntity{ base = "BASE_LIGHT_ARMOR",
 		for eff_id, p in pairs(who.tmp) do
 			-- p only has parameters, we need to get the effect definition (e) to check subtypes
 			local e = who.tempeffect_def[eff_id]
-			if e.subtype and (e.subtype.bleed or e.subtype.poison or e.subtype.wound) then	
+			if e.status == "detrimental" and e.subtype and (e.subtype.bleed or e.subtype.poison or e.subtype.wound) then	
 				
 				-- Copy the effect parameters then change only the source
 				-- This will preserve everything passed to the debuff in setEffect but will use the new source for +damage%, etc
@@ -571,9 +575,12 @@ newEntity{ base = "BASE_LIGHT_ARMOR",
 							game.logPlayer(who, "#CRIMSON#Rogue Plight transfers an effect to a nearby enemy!")
 							return true
 						end		
-			end end end end		
+					end
+				end
+			end
+		end	
 		return true	
-		end,
+	end,
 }
 
 newEntity{
@@ -4087,6 +4094,8 @@ newEntity{ base = "BASE_SHIELD", --Thanks SageAcrin!
 	rarity = 200,
 	cost = 60,
 	material_level = 1,
+	moddable_tile = "special/%s_coral_spray",
+	moddable_tile_big = true,
 	metallic = false,
 	special_combat = {
 		dam = 18,
@@ -4938,6 +4947,8 @@ newEntity{ base = "BASE_LONGSWORD",
 	unique = true,
 	name = "Everpyre Blade",
 	unided_name = "flaming wooden blade", image = "object/artifact/everpyre_blade.png",
+	moddable_tile = "special/%s_everpyre_blade",
+	moddable_tile_big = true,
 	level_range = {28, 38},
 	color=colors.RED,
 	rarity = 300,
@@ -5833,6 +5844,8 @@ newEntity{ base = "BASE_SHIELD",
 	unique = true,
 	unided_name = "handled hole in space",
 	name = "Temporal Rift", image = "object/artifact/temporal_rift.png",
+	moddable_tile = "special/%s_temporal_rift",
+	moddable_tile_big = true,
 	desc = [[Some mad Chronomancer appears to have affixed a handle to this hole in spacetime. It looks highly effective, in its own strange way.]],
 	color = colors.LIGHT_GREY,
 	rarity = 300,
@@ -5992,6 +6005,8 @@ newEntity{ base = "BASE_SHIELD",
 	power_source = {arcane=true},
 	unique = true,
 	name = "Piercing Gaze", image = "object/artifact/piercing_gaze.png",
+	moddable_tile = "special/%s_piercing_gaze",
+	moddable_tile_big = true,
 	unided_name = "stone-eyed shield",
 	desc = [[This gigantic shield has a stone eye embedded in it.]],
 	color = colors.BROWN,

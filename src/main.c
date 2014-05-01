@@ -360,13 +360,13 @@ void on_event(SDL_Event *event)
 				else if (wc < 0x800)
 				{
 					buf[0] = (0xC0 | wc>>6);
-					buf[1] = (0x80 | wc & 0x3F);
+					buf[1] = (0x80 | (wc & 0x3F));
 				}
 				else
 				{
 					buf[0] = (0xE0 | wc>>12);
-					buf[1] = (0x80 | wc>>6 & 0x3F);
-					buf[2] = (0x80 | wc & 0x3F);
+					buf[1] = (0x80 | (wc>>6 & 0x3F));
+					buf[2] = (0x80 | (wc & 0x3F));
 				}
 
 				lua_pushstring(L, buf);

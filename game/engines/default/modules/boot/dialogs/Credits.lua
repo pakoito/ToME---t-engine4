@@ -122,7 +122,7 @@ local credits = {
 	{"Community Managers", title=2},
 	{"Bradley 'AuraOfTheDawn' Kersey"},
 	{"Faeryan"},
-	{"Lord Xandor"},
+	{"Erik 'Lord Xandor' Tillford"},
 	{"Michael 'Dekar' Olscher"},
 	{"Reenen 'Canderel' Laurie"},
 	{"The Revanchist"},

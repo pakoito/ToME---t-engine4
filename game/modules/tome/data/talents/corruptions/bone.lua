@@ -36,7 +36,9 @@ newTalent{
 		local tg = self:getTalentTarget(t)
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
-		self:project(tg, x, y, DamageType.PHYSICAL, self:spellCrit(self:combatTalentSpellDamage(t, 20, 200)), {type="bones"})
+		self:project(tg, x, y, DamageType.PHYSICAL, self:spellCrit(self:combatTalentSpellDamage(t, 20, 200)))
+		local _ _, _, _, x, y = self:canProject(tg, x, y)
+		game.level.map:particleEmitter(self.x, self.y, tg.range, "bone_spear", {tx=x - self.x, ty=y - self.y})
 		game:playSoundNear(self, "talents/arcane")
 		return true
 	end,
@@ -72,7 +74,7 @@ newTalent{
 
 			DamageType:get(DamageType.PHYSICAL).projector(self, target.x, target.y, DamageType.PHYSICAL, dam)
 			if target:canBe("pin") then
-				target:setEffect(target.EFF_PINNED, t.getDuration(self, t), {apply_power=self:combatSpellpower()})
+				target:setEffect(target.EFF_BONE_GRAB, t.getDuration(self, t), {apply_power=self:combatSpellpower()})
 			else
 				game.logSeen(target, "%s resists the bone!", target.name:capitalize())
 			end

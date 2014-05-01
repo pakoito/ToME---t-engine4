@@ -44,6 +44,8 @@ newTalent{
 			if not target or target == self then return end
 			target:setEffect(target.EFF_PACIFICATION_HEX, 20, {power=self:combatSpellpower(), chance=t.getchance(self,t), apply_power=self:combatSpellpower()})
 		end)
+		local _ _, _, _, x, y = self:canProject(tg, x, y)
+		game.level.map:particleEmitter(x, y, tg.radius, "circle", {oversize=0.7, a=90, limit_life=8, appear=8, speed=2, img="blight_circle", radius=self:getTalentRadius(t)})
 		game:playSoundNear(self, "talents/slime")
 		return true
 	end,
@@ -78,6 +80,8 @@ newTalent{
 			if not target or target == self then return end
 			target:setEffect(target.EFF_BURNING_HEX, 20, {src=self, dam=self:spellCrit(self:combatTalentSpellDamage(t, 4, 90)), power=1 + t.getCDincrease(self, t), apply_power=self:combatSpellpower()})
 		end)
+		local _ _, _, _, x, y = self:canProject(tg, x, y)
+		game.level.map:particleEmitter(x, y, tg.radius, "circle", {oversize=0.7, g=100, b=100, a=90, limit_life=8, appear=8, speed=2, img="blight_circle", radius=self:getTalentRadius(t)})
 		game:playSoundNear(self, "talents/slime")
 		return true
 	end,
@@ -114,6 +118,8 @@ newTalent{
 			if not target or target == self then return end
 			target:setEffect(target.EFF_EMPATHIC_HEX, 20, {power=t.recoil(self,t), apply_power=self:combatSpellpower()})
 		end)
+		local _ _, _, _, x, y = self:canProject(tg, x, y)
+		game.level.map:particleEmitter(x, y, tg.radius, "circle", {oversize=0.7, r=100, b=100, a=90, limit_life=8, appear=8, speed=2, img="blight_circle", radius=self:getTalentRadius(t)})
 		game:playSoundNear(self, "talents/slime")
 		return true
 	end,
@@ -149,6 +155,8 @@ newTalent{
 				target:setEffect(target.EFF_DOMINATION_HEX, t.getDuration(self, t), {src=self, apply_power=self:combatSpellpower(), faction = self.faction})
 			end
 		end)
+		local _ _, _, _, x, y = self:canProject(tg, x, y)
+		game.level.map:particleEmitter(x, y, tg.radius, "circle", {oversize=0.7, g=100, r=100, a=90, limit_life=8, appear=8, speed=2, img="blight_circle", radius=self:getTalentRadius(t)})
 		game:playSoundNear(self, "talents/slime")
 		return true
 	end,
