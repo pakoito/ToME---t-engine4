@@ -4832,6 +4832,9 @@ function _M:getTalentCooldown(t)
 	if type(cd) == "function" then cd = cd(self, t) end
 	if not cd then return end
 
+	-- Can not touch this cooldown
+	if t.fixed_cooldown then return cd end
+
 	if t.type[1] == "inscriptions/infusions" then
 		local eff = self:hasEffect(self.EFF_INFUSION_COOLDOWN)
 		if eff and eff.power then cd = cd + eff.power end
