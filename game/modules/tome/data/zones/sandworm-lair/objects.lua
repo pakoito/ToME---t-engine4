@@ -45,9 +45,9 @@ You could ... consume it, should you feel mad enough or you could try to corrupt
 		who.unused_stats = who.unused_stats + 3
 		who.unused_talents = who.unused_talents + 1
 		who.unused_generics = who.unused_generics + 1
-		game.logPlayer(who, "You have %d stat point(s) to spend. Press G to use them.", who.unused_stats)
-		game.logPlayer(who, "You have %d class talent point(s) to spend. Press G to use them.", who.unused_talents)
-		game.logPlayer(who, "You have %d generic talent point(s) to spend. Press G to use them.", who.unused_generics)
+		game.logPlayer(who, "You have %d stat point(s) to spend. Press p to use them.", who.unused_stats)
+		game.logPlayer(who, "You have %d class talent point(s) to spend. Press p to use them.", who.unused_talents)
+		game.logPlayer(who, "You have %d generic talent point(s) to spend. Press p to use them.", who.unused_generics)
 
 		if not who:attr("forbid_nature") then
 			if who:knowTalentType("wild-gift/harmony") then
@@ -60,7 +60,7 @@ You could ... consume it, should you feel mad enough or you could try to corrupt
 			-- Make sure a previous amulet didnt bug it out
 			if who:getTalentTypeMastery("wild-gift/harmony") == 0 then who:setTalentTypeMastery("wild-gift/harmony", 1) end
 			game.logPlayer(who, "You are transformed by the heart of the Queen!.")
-			game.logPlayer(who, "#00FF00#You gain an affinity for nature. You can now learn new Harmony talents (press G).")
+			game.logPlayer(who, "#00FF00#You gain an affinity for nature. You can now learn new Harmony talents (press p).")
 
 			who:attr("drake_touched", 1)
 		end
@@ -84,7 +84,7 @@ newEntity{
 	use_simple = { name="drink the vile blood", use = function(self, who)
 		game.logPlayer(who, "#00FFFF#You drink the wyrm bile and feel forever transformed!")
 		who.unused_talents_types = who.unused_talents_types + 1
-		game.log("You have %d category point(s) to spend. Press G to use them.", who.unused_talents_types)
+		game.log("You have %d category point(s) to spend. Press p to use them.", who.unused_talents_types)
 
 		local str, dex, con, mag, wil, cun = rng.range(-3, 6), rng.range(-3, 6), rng.range(-3, 6), rng.range(-3, 6), rng.range(-3, 6), rng.range(-3, 6)
 		who:incStat("str", str) if str >= 0 then str="+"..str end

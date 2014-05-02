@@ -42,9 +42,9 @@ newEntity{
 		who.unused_stats = who.unused_stats + 3
 		who.unused_talents = who.unused_talents + 1
 		who.unused_generics = who.unused_generics + 1
-		game.logPlayer(who, "You have %d stat point(s) to spend. Press G to use them.", who.unused_stats)
-		game.logPlayer(who, "You have %d class talent point(s) to spend. Press G to use them.", who.unused_talents)
-		game.logPlayer(who, "You have %d generic talent point(s) to spend. Press G to use them.", who.unused_generics)
+		game.logPlayer(who, "You have %d stat point(s) to spend. Press p to use them.", who.unused_stats)
+		game.logPlayer(who, "You have %d class talent point(s) to spend. Press p to use them.", who.unused_talents)
+		game.logPlayer(who, "You have %d generic talent point(s) to spend. Press p to use them.", who.unused_generics)
 
 		if not who:attr("forbid_arcane") then
 			if who:knowTalentType("corruption/vile-life") then
@@ -57,7 +57,7 @@ newEntity{
 			-- Make sure a previous amulet didnt bug it out
 			if who:getTalentTypeMastery("corruption/vile-life") == 0 then who:setTalentTypeMastery("corruption/vile-life", 1) end
 			game.logPlayer(who, "You are transformed by the corrupted heart of the Queen!.")
-			game.logPlayer(who, "#00FF00#You gain an affinity for blight. You can now learn new Vile Life talents (press G).")
+			game.logPlayer(who, "#00FF00#You gain an affinity for blight. You can now learn new Vile Life talents (press p).")
 
 			who:attr("drake_touched", 1)
 		end
