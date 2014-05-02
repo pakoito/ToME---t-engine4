@@ -310,7 +310,7 @@ end
 --- Called by the engine when the user tries to close the window
 function _M:onExit()
 	if core.steam then core.steam.exit() end
-	os.exit()
+	core.game.exit_engine()
 end
 
 --- Sets up a text flyers

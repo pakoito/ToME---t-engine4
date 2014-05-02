@@ -65,7 +65,7 @@ function _M:init()
 			d.__showup = nil
 			tween(1, {a=1}, {a=2}, 'linear', function()
 				game:unregisterDialog(d)
-				if i < 500 then i = i + 1 return fct() end
+				if i < 500 then i = i + 1 return fct() else core.game.exit_engine() end
 			end)
 		end
 		fct()

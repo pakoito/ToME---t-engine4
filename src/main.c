@@ -297,6 +297,14 @@ void on_event(SDL_Event *event)
 	case SDL_TEXTINPUT:
 		if (current_keyhandler != LUA_NOREF)
 		{
+			static Uint32 lastts = 0;
+			static char lastc = 0;
+			if (event->text.timestamp == lastts) break;
+			if ((event->text.timestamp - lastts < 5) && (lastc == event->text.text[0])) break;
+			lastts = event->text.timestamp;
+			lastc = event->text.text[0];
+
+			printf("<==text event %ld : '%s'\n", (long int)event->text.timestamp, event->text.text);
 			lua_rawgeti(L, LUA_REGISTRYINDEX, current_keyhandler);
 			lua_pushstring(L, "receiveKey");
 			lua_gettable(L, -2);
@@ -313,8 +321,10 @@ void on_event(SDL_Event *event)
 			lua_pushstring(L, event->text.text);
 			lua_pushboolean(L, FALSE);
 			lua_pushnil(L);
+			lua_pushnil(L);
+			lua_pushnumber(L, 0);
 
-			docall(L, 9, 0);
+			docall(L, 11, 0);
 		}
 		break;
 	case SDL_KEYDOWN:
@@ -1232,6 +1242,7 @@ int main(int argc, char *argv[])
 		if (!strncmp(arg, "--home", 6)) override_home = strdup(argv[++i]);
 		if (!strncmp(arg, "--no-steam", 10)) no_steam = TRUE;
 		if (!strncmp(arg, "--type=zygote", 13)) is_zygote = TRUE;
+		if (!strncmp(arg, "--type=renderer", 15)) is_zygote = TRUE;
 	}
 
 #ifdef SELFEXE_WINDOWS
@@ -1493,6 +1504,7 @@ int main(int argc, char *argv[])
 	}
 
 	// Clean up locks.
+	printf("Cleaning up!\n");
 	cleanupTimerLock(renderingLock, &display_timer_id, &redraw_pending);
 	cleanupTimerLock(realtimeLock, &realtime_timer_id, &realtime_pending);
 	
