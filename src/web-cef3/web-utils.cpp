@@ -9,6 +9,7 @@ extern "C" {
 #include "tSDL.h"
 #include "tgl.h"
 #include "web-external.h"
+#include <stdio.h>
 }
 
 #include "web.h"
@@ -59,9 +60,12 @@ WebEvent *pop_order()
 void push_event(WebEvent *event)
 {
 	if (!lock_oqueue) return;
+
+//	fprintf(logfile, "[WEBCORE] <Event push %d\n", event->kind);
 	web_mutex_lock(lock_oqueue);
 	oqueue->push_back(event);
 	web_mutex_unlock(lock_oqueue);
+//	fprintf(logfile, "[WEBCORE] >Event push %d\n", event->kind);
 }
 
 WebEvent *pop_event()
@@ -69,12 +73,14 @@ WebEvent *pop_event()
 	if (!lock_oqueue) return NULL;
 	WebEvent *event = NULL;
 
+//	fprintf(logfile, "[WEBCORE] <Event pop\n");
 	web_mutex_lock(lock_oqueue);
 	if (!oqueue->empty()) {
 		event = oqueue->back();
 		oqueue->pop_back();
 	}
 	web_mutex_unlock(lock_oqueue);
+//	fprintf(logfile, "[WEBCORE] >Event pop\n");
 
 	return event;
 }

@@ -16,6 +16,7 @@ extern "C" {
 #include "web-internal.h"
 #include <map>
 
+FILE *logfile = NULL;
 
 void *(*web_mutex_create)();
 void (*web_mutex_destroy)(void *mutex);
@@ -52,7 +53,7 @@ public:
 	}
 
 	~RenderHandler() {
-		printf("[WEBCORE] Destroyed renreder\n");
+		fprintf(logfile, "[WEBCORE] Destroyed renreder\n");
 
 		WebEvent *event = new WebEvent();
 		event->kind = TE4_WEB_EVENT_DELETE_TEXTURE;
@@ -118,7 +119,7 @@ public:
 		all_browsers[this] = true;
 	}
 	~BrowserClient() {
-		printf("[WEBCORE] Destroyed client\n");
+		fprintf(logfile, "[WEBCORE] Destroyed client\n");
 		for (std::map<int32, CurrentDownload*>::iterator it=downloads.begin(); it != downloads.end(); ++it) {
 			delete it->second;
 		}
@@ -176,7 +177,7 @@ public:
 		event->data.popup.h = popupFeatures.heightSet ? popupFeatures.height : -1;
 		push_event(event);
 
-		printf("[WEBCORE] stopped popup to %s (%dx%d), pushing event...\n", url, event->data.popup.w, event->data.popup.h);
+		fprintf(logfile, "[WEBCORE] stopped popup to %s (%dx%d), pushing event...\n", url, event->data.popup.w, event->data.popup.h);
 
 		return true;
 	}
@@ -190,7 +191,7 @@ public:
 		const char *mime = cstring_to_c(download_item->GetMimeType());
 		const char *url = cstring_to_c(download_item->GetURL());
 		const char *name = cstring_to_c(suggested_name);
-		printf("[WEBCORE] Download request [name: %s] [mime: %s] [url: %s]\n", name, mime, url);
+		fprintf(logfile, "[WEBCORE] Download request id %ld [name: %s] [mime: %s] [url: %s]\n", id, name, mime, url);
 
 		WebEvent *event = new WebEvent();
 		event->kind = TE4_WEB_EVENT_DOWNLOAD_REQUEST;
@@ -207,6 +208,13 @@ public:
 		CurrentDownload *cd = this->downloads[id];
 		if (!cd) { return; }
 		cd->cancel_cb = callback;
+
+		fprintf(logfile, "[WEBCORE] Download update id %ld [size: %ld / %ld] [completed: %d, canceled: %d, inprogress: %d, valid: %d]\n",
+				id,
+				download_item->GetReceivedBytes(), download_item->GetTotalBytes(),
+				download_item->IsComplete(), download_item->IsCanceled(),
+				download_item->IsInProgress(), download_item->IsValid()
+			);
 
 		if (download_item->IsComplete() || download_item->IsCanceled()) {
 			WebEvent *event = new WebEvent();
@@ -236,12 +244,12 @@ public:
 			if (cd->cancel_cb) cd->cancel_cb->Cancel();
 			delete cd;
 			downloads.erase(id);
-			printf("[WEBCORE] Cancel download(%d)\n", id);
+			fprintf(logfile, "[WEBCORE] Cancel download(%d)\n", id);
 		} else {
 			// Accept
 			CefString fullpath(path);
 			cd->accept_cb->Continue(fullpath, false);
-			printf("[WEBCORE] Accepting download(%d) to %s\n", id, path);
+			fprintf(logfile, "[WEBCORE] Accepting download(%d) to %s\n", id, path);
 		}
 	}
 
@@ -266,7 +274,7 @@ public:
 	}
 
 	virtual void OnAfterCreated(CefRefPtr<CefBrowser> browser) {
-		printf("[WEBCORE] Created browser for webview\n");
+		fprintf(logfile, "[WEBCORE] Created browser for webview\n");
 		this->browser = browser;
 	}
 
@@ -278,7 +286,7 @@ public:
 
 		delete this->opaque;
 
-		printf("[WEBCORE] Destroyed webview for browser\n");
+		fprintf(logfile, "[WEBCORE] Destroyed webview for browser\n");
 	}
 
 	IMPLEMENT_REFCOUNTING(BrowserClient);
@@ -316,15 +324,16 @@ void te4_web_new(web_view_type *view, int w, int h) {
 	view->w = w;
 	view->h = h;
 	view->closed = false;
-	printf("[WEBCORE] Created webview\n");
+	fprintf(logfile, "[WEBCORE] Created webview\n");
 }
 
 bool te4_web_close(web_view_type *view) {
 	WebViewOpaque *opaque = (WebViewOpaque*)view->opaque;
 	if (!view->closed) {
 		view->closed = true;
-		printf("[WEBCORE] Destroying webview for browser\n");
+		fprintf(logfile, "[WEBCORE] Destroying webview for browser\n");
 		opaque->browser->GetHost()->CloseBrowser(true);
+		fprintf(logfile, "[WEBCORE] Destroying send done\n");
 		return true;
 	}
 	return false;
@@ -754,6 +763,11 @@ void te4_web_setup(
 	void (*instant_js)(int handlers, const char *fct, int nb_args, WebJsValue *args, WebJsValue *ret)
 	) {
 
+	logfile = fopen("te4_log_web.txt", "w");
+#ifdef _WIN32
+	setvbuf(logfile, NULL, _IONBF, 2);
+#endif
+
 	web_mutex_create = mutex_create;
 	web_mutex_destroy = mutex_destroy;
 	web_mutex_lock = mutex_lock;
@@ -806,6 +820,8 @@ void te4_web_initialize(const char *locales, const char *pak) {
 }
 
 void te4_web_shutdown() {
+	fprintf(logfile, "[WEBCORE] Shutdown starting...\n");
+
 	std::map<BrowserClient*, bool> all;
 
 	for (std::map<BrowserClient*, bool>::iterator it=all_browsers.begin(); it != all_browsers.end(); ++it) {
@@ -818,7 +834,9 @@ void te4_web_shutdown() {
 
 	while (!all_browsers.empty()) {
 		CefDoMessageLoopWork();
-		printf("Waiting browsers to close: %d left\n", all_browsers.size());
+		fprintf(logfile, "Waiting browsers to close: %d left\n", all_browsers.size());
 	}
 	CefShutdown();
+
+	fclose(logfile);
 }

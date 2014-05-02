@@ -20,6 +20,8 @@
 #include <cef_render_process_handler.h>
 #include <cef_v8.h>
 
+extern FILE *logfile;
+
 extern void te4_web_init_utils();
 
 extern void push_order(WebEvent *event);
