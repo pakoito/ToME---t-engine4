@@ -78,7 +78,8 @@ newTalent{
 	type = {"celestial/sun", 2},
 	require = divi_req2,
 	points = 5,
-	cooldown = 20, -- CD reduction works on this 
+	cooldown = 20,
+	fixed_cooldown = true,
 	positive = -15,
 	tactical = { BUFF = 2 },
 	direct_hit = true,
@@ -87,8 +88,9 @@ newTalent{
 	range = 10,
 	getCap = function(self, t) return math.max(50, 100 - self:getTalentLevelRaw(t) * 10) end,
 	getHaste = function(self, t) return math.min(0.9, self:combatTalentSpellDamage(t, 0.2, 0.7)) end,
+	getCD = function(self, t) return math.min(0.5, self:combatTalentSpellDamage(t, 5, 450) / 1000) end,
 	action = function(self, t)
-		self:setEffect(self.EFF_SUNCLOAK, 6, {cap=t.getCap(self, t), haste=t.getHaste(self, t)})
+		self:setEffect(self.EFF_SUNCLOAK, 6, {cap=t.getCap(self, t), haste=t.getHaste(self, t), cd=t.getCD(self, t)})
 		game:playSoundNear(self, "talents/flame")
 		return true
 	end,
@@ -96,7 +98,7 @@ newTalent{
 		return ([[You wrap yourself in a cloak of sunlight that empowers your magic and protects you for 6 turns.
 		While the cloak is active your spell casting speed is increased by %d%%, your spell cooldowns are reduced by %d%%, and you cannot take more than %d%% of your maximum life from a single blow.
 		The effects will increase with your Spellpower.]]):
-		format(t.getHaste(self, t)*100, t.getHaste(self, t)*100, t.getCap(self, t))
+		format(t.getHaste(self, t)*100, t.getCD(self, t)*100, t.getCap(self, t))
    end,
 }
 

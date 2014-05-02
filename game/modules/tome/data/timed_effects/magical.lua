@@ -2549,13 +2549,13 @@ newEffect{
 	type = "magical",
 	subtype = { sun=true, },
 	status = "beneficial",
-	parameters = {cap = 1, haste = 0.1},
+	parameters = {cap = 1, haste = 0.1, cd = 0.1},
 	on_gain = function(self, err) return "#Target# is energized and protected by the Sun!", "+Suncloak" end,
 	on_lose = function(self, err) return "#Target#'s solar fury subsides.", "-Suncloak" end,
 	activate = function(self, eff)
 		self:effectTemporaryValue(eff, "flat_damage_cap", {all=eff.cap})
 		self:effectTemporaryValue(eff, "combat_spellspeed", eff.haste)
-		self:effectTemporaryValue(eff, "spell_cooldown_reduction", eff.haste)
+		self:effectTemporaryValue(eff, "spell_cooldown_reduction", eff.cd)
 		eff.particle = self:addParticles(Particles.new("suncloak", 1))
 	end,
 	deactivate = function(self, eff)
