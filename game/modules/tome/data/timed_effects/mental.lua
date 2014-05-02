@@ -1147,7 +1147,7 @@ newEffect{
 	on_lose = function(self, err) return "#Target# is no longer haunted", "-Haunted" end,
 	activate = function(self, eff)
 		for e, p in pairs(self.tmp) do
-			def = self.tempeffect_def[e]
+			local def = self.tempeffect_def[e]
 			if def.subtype and def.subtype.fear then
 				if not self.dead then
 					game.logSeen(self, "#F53CBE#%s is struck by fear of the %s effect.", self.name:capitalize(), def.desc)

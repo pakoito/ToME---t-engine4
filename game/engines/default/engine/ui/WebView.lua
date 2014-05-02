@@ -109,15 +109,15 @@ function _M:generate()
 			if button == "wheelup" then self.scroll_inertia = math.min(self.scroll_inertia, 0) - 5
 			elseif button == "wheeldown" then self.scroll_inertia = math.max(self.scroll_inertia, 0) + 5
 			elseif button == "left" then self.view:injectMouseButton(true, 1)
-			elseif button == "middle" then self.view:injectMouseButton(true, 2)
-			elseif button == "right" then self.view:injectMouseButton(true, 3)
+--			elseif button == "middle" then self.view:injectMouseButton(true, 2)
+--			elseif button == "right" then self.view:injectMouseButton(true, 3)
 			end				
 		elseif event == "button-down" then
 			if button == "wheelup" then self.scroll_inertia = math.min(self.scroll_inertia, 0) - 5
 			elseif button == "wheeldown" then self.scroll_inertia = math.max(self.scroll_inertia, 0) + 5
 			elseif button == "left" then self.view:injectMouseButton(false, 1)
-			elseif button == "middle" then self.view:injectMouseButton(false, 2)
-			elseif button == "right" then self.view:injectMouseButton(false, 3)
+--			elseif button == "middle" then self.view:injectMouseButton(false, 2)
+--			elseif button == "right" then self.view:injectMouseButton(false, 3)
 			end				
 		else
 			self.view:injectMouseMove(bx, by)
