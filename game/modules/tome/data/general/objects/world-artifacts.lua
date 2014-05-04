@@ -1901,7 +1901,7 @@ newEntity{ base = "BASE_ARROW",
 	material_level = 4,
 	require = { stat = { dex=24 }, },
 	combat = {
-		capacity = 18,
+		capacity = 25,
 		tg_type = "beam",
 		travel_speed = 3,
 		dam = 34,
@@ -1925,7 +1925,7 @@ newEntity{ base = "BASE_ARROW",
 	material_level = 4,
 	require = { stat = { dex=24 }, },
 	combat = {
-		capacity = 14,
+		capacity = 20,
 		dam = 24,
 		apr = 8,
 		physcrit = 2,
@@ -1934,7 +1934,8 @@ newEntity{ base = "BASE_ARROW",
 		special_on_crit = {desc="dominate the target", fct=function(combat, who, target)
 			if not target or target == self then return end
 			if target:canBe("instakill") then
-				target:setEffect(target.EFF_DOMINATE_ENTHRALL, 3, {src=who, apply_power=who:combatMindpower()})
+				local check = math.max(src:combatSpellpower(), src:combatMindpower(), src:combatAttack())
+				target:setEffect(target.EFF_DOMINATE_ENTHRALL, 3, {src=who, apply_power=check()})
 			end
 		end},
 	},
@@ -2631,7 +2632,7 @@ newEntity{ base = "BASE_SHOT",
 	material_level = 4,
 	require = { stat = { dex=28 }, },
 	combat = {
-		capacity = 18,
+		capacity = 25,
 		dam = 32,
 		apr = 15,
 		physcrit = 10,
@@ -5074,9 +5075,10 @@ newEntity{ base = "BASE_CLOAK",
 		resists_cap = { [DamageType.LIGHT] = 10, },
 		resists = { [DamageType.LIGHT] = 20, [DamageType.DARKNESS] = 20, },
 		talents_types_mastery = {
-			["celestial/light"] = 0.1,
-			["celestial/sun"] = 0.1,
-			["spell/phantasm"] = 0.1,
+			["celestial/light"] = 0.2,
+			["celestial/sun"] = 0.2,
+			["spell/phantasm"] = 0.2,
+			["celestial/radiance"] = 0.2, 
 		},
 		on_melee_hit={[DamageType.LIGHT_BLIND] = 30},
 	},
@@ -5337,8 +5339,8 @@ The heart which wishes that it be unseen.]],
 		inc_damage = { all = 4 },
 		resists = {[DamageType.DARKNESS] = 10, [DamageType.MIND] = 10,},
 		talents_types_mastery = {
-			["cursed/gloom"] = 0.1,
-			["cursed/darkness"] = 0.1,
+			["cursed/gloom"] = 0.2,
+			["cursed/darkness"] = 0.2,
 		},
 		on_melee_hit={[DamageType.MIND] = 30},
 	},

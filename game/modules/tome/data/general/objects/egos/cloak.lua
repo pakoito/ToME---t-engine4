@@ -396,13 +396,50 @@ newEntity{
 	greater_ego = 1,
 	rarity = 30,
 	cost = 60,
-	resolvers.charmt(Talents.T_BLINDING_SPEED, {2,3,4}, 45),
+	--resolvers.charmt(Talents.T_BLINDING_SPEED, {2,3,4}, 45),
 	wielder = {
 		combat_atk = resolvers.mbonus_material(20, 15),
 		max_life = resolvers.mbonus_material(70, 40),
 		fatigue = resolvers.mbonus_material(6, 4, function(e, v) return 0, -v end),
 	},
 }
+
+-- Partially tested
+newEntity{
+	power_source = {arcane=true},
+	name = " of the voidstalker", suffix=true, instant_resolve=true,
+	keywords = {voidstriker=true},
+	level_range = {20, 50},
+	greater_ego = 1,
+	rarity = 30,
+	cost = 65,
+	wielder = {
+		resist_all_on_teleport = resolvers.mbonus_material(5, 10),
+		defense_on_teleport = resolvers.mbonus_material(20, 10),
+		effect_reduction_on_teleport = resolvers.mbonus_material(20, 10),
+		resists={
+			[DamageType.TEMPORAL] = resolvers.mbonus_material(20, 10),
+			[DamageType.DARKNESS] = resolvers.mbonus_material(20, 10),
+		},
+	},
+	--charm_power = resolvers.mbonus_material(80, 20),
+	charm_power_def = {add=5, max=10, floor=true},
+	resolvers.charm("blink to a random location within 2 spaces of target hostile creature", 10, function(self, who)
+		local tg = {type="hit", range=8, friendlyfire = false}
+		local x, y = who:getTarget(tg)
+		if not x or not y then return nil end
+		local _ _, x, y = who:canProject(tg, x, y)
+		local target = game.level.map(x, y, engine.Map.ACTOR)
+		if not target then return end
+
+		game.level.map:particleEmitter(who.x, who.y, 1, "teleport")
+		who:teleportRandom(target.x, target.y, 2)
+		game.level.map:particleEmitter(who.x, who.y, 1, "teleport")
+		game.logSeen(who, "%s uses %s!", who.name:capitalize(), self:getName{no_count=true})
+		return {id=true, used=true}
+		end),
+}
+
 
 newEntity{
 	power_source = {technique=true},
@@ -413,7 +450,7 @@ newEntity{
 	rarity = 35,
 	cost = 70,
 	wielder = {
-		combat_critical_power = resolvers.mbonus_material(30, 10),
+		combat_critical_power = resolvers.mbonus_material(20, 10),
 		combat_atk = resolvers.mbonus_material(10, 5),
 		combat_apr = resolvers.mbonus_material(10, 5),
 		inc_stealth = resolvers.mbonus_material(10, 5),

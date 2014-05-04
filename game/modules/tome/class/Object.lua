@@ -647,6 +647,21 @@ function _M:getTextualDesc(compare_with, use_actor)
 			end
 		end
 
+
+		local ranged_string = tstring{}
+		local ranged_combat = { ranged_project = {} }
+		for i, v in pairs(combat.ranged_project or {}) do
+			local def = DamageType.dam_def[i]
+			if def and def.tdesc then
+				local d = def.tdesc(v)
+				found = true
+				ranged_string:add(d, {"color","LAST"}, true)
+				
+			else
+				ranged_combat.ranged_project[i] = v
+			end
+		end
+
 		-- Add the on hit section only if theres a tdesc DT or a special_on_hit
 		if found or special ~= ""  then
 			desc:add({"color","ORANGE"}, "When this weapon hits: ", {"color","LAST"}, true)
@@ -661,6 +676,7 @@ function _M:getTextualDesc(compare_with, use_actor)
 		-- Add the extended melee_project descriptions after special_on_hit, colors defined by tdesc
 		if found then
 			desc:merge(dt_string)
+			desc:merge(ranged_string)
 		end
 
 		-- only special_on_hit display is modified, not special_on_crit and so on
@@ -724,7 +740,7 @@ function _M:getTextualDesc(compare_with, use_actor)
 				return col[2], (" %s"):format(DamageType.dam_def[item].name),{"color","LAST"}
 			end)
 
-		compare_table_fields(combat, compare_with, field, "ranged_project", "%+d", "Damage when this weapon hits(ranged): ", function(item)
+		compare_table_fields(ranged_combat, compare_with, field, "ranged_project", "%+d", "Damage (Ranged): ", function(item)
 				local col = (DamageType.dam_def[item] and DamageType.dam_def[item].text_color or "#WHITE#"):toTString()
 				return col[2], (" %s"):format(DamageType.dam_def[item].name),{"color","LAST"}
 			end)

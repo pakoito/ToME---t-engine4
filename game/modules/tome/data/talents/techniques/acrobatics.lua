@@ -30,14 +30,14 @@ newTalent {
 	require = techs_dex_req1,
 	points = 5,
 	random_ego = "attack",
-	cooldown = function(self, t) return 25 - cooldown_bonus(self) end,
+	cooldown = function(self, t) return 10 - cooldown_bonus(self) end,
 	stamina = function(self, t) return math.max(0, 18 - stamina_bonus(self)) end,
 	tactical = {ESCAPE = 2},
 	on_pre_use = function(self, t)
 		return not self:attr("never_move")
 	end,
 	range = function(self, t)
-		return math.floor(2 + self:getTalentLevel(t) * 0.5)
+		return math.floor(self:combatTalentScale(t, 3, 8))
 	end,
 	target = function(self, t)
 		return {type="beam", range=self:getTalentRange(t), talent=t, nolock=true}
@@ -92,8 +92,8 @@ newTalent {
 }
 
 newTalent {
+	name = "Tumble",
 	short_name = "SKIRMISHER_CUNNING_ROLL",
-	name = "Cunning Roll",
 	type = {"technique/acrobatics", 2},
 	require = techs_dex_req2,
 	points = 5,
@@ -101,11 +101,11 @@ newTalent {
 	cooldown = function(self, t) return 20 - cooldown_bonus(self) end,
 	no_energy = true,
 	stamina = function(self, t)
-		return math.max(0, 40 - self:getTalentLevel(t) * 3 - stamina_bonus(self))
+		return math.max(0, 20 - stamina_bonus(self))
 	end,
 	tactical = {ESCAPE = 2, BUFF = 1},
 	range = function(self, t)
-		return 2 + math.floor(self:getTalentLevel(t) / 6)
+		return math.floor(self:combatTalentScale(t, 2, 4))
 	end,
 	target = function(self, t)
 		return {type="beam", range=self:getTalentRange(t), talent=t}
@@ -121,8 +121,10 @@ newTalent {
 		if not x or not y then return end
 		if self.x == x and self.y == y then return end
 		if core.fov.distance(self.x, self.y, x, y) > self:getTalentRange(t) then return end
-		if target or game.level.map:checkEntity(tx, ty, Map.TERRAIN, "block_move", self) then
+
+		if target or game.level.map:checkEntity(x, y, Map.TERRAIN, "block_move", self) then
 			game.logPlayer(self, "You must have an empty space to roll to.")
+			return false
 		end
 
 		self:move(x, y, true)
@@ -150,7 +152,7 @@ newTalent {
 	points = 5,
 	cooldown = function(self, t) return 10 - cooldown_bonus(self) end,
 	stamina_per_use = function(self, t) return 30 - stamina_bonus(self) end,
-	sustain_stamina = 0,
+	sustain_stamina = 10,
 	require = techs_dex_req3,
 	tactical = { BUFF = 2 },
 
@@ -173,18 +175,9 @@ newTalent {
 
 		local cost = t.stamina_per_use(self, t)
 		if damage >= self.max_life * t.getLifeTrigger(self, t) * 0.01 then
-			-- now to find empty space
-			--[SHIBARI NOTE] Removing the roll part of this, too random and too much anti-synergy for a core defense
-			-- Shame though, its very thematic
 			
 			local nx, ny = util.findFreeGrid(self.x, self.y, 1, true, {[Map.ACTOR]=true})
 			if nx and ny and use_stamina(self, cost) then
-				--local ox, oy = self.x, self.y
-				--self:move(nx, ny, true)
-			
-				-- Don't have trigger cooldown.
-				-- -- Apply cooldown effect.
-				-- self:setEffect("EFF_SKIRMISHER_TRAINED_REACTIONS_COOLDOWN", t.cooldown(self, t), {})
 
 				-- Apply effect with duration 0.
 				self:setEffect("EFF_SKIRMISHER_DEFENSIVE_ROLL", 1, {reduce = t.getReduction(self, t)})
@@ -209,7 +202,7 @@ newTalent {
 		local reduce = t.getReduction(self, t)
 		local cost = t.stamina_per_use(self, t) * (1 + self:combatFatigue() * 0.01)
 		return ([[While sustainted, any time you would lose more than %d%% of your life in a single hit, you instead duck out of the way gaining a temporary buff that reduces this damage and all further damage that turn by %d%%.
-			This costs %d Stamina per dodge and will not trigger if you do not have the Stamina.]])
+			This costs %d Stamina per dodge and will not trigger if you do not have the Stamina or there isn't an adjacent grid (though you will not move).]])
 			:format(trigger, reduce, cost)
 	end,
 
@@ -222,15 +215,17 @@ newTalent {
 	require = techs_dex_req4,
 	mode = "passive",
 	points = 5,
-	cooldown_bonus = function(self, t) return math.floor(self:getTalentLevel(t)) end,
-	stamina_bonus = function(self, t) return math.floor(self:getTalentLevel(t) * 2) end,
+	--cooldown_bonus = function(self, t) return math.floor(self:getTalentLevel(t)) end,
+	--stamina_bonus = function(self, t) return math.floor(self:getTalentLevel(t) * 2) end,
+	stamina_bonus = function(self, t) return math.floor(self:combatTalentScale(t, 1, 10)) end,
+	cooldown_bonus = function(self, t) return math.floor(self:combatTalentScale(t, 1, 6)) end,
 	speed_buff = function(self, t)
 		local level = self:getTalentLevel(t)
 		if level >= 5 then return {global_speed_add = 0.2, duration = 2} end
 		if level >= 3 then return {global_speed_add = 0.1, duration = 1} end
 	end,
 	info = function(self, t)
-		return ([[Lowers the cooldown of Vault, Cunning Roll, and Trained Reactions by %d, and their stamina costs by %d. At Rank 3 you also gain 10%% global speed for 1 turn after Trained Reactions activates. At rank 5 this speed bonus becomes 20%% and lasts for 2 rounds.]])
+		return ([[Lowers the cooldown of Vault and Cunning Roll by %d, and their stamina costs by %d. At Rank 3 you also gain 10%% global speed for 1 turn after Trained Reactions activates. At rank 5 this speed bonus becomes 20%% and lasts for 2 rounds.]])
 			:format(t.cooldown_bonus(self, t),
 							t.stamina_bonus(self, t))
 	end,

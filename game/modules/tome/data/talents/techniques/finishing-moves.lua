@@ -69,20 +69,22 @@ newTalent{
 	end,
 }
 
+-- Low CD makes this more or less the "default" combo point dump for damage
+-- Its pretty crap at low combo point
 newTalent{
 	name = "Concussive Punch",
 	type = {"technique/finishing-moves", 2},
 	require = techs_dex_req2,
 	points = 5,
 	random_ego = "attack",
-	cooldown = 10,
+	cooldown = 6,
 	stamina = 10,
 	message = "@Source@ throws a concussive punch.",
 	tactical = { ATTACK = { weapon = 2 }, },
 	requires_target = true,
 	--on_pre_use = function(self, t, silent) if not self:hasEffect(self.EFF_COMBO) then if not silent then game.logPlayer(self, "You must have a combo going to use this ability.") end return false end return true end,
 	getDamage = function(self, t) return self:combatTalentWeaponDamage(t, 0.6, 1.5) + getStrikingStyle(self, dam) end,
-	getAreaDamage = function(self, t) return self:combatTalentStatDamage(t, "str", 20, 600) * (1 + getStrikingStyle(self, dam)) end,
+	getAreaDamage = function(self, t) return self:combatTalentStatDamage(t, "str", 10, 550) * (1 + getStrikingStyle(self, dam)) end,
 	radius = function(self, t) return (1 + self:getCombo(combo) ) end,
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t)}
@@ -188,19 +190,20 @@ newTalent{
 	end,
 }
 
+
 newTalent{
 	name = "Haymaker",
 	type = {"technique/finishing-moves", 4},
 	require = techs_dex_req4,
 	points = 5,
 	random_ego = "attack",
-	cooldown = 16,
+	cooldown = 12,
 	stamina = 12,
 	message = "@Source@ throws a wild haymaker!",
 	tactical = { ATTACK = { weapon = 2 } },
 	requires_target = true,
 	--on_pre_use = function(self, t, silent) if not self:hasEffect(self.EFF_COMBO) then if not silent then game.logPlayer(self, "You must have a combo going to use this ability.") end return false end return true end,
-	getDamage = function(self, t) return self:combatTalentWeaponDamage(t, 1, 2.8) + getStrikingStyle(self, dam) end, 
+	getDamage = function(self, t) return self:combatTalentWeaponDamage(t, 1.2, 3) + getStrikingStyle(self, dam) end, 
 	getBonusDamage = function(self, t) return self:getCombo(combo)/5 end, -- shift more of the damage to CP
 	getStamina = function(self, t, comb)
 		return self:combatLimit((self:getTalentLevel(t) + comb), 0.5, 0, 0, 0.2, 10) * self.max_stamina

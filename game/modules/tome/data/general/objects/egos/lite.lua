@@ -102,7 +102,7 @@ newEntity{
 	cost = 20,
 	wielder = {
 		inc_stats = {
-			[Stats.STAT_CUN] = resolvers.mbonus_material(4, 3),
+			[Stats.STAT_CUN] = resolvers.mbonus_material(8, 3),
 		},
 		lite = -10,
 		infravision = resolvers.mbonus_material(5, 4),
@@ -281,6 +281,7 @@ newEntity{
 	name = " of the zealot", suffix=true, instant_resolve=true,
 	keywords = {zealot=true},
 	level_range = {1, 50},
+	greater_ego = 1,
 	rarity = 15,
 	cost = 10,
 	wielder = {

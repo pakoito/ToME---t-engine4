@@ -18,6 +18,7 @@
 -- darkgod@te4.org
 
 -- We don't have to worry much about this vs. players since it requires combo points to be really effective and the AI isn't very bright
+-- I lied, letting the AI use this is a terrible idea
 newTalent{
 	name = "Combination Kick",
 	type = {"technique/unarmed-discipline", 1},
@@ -81,8 +82,8 @@ newTalent{
 	info = function(self, t)
 		local damage = t.getDamage(self, t) * 100
 		return ([[Unleash a flurry of disruptive kicks at your target's vulnerable areas.  For each combo point you attack for %d%% weapon damage and deactivate one physical sustain.
-			At talent level 3 Magical sustains will also be effected.
-			At talent level 5 Mental sustains will also be effected.]])
+			At talent level 3 #DARK_ORCHID#Magical#LAST# sustains will also be effected.
+			At talent level 5 #YELLOW#Mental#LAST# sustains will also be effected.]])
 		:format(damage)
 	end,
 }
@@ -143,32 +144,50 @@ newTalent{
 }
 
 newTalent{
-	name = "Breath Control",
+	name = "Tempo",
 	type = {"technique/unarmed-discipline", 3},
+	short_name = "BREATH_CONTROL",
 	require = techs_dex_req3,
 	mode = "sustained",
 	points = 5,
 	cooldown = 30,
 	sustain_stamina = 15,
 	tactical = { BUFF = 1, STAMINA = 2 },
-	getSpeed = function(self, t) return 0.1 end,
-	getStamina = function(self, t) return self:combatTalentScale(t, 2, 7.5, 0.75) end,
-	activate = function(self, t)
+	getStamina = function(self, t) return 1 end,
+	getDamage = function(self, t) return math.min(10, math.floor(self:combatTalentScale(t, 1, 4))) end,
+	getDefense = function(self, t) return math.floor(self:combatTalentScale(t, 1, 8)) end,
+	getResist = function(self, t) return 20 end,
+	activate = function(self, t)		
 		return {
-			speed = self:addTemporaryValue("global_speed_add", -t.getSpeed(self, t)),
-			stamina = self:addTemporaryValue("stamina_regen", t.getStamina(self, t)),
+
 		}
 	end,
 	deactivate = function(self, t, p)
-		self:removeTemporaryValue("global_speed_add", p.speed)
-		self:removeTemporaryValue("stamina_regen", p.stamina)
+		return true
+	end,
+	callbackOnMeleeAttack = function(self, t, target, hitted, crit, weapon, damtype, mult, dam)
+		if not hitted or self.turn_procs.tempo or not (self:reactionToward(target) < 0) then return end
+		self.turn_procs.tempo = true
+
+		self:setEffect(target.EFF_RELENTLESS_TEMPO, 2, {
+			stamina = t.getStamina(self, t),
+			damage = t.getDamage(self, t),
+			defense = t.getDefense(self, t),
+			resist = t.getResist(self, t)
+			 })
 		return true
 	end,
 	info = function(self, t)
-		local speed = t.getSpeed(self, t)
 		local stamina = t.getStamina(self, t)
-		return ([[You focus your breathing, increasing stamina regeneration by %0.2f per turn at the cost of %d%% global speed.]]):
-		format(stamina, speed * 100)
+		local damage = t.getDamage(self, t)
+		local resistance = t.getResist(self, t)
+		local defense = t.getDefense(self, t)
+
+		return ([[Your years of fighting have trained you for sustained engagements.  Each turn you attack at least once you gain %d Stamina Regeneration, %d Defense, and %d%% Damage Increase.
+			This effect lasts 2 turns and stacks up to 5 times.
+			At talent level 3 you gain %d%% All Resistance upon reaching 5 stacks.
+		 ]]):
+		format(stamina, defense, damage, resistance ) -- 
 	end,
 }
 

@@ -60,10 +60,10 @@ newTalent {
 	tactical = {ATTACK = {weapon = 2}},
 	range = archery_range,
 	cooldown = 5,
-	stamina = 10,
+	stamina = 15,
 	on_pre_use = function(self, t, silent) return sling_equipped(self, silent) end,
 	getDamage = function(self, t)
-		return self:combatTalentWeaponDamage(t, 1.4, 2.4)
+		return self:combatTalentWeaponDamage(t, 0.4, 1.6)
 	end,
 	callbackOnMove = function(self, t, moved, force, ox, oy)
 		local cooldown = self.talents_cd[t.id] or 0
@@ -110,7 +110,7 @@ newTalent {
 	range = 0,
 	radius = archery_range,
 	cooldown = 7,
-	stamina = 40,
+	stamina = 45,
 	target = function(self, t)
 		return {
 			type = "cone",
@@ -123,11 +123,11 @@ newTalent {
 	end,
 	on_pre_use = function(self, t, silent) return sling_equipped(self, silent) end,
 	damage_multiplier = function(self, t)
-		return self:combatTalentWeaponDamage(t, 0.8, 1.0)
+		return self:combatTalentWeaponDamage(t, 0.4, 1)
 	end,
 	-- Maximum number of shots fired.
 	limit_shots = function(self, t)
-		return math.floor(4 + self:getTalentLevel(t))
+		return math.floor(6 + self:getTalentLevel(t))
 	end,
 	action = function(self, t)
 		-- Get list of possible targets, possibly doubled.
@@ -156,12 +156,12 @@ newTalent {
 		for i = 1, math.min(limit_shots, #targets) do
 			local target = targets[i]
 			game.target.forced = {target.x, target.y, target}
-			local targets = self:archeryAcquireTargets(nil, {one_shot=true, no_energy = fired})
+			local targets = self:archeryAcquireTargets({type = "hit", speed = 200}, {one_shot=true, no_energy = fired})
 			if targets then
 				local params = table.clone(shot_params_base)
 				local target = targets.dual and targets.main[1] or targets[1]
 				params.phase_target = game.level.map(target.x, target.y, game.level.map.ACTOR)
-				self:archeryShoot(targets, t, nil, params)
+				self:archeryShoot(targets, t, {type = "hit", speed = 200}, params)
 				fired = true
 			else
 				-- If no target that means we're out of ammo.
@@ -179,6 +179,8 @@ newTalent {
 	end,
 }
 
+-- The cost on this is extreme because its a completely ridiculous talent
+-- We don't have any other talents like this, really, that are incredibly hard to use for much of anything until late.  Should be interesting.
 newTalent {
 	short_name = "SKIRMISHER_BOMBARDMENT",
 	name = "Bombardment",
@@ -190,16 +192,16 @@ newTalent {
 	tactical = { BUFF = 2 },
 	on_pre_use = function(self, t, silent) return sling_equipped(self, silent) end,
 	cooldown = function(self, t)
-		return math.max(0, math.floor(15 - self:getTalentLevel(t)))
+		return 10
 	end,
 	bullet_count = function(self, t)
-		return 2
+		return 3
 	end,
 	shot_stamina = function(self, t)
 		return 25 * (1 + self:combatFatigue() * 0.01)
 	end,
 	damage_multiplier = function(self, t)
-		return self:combatTalentWeaponDamage(t, 0.6, 1.0)
+		return self:combatTalentWeaponDamage(t, 0.1, 0.6)
 	end,
 	activate = function(self, t) return {} end,
 	deactivate = function(self, t, p) return true end,

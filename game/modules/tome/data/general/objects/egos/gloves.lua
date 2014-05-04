@@ -385,7 +385,6 @@ newEntity{
 		combat = {
 			physcrit = resolvers.mbonus_material(10, 4),
 			atk = resolvers.mbonus_material(10, 2),
-			physspeed = -0.1,
 			talent_on_hit = { [Talents.T_SET_UP] = {level=resolvers.genericlast(function(e) return e.material_level end), chance=10} },
 		},
 	},
@@ -474,7 +473,7 @@ newEntity{
 	greater_ego = 1,
 	rarity = 35,
 	cost = 80,
-	resolvers.charmt(Talents.T_TRACK, 2, 30),
+	resolvers.charmt(Talents.T_TRACK, 2, 15),
 	wielder = {
 		inc_stats = {
 			[Stats.STAT_CUN] = resolvers.mbonus_material(5, 1),
@@ -508,10 +507,10 @@ newEntity{
 			[DamageType.PHYSICAL] = resolvers.mbonus_material(8, 4),
 		},
 		inc_stats = {
-			[Stats.STAT_CON] = resolvers.mbonus_material(5, 1),
+			[Stats.STAT_CON] = resolvers.mbonus_material(10, 5),
 		},
-		combat_armor = resolvers.mbonus_material(10, 5),
-		combat_armor_hardiness = resolvers.mbonus_material(5, 5),
+		combat_armor = resolvers.mbonus_material(15, 5),
+		combat_armor_hardiness = resolvers.mbonus_material(10, 5),
 		combat = {
 			talent_on_hit = { [Talents.T_STONE_TOUCH] = {level=resolvers.genericlast(function(e) return e.material_level end), chance=5} },
 		},
@@ -580,7 +579,7 @@ newEntity{
 	keywords = {regen=true},
 	level_range = {30, 50},
 	greater_ego = 1,
-	rarity = 18,
+	rarity = 25,
 	cost = 25,
 	wielder = {
 		life_regen = resolvers.mbonus_material(45, 15, function(e, v) v=v/10 return 0, v end),

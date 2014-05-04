@@ -508,6 +508,31 @@ function _M:generateRandart(data)
 	-- Setup the name
 	o.name = name
 
+	local theme_map = {
+		physical = engine.DamageType.PHYSICAL,
+		--mental = engine.DamageType.MIND,
+		fire = engine.DamageType.FIRE,
+		lightning = engine.DamageType.LIGHTNING,
+		acid = engine.DamageType.ACID,
+		mind = engine.DamageType.MIND,
+		arcane = engine.DamageType.ARCANE,
+		blight = engine.DamageType.BLIGHT,
+		nature = engine.DamageType.NATURE,
+		temporal = engine.DamageType.TEMPORAL,
+		light = engine.DamageType.LIGHT,
+		dark = engine.DamageType.DARK,
+	}
+
+	local pickDamtype = function(themes_list)
+		if not rng.percent(18) then return engine.DamageType.PHYSICAL end
+			for k, v in pairs(themes_list) do
+				if theme_map[k] then return theme_map[k] end
+			end
+		return engine.DamageType.PHYSICAL
+	end
+
+	if o and o.combat and not (o.subtype and o.subtype == "staff") then o.combat.damtype = pickDamtype(themes) end
+
 	if data.post then
 		data.post(o)
 	end

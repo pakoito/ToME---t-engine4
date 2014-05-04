@@ -240,6 +240,9 @@ newBirthDescriptor{
 			{type="armor", subtype="shield", name="iron shield", autoreq=false, ego_chance=-1000, ego_chance=-1000},
 			{type="ammo", subtype="shot", name="pouch of iron shots", autoreq=true, ego_chance=-1000},
 		},
+		resolvers.generic(function(e)
+			e.auto_shoot_talent = e.T_SHOOT
+		end),
 	},
 	copy_add = {
 		life_rating = 0,

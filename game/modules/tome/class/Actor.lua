@@ -1627,14 +1627,6 @@ function _M:tooltip(x, y, seen_by)
 
 	local rank, rank_color = self:TextRank()
 
-	local resists = {}
-	for t, v in pairs(self.resists) do
-		if v ~= 0 then
-			if t ~= "all" then v = self:combatGetResist(t) end
-			resists[#resists+1] = string.format("%d%% %s", v, t == "all" and "all" or DamageType:get(t).name)
-		end
-	end
-
 	local ts = tstring{}
 	ts:add({"uid",self.uid}) ts:merge(rank_color:toTString()) ts:add(self.name, {"color", "WHITE"})
 	if self.type == "humanoid" or self.type == "giant" then ts:add({"font","italic"}, "(", self.female and "female" or "male", ")", {"font","normal"}, true) else ts:add(true) end
@@ -1654,7 +1646,26 @@ function _M:tooltip(x, y, seen_by)
 		ts:add({"color", 0, 255, 128}, ("Iceblock: %d"):format(eff.hp), {"color", "WHITE"}, true)
 	end
 	--ts:add(("Stats: %d / %d / %d / %d / %d / %d"):format(self:getStr(), self:getDex(), self:getCon(), self:getMag(), self:getWil(), self:getCun()), true)
-	if #resists > 0 then ts:add("Resists: ", table.concat(resists, ','), true) end
+	--if #resists > 0 then ts:add("Resists: ", table.concat(resists, ','), true) end
+	
+	local resists = tstring{}
+	ts:add({"color", "ANTIQUE_WHITE"}, "Resists: ")
+	for t, v in pairs(self.resists) do
+		if t == "all" then 
+			ts:add({"color", "LIGHT_BLUE"}, tostring(math.floor(v)) .. "%", " ", {"color", "LAST"}, "all, ")
+		elseif math.abs(v) >= 20 then
+			local res = tostring ( math.floor(self:combatGetResist(t)) ) .. "%"
+			if v > 0 then  
+				ts:add({"color", "LIGHT_GREEN"}, res, " ", {"color", "LAST"}, DamageType:get(t).name, ", ")
+			else
+				ts:add({"color", "LIGHT_RED"}, res, " ", {"color", "LAST"}, DamageType:get(t).name, ", ")
+			end
+		end
+	end
+
+	if ts[#ts] == ", " then table.remove(ts) end
+	ts:add(true)
+
 	ts:add("Hardiness/Armour: ", tostring(math.floor(self:combatArmorHardiness())), '% / ', tostring(math.floor(self:combatArmor())), true)
 	ts:add("Size: ", {"color", "ANTIQUE_WHITE"}, self:TextSizeCategory(), {"color", "WHITE"}, true)
 
@@ -1667,9 +1678,48 @@ function _M:tooltip(x, y, seen_by)
 	ts:add("#FFD700#M. power#FFFFFF#: ", self:colorStats("combatMindpower"), "  ")
 	ts:add("#0080FF#M. save#FFFFFF#:  ", self:colorStats("combatMentalResist"), true)
 	ts:add({"color", "WHITE"})
+	
+	if (150 + (self.combat_critical_power or 0) ) > 150 then
+		ts:add("Critical Mult: ", ("%d%%"):format(150 + (self.combat_critical_power or 0) ), true )
+	end
+
 	if self.summon_time then
 		ts:add("Time left: ", {"color", "ANTIQUE_WHITE"}, ("%d"):format(self.summon_time), {"color", "WHITE"}, true)
 	end
+
+	if self:getInven("MAINHAND") and self:getInven("MAINHAND").worn and self:getInven("MAINHAND")[1] and self:getInven("MAINHAND")[1].keywords then
+		ts:add("Weapon Keywords: ", {"color", "RED"})
+		local keywords = tstring{}
+		local archery = self:getInven("MAINHAND")[1].archery or false
+
+
+		for k, v in pairs(self:getInven("MAINHAND")[1].keywords) do
+			ts:add(tostring(k), ", " )
+		end
+
+		if self:getInven("OFFHAND") and self:getInven("OFFHAND").worn and self:getInven("OFFHAND")[1] and self:getInven("OFFHAND")[1].keywords then
+			for k, v in pairs(self:getInven("OFFHAND")[1].keywords) do
+				ts:add(tostring(k), ", ")
+			end
+		end
+
+		if archery and self:getInven("QUIVER") and self:getInven("QUIVER").worn and self:getInven("QUIVER")[1] and self:getInven("QUIVER")[1].keywords then
+			for k, v in pairs(self:getInven("QUIVER")[1].keywords) do
+				ts:add(tostring(k), ", ")
+			end
+		end
+
+		if ts[#ts] == ", " then table.remove(ts) end
+		ts:add({"color", "LAST"}, true)
+	end
+
+	local retal = 0
+	for k, v in pairs(self.on_melee_hit) do
+		if v then retal = retal + v end
+	end
+
+	if retal > 0 then ts:add("Melee Retaliation: ", {"color", "RED"}, tostring(math.floor(retal)), {"color", "WHITE"}, true ) end
+
 	if self.desc then ts:add(self.desc, true) end
 	if self.faction and Faction.factions[self.faction] then ts:add("Faction: ") ts:merge(factcolor:toTString()) ts:add(("%s (%s, %d)"):format(Faction.factions[self.faction].name, factstate, factlevel), {"color", "WHITE"}, true) end
 	if game.player ~= self then ts:add("Personal reaction: ") ts:merge(pfactcolor:toTString()) ts:add(("%s, %d"):format(pfactstate, pfactlevel), {"color", "WHITE"} ) end
@@ -1682,27 +1732,39 @@ function _M:tooltip(x, y, seen_by)
 	if ts[#ts-1] == "Sustained Talents: " then table.remove(ts) table.remove(ts) table.remove(ts) table.remove(ts) end
 
 	ts:add(true, {"color", "ORANGE"}, "Temporary Status Effects: ",{"color", "WHITE"})
+
+	local effmental = tstring{}
+	local effphysical = tstring{}
+	local effmagical = tstring{}
+	local effother = tstring{}
+	local effbeneficial = tstring{}
+
 	for eff_id, p in pairs(self.tmp) do
 		local e = self.tempeffect_def[eff_id]
 		local dur = p.dur + 1
 		if e.status == "detrimental" then
 			if e.type == "physical" then
-				if act then ts:add(true, "- ", {"color", "LIGHT_RED"}, (e.decrease > 0) and ("%s(%d)"):format(e.desc,dur) or e.desc, {"color", "WHITE"} ) end
+				if act then effphysical:add(true, "- ", {"color", "LIGHT_RED"}, (e.decrease > 0) and ("%s(%d)"):format(e.desc,dur) or e.desc, {"color", "WHITE"} ) end
 			elseif e.type == "magical" then
-				if act then ts:add(true, "- ", {"color", "DARK_ORCHID"}, (e.decrease > 0) and ("%s(%d)"):format(e.desc,dur) or e.desc, {"color", "WHITE"} ) end
+				if act then effmagical:add(true, "- ", {"color", "DARK_ORCHID"}, (e.decrease > 0) and ("%s(%d)"):format(e.desc,dur) or e.desc, {"color", "WHITE"} ) end
 			elseif e.type == "mental" then
-				if act then ts:add(true, "- ", {"color", "YELLOW"}, (e.decrease > 0) and ("%s(%d)"):format(e.desc,dur) or e.desc, {"color", "WHITE"} ) end
+				if act then effmental:add(true, "- ", {"color", "YELLOW"}, (e.decrease > 0) and ("%s(%d)"):format(e.desc,dur) or e.desc, {"color", "WHITE"} ) end
 			elseif e.type == "other" then
-				if act then ts:add(true, "- ", {"color", "ORCHID"}, (e.decrease > 0) and ("%s(%d)"):format(e.desc,dur) or e.desc, {"color", "WHITE"} ) end
-
+				if act then effother:add(true, "- ", {"color", "ORCHID"}, (e.decrease > 0) and ("%s(%d)"):format(e.desc,dur) or e.desc, {"color", "WHITE"} ) end
 			else
 				if act then ts:add(true, "- ", {"color", "LIGHT_RED"}, (e.decrease > 0) and ("%s(%d)"):format(e.desc,dur) or e.desc, {"color", "WHITE"} ) end
 
 			end		
 		else
-			if act then ts:add(true, "- ", {"color", "LIGHT_GREEN"}, (e.decrease > 0) and ("%s(%d)"):format(e.desc,dur) or e.desc, {"color", "WHITE"} ) end
+			if act then effbeneficial:add(true, "- ", {"color", "LIGHT_GREEN"}, (e.decrease > 0) and ("%s(%d)"):format(e.desc,dur) or e.desc, {"color", "WHITE"} ) end
 		end
 	end
+
+	ts:merge(effphysical)
+	ts:merge(effmental)
+	ts:merge(effmagical)
+	ts:merge(effother)
+	ts:merge(effbeneficial)
 
 	if ts[#ts-1] == "Temporary Status Effects: " then table.remove(ts) table.remove(ts) table.remove(ts) table.remove(ts) end
 
@@ -1916,7 +1978,6 @@ function _M:onTakeHit(value, src, death_note)
 	end
 
 	-- Reduce damage and trigger for Trained Reactions
-	--print("[onTakeHit] Before Trained Reactions ", value)
 	if self:attr("incoming_reduce") then
 		value = value * (100-self:attr("incoming_reduce")) / 100
 		print("[onTakeHit] After Trained Reactions effect reduction ", value)

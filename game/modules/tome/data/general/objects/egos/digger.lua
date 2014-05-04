@@ -140,9 +140,6 @@ newEntity{
 			[DamageType.FIRE] = resolvers.mbonus_material(10, 5),
 			[DamageType.MIND] = resolvers.mbonus_material(10, 5),
 		},
-		melee_project={
-			[DamageType.DREAMFORGE] = resolvers.mbonus_material(10, 5),
-		},
 		combat_mentalresist = resolvers.mbonus_material(10, 5),
 	},
 	resolvers.generic(function(e) e.digspeed = math.ceil(e.digspeed / 2) end),

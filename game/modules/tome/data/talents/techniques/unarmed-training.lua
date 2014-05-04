@@ -73,27 +73,30 @@ newTalent{
 	end,
 }
 
+-- Not thoroughly tested yet
 newTalent{
 	name = "Unified Body",
 	type = {"technique/unarmed-training", 2},
 	require = techs_cun_req2,
-	mode = "sustained",
+	mode = "passive",
 	points = 5,
 	sustain_stamina = 20,
 	cooldown = 18,
 	tactical = { BUFF = 2 },
+	last_update = 0,
 	getStr = function(self, t) return math.ceil(self:combatTalentScale(t, 1.5, 7.5, 0.75) + self:combatTalentStatDamage(t, "cun", 2, 10)) end,
 	getCon = function(self, t) return math.ceil(self:combatTalentScale(t, 1.5, 7.5, 0.75) + self:combatTalentStatDamage(t, "dex", 5, 25)) end,
-	activate = function(self, t)
-		return {
-			stat1 = self:addTemporaryValue("inc_stats", {[self.STAT_CON] = t.getCon(self, t)}),
-			stat2 = self:addTemporaryValue("inc_stats", {[self.STAT_STR] = t.getStr(self, t)}),	
-		}
+
+	passives = function(self, t, tmptable)
+			self:talentTemporaryValue(tmptable, "inc_stats", {[self.STAT_CON] = t.getCon(self, t)})
+			self:talentTemporaryValue(tmptable, "inc_stats", {[self.STAT_STR] = t.getStr(self, t)})	
 	end,
-	deactivate = function(self, t, p)
-		self:removeTemporaryValue("inc_stats", p.stat1)
-		self:removeTemporaryValue("inc_stats", p.stat2)
-		return true
+	callbackOnStatChange = function(self, t, stat, v)
+		if self.turn_procs.unified_body then return end
+		if stat == self.STAT_DEX or stat == self.STAT_CUN then
+			self.turn_procs.unified_body = true
+			self:updateTalentPassives(t)
+		end
 	end,
 	info = function(self, t)
 		return ([[Your mastery of unarmed combat unifies your body.  Increases your Strength by %d based on Cunning and your Constitution by %d based on Dexterity.]]):format(t.getStr(self, t), t.getCon(self, t))
@@ -127,7 +130,7 @@ newTalent{
 	no_energy = true,
 	tactical = { BUFF = 2 },
 	getDefensePct = function(self, t)
-		return self:combatTalentScale(t, 0.15, 0.9) -- God scaling this is weird
+		return self:combatTalentScale(t, 0.15, 0.8) -- God scaling this is weird
 	end,
 	getDamageReduction = function(self, t) 
 		return math.min(0.8, t.getDefensePct(self, t) * self:combatDefense() / 100)
@@ -151,7 +154,7 @@ newTalent{
 		return cb.value
 	end, 
 	info = function(self, t)
-		return ([[Your understanding of physiology allows you to apply your reflexes in new ways.  Whenever you receive damage greater than %d%% of your maximum life you reduce that damage by %d%% based on your defense.]]):
+		return ([[Your understanding of physiology allows you to apply your reflexes in new ways.  Whenever you would receive damage greater than %d%% of your maximum life you reduce that damage by %d%% based on your defense.]]):
 		format(t.getDamagePct(self, t)*100, t.getDamageReduction(self, t)*100 )
 	end,
 }

@@ -67,6 +67,7 @@ newTalent{
 	no_energy = false,
 	tactical = { ATTACK = { weapon = 2 }, CLOSEIN = 0.5 },
 	requires_target = true,
+	getDamage = function(self, t) return self:combatTalentWeaponDamage(t, 0.7, 1.8) end,
 	on_pre_use = function(self, t, silent) if not self:hasTwoHandedWeapon() then if not silent then game.logPlayer(self, "You require a two handed weapon to use this talent.") end return false end return true end,
 	action = function(self, t)
 		local weapon = self:hasTwoHandedWeapon()
@@ -77,7 +78,7 @@ newTalent{
 		if not x or not y then return nil end
 		if core.fov.distance(self.x, self.y, x, y) > 1 then return nil end
 		local dir = util.getDir(x, y, self.x, self.y) or 6
-		local moved = 0.75
+		local moved = 0.5
 		if self:canMove(x, y) then
 			self:move(x, y)
 			moved = 1
@@ -88,16 +89,19 @@ newTalent{
 		local rx, ry = util.coordAddDir(self.x, self.y, util.dirSides(dir, self.x, self.y).right)
 		local target, lt, rt = game.level.map(fx, fy, Map.ACTOR), game.level.map(lx, ly, Map.ACTOR), game.level.map(rx, ry, Map.ACTOR)
 
-		if target then self:attackTargetWith(target, weapon.combat, nil, self:combatTalentWeaponDamage(t, 0.9, 2) * moved) end
-		if lt then     self:attackTargetWith(lt, weapon.combat, nil, self:combatTalentWeaponDamage(t, 0.9, 2) * moved) end
-		if rt then     self:attackTargetWith(rt, weapon.combat, nil, self:combatTalentWeaponDamage(t, 0.9, 2) * moved) end
+		local damage = t.getDamage(self, t) * moved
+		if target then self:attackTargetWith(target, weapon.combat, nil, damage) end
+		if lt then     self:attackTargetWith(lt, weapon.combat, nil, damage) end
+		if rt then     self:attackTargetWith(rt, weapon.combat, nil, damage) end
 
 		return true
 	end,
 	info = function(self, t)
+	local damage = t.getDamage(self, t) * 100
+	local movedamage = t.getDamage(self, t) * 0.5 * 100
 		return ([[Take a step toward your foes using the momentum to cleave all creatures in a 3 wide arc in front of you for %d%% weapon damage.
 		If you failed to move the damage is instead %d%%.]])
-		:format(100 * self:combatTalentWeaponDamage(t, 0.9, 2), 100 * self:combatTalentWeaponDamage(t, 0.9, 2) * 0.75)
+		:format(damage, movedamage)
 	end,
 }
 

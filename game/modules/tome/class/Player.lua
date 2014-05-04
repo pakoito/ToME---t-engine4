@@ -828,8 +828,8 @@ function _M:automaticTalents()
 	end
 	table.sort(uses, function(a, b)
 		local an, nb = util.getval(a.no_energy, self, a), util.getval(b.no_energy, self, b)
-		if an < bn then return true
-		elseif an > bn then return false
+		if an < nb then return true
+		elseif an > nb then return false
 		else
 			if a.cd > b.cd then return true
 			else return false

@@ -120,6 +120,8 @@ newEntity{
 -----------------------------------------------------------
 -- Infusions
 -----------------------------------------------------------
+-- Pros:  Instant cast, clears 2 average/lesser debuff types, which makes other cleanses also more consistent
+-- Cons:  Significantly less healing outputper cast than Regeneration
 newEntity{ base = "BASE_INFUSION",
 	name = "healing infusion",
 	level_range = {7, 50},
@@ -129,9 +131,9 @@ newEntity{ base = "BASE_INFUSION",
 
 	inscription_kind = "heal",
 	inscription_data = {
-		cooldown = resolvers.rngrange(12, 17),
-		heal = resolvers.mbonus_level(400, 40, function(e, v) return v * 0.06 end),
-		use_stat_mod = 2.7,
+		cooldown = resolvers.rngrange(10, 16),
+		heal = resolvers.mbonus_level(80, 20, function(e, v) return v * 0.06 end),
+		use_stat_mod = 2,
 	},
 	inscription_talent = "INFUSION:_HEALING",
 }
@@ -193,7 +195,7 @@ newEntity{ base = "BASE_INFUSION",
 	inscription_data = {
 		cooldown = resolvers.rngrange(13, 20),
 		dur = resolvers.mbonus_level(5, 4, function(e, v) return v * 1 end),
-		speed = resolvers.mbonus_level(700, 500, function(e, v) return v * 0.001 end),
+		speed = resolvers.mbonus_level(500, 300, function(e, v) return v * 0.001 end),
 		use_stat_mod = 3,
 	},
 	inscription_talent = "INFUSION:_MOVEMENT",

@@ -103,8 +103,9 @@ newEntity{ base = "BASE_TOOL_MISC", image="object/temporal_instability.png",
 			[DamageType.PHYSICAL] 	= 5,
 		},
 	},
+	-- Trinket slots are allowed to have extremely good actives because of their opportunity cost
 	max_power = 25, power_regen = 1,
-	use_talent = { id = Talents.T_ANIMATE_BLADE, level = 1, power = 25 },
+	use_talent = { id = Talents.T_ANIMATE_BLADE, level = 1, power = 15 },
 }
 
 newEntity{ base = "BASE_LONGSWORD", define_as = "RIFT_SWORD",

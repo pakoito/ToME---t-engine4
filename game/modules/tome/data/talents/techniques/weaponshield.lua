@@ -95,7 +95,7 @@ newTalent{
 	require = techs_req3,
 	points = 5,
 	random_ego = "attack",
-	cooldown = 10,
+	cooldown = 15,
 	stamina = 15,
 	requires_target = true,
 	getShieldDamage = function(self, t) return self:combatTalentWeaponDamage(t, 0.1, 0.8, self:getTalentLevel(self.T_SHIELD_EXPERTISE)) end,

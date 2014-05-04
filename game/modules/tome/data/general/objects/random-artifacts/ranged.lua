@@ -96,27 +96,16 @@ newEntity{ theme={mental=true}, name="equilibrium on hit", points = 1, rarity = 
 newEntity{ theme={mental=true}, name="max hate", points = 1, rarity = 16, level_range = {1, 50},
 	wielder = { max_hate = resolvers.randartmax(2, 10), },
 }
-newEntity{ theme={mental=true}, name="hate per kill", points = 1, rarity = 16, level_range = {1, 50},
-	wielder = { hate_per_kill = resolvers.randartmax(1, 5), },
-}
 newEntity{ theme={mental=true}, name="hate on crit", points = 1, rarity = 16, level_range = {1, 50},
 	wielder = { hate_on_crit = resolvers.randartmax(1, 5), },
 }
 newEntity{ theme={mental=true}, name="max psi", points = 1, rarity = 16, level_range = {1, 50},
 	wielder = { max_psi = resolvers.randartmax(10, 50), },
 }
-newEntity{ theme={mental=true}, name="psi per kill", points = 1, rarity = 16, level_range = {1, 50},
-	wielder = { psi_per_kill = resolvers.randartmax(1, 5), },
-}
 newEntity{ theme={mental=true}, name="psi on hit", points = 1, rarity = 16, level_range = {1, 50},
 	wielder = { psi_regen_when_hit = resolvers.randartmax(.04, 2), },
 }
-newEntity{ theme={mental=true}, name="psi on crit", points = 1, rarity = 16, level_range = {1, 50},
-	wielder = { psi_on_crit = resolvers.randartmax(1, 5), },
-}
-newEntity{ theme={mental=true}, name="psi regen", points = 1, rarity = 16, level_range = {1, 50},
-	wielder = { psi_regen = resolvers.randartmax(.1, 1), },
-}
+
 ----------------------------------------------------------------
 -- Misc
 ----------------------------------------------------------------
@@ -283,6 +272,7 @@ newEntity{ theme={defense=true, antimagic=true, temporal=true}, name="resist tem
 ----------------------------------------------------------------
 -- Elemental Projection
 ----------------------------------------------------------------
+--[[[]
 newEntity{ theme={physical=true}, name="physical melee", points = 1, rarity = 18, level_range = {1, 50},
 	wielder = { ranged_project = {[DamageType.PHYSICAL] = resolvers.randartmax(2, 20), }, },
 }
@@ -319,6 +309,7 @@ newEntity{ theme={arcane=true, spell=true}, name="arcane melee", points = 2, rar
 newEntity{ theme={temporal=true}, name="temporal melee", points = 2, rarity = 24, level_range = {1, 50},
 	wielder = { ranged_project = {[DamageType.TEMPORAL] = resolvers.randartmax(2, 20), }, },
 }
+--]]
 ----------------------------------------------------------------
 -- ranged damage Projection (rare)
 ----------------------------------------------------------------
@@ -432,45 +423,6 @@ newEntity{ theme={temporal=true}, name="temporal burst (crit)", points = 6, rari
 -- damage conversion
 ----------------------------------------------------------------
 -- Removed due to essentially being downsides more often than not, double dipping defenses and creating massive log spam
-----------------------------------------------------------------
--- Elemental Retribution
-----------------------------------------------------------------
-newEntity{ theme={physical=true}, name="physical retribution", points = 1, rarity = 18, level_range = {1, 50},
-	wielder = { on_melee_hit = {[DamageType.PHYSICAL] = resolvers.randartmax(4, 20), }, },
-}
-newEntity{ theme={mind=true, mental=true}, name="mind retribution", points = 1, rarity = 24, level_range = {1, 50},
-	wielder = { on_melee_hit = {[DamageType.MIND] = resolvers.randartmax(4, 20), }, },
-}
-newEntity{ theme={acid=true}, name="acid retribution", points = 1, rarity = 18, level_range = {1, 50},
-	wielder = { on_melee_hit = {[DamageType.ACID] = resolvers.randartmax(4, 20), }, },
-}
-newEntity{ theme={lightning=true}, name="lightning retribution", points = 1, rarity = 18, level_range = {1, 50},
-	wielder = { on_melee_hit = {[DamageType.LIGHTNING] = resolvers.randartmax(4, 20), }, },
-}
-newEntity{ theme={fire=true}, name="fire retribution", points = 1, rarity = 18, level_range = {1, 50},
-	wielder = { on_melee_hit = {[DamageType.FIRE] = resolvers.randartmax(4, 20), }, },
-}
-newEntity{ theme={cold=true}, name="cold retribution", points = 1, rarity = 18, level_range = {1, 50},
-	wielder = { on_melee_hit = {[DamageType.COLD] = resolvers.randartmax(4, 20), }, },
-}
-newEntity{ theme={light=true}, name="light retribution", points = 1, rarity = 18, level_range = {1, 50},
-	wielder = { on_melee_hit = {[DamageType.LIGHT] = resolvers.randartmax(4, 20), }, },
-}
-newEntity{ theme={dark=true}, name="dark retribution", points = 1, rarity = 18, level_range = {1, 50},
-	wielder = { on_melee_hit = {[DamageType.DARKNESS] = resolvers.randartmax(4, 20), }, },
-}
-newEntity{ theme={blight=true, spell=true}, name="blight retribution", points = 1, rarity = 18, level_range = {1, 50},
-	wielder = { on_melee_hit = {[DamageType.BLIGHT] = resolvers.randartmax(4, 20), }, },
-}
-newEntity{ theme={nature=true}, name="nature retribution", points = 1, rarity = 18, level_range = {1, 50},
-	wielder = { on_melee_hit = {[DamageType.NATURE] = resolvers.randartmax(4, 20), }, },
-}
-newEntity{ theme={arcane=true, spell=true}, name="arcane retribution", points = 2, rarity = 24, level_range = {1, 50},
-	wielder = { on_melee_hit = {[DamageType.ARCANE] = resolvers.randartmax(4, 20), }, },
-}
-newEntity{ theme={temporal=true}, name="temporal retribution", points = 2, rarity = 24, level_range = {1, 50},
-	wielder = { on_melee_hit = {[DamageType.TEMPORAL] = resolvers.randartmax(4, 20), }, },
-}
 
 ----------------------------------------------------------------
 -- Damage %
@@ -587,9 +539,6 @@ newEntity{ theme={misc=true, darkness=true}, name="infravision radius", points =
 }
 newEntity{ theme={misc=true, light=true}, name="lite radius", points = 1, rarity = 14, level_range = {1, 50},
 	wielder = { lite = resolvers.randartmax(1, 3), },
-}
-newEntity{ theme={misc=true}, name="water breathing", points = 10, rarity = 15, level_range = {1, 50},
-	wielder = { can_breath = {water=1}, },
 }
 newEntity{ theme={misc=true, mental=true}, name="telepathy", points = 60, rarity = 100, level_range = {1, 50},
 	wielder = { esp_all = 1 },

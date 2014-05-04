@@ -238,29 +238,13 @@ newEntity{
 	end),
 }
 
--- The rest
-newEntity{
-	power_source = {nature=true},
-	name = " of the fish", suffix=true,
-	keywords = {fish=true},
-	level_range = {1, 50},
-	rarity = 10,
-	cost = 10,
-	wielder = {
-		resists={
-			[DamageType.COLD] = resolvers.mbonus_material(20, 10),
-		},
-		can_breath = {water=1},
-	},
-}
-
 newEntity{
 	power_source = {psionic=true},
 	name = " of seduction", suffix=true, instant_resolve=true,
 	keywords = {seduction=true},
 	level_range = {35, 50},
 	greater_ego = 1,
-	rarity = 25,
+	rarity = 50,
 	cost = 50,
 	wielder = {
 		inc_damage = {
@@ -508,6 +492,7 @@ newEntity{
 		inc_stats = {
 			[Stats.STAT_LCK] = resolvers.mbonus_material(15, 5),
 		},
+		resist_unseen = resolvers.mbonus_material(10, 10), -- Makes more sense on Precognition helm, but I didn't want to overlap with the original stat use
 		combat_def = resolvers.mbonus_material(15, 5),
 		combat_atk = resolvers.mbonus_material(15, 5),
 	},
@@ -571,4 +556,32 @@ newEntity{
 			[DamageType.DARKNESS] = resolvers.mbonus_material(10, 5),
 		},
 	},
+}
+
+-- Upgraded Mastery
+newEntity{
+	power_source = {technique=true},
+	name = " of perfection (#MASTERY#)", suffix=true,
+	keywords = {perfection=true},
+	level_range = {30, 50},
+	rarity = 25,
+	greater_ego = 1,
+	cost = 2,
+	wielder = {},
+	resolvers.generic(function(e)
+		local tts = {}
+		local p = game:getPlayer(true)
+		for i, def in ipairs(engine.interface.ActorTalents.talents_types_def) do
+			if p and def.allow_random and p:knowTalentType(def.type) or p:knowTalentType(def.type) == false then tts[#tts+1] = def.type end
+		end
+		--local tt = tts[rng.range(1, #tts)]
+		local tt = rng.tableRemove(tts)
+		local tt2 = rng.tableRemove(tts)
+
+		e.wielder.talents_types_mastery = {}
+		local v = (10 + rng.mbonus(math.ceil(30 * e.material_level / 5), resolvers.current_level, 50)) / 100
+		e.wielder.talents_types_mastery[tt] = v
+		e.wielder.talents_types_mastery[tt2] = v
+		e.cost = e.cost + v * 60
+	end),
 }

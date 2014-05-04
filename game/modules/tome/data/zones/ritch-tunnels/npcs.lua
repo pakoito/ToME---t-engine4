@@ -94,6 +94,7 @@ newEntity{ base = "BASE_NPC_RITCH_REL",
 	ai_state = { ai_move="move_complex", talent_in=1, },
 }
 
+-- Screw it just die, die, die
 newEntity{ base = "BASE_NPC_RITCH_REL", define_as = "HIVE_MOTHER",
 	unique = true,
 	name = "Ritch Great Hive Mother", image = "npc/insect_ritch_ritch_hive_mother.png",
@@ -119,7 +120,7 @@ newEntity{ base = "BASE_NPC_RITCH_REL", define_as = "HIVE_MOTHER",
 
 	body = { INVEN = 10, BODY=1 },
 
-	inc_damage = {all=-30},
+	inc_damage = {all=-70},
 
 	resolvers.drops{chance=100, nb=1, {defined="FLAMEWROUGHT", random_art_replace={chance=75}}, },
 	resolvers.drops{chance=100, nb=3, {tome_drops="boss"} },
