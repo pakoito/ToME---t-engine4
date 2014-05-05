@@ -89,6 +89,7 @@ class BrowserClient;
 
 class WebViewOpaque {
 public:
+	bool crashed;
 	CefRefPtr<RenderHandler> render;
 	CefRefPtr<CefBrowser> browser;
 	CefRefPtr<BrowserClient> view;
@@ -156,6 +157,25 @@ public:
 
 	virtual bool OnBeforeResourceLoad(CefRefPtr<CefBrowser> browser, CefRefPtr<CefFrame> frame, CefRefPtr<CefRequest> request) OVERRIDE {
 		return false;
+	}
+
+	virtual bool OnBeforePluginLoad(CefRefPtr<CefBrowser> browser, const CefString& url, const CefString& policy_url, CefRefPtr<CefWebPluginInfo> info) OVERRIDE {
+		char *name = cstring_to_c(info->GetName());
+		char *path = cstring_to_c(info->GetPath());
+		fprintf(logfile, "[WEBCORE] Forbade plugin %s from %s\n", name, path);
+		free(name);
+		free(path);
+		return true;
+	}
+
+	virtual void OnRenderProcessTerminated(CefRefPtr<CefBrowser> browser, TerminationStatus status) OVERRIDE {
+		if ((status == TS_ABNORMAL_TERMINATION) || (status == TS_PROCESS_WAS_KILLED) || (status == TS_PROCESS_CRASHED)) {
+			opaque->crashed = true;
+			WebEvent *event = new WebEvent();
+			event->kind = TE4_WEB_EVENT_END_BROWSER;
+			event->handlers = handlers;
+			push_event(event);
+		}
 	}
 
 	virtual bool OnBeforePopup(CefRefPtr<CefBrowser> browser,
@@ -314,12 +334,15 @@ void te4_web_new(web_view_type *view, int w, int h) {
 
 	CefWindowInfo window_info;
 	CefBrowserSettings browserSettings;
+	browserSettings.java = STATE_DISABLED;
+	browserSettings.plugins = STATE_DISABLED;
 	window_info.SetAsOffScreen(NULL);
 	window_info.SetTransparentPainting(true);
 	opaque->render = new RenderHandler(w, h);
 	opaque->view = new BrowserClient(opaque, opaque->render, view->handlers);
 	CefString curl("");
 	opaque->browser = CefBrowserHost::CreateBrowserSync(window_info, opaque->view.get(), curl, browserSettings);
+	opaque->crashed = false;
 
 	view->w = w;
 	view->h = h;
@@ -331,9 +354,13 @@ bool te4_web_close(web_view_type *view) {
 	WebViewOpaque *opaque = (WebViewOpaque*)view->opaque;
 	if (!view->closed) {
 		view->closed = true;
-		fprintf(logfile, "[WEBCORE] Destroying webview for browser\n");
-		opaque->browser->GetHost()->CloseBrowser(true);
-		fprintf(logfile, "[WEBCORE] Destroying send done\n");
+		if (opaque->crashed) {
+			fprintf(logfile, "[WEBCORE] Destroying webview but it was already crashed, doing nothing\n");
+		} else {
+			fprintf(logfile, "[WEBCORE] Destroying webview for browser\n");
+			opaque->browser->GetHost()->CloseBrowser(true);
+			fprintf(logfile, "[WEBCORE] Destroying send done\n");
+		}
 		return true;
 	}
 	return false;
