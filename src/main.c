@@ -1243,6 +1243,7 @@ int main(int argc, char *argv[])
 		if (!strncmp(arg, "--no-steam", 10)) no_steam = TRUE;
 		if (!strncmp(arg, "--type=zygote", 13)) is_zygote = TRUE;
 		if (!strncmp(arg, "--type=renderer", 15)) is_zygote = TRUE;
+		if (!strncmp(arg, "--no-sandbox", 12)) is_zygote = TRUE;
 	}
 
 #ifdef SELFEXE_WINDOWS
