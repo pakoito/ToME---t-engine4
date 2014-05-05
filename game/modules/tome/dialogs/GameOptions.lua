@@ -275,6 +275,26 @@ function _M:generateListUi()
 		self.c_list:drawItem(item)
 	end,}
 
+	local zone = Textzone.new{width=self.c_desc.w, height=self.c_desc.h, text=string.toTString"If disabled you will not get a fullscreen notification of stun/daze effects. Beware.#WHITE#"}
+	list[#list+1] = { zone=zone, name=string.toTString"#GOLD##{bold}#Fullscreen stun/daze notification.#WHITE##{normal}#", status=function(item)
+		return tostring(config.settings.tome.fullscreen_stun and "enabled" or "disabled")
+	end, fct=function(item)
+		config.settings.tome.fullscreen_stun = not config.settings.tome.fullscreen_stun
+		game:saveSettings("tome.fullscreen_stun", ("tome.fullscreen_stun = %s\n"):format(tostring(config.settings.tome.fullscreen_stun)))
+		self.c_list:drawItem(item)
+		if game.player.updateMainShader then game.player:updateMainShader() end
+	end,}
+
+	local zone = Textzone.new{width=self.c_desc.w, height=self.c_desc.h, text=string.toTString"If disabled you will not get a fullscreen notification of confusion effects. Beware.#WHITE#"}
+	list[#list+1] = { zone=zone, name=string.toTString"#GOLD##{bold}#Fullscreen confusion notification.#WHITE##{normal}#", status=function(item)
+		return tostring(config.settings.tome.fullscreen_confusion and "enabled" or "disabled")
+	end, fct=function(item)
+		config.settings.tome.fullscreen_confusion = not config.settings.tome.fullscreen_confusion
+		game:saveSettings("tome.fullscreen_confusion", ("tome.fullscreen_confusion = %s\n"):format(tostring(config.settings.tome.fullscreen_confusion)))
+		self.c_list:drawItem(item)
+		if game.player.updateMainShader then game.player:updateMainShader() end
+	end,}
+
 	self.list = list
 end
 
