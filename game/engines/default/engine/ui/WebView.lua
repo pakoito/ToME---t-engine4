@@ -69,6 +69,10 @@ function _M:generate()
 		on_loading = function(url, status)
 			self.loading = status
 		end,
+		on_crash = function()
+			print("WebView crashed, closing C view")
+			self.view = nil
+		end,
 	}
 	if self.allow_downloads then self:onDownload(handlers) end
 	self.view = core.webview.new(self.w, self.h, handlers)
