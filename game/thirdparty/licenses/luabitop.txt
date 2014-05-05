@@ -1,0 +1,1 @@
+Lua BitOp is Copyright © 2008-2012 Mike Pall. Lua BitOp is free software, released under the MIT license (same license as the Lua core). 
