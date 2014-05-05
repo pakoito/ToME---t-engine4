@@ -120,11 +120,11 @@ class BrowserClient :
 	public CefLoadHandler
 {
 	std::map<int32, CurrentDownload*> downloads;
-	WebViewOpaque *opaque;
 	CefRefPtr<CefRenderHandler> m_renderHandler;
 	int handlers;
 
 public:
+	WebViewOpaque *opaque;
 	CefRefPtr<CefBrowser> browser;
 	bool first_load;
 	BrowserClient(WebViewOpaque *opaque, RenderHandler *renderHandler, int handlers) : m_renderHandler(renderHandler) {
@@ -870,7 +870,9 @@ void te4_web_shutdown() {
 	}
 
 	for (std::map<BrowserClient*, bool>::iterator it=all.begin(); it != all.end(); ++it) {
-		it->first->browser->GetHost()->CloseBrowser(true);
+		if (!it->first->opaque->crashed) {
+			it->first->browser->GetHost()->CloseBrowser(true);
+		}
 	}
 
 	while (!all_browsers.empty()) {
