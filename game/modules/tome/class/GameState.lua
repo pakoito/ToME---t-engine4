@@ -531,7 +531,7 @@ function _M:generateRandart(data)
 		return engine.DamageType.PHYSICAL
 	end
 
-	if o and o.combat and not (o.subtype and o.subtype == "staff") then o.combat.damtype = pickDamtype(themes) end
+	if o and o.combat and not (o.subtype and o.subtype == "staff") and not (o.subtype and o.subtype == "mindstar") then o.combat.damtype = pickDamtype(themes) end
 
 	if data.post then
 		data.post(o)
