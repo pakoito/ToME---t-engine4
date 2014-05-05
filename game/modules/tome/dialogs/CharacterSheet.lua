@@ -326,6 +326,9 @@ function _M:drawDialog(kind, actor_to_compare)
 		if player:attr("forbid_arcane") then
 			s:drawColorStringBlended(self.font, "#ORCHID#Zigur follower", w, h, 255, 255, 255, true) h = h + self.font_h
 		end
+		if player:attr("blood_life") then
+			s:drawColorStringBlended(self.font, "#DARK_RED#Blood of Life", w, h, 255, 255, 255, true) h = h + self.font_h
+		end
 
 		h = h + self.font_h
 		self:mouseTooltip(self.TOOLTIP_LEVEL, s:drawColorStringBlended(self.font,  "Level: #00ff00#"..player.level, w, h, 255, 255, 255, true)) h = h + self.font_h
@@ -520,10 +523,10 @@ function _M:drawDialog(kind, actor_to_compare)
 
 		print_stat(self.actor.STAT_STR, ("%-12s"):format(Stats.stats_def[self.actor.STAT_STR].name:capitalize()), self.TOOLTIP_STR)
 		print_stat(self.actor.STAT_DEX, ("%-12s"):format(Stats.stats_def[self.actor.STAT_DEX].name:capitalize()), self.TOOLTIP_DEX)
+		print_stat(self.actor.STAT_CON, ("%-12s"):format(Stats.stats_def[self.actor.STAT_CON].name:capitalize()), self.TOOLTIP_CON)
 		print_stat(self.actor.STAT_MAG, ("%-12s"):format(Stats.stats_def[self.actor.STAT_MAG].name:capitalize()), self.TOOLTIP_MAG)
 		print_stat(self.actor.STAT_WIL, ("%-12s"):format(Stats.stats_def[self.actor.STAT_WIL].name:capitalize()), self.TOOLTIP_WIL)
 		print_stat(self.actor.STAT_CUN, ("%-12s"):format(Stats.stats_def[self.actor.STAT_CUN].name:capitalize()), self.TOOLTIP_CUN)
-		print_stat(self.actor.STAT_CON, ("%-12s"):format(Stats.stats_def[self.actor.STAT_CON].name:capitalize()), self.TOOLTIP_CON)
 		h = h + self.font_h
 
 		local nb_inscriptions = 0

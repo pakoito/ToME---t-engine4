@@ -168,7 +168,7 @@ function _M:display(x, y, nb_keyframes)
 	end
 	if self.focused then
 		self:drawFrame(self.frame_sel, x + self.title_w, y)
-		self.texcursor.t:toScreenFull(x + self.text_x + (self.cursor-self.scroll) * self.font_mono_w, y + self.cursor_y, self.texcursor.w, self.texcursor.h, self.texcursor.tw, self.texcursor.th)
+		self.texcursor.t:toScreenFull(x + self.text_x + (self.cursor-self.scroll) * self.font_mono_w - (self.texcursor.w / 2), y + self.cursor_y, self.texcursor.w, self.texcursor.h, self.texcursor.tw, self.texcursor.th)
 	else
 		self:drawFrame(self.frame, x + self.title_w, y)
 		if self.focus_decay then
