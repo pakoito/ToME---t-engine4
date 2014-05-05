@@ -635,6 +635,25 @@ newLore{
 Eyal is a torn world, and the forces of nature can react strongly to the arcane energies that seek to manipulate them. Some items and areas are imbued with anti-magic, a natural energy that disrupts magical abilities and effects. There are even those who have learned to harness anti-magic into their own wild abilities, and who use them to hunt down and destroy those who practise magic. So beware, caster! It is a hostile world ye wander in.]],
 }
 
+newLore{
+	id = "kestin-highfin-adventuring-notes",
+	category = "highfin",
+	name = "On Adventuring",
+	lore = [[ I must say, as time grows, I feel so do I grow more and more inclined to distance myself from the calling of an 'adventurer', like so many you can find roaming the countryside. I feel like the myth of a wandering hero has blinded too many with promise of easy fame and riches, with no eye for the other kind of fortune.
+
+Hear me out on this.
+
+Nowadays most don't really recognize how fascinating the world we live in truly is. It is vast, more than you can imagine. I can safely promise, any wild thought you can muster up, dear reader, will not come close to the truth. Such is the breadth of wonders, I would probably dismiss most of what I have seen as myth, be I not there myself. And even then sometimes, I had to wonder whether I could trust my eyes.
+
+Perhaps I'm being too vague, or maybe these promises leave much to be desired. After all, adventuring is not all fun and exotics, it is before all danger and a constant threat of death, or worse. So then if you wish me to be more concrete, think of derelict, crumbling crypts, cults and demons, hungry forests full of monsters and forces beyond time and place. True, there is overwhelming awe, thrill even, but the reason that so little detail reaches you, is because so little live to tell.
+
+What does reach us then, are not people, but objects. Artifacts of great power, legacy of the past. Surely, any drunkard might like to tell tales after a pint or two, but a magical sword is a proof of its own and it keeps quiet of what it has seen. So, a great hero is usually easy to recognize, being practically a walking history book. Clad in half the age of important events which he probably has no idea about.
+
+It is important to remember, that every artifact has a meaning, beings of great power and importance behind them. Stories, that now slowly wane into nothing. This is why it is not artifacts that make an adventurer. It is his great deeds, the will to dare where nobody did before. It is not important if you get known in the process or not, after all, if you were truly great, maybe you will leave behind a legacy of your own.
+
+-#{italic}#Kestin Highfin#{normal}#]]
+}
+
 
 --------------------------------------------------------------
 -- Misc bosses

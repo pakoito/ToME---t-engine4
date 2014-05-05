@@ -143,7 +143,7 @@ newEffect{
 		return old_eff
 	end,
 	activate = function(self, eff)
-		if eff.src:knowTalent(self.T_BLOODY_BUTCHER) then
+		if eff.src and eff.src:knowTalent(self.T_BLOODY_BUTCHER) then
 			local t = eff.src:getTalentFromId(eff.src.T_BLOODY_BUTCHER)
 			local resist = math.min(t.getResist(eff.src, t), math.max(0, self:combatGetResist(DamageType.PHYSICAL)))
 			self:effectTemporaryValue(eff, "resists", {[DamageType.PHYSICAL] = -resist})

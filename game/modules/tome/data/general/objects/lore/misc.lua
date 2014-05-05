@@ -25,6 +25,13 @@ newEntity{ base = "BASE_LORE_RANDOM",
 }
 
 newEntity{ base = "BASE_LORE_RANDOM",
+	name = "On Adventuring", lore="kestin-highfin-adventuring-notes", unique=true,
+	desc = [[Fragments of a fabled traveler.]],
+	level_range = {10, 25},
+	rarity = 35,
+}
+
+newEntity{ base = "BASE_LORE_RANDOM",
 	name = "memories of Artelia Firstborn", lore="creation-elf", unique=true,
 	desc = [[The memories of the first elf ever to awaken.]],
 	level_range = {1, 25},

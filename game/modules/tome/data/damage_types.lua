@@ -873,7 +873,7 @@ newDamageType{
 
 -- Silence
 newDamageType{
-	name = "arcane silence", type = "ARCANE_SILENCE",
+	name = "arcane silence", type = "ARCANE_SILENCE", text_color = "#PURPLE#",
 	projector = function(src, x, y, type, dam)
 		local chance = 100
 		if _G.type(dam) == "table" then dam, chance = dam.dam, dam.chance end

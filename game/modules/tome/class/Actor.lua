@@ -1976,6 +1976,11 @@ function _M:onTakeHit(value, src, death_note)
 			value = value / 2
 		end
 	end
+	
+	--Special Flag (currently for Terrasca)
+	if value > 0 and self:attr("speed_resist") then
+		value = value * (util.bound(self.global_speed * self.movement_speed, 0.3, 1))
+	end
 
 	-- Reduce damage and trigger for Trained Reactions
 	if self:attr("incoming_reduce") then
