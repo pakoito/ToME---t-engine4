@@ -304,7 +304,6 @@ void on_event(SDL_Event *event)
 			lastts = event->text.timestamp;
 			lastc = event->text.text[0];
 
-			printf("<==text event %ld : '%s'\n", (long int)event->text.timestamp, event->text.text);
 			lua_rawgeti(L, LUA_REGISTRYINDEX, current_keyhandler);
 			lua_pushstring(L, "receiveKey");
 			lua_gettable(L, -2);

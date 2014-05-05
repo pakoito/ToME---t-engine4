@@ -1715,7 +1715,9 @@ function _M:tooltip(x, y, seen_by)
 
 	local retal = 0
 	for k, v in pairs(self.on_melee_hit) do
-		if v then retal = retal + v end
+		if type(v) == "number" then retal = retal + v
+		elseif type(v) == "table" and type(v.dam) == "number" then retal = retal + v.dam
+		end
 	end
 
 	if retal > 0 then ts:add("Melee Retaliation: ", {"color", "RED"}, tostring(math.floor(retal)), {"color", "WHITE"}, true ) end
