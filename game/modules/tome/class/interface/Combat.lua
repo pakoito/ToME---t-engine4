@@ -1811,7 +1811,6 @@ end
 --- Gets damage based on talent, stat, and interval
 function _M:combatStatTalentIntervalDamage(t, stat, min, max, stat_weight)
 	local stat_weight = stat_weight or 0.5
-	scaled_stat = self[stat](self)
 	return self:rescaleDamage(min + (max - min)*((stat_weight * self[stat](self)/100) + (1 - stat_weight) * self:getTalentLevel(t)/6.5))
 end
 
@@ -2258,7 +2257,7 @@ end
 
 -- grapple size check; compares attackers size and targets size
 function _M:grappleSizeCheck(target)
-	size = target.size_category - self.size_category
+	local size = target.size_category - self.size_category
 	if size > 1 then
 		self:logCombat(target, "#Source#'s grapple fails because #Target# is too big!")
 		return true

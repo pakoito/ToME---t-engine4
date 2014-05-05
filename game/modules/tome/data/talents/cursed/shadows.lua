@@ -391,7 +391,7 @@ newTalent{
 		end
 		self:incHate(-6)
 
-		level = t.getLevel(self, t)
+		local level = t.getLevel(self, t)
 		local tShadowWarriors = self:knowTalent(self.T_SHADOW_WARRIORS) and self:getTalentFromId(self.T_SHADOW_WARRIORS) or nil
 		local tShadowMages = self:knowTalent(self.T_SHADOW_MAGES) and self:getTalentFromId(self.T_SHADOW_MAGES) or nil
 

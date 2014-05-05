@@ -184,7 +184,7 @@ newTalent{
 		end
 		if #poss == 0 then game.logPlayer(self, "No exit location could be found.")	return false end
 		local pos = poss[rng.range(1, #poss)]
-		exit_x, exit_y = pos[1], pos[2]
+		local exit_x, exit_y = pos[1], pos[2]
 		print("[[wormhole]] entrance ", entrance_x, " :: ", entrance_y)
 		print("[[wormhole]] exit ", exit_x, " :: ", exit_y)
 

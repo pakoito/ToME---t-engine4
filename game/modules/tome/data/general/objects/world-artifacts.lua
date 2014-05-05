@@ -3637,7 +3637,7 @@ newEntity{ base = "BASE_LEATHER_BOOT", --Thanks Grayswandir!
 	use_power = { name = "phase door in range 6, radius 2", power = 24,
 		use = function(self, who)
 			local tg = {type="ball", nolock=true, pass_terrain=true, nowarning=true, range=6, radius=2, requires_knowledge=false}
-			x, y = who:getTarget(tg)
+			local x, y = who:getTarget(tg)
 			if not x then return nil end
 			-- Target code does not restrict the target coordinates to the range, it lets the project function do it
 			-- but we cant ...

@@ -256,6 +256,7 @@ newEntity{
 				return
 			end
 			local combat = weapon.combat
+			local explosion, particle, trail
 
 			local DamageType = require "engine.DamageType"
 			local damtype = combat.damtype
@@ -281,7 +282,7 @@ newEntity{
 			dam = rng.range(dam, dam * damrange)
 			dam = who:spellCrit(dam)
 
-			who:projectile(tg, x, y, damtype, dam, {type=explosion})
+			who:projectile(tg, x, y, damtype, dam, {type=explosion, particle=particle, trail=trail})
 
 			game.logSeen(who, "%s fires a bolt from %s!", who.name:capitalize(), self.name)
 			game:playSoundNear(who, "talents/arcane")

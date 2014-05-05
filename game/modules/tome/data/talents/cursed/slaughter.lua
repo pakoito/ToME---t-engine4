@@ -329,8 +329,8 @@ newTalent{
 		return true
 	end,
 	on_attackTarget = function(self, t, target)
-		if inCleave then return end
-		inCleave = true
+		if self.inCleave then return end
+		self.inCleave = true
 
 		local chance = t.getChance(self, t)
 		if rng.percent(chance) then
@@ -343,12 +343,12 @@ newTalent{
 					local damageMultiplier = t.getDamageMultiplier(self, t)
 					self:logCombat(secondTarget, "#Source# cleaves through #Target#!")
 					self:attackTarget(secondTarget, nil, damageMultiplier, true)
-					inCleave = false
+					self.inCleave = false
 					return
 				end
 			end
 		end
-		inCleave = false
+		self.inCleave = false
 	end,
 	info = function(self, t)
 		local chance = t.getChance(self, t, 0)

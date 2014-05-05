@@ -313,8 +313,8 @@ newTalent{
 		local tg = self:getTalentTarget(t)
 		local x, y, target = self:getTarget(tg)
 		if not x or not y then return nil end
-		dispower = t.getpower(self,t)
-		dismax = t.maxpower(self, t)
+		local dispower = t.getpower(self,t)
+		local dismax = t.maxpower(self, t)
 		self:project(tg, x, y, function(px, py)
 			target:setEffect(target.EFF_SPELL_DISRUPTION, 8, {src=self, power = dispower, max = dismax, apply_power=self:combatMindpower()})
 			if rng.percent(30) and self:getTalentLevel(t)>2 then

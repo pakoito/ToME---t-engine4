@@ -40,7 +40,7 @@ newTalent{
 		local tx, ty = self:getTarget(tg)
 		if not tx or not ty then return nil end
 		local _ _, tx, ty = self:canProject(tg, tx, ty)
-		target = game.level.map(tx, ty, Map.ACTOR)
+		local target = game.level.map(tx, ty, Map.ACTOR)
 		if not target or target == self then return nil end
 
 		if target == self.summoner then

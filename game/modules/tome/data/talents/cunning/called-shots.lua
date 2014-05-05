@@ -235,7 +235,7 @@ newTalent {
 	no_energy = "fake",
 	mode = "passive",
 	info = function(self, t)
-	bonuses = sniper_bonuses(self, true)
+		local bonuses = sniper_bonuses(self, true)
 		return ([[Your mastery of called shots is unparalleled. Gain %d%% bonus critical chance and %d%% critical damage on your Called Shots. At rank 3 lowers the cooldowns of your Called Shots by 2 each. At rank 5 gain %d%% physical resist piercing with all Called Shot attacks.]])
 		:format(bonuses.crit_chance,
 			bonuses.crit_power * 100,

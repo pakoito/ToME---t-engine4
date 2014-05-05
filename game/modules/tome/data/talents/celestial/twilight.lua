@@ -216,7 +216,7 @@ newTalent{
 			return
 		end
 
-		allowed = 2 + math.ceil(self:getTalentLevelRaw(t) / 2 )
+		local allowed = 2 + math.ceil(self:getTalentLevelRaw(t) / 2 )
 
 		if target.rank >= 3.5 or -- No boss
 			target:reactionToward(self) >= 0 or -- No friends

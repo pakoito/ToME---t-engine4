@@ -41,7 +41,8 @@ newTalent{
 	getDuration = function(self, t)
 		return 40
 	end,
-	getHitHateChange = function(self, t, bonus)Patbonus = math.min(bonus, 3)
+	getHitHateChange = function(self, t, bonus)
+		bonus = math.min(bonus, 3)
 		return 0.5 * bonus
 	end,
 	getAttackChange = function(self, t, bonus)

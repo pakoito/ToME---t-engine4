@@ -97,6 +97,7 @@ newTalent{
 		end
 
 		-- breaks active grapples if the target is not grappled
+		local grappled
 		if target:isGrappled(self) then
 			grappled = true
 		else
@@ -267,9 +268,7 @@ newTalent{
 		if core.fov.distance(self.x, self.y, x, y) > 1 then return nil end
 
 		-- breaks active grapples if the target is not grappled
-		if target:isGrappled(self) then
-			grappled = true
-		else
+		if not target:isGrappled(self) then
 			self:breakGrapples()
 		end
 
@@ -317,8 +316,6 @@ newTalent{
 
 		-- breaks active grapples if the target is not grappled
 		if target:isGrappled(self) then
-			grappled = true
-		else
 			self:breakGrapples()
 		end
 

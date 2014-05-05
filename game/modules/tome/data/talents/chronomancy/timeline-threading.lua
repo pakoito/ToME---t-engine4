@@ -108,7 +108,7 @@ newTalent{
 			return
 		end
 
-		allowed = t.getSize(self, t)
+		local allowed = t.getSize(self, t)
 
 		if target.rank >= 3.5 or -- No boss
 			target:reactionToward(self) >= 0 or -- No friends
