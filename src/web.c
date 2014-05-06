@@ -28,6 +28,7 @@
 #include "core_lua.h"
 #include "types.h"
 #include "main.h"
+#include "getself.h"
 #include "te4web.h"
 #include "web-external.h"
 #include "lua_externs.h"
