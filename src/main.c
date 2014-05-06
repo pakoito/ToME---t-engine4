@@ -299,8 +299,10 @@ void on_event(SDL_Event *event)
 		{
 			static Uint32 lastts = 0;
 			static char lastc = 0;
-			if (event->text.timestamp == lastts) break;
-			if ((event->text.timestamp - lastts < 5) && (lastc == event->text.text[0])) break;
+			if (browsers_count) { // Somehow CEF3 makes keys sometime arrive duplicated, so prevent that here
+				if (event->text.timestamp == lastts) break;
+				if ((event->text.timestamp - lastts < 3) && (lastc == event->text.text[0])) break;
+			}
 			lastts = event->text.timestamp;
 			lastc = event->text.text[0];
 
@@ -1523,13 +1525,14 @@ int main(int argc, char *argv[])
 	printf("Terminating!\n");
 	te4_web_terminate();
 	printf("Webcore shutdown complete\n");
-	SDL_Quit();
+//	SDL_Quit();
 	printf("SDL shutdown complete\n");
-	deinit_openal();
+//	deinit_openal();
 	printf("OpenAL shutdown complete\n");
 	printf("Thanks for having fun!\n");
 
 #ifdef SELFEXE_WINDOWS
+	TerminateProcess( GetCurrentProcess(),0);
 	fclose(stdout);
 #endif
 #ifdef SELFEXE_MACOSX
