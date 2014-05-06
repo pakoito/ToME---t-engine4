@@ -508,44 +508,52 @@ static void web_instant_js(int handlers, const char *fct, int nb_args, WebJsValu
 }
 
 void te4_web_load() {
+	char *spawnname = NULL;
+	char *libname = NULL;
 	const char *self = get_self_executable(g_argc, g_argv);
 #if defined(SELFEXE_LINUX) || defined(SELFEXE_BSD)
 #if defined(TE4_RELPATH64)
 	const char *spawnbname = "cef3spawn64";
-	char *spawnname = malloc(strlen(self) + strlen(spawnbname) + 1);
+	spawnname = malloc(strlen(self) + strlen(spawnbname) + 1);
 	strcpy(spawnname, self);
 	strcpy(strrchr(spawnname, '/') + 1, spawnbname);
-	void *web = SDL_LoadObject("lib64/libte4-web.so");
+	libname = "lib64/libte4-web.so";
+	void *web = SDL_LoadObject(libname);
 #elif defined(TE4_RELPATH32)
 	const char *spawnbname = "cef3spawn32";
-	char *spawnname = malloc(strlen(self) + strlen(spawnbname) + 1);
+	spawnname = malloc(strlen(self) + strlen(spawnbname) + 1);
 	strcpy(spawnname, self);
 	strcpy(strrchr(spawnname, '/') + 1, spawnbname);
-	void *web = SDL_LoadObject("lib/libte4-web.so");
+	libname = "lib/libte4-web.so";
+	void *web = SDL_LoadObject(libname);
 #else
 	const char *spawnbname = "cef3spawn";
-	char *spawnname = malloc(strlen(self) + strlen(spawnbname) + 1);
+	spawnname = malloc(strlen(self) + strlen(spawnbname) + 1);
 	strcpy(spawnname, self);
 	strcpy(strrchr(spawnname, '/') + 1, spawnbname);
-	void *web = SDL_LoadObject("libte4-web.so");
+	libname = "libte4-web.so";
+	void *web = SDL_LoadObject(libname);
 #endif
 #elif defined(SELFEXE_WINDOWS)
 	const char *spawnbname = "cef3spawn.exe";
-	char *spawnname = malloc(strlen(self) + strlen(spawnbname) + 1);
+	spawnname = malloc(strlen(self) + strlen(spawnbname) + 1);
 	strcpy(spawnname, self);
 	strcpy(strrchr(spawnname, '\\') + 1, spawnbname);
-	void *web = SDL_LoadObject("te4-web.dll");
+	libname = "te4-web.dll";
+	void *web = SDL_LoadObject(libname);
 #elif defined(SELFEXE_MACOSX)
-	char *spawnname = NULL;
+	spawnname = NULL;
 	const char *name = "libte4-web.dylib";
 	char *lib = malloc(strlen(self) + strlen(name) + 1);
 	strcpy(lib, self);
 	strcpy(lib+strlen(self), name);
+	libname = lib;
 	void *web = SDL_LoadObject(lib);
 #else
 	void *web = NULL;
 #endif
-	printf("Loading web core: %s\n", web ? "loaded!" : SDL_GetError());
+	printf("WebCore config: library(%s) spawn(%s)\n", libname ? libname : "--", spawnname ? spawnname : "--");
+	printf("Loading WebCore: %s\n", web ? "loaded!" : SDL_GetError());
 
 	if (web) {
 		webcore = TRUE;
