@@ -265,6 +265,36 @@ function _M:generateListUi()
 		self.c_list:drawItem(item)
 	end,}
 
+	local zone = Textzone.new{width=self.c_desc.w, height=self.c_desc.h, text=string.toTString[[Toggles between various tactical information display:
+- Combined healthbar and small tactical frame
+- Combined healthbar and big tactical frame
+- Only healthbar
+- No tactical information at all
+
+#{italic}#You can also change this directly ingame by pressing shift+T.#{normal}##WHITE#]]}
+	list[#list+1] = { zone=zone, name=string.toTString"#GOLD##{bold}#Tactical overlay.#WHITE##{normal}#", status=function(item)
+		local vs = "Combined Small"
+		if game.always_target == "old" then
+			local vs = "Combined Big"
+		elseif game.always_target == "health" then
+			local vs = "Only Healthbars"
+		elseif game.always_target == nil then
+			local vs = "Nothing"
+		elseif game.always_target == true then
+			local vs = "Combined Small"
+		end
+		return vs
+	end, fct=function(item)
+		Dialog:listPopup("Tactical overlay", "Select overlay mode", {
+			{name="Combined Small", mode=true},
+			{name="Combined Big", mode="old"},
+			{name="Only Healthbars", mode="health"},
+			{name="Nothing", mode=nil},
+		}, 300, 200, function(sel)
+			if not sel then return end
+			game:setTacticalMode(sel.mode)
+		end)
+	end,}
 
 	local zone = Textzone.new{width=self.c_desc.w, height=self.c_desc.h, text=string.toTString"Toggles between a bottom or side display for tactial healthbars.#WHITE#"}
 	list[#list+1] = { zone=zone, name=string.toTString"#GOLD##{bold}#Healthbars position.#WHITE##{normal}#", status=function(item)
