@@ -894,7 +894,7 @@ void te4_web_shutdown() {
 	}
 	
 	fprintf(logfile, "[WEBCORE] all browsers dead, shutting down\n");
-//	CefShutdown();
+	CefShutdown();
 	fprintf(logfile, "[WEBCORE] all browsers dead, shutdown completed\n");
 
 	fclose(logfile);
