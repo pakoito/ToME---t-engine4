@@ -588,6 +588,8 @@ project "cef3spawn"
 		libdirs {"/opt/cef3/1547/out/Release/obj.target/", "/opt/cef3/1547/Release/"}
 		includedirs {"/opt/cef3/1547/include/", "/opt/cef3/1547/"}
 		links { "cef", "cef_dll_wrapper" }
+		if _OPTIONS.relpath=="32" then linkoptions{"-Wl,-rpath -Wl,\\\$\$ORIGIN/lib "} end
+		if _OPTIONS.relpath=="64" then linkoptions{"-Wl,-rpath -Wl,\\\$\$ORIGIN/lib64 "} end
 		defines { 'SELFEXE_LINUX' }
 end
 
