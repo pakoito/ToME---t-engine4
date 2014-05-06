@@ -2845,8 +2845,10 @@ newDamageType{
 		local target = game.level.map(x, y, Map.ACTOR)
 		if target then
 			if src:reactionToward(target) < 0 then
-				local reapplied = target:hasEffect(target.EFF_CUT)
-				target:setEffect(target.EFF_CUT, 2, { power=dam.dam, src=src }, reapplied)
+				if target:canBe("cut") then
+					local reapplied = target:hasEffect(target.EFF_CUT)
+					target:setEffect(target.EFF_CUT, 2, { power=dam.dam, src=src }, reapplied)
+				end
 			else
 				local reapplied = target:hasEffect(target.EFF_LEAVES_COVER)
 				target:setEffect(target.EFF_LEAVES_COVER, 1, { power=dam.chance }, reapplied)

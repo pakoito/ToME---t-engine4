@@ -57,19 +57,7 @@ function _M:init()
 	l[#l+1] = {name="Credits", fct=function() game:registerDialog(require("mod.dialogs.Credits").new()) end}
 	l[#l+1] = {name="Exit", fct=function() game:onQuit() end}
 	if config.settings.cheat then l[#l+1] = {name="Reboot", fct=function() util.showMainMenu() end} end
-	if config.settings.cheat then l[#l+1] = {name="webtest", fct=function()
-		local tween = require "tween"
-		local i = 1
-		local function fct()
-			local d = Dialog:webPopup("http://google.com/")
-			d.__showup = nil
-			tween(1, {a=1}, {a=2}, 'linear', function()
-				game:unregisterDialog(d)
-				if i < 500 then i = i + 1 return fct() else core.game.exit_engine() end
-			end)
-		end
-		fct()
-	end} end
+	if config.settings.cheat then l[#l+1] = {name="webtest", fct=function() util.browserOpenUrl("http://te4.org/spoilers/talents/tometips/html/index.html") end} end
 --	if config.settings.cheat then l[#l+1] = {name="webtest", fct=function() util.browserOpenUrl("asset://te4/html/test.html") end} end
 
 	self.c_background = Button.new{text=game.stopped and "Enable background" or "Disable background", fct=function() self:switchBackground() end}
