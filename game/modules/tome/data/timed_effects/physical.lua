@@ -2504,14 +2504,7 @@ newEffect{
 }
 
 local normalize_direction = function(direction)
-	local pi2 = math.pi * 2
-	while direction > pi2 do
-		direction = direction - pi2
-	end
-	while direction < 0 do
-		direction = direction + pi2
-	end
-	return direction
+	return direction % (2*math.pi)
 end
 
 local in_angle = function(angle, min, max)
