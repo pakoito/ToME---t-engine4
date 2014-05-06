@@ -1214,9 +1214,8 @@ int main(int argc, char *argv[])
 	g_argv = argv;
 
 	bool is_zygote = FALSE;
-#ifdef SELFEXE_WINDOWS
-	bool windows_autoflush = FALSE;
-#endif
+	bool os_autoflush = FALSE;
+	FILE *logfile = NULL;
 
 	// Parse arguments
 	int i;
@@ -1231,7 +1230,7 @@ int main(int argc, char *argv[])
 		{
 			setvbuf(stdout, (char *) NULL, _IOLBF, 0);
 #ifdef SELFEXE_WINDOWS
-			windows_autoflush = TRUE;
+			os_autoflush = TRUE;
 #endif
 		}
 		if (!strncmp(arg, "--no-debug", 10)) no_debug = TRUE;
@@ -1247,9 +1246,19 @@ int main(int argc, char *argv[])
 
 #ifdef SELFEXE_WINDOWS
 	if (!is_zygote) {
-		FILE *logfile;
 		logfile = freopen("te4_log.txt", "w", stdout);
-		if (windows_autoflush) setvbuf(logfile, NULL, _IONBF, 2);
+		if (os_autoflush) setvbuf(logfile, NULL, _IONBF, 2);
+	}
+#endif
+#ifdef SELFEXE_MACOSX
+	if (!is_zygote) {
+		const char *self = get_self_executable(g_argc, g_argv);
+		const char *name = "../../../te4_log.txt";
+		char *logname = malloc(strlen(self) + strlen(name) + 1);
+		strcpy(logname, self);
+		strcpy(logname + strlen(self), name);
+		logfile = freopen(logname, "w", stdout);
+		if (os_autoflush) setlinebuf(logfile);
 	}
 #endif
 
@@ -1338,7 +1347,10 @@ int main(int argc, char *argv[])
 		if (!isActive || tickPaused) SDL_WaitEvent(NULL);
 
 #ifdef SELFEXE_WINDOWS
-		if (windows_autoflush) _commit(_fileno(stdout));
+		if (os_autoflush) _commit(_fileno(stdout));
+#endif
+#ifdef SELFEXE_MACOSX
+		if (os_autoflush) fflush(stdout);
 #endif
 		/* handle the events in the queue */
 		while (SDL_PollEvent(&event))
@@ -1515,6 +1527,9 @@ int main(int argc, char *argv[])
 	printf("Thanks for having fun!\n");
 
 #ifdef SELFEXE_WINDOWS
+	fclose(stdout);
+#endif
+#ifdef SELFEXE_MACOSX
 	fclose(stdout);
 #endif
 }

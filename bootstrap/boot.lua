@@ -15,7 +15,10 @@ if __SELFEXE then
 		-- Now remove executable name
 		dir = dir:gsub("(.*"..fs.getPathSeparator()..").+", "%1")
 	else
-		dir = dir:gsub("(.*"..fs.getPathSeparator()..").+", "%1")..fs.getPathSeparator().."Resources"..fs.getPathSeparator()
+		-- This is a little un-OSX like: we grab our data from the folder containing T-Engine.app
+		-- It is a bit strange but way way better for people to install addons and such
+		dir = dir:gsub("(.*"..fs.getPathSeparator()..").+", "%1"):gsub("(.*"..fs.getPathSeparator()..").+", "%1"):gsub("(.*"..fs.getPathSeparator()..").+", "%1")
+--		dir = dir:gsub("(.*"..fs.getPathSeparator()..").+", "%1")..fs.getPathSeparator().."Resources"..fs.getPathSeparator()
 	end
 
 	print("SelfExe gave us app directory of:", dir)

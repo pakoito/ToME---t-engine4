@@ -132,10 +132,18 @@ project "TEngine"
 		if _OPTIONS.wincross then
 			postbuildcommands { "cp ../bin/Debug/t-engine.exe ../", }
 		else
-			postbuildcommands { "cp ../bin/Debug/t-engine ../", }
+			if os.get() ~= "macosx" then postbuildcommands { "cp ../bin/Debug/t-engine ../", }
+			else postbuildcommands { "cp ../build/t-engine.app/Contents/MacOS/t-engine ../mac/base_app/Contents/MacOS", }
+			end
 		end
 	configuration {"Release"}
-		postbuildcommands { "cp ../bin/Release/t-engine ../", }
+		if _OPTIONS.wincross then
+			postbuildcommands { "cp ../bin/Release/t-engine.exe ../", }
+		else
+			if os.get() ~= "macosx" then postbuildcommands { "cp ../bin/Release/t-engine ../", }
+			else postbuildcommands { "cp ../build/t-engine.app/Contents/MacOS/t-engine ../mac/base_app/Contents/MacOS", }
+			end
+		end
 
 
 ----------------------------------------------------------------
@@ -540,18 +548,22 @@ project "te4-web"
 	if _OPTIONS.relpath=="32" then linkoptions{"-Wl,-rpath -Wl,\\\$\$ORIGIN "} end
 	if _OPTIONS.relpath=="64" then linkoptions{"-Wl,-rpath -Wl,\\\$\$ORIGIN "} end
 
-	buildoptions{"-Wall -pthread -I/usr/include/gtk-2.0 -I/usr/lib64/gtk-2.0/include -I/usr/include/atk-1.0 -I/usr/include/cairo -I/usr/include/gdk-pixbuf-2.0 -I/usr/include/pango-1.0 -I/usr/include/glib-2.0 -I/usr/lib64/glib-2.0/include -I/usr/include/pixman-1 -I/usr/include/freetype2 -I/usr/include/libpng15 -I/usr/include/libdrm"}
-	libdirs {"/opt/cef3/1547/out/Release/obj.target/", "/opt/cef3/1547/Release/"}
-	includedirs {"/opt/cef3/1547/include/", "/opt/cef3/1547/"}
-	links { "cef", "cef_dll_wrapper" }
-	
 	files { "../src/web-cef3/*.cpp", }
 
 	configuration "macosx"
 		defines { 'SELFEXE_MACOSX' }
+		libdirs {"/users/tomedev/downloads/cef_binary_3.1547.1597_macosx64/xcodebuild/Release/", "/users/tomedev/downloads/cef_binary_3.1547.1597_macosx64/Release/"}
+		includedirs {"/users/tomedev/downloads/cef_binary_3.1547.1597_macosx64/include/", "/users/tomedev/downloads/cef_binary_3.1547.1597_macosx64/"}
+		links { "cef", "cef_dll_wrapper" }
+
 	configuration "windows"
 		defines { 'SELFEXE_WINDOWS' }
+
 	configuration "linux"
+		buildoptions{"-Wall -pthread -I/usr/include/gtk-2.0 -I/usr/lib64/gtk-2.0/include -I/usr/include/atk-1.0 -I/usr/include/cairo -I/usr/include/gdk-pixbuf-2.0 -I/usr/include/pango-1.0 -I/usr/include/glib-2.0 -I/usr/lib64/glib-2.0/include -I/usr/include/pixman-1 -I/usr/include/freetype2 -I/usr/include/libpng15 -I/usr/include/libdrm"}
+		libdirs {"/opt/cef3/1547/out/Release/obj.target/", "/opt/cef3/1547/Release/"}
+		includedirs {"/opt/cef3/1547/include/", "/opt/cef3/1547/"}
+		links { "cef", "cef_dll_wrapper" }
 		defines { 'SELFEXE_LINUX' }
 end
 

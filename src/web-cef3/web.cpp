@@ -110,6 +110,7 @@ public:
 };
 
 static std::map<BrowserClient*, bool> all_browsers;
+static int all_browsers_nb = 0;
 
 class BrowserClient :
 	public CefClient,
@@ -132,6 +133,7 @@ public:
 		this->handlers = handlers;
 		this->first_load = true;
 		all_browsers[this] = true;
+		all_browsers_nb++;
 	}
 	~BrowserClient() {
 		fprintf(logfile, "[WEBCORE] Destroyed client\n");
@@ -139,6 +141,7 @@ public:
 			delete it->second;
 		}
 		all_browsers.erase(this);
+		all_browsers_nb--;
 	}
 
 	virtual CefRefPtr<CefRenderHandler> GetRenderHandler() {
@@ -752,7 +755,7 @@ void te4_web_reply_local(int id, const char *mime, const char *result, size_t le
 void te4_web_do_update(void (*cb)(WebEvent*)) {
 	if (!web_core) return;
 
-	CefDoMessageLoopWork();
+	if (all_browsers_nb) CefDoMessageLoopWork();
 
 	WebEvent *event;
 	while ((event = pop_event())) {
@@ -804,8 +807,15 @@ void te4_web_setup(
 	void (*instant_js)(int handlers, const char *fct, int nb_args, WebJsValue *args, WebJsValue *ret)
 	) {
 
+#ifdef SELFEXE_MACOSX
+	logfile = fopen("/tmp/te4_log_web.txt", "w");
+#else
 	logfile = fopen("te4_log_web.txt", "w");
+#endif
 #ifdef _WIN32
+	setvbuf(logfile, NULL, _IONBF, 2);
+#endif
+#ifdef SELFEXE_MACOSX
 	setvbuf(logfile, NULL, _IONBF, 2);
 #endif
 
