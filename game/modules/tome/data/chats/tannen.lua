@@ -35,7 +35,14 @@ local function check_materials_withheld_orb(npc, player)
 	return gem_o and athame_o
 end
 
-if game.player:hasQuest("east-portal") and game.player:hasQuest("east-portal").wait_turn and game.player:hasQuest("east-portal").wait_turn > game.turn then
+if game.player:hasQuest("east-portal") and game.player:isQuestStatus("east-portal", engine.Quest.DONE) then
+newChat{ id="welcome",
+	text = [[#LIGHT_GREEN#*Nobody answers.*#WHITE#]],
+	answers = {
+		{"[leave]"},
+	}
+}
+elseif game.player:hasQuest("east-portal") and game.player:hasQuest("east-portal").wait_turn and game.player:hasQuest("east-portal").wait_turn > game.turn then
 newChat{ id="welcome",
 	text = [[#LIGHT_GREEN#*Nobody answers. Tannen is probably still busy studying the orb.*#WHITE#]],
 	answers = {
