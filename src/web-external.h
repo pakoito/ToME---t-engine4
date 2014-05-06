@@ -36,6 +36,7 @@ enum web_event_kind {
 	TE4_WEB_EVENT_LOCAL_REQUEST,
 	TE4_WEB_EVENT_RUN_LUA,
 	TE4_WEB_EVENT_END_BROWSER,
+	TE4_WEB_EVENT_BROWSER_COUNT,
 };
 
 typedef struct {
@@ -73,6 +74,7 @@ typedef struct {
 			const char *code;
 		} run_lua;
 		void *texture;
+		int count;
 	} data;
 } WebEvent;
 

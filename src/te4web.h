@@ -25,6 +25,7 @@ extern void te4_web_load();
 extern void te4_web_init(lua_State *L);
 extern void te4_web_update(lua_State *L);
 extern void te4_web_terminate();
+extern int browsers_count;
 
 #endif
 

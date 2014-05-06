@@ -269,6 +269,7 @@ static const struct luaL_Reg weblib[] =
 	{NULL, NULL},
 };
 
+int browsers_count = 0;
 static lua_State *he_L;
 static void handle_event(WebEvent *event) {
 	switch (event->kind) {
@@ -383,6 +384,10 @@ static void handle_event(WebEvent *event) {
 			}
 			break;
 		case TE4_WEB_EVENT_DELETE_TEXTURE:
+			break;
+		case TE4_WEB_EVENT_BROWSER_COUNT:
+			browsers_count = event->data.count;
+			printf("[WEBCORE] Browser count %d\n", browsers_count);
 			break;
 	}
 }

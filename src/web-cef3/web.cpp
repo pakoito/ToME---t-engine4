@@ -134,6 +134,11 @@ public:
 		this->first_load = true;
 		all_browsers[this] = true;
 		all_browsers_nb++;
+
+		WebEvent *event = new WebEvent();
+		event->kind = TE4_WEB_EVENT_BROWSER_COUNT;
+		event->data.count = all_browsers_nb;
+		push_event(event);
 	}
 	~BrowserClient() {
 		fprintf(logfile, "[WEBCORE] Destroyed client\n");
@@ -142,6 +147,11 @@ public:
 		}
 		all_browsers.erase(this);
 		all_browsers_nb--;
+
+		WebEvent *event = new WebEvent();
+		event->kind = TE4_WEB_EVENT_BROWSER_COUNT;
+		event->data.count = all_browsers_nb;
+		push_event(event);
 	}
 
 	virtual CefRefPtr<CefRenderHandler> GetRenderHandler() {
