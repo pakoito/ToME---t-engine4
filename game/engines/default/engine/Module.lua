@@ -438,6 +438,7 @@ You may try to force loading if you are sure the savefile does not use that addo
 		end
 	end
 
+	local hooks_list = {}
 	mod.addons = {}
 	_G.__addons_superload_order = {}
 	for i, add in ipairs(adds) do
@@ -476,9 +477,7 @@ You may try to force loading if you are sure the savefile does not use that addo
 			else fs.mount(base.."/hooks", "/hooks/"..add.short_name, true)
 			end
 
-			self:setCurrentHookDir("/hooks/"..add.short_name.."/")
-			dofile("/hooks/"..add.short_name.."/load.lua")
-			self:setCurrentHookDir(nil)
+         		hooks_list[#hooks_list+1] = "/hooks/"..add.short_name
 			print(" * with hooks")
 		end
 
@@ -497,6 +496,15 @@ You may try to force loading if you are sure the savefile does not use that addo
 
 		mod.addons[add.short_name] = add
 	end
+
+	-- We load hooks at the end of all superloads and overloads
+	-- If the code in /hooks/ is run earlier, it will load early versions of the dependent files and subsequent superloads and overloads will be disregarded.
+	print("Post-processing hooks.")
+	for i, dir in ipairs(hooks_list) do
+		self:setCurrentHookDir(dir.."/")
+		dofile(dir.."/load.lua")
+	end
+	self:setCurrentHookDir(nil)
 	return hashlist
 end
 

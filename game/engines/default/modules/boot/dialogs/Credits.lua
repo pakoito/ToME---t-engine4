@@ -57,6 +57,7 @@ local credits = {
 	{"World Builders", title=1},
 	{"Aaron 'Sage Acrin' Vandegrift"},
 	{"Chris 'Shibari' Davidson"},
+	{"Doctornull"},
 	{"Em 'Susramanian' Jay"},
 	{"Eric 'Edge2054' Wykoff"},
 	{"Evan 'Fortescue' Williams"},
@@ -105,7 +106,6 @@ local credits = {
 
 	{"Code Helpers", title=1},
 	{"Antagonist"},
-	{"Doctornull"},
 	{"Graziel"},
 	{"Grayswandir"},
 	{"Hachem Muche"},
