@@ -80,10 +80,7 @@ newTalent{
 	require = techs_cun_req2,
 	mode = "passive",
 	points = 5,
-	sustain_stamina = 20,
-	cooldown = 18,
 	tactical = { BUFF = 2 },
-	last_update = 0,
 	getStr = function(self, t) return math.ceil(self:combatTalentScale(t, 1.5, 7.5, 0.75) + self:combatTalentStatDamage(t, "cun", 2, 10)) end,
 	getCon = function(self, t) return math.ceil(self:combatTalentScale(t, 1.5, 7.5, 0.75) + self:combatTalentStatDamage(t, "dex", 5, 25)) end,
 
