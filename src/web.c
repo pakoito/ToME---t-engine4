@@ -509,7 +509,12 @@ void te4_web_load() {
 #elif defined(SELFEXE_WINDOWS)
 	void *web = SDL_LoadObject("te4-web.dll");
 #elif defined(SELFEXE_MACOSX)
-	void *web = SDL_LoadObject("libte4-web.dylib");
+	const char *self = get_self_executable(g_argc, g_argv);
+	const char *name = "libte4-web.dylib";
+	char *lib = malloc(strlen(self) + strlen(name) + 1);
+	strcpy(lib, self);
+	strcpy(lib+strlen(self), name);
+	void *web = SDL_LoadObject(lib);
 #else
 	void *web = NULL;
 #endif

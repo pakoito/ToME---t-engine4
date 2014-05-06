@@ -578,82 +578,82 @@ void te4_web_inject_key(web_view_type *view, int scancode, int asymb, const char
 	key_event.windows_key_code = VkCode;
 #elif defined(SELFEXE_MACOSX)
 	if (key_code == SDLK_BACKSPACE) {
-		cef_event.native_key_code = kVK_Delete;
-		cef_event.unmodified_character = kBackspaceCharCode;
+		key_event.native_key_code = kVK_Delete;
+		key_event.unmodified_character = kBackspaceCharCode;
 	} else if (key_code == SDLK_DELETE) {
-		cef_event.native_key_code = kVK_ForwardDelete;
-		cef_event.unmodified_character = kDeleteCharCode;
+		key_event.native_key_code = kVK_ForwardDelete;
+		key_event.unmodified_character = kDeleteCharCode;
 	} else if (key_code == SDLK_DOWN) {
-		cef_event.native_key_code = kVK_DownArrow;
-		cef_event.unmodified_character = /* NSDownArrowFunctionKey */ 0xF701;
+		key_event.native_key_code = kVK_DownArrow;
+		key_event.unmodified_character = /* NSDownArrowFunctionKey */ 0xF701;
 	} else if (key_code == SDLK_RETURN) {
-		cef_event.native_key_code = kVK_Return;
-		cef_event.unmodified_character = kReturnCharCode;
+		key_event.native_key_code = kVK_Return;
+		key_event.unmodified_character = kReturnCharCode;
 	} else if (key_code == SDLK_ESCAPE) {
-		cef_event.native_key_code = kVK_Escape;
-		cef_event.unmodified_character = kEscapeCharCode;
+		key_event.native_key_code = kVK_Escape;
+		key_event.unmodified_character = kEscapeCharCode;
 	} else if (key_code == SDLK_LEFT) {
-		cef_event.native_key_code = kVK_LeftArrow;
-		cef_event.unmodified_character = /* NSLeftArrowFunctionKey */ 0xF702;
+		key_event.native_key_code = kVK_LeftArrow;
+		key_event.unmodified_character = /* NSLeftArrowFunctionKey */ 0xF702;
 	} else if (key_code == SDLK_RIGHT) {
-		cef_event.native_key_code = kVK_RightArrow;
-		cef_event.unmodified_character = /* NSRightArrowFunctionKey */ 0xF703;
+		key_event.native_key_code = kVK_RightArrow;
+		key_event.unmodified_character = /* NSRightArrowFunctionKey */ 0xF703;
 	} else if (key_code == SDLK_TAB) {
-		cef_event.native_key_code = kVK_Tab;
-		cef_event.unmodified_character = kTabCharCode;
+		key_event.native_key_code = kVK_Tab;
+		key_event.unmodified_character = kTabCharCode;
 	} else if (key_code == SDLK_UP) {
-		cef_event.native_key_code = kVK_UpArrow;
-		cef_event.unmodified_character = /* NSUpArrowFunctionKey */ 0xF700;
+		key_event.native_key_code = kVK_UpArrow;
+		key_event.unmodified_character = /* NSUpArrowFunctionKey */ 0xF700;
 	} else {
-		cef_event.native_key_code = GetMacKeyCodeFromChar(key_code);
-		if (cef_event.native_key_code == -1)
+		key_event.native_key_code = GetMacKeyCodeFromChar(key_code);
+		if (key_event.native_key_code == -1)
 			return;
 		
-		cef_event.unmodified_character = key_code;
+		key_event.unmodified_character = key_code;
 	}
 
-	cef_event.character = cef_event.unmodified_character;
+	key_event.character = key_event.unmodified_character;
 
 	// Fill in |character| according to flags.
-	if (cef_event.modifiers & EVENTFLAG_SHIFT_DOWN) {
+	if (key_event.modifiers & EVENTFLAG_SHIFT_DOWN) {
 		if (key_code >= '0' && key_code <= '9') {
-			cef_event.character = kShiftCharsForNumberKeys[key_code - '0'];
+			key_event.character = kShiftCharsForNumberKeys[key_code - '0'];
 		} else if (key_code >= 'A' && key_code <= 'Z') {
-			cef_event.character = 'A' + (key_code - 'A');
+			key_event.character = 'A' + (key_code - 'A');
 		} else {
-			switch (cef_event.native_key_code) {
+			switch (key_event.native_key_code) {
 				case kVK_ANSI_Grave:
-					cef_event.character = '~';
+					key_event.character = '~';
 					break;
 				case kVK_ANSI_Minus:
-					cef_event.character = '_';
+					key_event.character = '_';
 					break;
 				case kVK_ANSI_Equal:
-					cef_event.character = '+';
+					key_event.character = '+';
 					break;
 				case kVK_ANSI_LeftBracket:
-					cef_event.character = '{';
+					key_event.character = '{';
 					break;
 				case kVK_ANSI_RightBracket:
-					cef_event.character = '}';
+					key_event.character = '}';
 					break;
 				case kVK_ANSI_Backslash:
-					cef_event.character = '|';
+					key_event.character = '|';
 					break;
 				case kVK_ANSI_Semicolon:
-					cef_event.character = ':';
+					key_event.character = ':';
 					break;
 				case kVK_ANSI_Quote:
-					cef_event.character = '\"';
+					key_event.character = '\"';
 					break;
 				case kVK_ANSI_Comma:
-					cef_event.character = '<';
+					key_event.character = '<';
 					break;
 				case kVK_ANSI_Period:
-					cef_event.character = '>';
+					key_event.character = '>';
 					break;
 				case kVK_ANSI_Slash:
-					cef_event.character = '?';
+					key_event.character = '?';
 					break;
 				default:
 					break;
@@ -662,15 +662,15 @@ void te4_web_inject_key(web_view_type *view, int scancode, int asymb, const char
 	}
 
 	// Control characters.
-	if (cef_event.modifiers & EVENTFLAG_CONTROL_DOWN) {
+	if (key_event.modifiers & EVENTFLAG_CONTROL_DOWN) {
 		if (key_code >= 'A' && key_code <= 'Z')
-			cef_event.character = 1 + key_code - 'A';
-		else if (cef_event.native_key_code == kVK_ANSI_LeftBracket)
-			cef_event.character = 27;
-		else if (cef_event.native_key_code == kVK_ANSI_Backslash)
-			cef_event.character = 28;
-		else if (cef_event.native_key_code == kVK_ANSI_RightBracket)
-			cef_event.character = 29;
+			key_event.character = 1 + key_code - 'A';
+		else if (key_event.native_key_code == kVK_ANSI_LeftBracket)
+			key_event.character = 27;
+		else if (key_event.native_key_code == kVK_ANSI_Backslash)
+			key_event.character = 28;
+		else if (key_event.native_key_code == kVK_ANSI_RightBracket)
+			key_event.character = 29;
 	}
 #else
 	// Try a fallback..
