@@ -223,7 +223,11 @@ function _M:newGame()
 		self:updateCurrentChar()
 	end
 
-	self.always_target = true
+	if not config.settings.tome.tactical_mode_set then
+		self.always_target = true
+	else
+		self.always_target = config.settings.tome.tactical_mode
+	end
 	local nb_unlocks, max_unlocks = self:countBirthUnlocks()
 	self.creating_player = true
 	local birth; birth = Birther.new("Character Creation ("..nb_unlocks.."/"..max_unlocks.." unlocked birth options)", self.player, {"base", "world", "difficulty", "permadeath", "race", "subrace", "sex", "class", "subclass" }, function(loaded)
@@ -271,6 +275,7 @@ function _M:newGame()
 
 					birth_done()
 					self.player:check("on_birth_done")
+					self:setTacticalMode(self.always_target)
 
 					if __module_extra_info.birth_done_script then loadstring(__module_extra_info.birth_done_script)() end
 				end, true)
@@ -280,7 +285,6 @@ function _M:newGame()
 
 			if self.player.no_birth_levelup or __module_extra_info.no_birth_popup then birthend()
 			else self.player:playerLevelup(birthend, true) end
-
 		-- Player was loaded from a premade
 		else
 			self.calendar = Calendar.new("/data/calendar_"..(self.player.calendar or "allied")..".lua", "Today is the %s %s of the %s year of the Age of Ascendancy of Maj'Eyal.\nThe time is %02d:%02d.", 122, 167, 11)
@@ -311,6 +315,7 @@ function _M:newGame()
 
 			birth_done()
 			self.player:check("on_birth_done")
+			self:setTacticalMode(self.always_target)
 		end
 	end, quickbirth, 800, 600)
 	self:registerDialog(birth)
@@ -1504,6 +1509,38 @@ function _M:onUnregisterDialog(d)
 	if self.player then self.player:updateMainShader() self.player.changed = true end
 end
 
+function _M:setTacticalMode(mode, silent)
+	local vs = "true"
+	if mode == "old" then
+		self.always_target = "old"
+		vs = "'old'"
+		Map:setViewerFaction(self.player.faction)
+		if not silent then self.log("Showing big healthbars and tactical borders.") end
+	elseif mode == "health" then
+		self.always_target = "health"
+		vs = "'health'"
+		Map:setViewerFaction(nil)
+		if not silent then self.log("Showing healthbars only.") end
+	elseif mode == nil then
+		self.always_target = nil
+		vs = "nil"
+		Map:setViewerFaction(nil)
+		if not silent then self.log("Showing no tactical information.") end
+	elseif mode == true then
+		self.always_target = true
+		vs = "true"
+		Map:setViewerFaction(self.player.faction)
+		if not silent then self.log("Showing small healthbars and tactical borders.") end
+	end
+
+	config.settings.tome.tactical_mode = self.always_target
+	config.settings.tome.tactical_mode_set = true
+	game:saveSettings("tome.tactical_mode", ([[
+tome.tactical_mode = %s
+tome.tactical_mode_set = true
+]]):format(vs))
+end
+
 function _M:setupCommands()
 	-- Make targeting work
 	self.normal_key = self.key
@@ -1840,21 +1877,13 @@ do return end
 
 		TACTICAL_DISPLAY = function()
 			if self.always_target == true then
-				self.always_target = "old"
-				Map:setViewerFaction(self.player.faction)
-				self.log("Showing big healthbars and tactical borders.")
+				self:setTacticalMode("old")
 			elseif self.always_target == "old" then
-				self.always_target = "health"
-				Map:setViewerFaction(nil)
-				self.log("Showing healthbars only.")
+				self:setTacticalMode("health")
 			elseif self.always_target == "health" then
-				self.always_target = nil
-				Map:setViewerFaction(nil)
-				self.log("Showing no tactical information.")
+				self:setTacticalMode(nil)
 			elseif self.always_target == nil then
-				self.always_target = true
-				Map:setViewerFaction(self.player.faction)
-				self.log("Showing small healthbars and tactical borders.")
+				self:setTacticalMode(true)
 			end
 		end,
 

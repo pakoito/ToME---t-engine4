@@ -160,7 +160,7 @@ local credits = {
 	{"lpeg - http://www.inf.puc-rio.br/~roberto/lpeg/"},
 	{"LuaSocket - http://w3.impa.br/~diego/software/luasocket/"},
 	{"Physfs - https://icculus.org/physfs/"},
-	{"Awesomium - http://awesomium.com/"},
+	{"CEF3 - http://code.google.com/p/chromiumembedded/"},
 	{"Font: Droid - http://www.droidfonts.com/"},
 	{"Font: Vera - http://www.gnome.org/fonts/"},
 	{"Font: INSULA, USENET: http://www.dafont.com/fr/apostrophic-labs.d128"},
