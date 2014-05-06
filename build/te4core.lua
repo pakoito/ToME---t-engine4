@@ -565,6 +565,26 @@ project "te4-web"
 		includedirs {"/opt/cef3/1547/include/", "/opt/cef3/1547/"}
 		links { "cef", "cef_dll_wrapper" }
 		defines { 'SELFEXE_LINUX' }
+
+
+project "cef3spawn"
+	kind "WindowedApp"
+	language "C++"
+	targetname "cef3spawn"
+
+	includedirs {"../src/web-cef3/", }
+	files {
+		"../src/web-cef3/spawn.cpp",
+	}
+
+	configuration "linux"
+	buildoptions{"-pthread -I/usr/include/gtk-2.0 -I/usr/lib64/gtk-2.0/include -I/usr/include/atk-1.0 -I/usr/include/cairo -I/usr/include/gdk-pixbuf-2.0 -I/usr/include/pango-1.0 -I/usr/include/glib-2.0 -I/usr/lib64/glib-2.0/include -I/usr/include/pixman-1 -I/usr/include/freetype2 -I/usr/include/libpng15 -I/usr/include/libdrm"}
+	libdirs {"/opt/cef3/1547/out/Release/obj.target/"}
+	libdirs {"/opt/cef3/1547/Release/"}
+	links {"cef_dll_wrapper"}
+	includedirs {"/opt/cef3/1547/include/", "/opt/cef3/1547/", }
+	links { "cef" }
+
 end
 
 if _OPTIONS.steam then

@@ -508,18 +508,35 @@ static void web_instant_js(int handlers, const char *fct, int nb_args, WebJsValu
 }
 
 void te4_web_load() {
+	const char *self = get_self_executable(g_argc, g_argv);
 #if defined(SELFEXE_LINUX) || defined(SELFEXE_BSD)
 #if defined(TE4_RELPATH64)
+	const char *spawnbname = "cef3spawn64";
+	char *spawnname = malloc(strlen(self) + strlen(spawnbname) + 1);
+	strcpy(spawnname, self);
+	strcpy(strrchr(spawnname, '/') + 1, spawnbname);
 	void *web = SDL_LoadObject("lib64/libte4-web.so");
-#elif defined(TE4_RELPATH64)
+#elif defined(TE4_RELPATH32)
+	const char *spawnbname = "cef3spawn32";
+	char *spawnname = malloc(strlen(self) + strlen(spawnbname) + 1);
+	strcpy(spawnname, self);
+	strcpy(strrchr(spawnname, '/') + 1, spawnbname);
 	void *web = SDL_LoadObject("lib/libte4-web.so");
 #else
+	const char *spawnbname = "cef3spawn";
+	char *spawnname = malloc(strlen(self) + strlen(spawnbname) + 1);
+	strcpy(spawnname, self);
+	strcpy(strrchr(spawnname, '/') + 1, spawnbname);
 	void *web = SDL_LoadObject("libte4-web.so");
 #endif
 #elif defined(SELFEXE_WINDOWS)
+	const char *spawnbname = "cef3spawn.exe";
+	char *spawnname = malloc(strlen(self) + strlen(spawnbname) + 1);
+	strcpy(spawnname, self);
+	strcpy(strrchr(spawnname, '\\') + 1, spawnbname);
 	void *web = SDL_LoadObject("te4-web.dll");
 #elif defined(SELFEXE_MACOSX)
-	const char *self = get_self_executable(g_argc, g_argv);
+	char *spawnname = NULL;
 	const char *name = "libte4-web.dylib";
 	char *lib = malloc(strlen(self) + strlen(name) + 1);
 	strcpy(lib, self);
@@ -557,7 +574,7 @@ void te4_web_load() {
 		te4_web_set_js_call = (void (*)(web_view_type *view, const char *name)) SDL_LoadFunction(web, "te4_web_set_js_call");
 
 		te4_web_setup(
-			g_argc, g_argv, NULL,
+			g_argc, g_argv, spawnname,
 			web_mutex_create, web_mutex_destroy, web_mutex_lock, web_mutex_unlock,
 			web_make_texture, web_del_texture, web_texture_update,
 			web_key_mods,

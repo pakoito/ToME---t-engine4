@@ -797,6 +797,7 @@ void te4_web_do_update(void (*cb)(WebEvent*)) {
 
 static int g_argc;
 static char **g_argv;
+static char *spawnname;
 CefRefPtr<ClientApp> app(new ClientApp);
 
 void te4_web_setup(
@@ -829,21 +830,9 @@ void te4_web_setup(
 	web_key_mods = key_mods;
 	web_instant_js = instant_js;
 
+	spawnname = spawnc;
 	g_argc = argc;
 	g_argv = gargv;
-
-#ifdef _WIN32
-	CefMainArgs args(GetModuleHandle(NULL));
-#else
-	char **cargv = (char**)calloc(argc, sizeof(char*));
-	for (int i = 0; i < argc; i++) cargv[i] = strdup(gargv[i]);
-	CefMainArgs args(argc, cargv);
-#endif
-
-	int exit_code = CefExecuteProcess(args, app.get());
-	if (exit_code >= 0) {
-		exit(exit_code);
-	}
 }
 
 void te4_web_initialize(const char *locales, const char *pak) {
@@ -859,6 +848,8 @@ void te4_web_initialize(const char *locales, const char *pak) {
 		CefSettings settings;
 		settings.multi_threaded_message_loop = false;
 
+		CefString spawn(spawnname);
+		CefString(&settings.browser_subprocess_path) = spawn;
 		CefString clocales(locales);
 		CefString(&settings.locales_dir_path) = clocales;
 		CefString resources(pak);
