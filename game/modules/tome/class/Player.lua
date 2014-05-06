@@ -1461,7 +1461,7 @@ function _M:useCommandOrb(o, x, y)
 	end
 
 	if g.orb_command then
-		g.orb_command:special(self)
+		g.orb_command:special(self, g)
 		if not g.orb_command.continue then return end
 	end
 	g.orbed = true

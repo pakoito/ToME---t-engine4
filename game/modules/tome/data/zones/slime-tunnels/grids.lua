@@ -37,7 +37,8 @@ local orb_activate = function(self, x, y, who, act, couldpass)
 	return false
 end
 
-local orb_summon = function(self, who)
+local orb_summon = function(self, who, g)
+	if g and g.orbed then return end
 	local filter = self.summon
 	local npc = game.zone:makeEntity(game.level, "actor", filter, nil, true)
 	local nx, ny = util.findFreeGrid(who.x, who.y, 10, true, {[engine.Map.ACTOR]=true})
