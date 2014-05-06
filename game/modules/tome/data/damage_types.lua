@@ -873,7 +873,7 @@ newDamageType{
 
 -- Silence
 newDamageType{
-	name = "arcane silence", type = "ARCANE_SILENCE",
+	name = "arcane silence", type = "ARCANE_SILENCE", text_color = "#PURPLE#",
 	projector = function(src, x, y, type, dam)
 		local chance = 100
 		if _G.type(dam) == "table" then dam, chance = dam.dam, dam.chance end
@@ -1682,6 +1682,7 @@ newDamageType{
 
 -- Name:  item - theme - debuff/effect
 
+-- Log entries are pretty limited currently because it can be quite spammy with the default messages already
 newDamageType{
 	name = "item mind gloom", type = "ITEM_MIND_GLOOM",
 	tdesc = function(dam) 
@@ -1696,7 +1697,7 @@ newDamageType{
 			if effect == 1 then
 				-- confusion
 				if target:canBe("confusion") and not target:hasEffect(target.EFF_GLOOM_CONFUSED) then
-					target:setEffect(target.EFF_GLOOM_CONFUSED, 2, {power=70, no_ct_effect=true} )
+					target:setEffect(target.EFF_GLOOM_CONFUSED, 2, {power=25, no_ct_effect=true} )
 				end
 			elseif effect == 2 then
 				-- stun
@@ -1736,7 +1737,7 @@ newDamageType{
 	projector = function(src, x, y, type, dam)
 		local target = game.level.map(x, y, Map.ACTOR)
 		if target and src and src.name and rng.percent(dam) then
-				if src.turn_procs and src.turn_procs.item_temporal_energize and src.turn_procs.item_temporal_energize > 5 then 
+				if src.turn_procs and src.turn_procs.item_temporal_energize and src.turn_procs.item_temporal_energize > 3 then 
 					game.logSeen(src, "#LIGHT_STEEL_BLUE#%s can't gain any more energy this turn! ", src.name:capitalize())
 				return
 				end
@@ -1793,15 +1794,15 @@ newDamageType{
 		if target and rng.percent(dam) then
 			if target:canBe("stun") then
 				local check = math.max(src:combatAttack(), src:combatSpellpower(), src:combatMindpower())
-				target:setEffect(target.EFF_DAZED, 4, {apply_power=check, no_ct_effect=true})
+				--game:onTickEnd(function() target:setEffect(target.EFF_DAZED, 3, {src=src, apply_power=dam.power_check or math.max(src:combatSpellpower(), src:combatMindpower(), src:combatAttack())}) end) -- Do it at the end so we don't break our own daze
+				game:onTickEnd(function() target:setEffect(target.EFF_DAZED, 4, {apply_power=check, no_ct_effect=true}) end)
 			else
 				--game.logSeen(target, "%s resists the daze!", target.name:capitalize())
 			end
 		end
 	end,
 }
-
--- Note:  This spams a lot of magic debuffs.  
+  
 newDamageType{
 	name = "item blight disease", type = "ITEM_BLIGHT_DISEASE", text_color = "#DARK_GREEN#",
 	tdesc = function(dam) 
@@ -1809,12 +1810,10 @@ newDamageType{
 	end,
 	projector = function(src, x, y, type, dam)
 		local target = game.level.map(x, y, Map.ACTOR)
-		if target and target:canBe("disease") and rng.percent(dam) then
+		if target and  rng.percent(dam) and target:canBe("disease") then
 			local check = math.max(src:combatSpellpower(), src:combatMindpower(), src:combatAttack())
 			local disease_power = math.min(30, dam / 2)
-			local disease_dam = 0
-			local eff = rng.table{{target.EFF_ROTTING_DISEASE, "con"}, {target.EFF_DECREPITUDE_DISEASE, "dex"}, {target.EFF_WEAKNESS_DISEASE, "str"}}
-			target:setEffect(eff[1], 5, { src = src, apply_power = check, no_ct_effect=true, [eff[2]] = disease_power, dam = disease_dam })
+			target:setEffect(target.EFF_ITEM_BLIGHT_ILLNESS, 5, {reduce = disease_power})
 		end
 	end,
 }
@@ -1822,7 +1821,7 @@ newDamageType{
 newDamageType{
 	name = "item manaburn arcane", type = "ITEM_ANTIMAGIC_MANABURN", text_color = "#PURPLE#",
 	tdesc = function(dam)
-		return ("#PURPLE#%d#LAST# damage based on #PURPLE#arcane resource#LAST#"):format(dam) 
+		return ("#DARK_ORCHID#%d arcane resource#LAST# burn"):format(dam) 
 	end,
 	projector = function(src, x, y, type, dam)
 		local target = game.level.map(x, y, Map.ACTOR)
@@ -1853,26 +1852,26 @@ newDamageType{
 newDamageType{
 	name = "item nature slow", type = "ITEM_NATURE_SLOW", text_color = "#LIGHT_GREEN#",
 	tdesc = function(dam)
-		return ("#LIGHT_GREEN#%d%% nature#LAST# slow"):format(dam) 
+		return ("Slows global speed by #LIGHT_GREEN#%d%%#LAST#"):format(dam) 
 	end,
 	projector = function(src, x, y, type, dam)
 		local target = game.level.map(x, y, Map.ACTOR)
 		if target then
-			target:setEffect(target.EFF_SLOW, 3, {power=dam / 100, no_ct_effect=true})
+			target:setEffect(target.EFF_SLOW, 3, {power= math.min(60, dam / 100), no_ct_effect=true})
 		end
 	end,
 }
 
--- Mostly used on specific egos
+-- Reduces all offensive powers by 20%
 newDamageType{
 	name = "item antimagic scouring", type = "ITEM_ANTIMAGIC_SCOURING", text_color = "#ORCHID#",
 	tdesc = function(dam)
-		return ("#LIGHT_GREEN#%d%%#LAST# chance to #ORCHID#reduce power ratings#LAST# by %d%%"):format(dam, 30) 
+		return ("#LIGHT_GREEN#%d%%#LAST# chance to #ORCHID#reduce powers#LAST# by %d%%"):format(dam, 20) 
 	end,
 	projector = function(src, x, y, type, dam)
 		local target = game.level.map(x, y, Map.ACTOR)
 		if target then
-			target:setEffect(target.EFF_ITEM_ANTIMAGIC_SCOURED, 3, {pct = 0.3, no_ct_effect=true})
+			target:setEffect(target.EFF_ITEM_ANTIMAGIC_SCOURED, 3, {pct = 0.2, no_ct_effect=true})
 		end
 	end,
 }

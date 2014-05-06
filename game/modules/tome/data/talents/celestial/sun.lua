@@ -78,7 +78,7 @@ newTalent{
 	type = {"celestial/sun", 2},
 	require = divi_req2,
 	points = 5,
-	cooldown = 20,
+	cooldown = 15, -- 20 was accounting for it buffing itself
 	fixed_cooldown = true,
 	positive = -15,
 	tactical = { BUFF = 2 },
@@ -87,7 +87,7 @@ newTalent{
 	requires_target = true,
 	range = 10,
 	getCap = function(self, t) return math.max(50, 100 - self:getTalentLevelRaw(t) * 10) end,
-	getHaste = function(self, t) return math.min(0.9, self:combatTalentSpellDamage(t, 0.2, 0.7)) end,
+	getHaste = function(self, t) return math.min(0.5, self:combatTalentSpellDamage(t, 0.1, 0.4)) end,
 	getCD = function(self, t) return math.min(0.5, self:combatTalentSpellDamage(t, 5, 450) / 1000) end,
 	action = function(self, t)
 		self:setEffect(self.EFF_SUNCLOAK, 6, {cap=t.getCap(self, t), haste=t.getHaste(self, t), cd=t.getCD(self, t)})
@@ -133,7 +133,7 @@ newTalent{
 		local chance = t.getProcChance(self, t)
 		return ([[Infuse yourself with the raging fury of the Sun, increasing your physical and spell critical chance by %d%%.
 		Each time you crit with a physical attack or a spell you have %d%% chance to gain Sun's Vengeance for 2 turns.
-		While affected your Sun Beam will take no turn to use and deal 25%% more damage.
+		While affected by Sun's Vengeance your Sun Beam will take no turn to use and deal 25%% more damage.
 		If Sun Beam was on cooldown, the remaining turns are reduced by one instead.
 		This effect can only happen once per turn.]]):
 		format(crit, chance)

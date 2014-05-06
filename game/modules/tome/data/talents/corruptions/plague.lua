@@ -28,7 +28,7 @@ newTalent{
 	tactical = { ATTACK = {BLIGHT = 2} },
 	requires_target = true,
 	no_energy = true,
-	range = function(self, t) return math.floor(self:combatTalentScale(t, 5, 9)) end,
+	range = function(self, t) return 5 end, -- Instant cast should not do thousands of damage at long range.  This is still too powerful, though
 	action = function(self, t)
 		local tg = {type="bolt", range=self:getTalentRange(t)}
 		local x, y = self:getTarget(tg)
@@ -52,7 +52,7 @@ newTalent{
 					disease = {self.EFF_ROTTING_DISEASE, "con"}
 				end
 
-				target:setEffect(disease[1], 6, {src=self, dam=self:spellCrit(7 + self:combatTalentSpellDamage(t, 6, 65)), [disease[2]]=self:combatTalentSpellDamage(t, 5, 35), apply_power=self:combatSpellpower()})
+				target:setEffect(disease[1], 6, {src=self, dam=self:spellCrit(7 + self:combatTalentSpellDamage(t, 6, 45)), [disease[2]]=self:combatTalentSpellDamage(t, 5, 35), apply_power=self:combatSpellpower()})
 			else
 				game.logSeen(target, "%s resists the disease!", target.name:capitalize())
 			end
@@ -77,7 +77,7 @@ newTalent{
 	points = 5,
 	vim = 18,
 	cooldown = 9,
-	range = 7,
+	range = 8,
 	radius = function(self, t) return math.floor(self:combatTalentScale(t, 1.5, 3.5)) end,
 	tactical = { ATTACK = function(self, t, target)
 		-- Count the number of diseases on the target
@@ -155,7 +155,7 @@ newTalent{
 	points = 5,
 	vim = 20,
 	cooldown = 15,
-	range = 6,
+	range = 8,
 	tactical = { DISABLE = function(self, t, target)
 		-- Make sure the target has a disease
 		for eff_id, p in pairs(target.tmp) do
@@ -224,7 +224,7 @@ newTalent{
 	points = 5,
 	vim = 20,
 	cooldown = 13,
-	range = 6,
+	range = 8,
 	radius = 2,
 	tactical = { ATTACK = {BLIGHT = 2} },
 	requires_target = true,

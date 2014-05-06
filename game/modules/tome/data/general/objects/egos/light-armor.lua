@@ -306,11 +306,11 @@ newEntity{
 	cost = 35,
 	wielder = {
 		inc_stats = {
-			[Stats.STAT_STR] = resolvers.mbonus_material(4, 3),
-			[Stats.STAT_DEX] = resolvers.mbonus_material(4, 3),
-			[Stats.STAT_WIL] = resolvers.mbonus_material(4, 3),
-			[Stats.STAT_CUN] = resolvers.mbonus_material(4, 3),
-			[Stats.STAT_MAG] = resolvers.mbonus_material(4, 3),
+			[Stats.STAT_STR] = resolvers.mbonus_material(6, 3),
+			[Stats.STAT_DEX] = resolvers.mbonus_material(6, 3),
+			[Stats.STAT_WIL] = resolvers.mbonus_material(6, 3),
+			[Stats.STAT_CUN] = resolvers.mbonus_material(6, 3),
+			[Stats.STAT_MAG] = resolvers.mbonus_material(6, 3),
 		},
 	},
 }

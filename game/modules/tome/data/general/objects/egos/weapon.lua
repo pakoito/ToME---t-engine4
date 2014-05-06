@@ -263,14 +263,14 @@ newEntity{
 
 newEntity{
 	power_source = {arcane=true},
-	name = "icy ", prefix=true, instant_resolve=true,
-	keywords = {icy=true},
+	name = "chilling ", prefix=true, instant_resolve=true,
+	keywords = {chilling=true},
 	level_range = {15, 50},
 	rarity = 5,
 	cost = 10,
 	combat = {
 		melee_project={
-			[DamageType.ICE] = resolvers.mbonus_material(15, 5)
+			[DamageType.COLD] = resolvers.mbonus_material(25, 5)
 		},
 	},
 }
@@ -340,33 +340,38 @@ newEntity{
 
 -- Greater Egos
 
--- This keeps the damage conversion because its excellent for swapping on resistant targets
--- Changed to low level because its a utility ego thats useful all game
+-- Mostly flat damage because combatSpellpower is so frontloaded
 newEntity{
 	power_source = {arcane=true},
 	name = "elemental ", prefix=true, instant_resolve=true,
 	keywords = {elemental=true},
-	level_range = {1, 50},
+	level_range = {35, 50},
 	greater_ego = 1,
-	rarity = 30,
+	rarity = 25,
 	cost = 35,
-	combat = {
-		convert_damage ={
-			[DamageType.FIRE] = resolvers.mbonus_material(15, 10),
-			[DamageType.COLD] = resolvers.mbonus_material(15, 10),
-			[DamageType.ACID] = resolvers.mbonus_material(15, 10),
-			[DamageType.LIGHTNING] = resolvers.mbonus_material(15, 10),
+	wielder = {
+			resists_pen={
+			[DamageType.ACID] = resolvers.mbonus_material(10, 7),
+			[DamageType.LIGHTNING] = resolvers.mbonus_material(10, 7),
+			[DamageType.FIRE] = resolvers.mbonus_material(10, 7),
+			[DamageType.COLD] = resolvers.mbonus_material(10, 7),
 		},
-		special_on_hit = {desc="random elemental effect", fct=function(combat, who, target)
-			local dam = 20 + (who:combatSpellpower()/5)
-			local tg = {type="hit", range=1}
-			local elem = rng.table{
-				{engine.DamageType.FIREBURN, "flame"},
-				{engine.DamageType.ICE, "freeze"},
-				{engine.DamageType.LIGHTNING_DAZE, "lightning_explosion"},
-				{engine.DamageType.ACID_BLIND, "acid"},
-			}
-			who:project(tg, target.x, target.y, elem[1], rng.avg(dam / 2, dam, 3), {type=elem[2]})
+	},
+	combat = {
+		-- Define this here so it stays in scope
+		elements = {
+			{engine.DamageType.FIRE, "flame"},
+			{engine.DamageType.COLD, "freeze"},
+			{engine.DamageType.LIGHTNING, "lightning_explosion"},
+			{engine.DamageType.ACID, "acid"},
+		},	
+		special_on_hit = {desc="Random elemental explosion", fct=function(combat, who, target)
+			if who.turn_procs.elemental_explosion then return end
+			who.turn_procs.elemental_explosion = 1
+			local elem = rng.table(combat.elements)
+			local dam = 10 + (who:combatSpellpower() )
+			local tg = {type="ball", radius=3, range=10, selffire = false, friendlyfire=false}
+			who:project(tg, target.x, target.y, elem[1], rng.avg(dam / 2, dam, 3), {type=elem[2]})		
 		end},
 	},
 }
@@ -387,7 +392,9 @@ newEntity{
 			[DamageType.BLIGHT] = resolvers.mbonus_material(15, 5),
 			[DamageType.ITEM_BLIGHT_DISEASE] = resolvers.mbonus_material(15, 5),
 		},
-		talent_on_hit = { [Talents.T_EPIDEMIC] = {level=1, chance=10} },
+		-- Well, Brawler Gloves do this calc for on hit Talents, and the new disease egos don't do damage, so.. What could possibly go wrong?
+		-- SCIENCE
+		talent_on_hit = { [Talents.T_EPIDEMIC] = {level=resolvers.genericlast(function(e) return e.material_level end), chance=10} },
 	},
 }
 
@@ -560,7 +567,6 @@ newEntity{
 	},
 }
 
--- Damtype nature?
 newEntity{
 	power_source = {nature=true},
 	name = " of nature", suffix=true, instant_resolve=true,
@@ -576,9 +582,7 @@ newEntity{
 		},
 	},
 	combat = {
-		convert_damage = {
-			[DamageType.NATURE] = resolvers.mbonus_material(25, 25),
-		},
+
 	},
 }
 
@@ -736,7 +740,7 @@ newEntity{
 	keywords = {leech=true},
 	level_range = {10, 50},
 	greater_ego = 1,
-	rarity = 50,
+	rarity = 40,
 	cost = 40,
 	wielder = {
 		on_melee_hit = {
@@ -753,6 +757,24 @@ newEntity{
 				target:incStamina(-leeched)
 			end
 		end},
+	},
+}
+
+newEntity{
+	power_source = {antimagic=true},
+	name = " of dampening", suffix=true, instant_resolve=true,
+	keywords = {dampening=true},
+	level_range = {1, 50},
+	rarity = 18,
+	cost = 22,
+	wielder = {
+		resists={
+			[DamageType.ACID] = resolvers.mbonus_material(10, 7),
+			[DamageType.LIGHTNING] = resolvers.mbonus_material(10, 7),
+			[DamageType.FIRE] = resolvers.mbonus_material(10, 7),
+			[DamageType.COLD] = resolvers.mbonus_material(10, 7),
+		},
+		combat_spellresist = resolvers.mbonus_material(10, 5),
 	},
 }
 
@@ -779,7 +801,7 @@ newEntity{
 	level_range = {1, 50},
 	rarity = 5,
 	cost = 15,
-	resolvers.charm("project an attack as mind damage doing 200%% weapon damage at range 10", 6,
+	resolvers.charm("project an attack as mind damage doing 150%% weapon damage at range 10", 6,
 		function(self, who)
 			local tg = {type="hit", range=10}
 			local x, y = who:getTarget(tg)
@@ -787,7 +809,7 @@ newEntity{
 			local _ _, x, y = who:canProject(tg, x, y)
 			local target = game.level.map(x, y, engine.Map.ACTOR)
 			if target then
-				who:attackTarget(target, engine.DamageType.MIND, 1, true)
+				who:attackTarget(target, engine.DamageType.MIND, 1.5, true)
 			else
 				return
 			end

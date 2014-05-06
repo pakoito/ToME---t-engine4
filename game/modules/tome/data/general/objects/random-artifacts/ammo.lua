@@ -80,9 +80,11 @@ newEntity{ theme={temporal=true}, name="temporal ranged", points = 2, rarity = 2
 ----------------------------------------------------------------
 --Ranged damage Projection (rare)
 ----------------------------------------------------------------
--- Missing a greater pairing for Fire, Arcane, Physical for now
 newEntity{ theme={blight=true}, name="corrupted blood melee", points = 2, rarity = 20, level_range = {1, 50},
 	combat = { ranged_project = {[DamageType.ITEM_BLIGHT_DISEASE] = resolvers.randartmax(20, 40), }, },
+}
+newEntity{ theme={temporal=true}, name="temporal energize melee", points = 2, rarity = 20, level_range = {1, 50},
+	combat = { ranged_project = {[DamageType.ITEM_TEMPORAL_ENERGIZE] = resolvers.randartmax(20, 40), }, },
 }
 newEntity{ theme={blight=true}, name="gloom mind melee", points = 2, rarity = 20, level_range = {1, 50},
 	combat = { ranged_project = {[DamageType.ITEM_MIND_GLOOM] = resolvers.randartmax(20, 40), }, },
@@ -192,6 +194,7 @@ newEntity{ theme={temporal=true}, name="temporal burst (crit)", points = 6, rari
 ----------------------------------------------------------------
 -- Slaying
 ----------------------------------------------------------------
+--[[
 newEntity{ theme={physical=true}, name="slay humanoid", points = 1, rarity = 22, level_range = {1, 50},
 	combat = { inc_damage_type = {humanoid=resolvers.randartmax(5, 25),},},
 }
@@ -225,3 +228,4 @@ newEntity{ theme={physical=true}, name="slay insect", points = 1, rarity = 22, l
 newEntity{ theme={physical=true}, name="slay spiderkin", points = 1, rarity = 22, level_range = {1, 50},
 	combat = { inc_damage_type = {spiderkin=resolvers.randartmax(5, 25),},},
 }
+--]]

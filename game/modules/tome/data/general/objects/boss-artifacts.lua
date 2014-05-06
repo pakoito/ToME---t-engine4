@@ -103,8 +103,9 @@ newEntity{ base = "BASE_TOOL_MISC", image="object/temporal_instability.png",
 			[DamageType.PHYSICAL] 	= 5,
 		},
 	},
+	-- Trinket slots are allowed to have extremely good actives because of their opportunity cost
 	max_power = 25, power_regen = 1,
-	use_talent = { id = Talents.T_ANIMATE_BLADE, level = 1, power = 25 },
+	use_talent = { id = Talents.T_ANIMATE_BLADE, level = 1, power = 15 },
 }
 
 newEntity{ base = "BASE_LONGSWORD", define_as = "RIFT_SWORD",
@@ -174,6 +175,13 @@ newEntity{ base = "BASE_BATTLEAXE",
 		physcrit = 8,
 		dammod = {str=1.2},
 		melee_project={[DamageType.SLIME] = 50, [DamageType.ACID] = 50},
+		special_on_crit = {desc="deal manaburn damage equal to your mindpower in a radius 3 cone", on_kill=1, fct=function(combat, who, target)
+			who.turn_procs.gaping_maw = (who.turn_procs.gaping_maw or 0) + 1
+			local tg = {type="cone", range=10, radius=3, force_target=target, selffire=false}
+			local grids = who:project(tg, target.x, target.y, engine.DamageType.MANABURN, who:combatMindpower() / (who.turn_procs.gaping_maw))
+			game.level.map:particleEmitter(target.x, target.y, tg.radius, "directional_shout", {life=8, size=3, tx=target.x-who.x, ty=target.y-who.y, distorion_factor=0.1, radius=3, nb_circles=8, rm=0.8, rM=1, gm=0.4, gM=0.6, bm=0.1, bM=0.2, am=1, aM=1})
+			who.turn_procs.gaping_maw = (who.turn_procs.gaping_maw or 0) + 1
+		end},
 	},
 	wielder = {
 		talent_cd_reduction= {

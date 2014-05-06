@@ -216,9 +216,11 @@ newEntity{
 	rarity = 30,
 	cost = 60,
 	wielder = {
-		inc_stats = {
-			[Stats.STAT_WIL] = resolvers.mbonus_material(5, 3),
-			[Stats.STAT_CUN] = resolvers.mbonus_material(5, 3),
+		lucid_dreamer=1,
+		sleep=1,
+		resists={
+			[DamageType.MIND] = resolvers.mbonus_material(20, 10),
+			[DamageType.DARKNESS] = resolvers.mbonus_material(20, 10),
 		},
 		combat_physresist = resolvers.mbonus_material(10, 10),
 		combat_spellresist = resolvers.mbonus_material(10, 10),
@@ -251,39 +253,31 @@ newEntity{
 -- The rest
 newEntity{
 	power_source = {arcane=true},
-	name = " of the elements", suffix=true, instant_resolve=true,
-	keywords = {elemental=true},
+	name = " of alchemy", suffix=true, instant_resolve=true,
+	keywords = {alchemy=true},
 	level_range = {20, 50},
 	greater_ego = 1,
 	rarity = 20,
 	cost = 40,
 	wielder = {
-		on_melee_hit = {
+		inc_damage = { 
 			[DamageType.ACID] = resolvers.mbonus_material(10, 5),
-			[DamageType.LIGHTNING] = resolvers.mbonus_material(10, 5),
+			[DamageType.PHYSICAL] = resolvers.mbonus_material(10, 5),
 			[DamageType.FIRE] = resolvers.mbonus_material(10, 5),
 			[DamageType.COLD] = resolvers.mbonus_material(10, 5),
 		},
-		inc_damage = { 
-			[DamageType.ACID] = resolvers.mbonus_material(5, 5),
-			[DamageType.LIGHTNING] = resolvers.mbonus_material(5, 5),
-			[DamageType.FIRE] = resolvers.mbonus_material(5, 5),
-			[DamageType.COLD] = resolvers.mbonus_material(5, 5),
-	},	
 		resists={
-			[DamageType.ACID] = resolvers.mbonus_material(4, 4),
-			[DamageType.LIGHTNING] = resolvers.mbonus_material(4, 4),
-			[DamageType.FIRE] = resolvers.mbonus_material(4, 4),
-			[DamageType.COLD] = resolvers.mbonus_material(4, 4),
+			[DamageType.ACID] = resolvers.mbonus_material(10, 10),
+			[DamageType.PHYSICAL] = resolvers.mbonus_material(10, 10),
+			[DamageType.FIRE] = resolvers.mbonus_material(10, 10),
+			[DamageType.COLD] = resolvers.mbonus_material(10, 10),
 		},
-		melee_project={
-			[DamageType.ACID] = resolvers.mbonus_material(5, 5),
-			[DamageType.LIGHTNING] = resolvers.mbonus_material(5, 5),
-			[DamageType.FIRE] = resolvers.mbonus_material(5, 5),
-			[DamageType.COLD] = resolvers.mbonus_material(5, 5),
-		},
+		talent_cd_reduction = {
+		   [Talents.T_REFIT_GOLEM] = resolvers.mbonus_material(4, 2),
+		}
 	},	
 }
+
 newEntity{
 	power_source = {arcane=true},
 	name = "spellwoven ", prefix=true, instant_resolve=true,
@@ -385,14 +379,7 @@ newEntity{
 	cost = 15,
 	wielder = {
 		inc_damage = {
-			[DamageType.ARCANE] = resolvers.mbonus_material(15, 5),
-			[DamageType.FIRE] = resolvers.mbonus_material(15, 5),
-			[DamageType.COLD] = resolvers.mbonus_material(15, 5),
-			[DamageType.ACID] = resolvers.mbonus_material(15, 5),
-			[DamageType.LIGHTNING] = resolvers.mbonus_material(15, 5),
-			[DamageType.NATURE] = resolvers.mbonus_material(15, 5),
-			[DamageType.BLIGHT] = resolvers.mbonus_material(15, 5),
-			[DamageType.PHYSICAL] = resolvers.mbonus_material(15, 5),
+			all = resolvers.mbonus_material(15, 5),
 		},
 		combat_spellpower = resolvers.mbonus_material(10, 10),
 	},
@@ -444,7 +431,7 @@ newEntity{
 		},
 		combat_armor = resolvers.mbonus_material(5, 3),
 		combat_def = resolvers.mbonus_material(5, 3),
-		lite = 1,
+		lite = resolvers.mbonus_material(3,1),
 		max_life=resolvers.mbonus_material(40, 30),
 	},
 }
@@ -478,15 +465,12 @@ newEntity{
 			[DamageType.ITEM_NATURE_SLOW] = resolvers.mbonus_material(7, 3),
 			[DamageType.ITEM_ANTIMAGIC_MANABURN] = resolvers.mbonus_material(7, 3)
 		},
-		melee_project={
-			[DamageType.ITEM_NATURE_SLOW] = resolvers.mbonus_material(7, 3),
-	},
 	},
 }
 newEntity{
 	power_source = {nature=true},
-	name = "stormlord's ", prefix=true, instant_resolve=true,
-	keywords = {stormlord=true},
+	name = "stormwoven ", prefix=true, instant_resolve=true,
+	keywords = {storm=true},
 	level_range = {30, 50},
 	greater_ego = 1,
 	rarity = 16,
@@ -520,10 +504,11 @@ newEntity{
 		inc_stats = {
 			[Stats.STAT_CON] = resolvers.mbonus_material(8, 2),
 		},
-		life_regen = resolvers.mbonus_material(75, 15, function(e, v) v=v/10 return 0, v end),
 		inc_damage = {
 			[DamageType.NATURE] = resolvers.mbonus_material(15, 5),
 		},
+		disease_immune = resolvers.mbonus_material(30, 20, function(e, v) return 0, v/100 end),
+		poison_immune = resolvers.mbonus_material(30, 20, function(e, v) return 0, v/100 end),
 	},
 }
 newEntity{
@@ -551,10 +536,10 @@ newEntity{
 		inc_stats = {
 			[Stats.STAT_CUN] = resolvers.mbonus_material(9, 1),
 		},
-		combat_mindcrit = resolvers.mbonus_material(7, 5),
-		combat_critical_power = resolvers.mbonus_material(30, 10),
+		combat_critical_power = resolvers.mbonus_material(10, 10),
 		hate_on_crit = resolvers.mbonus_material(3, 2),
-	},	
+		psi_on_crit = resolvers.mbonus_material(4, 1),
+	},
 }
 newEntity{
 	power_source = {psionic=true},

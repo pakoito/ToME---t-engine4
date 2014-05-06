@@ -180,10 +180,10 @@ newEntity{
 	rarity = 8,
 	cost = 10,
 	special_combat = {
-		melee_project={[DamageType.ICE] = resolvers.mbonus_material(10, 10)},
+		melee_project={[DamageType.COLD] = resolvers.mbonus_material(10, 10)},
 	},
 	wielder = {
-		on_melee_hit={[DamageType.COLD] = resolvers.mbonus_material(10, 10)},
+		on_melee_hit={[DamageType.ICE] = resolvers.mbonus_material(10, 10)},
 		melee_project={
 			[DamageType.COLD] = resolvers.mbonus_material(5, 5),
 	},
@@ -237,13 +237,10 @@ newEntity{
 	level_range = {30, 50},
 	rarity = 25,
 	cost = 12,
-	special_combat = {
-		melee_project={[DamageType.ITEM_MIND_GLOOM] = resolvers.mbonus_material(25, 10)},
-	},
 	wielder = {
 		on_melee_hit={[DamageType.ITEM_MIND_GLOOM] = resolvers.mbonus_material(25, 10)},
 		melee_project={
-			[DamageType.ITEM_MIND_GLOOM] = resolvers.mbonus_material(5, 5),
+			[DamageType.ITEM_MIND_GLOOM] = resolvers.mbonus_material(10, 5),
 	},
 	},
 }
@@ -270,7 +267,7 @@ newEntity{
 			[Stats.STAT_STR] = resolvers.mbonus_material(5, 1),
 		},
 		on_melee_hit = {
-			[DamageType.FIRE] = resolvers.mbonus_material(10, 10),
+			[DamageType.FIRE] = resolvers.mbonus_material(30, 10),
 		},
 	},
 }
@@ -426,18 +423,24 @@ newEntity{
 	},
 }
 
-
+-- Meh, needed to re-use Scouring, needed AM shield egos, whatever
 newEntity{
-	power_source = {nature=true},
-	name = "blood-etched ", prefix=true, instant_resolve=true,
-	keywords = {etched=true},
+	power_source = {antimagic=true},
+	name = "scouring ", prefix=true, instant_resolve=true,
+	keywords = {scouring=true},
 	level_range = {30, 50},
 	greater_ego = 1,
-	rarity = 17,
+	rarity = 25,
 	cost = 30,
 	wielder = {
-		life_regen = resolvers.mbonus_material(30, 10, function(e, v) v=v/10 return 0, v end),
-		healing_factor = resolvers.mbonus_material(20, 10, function(e, v) v=v/100 return 0, v end),
+		resists={
+			[DamageType.ACID] = resolvers.mbonus_material(15, 5),
+			[DamageType.NATURE] = resolvers.mbonus_material(15, 5),
+		},
+		on_melee_hit = {
+			[DamageType.ITEM_ANTIMAGIC_SCOURING] = resolvers.mbonus_material(20, 15), 
+			[DamageType.ITEM_ANTIMAGIC_MANABURN] = resolvers.mbonus_material(20, 15),
+		},
 		inc_stats = {
 			[Stats.STAT_CON] = resolvers.mbonus_material(4, 3),
 		},
@@ -493,7 +496,7 @@ newEntity{
 			[DamageType.DARKNESS] = resolvers.mbonus_material(10, 5),
 		},
 	},
-	on_block = {desc = "Unleash the fury of the cosmos, dealing light and darkness damage to your attacker", fct = function(self, who, target, type, dam, eff)
+	on_block = {desc = "Unleash the fury of the cosmos, dealing light and darkness damage to your attackers", fct = function(self, who, target, type, dam, eff)
 			if not target or target:attr("dead") or not target.x or not target.y then return end
 			if who.turn_procs and who.turn_procs.shield_cosmic and who.turn_procs.shield_cosmic[target.uid] then return end
 
@@ -578,6 +581,8 @@ newEntity{
 	},
 }
 
+--[[
+Killing this feels weird but there are a lot of anti-poison/disease general tools going in 1.2 and since the stats on this sucked most people hated it anyway
 newEntity{
 	power_source = {nature=true},
 	name = " of harmony", suffix=true, instant_resolve=true,
@@ -594,6 +599,7 @@ newEntity{
 		healing_factor = resolvers.mbonus_material(10, 10, function(e, v) v=v/100 return 0, v end),
 	},
 }
+--]]
 
 newEntity{
 	power_source = {arcane=true},
@@ -605,12 +611,16 @@ newEntity{
 	cost = 12,
 	special_combat = {
 		melee_project={
-			[DamageType.LIGHT] = resolvers.mbonus_material(30, 10),
+			[DamageType.LIGHT] = resolvers.mbonus_material(10, 10),
 		},
 	},
 	wielder = {
+		resists={
+			[DamageType.LIGHT] = resolvers.mbonus_material(10, 10),
+		},
 		inc_stats = {
 			[Stats.STAT_MAG] = resolvers.mbonus_material(5, 1),
+			[Stats.STAT_CON] = resolvers.mbonus_material(4, 3),
 		},
 		on_melee_hit = {
 			[DamageType.ITEM_LIGHT_BLIND] = resolvers.mbonus_material(30, 10),

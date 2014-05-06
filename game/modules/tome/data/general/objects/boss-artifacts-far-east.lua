@@ -460,11 +460,11 @@ newEntity{ base = "BASE_GREATMAUL", define_as="ROTTING_MAUL",
 		dammod = {str=1.4},
 		convert_damage = {[DamageType.BLIGHT] = 20},
 		melee_project={[DamageType.ITEM_BLIGHT_DISEASE] = 50},
-		special_on_hit = {desc="Damage nearby creatures", on_kill=1, fct=function(combat, who, target)
+		special_on_hit = {desc="Damages enemies in radius 1 around your target (based on Strength).", on_kill=1, fct=function(combat, who, target)
 			local o, item, inven_id = who:findInAllInventoriesBy("define_as", "ROTTING_MAUL")
-			local dam = rng.avg(1,2) * (70+ who:getStr())
+			local dam = rng.avg(1,3) * (70+ who:getStr())
 			game.logSeen(who, "The ground shakes as the %s hits!", o:getName())
-			local tg = {type="ball", range=0, selffire=false, radius=2, no_restrict=true}
+			local tg = {type="ball", range=10, selffire=false, force_target=target, radius=1, no_restrict=true}
 			who:project(tg, target.x, target.y, engine.DamageType.PHYSICAL, dam)
 		end},
 	},

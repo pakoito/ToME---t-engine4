@@ -322,19 +322,16 @@ newTalent{
 				-- confusion
 				if target:canBe("confusion") and not target:hasEffect(target.EFF_MADNESS_CONFUSED) then
 					target:setEffect(target.EFF_MADNESS_CONFUSED, 3, {power=50, mindResistChange=mindResistChange}) -- Consistent with other confusion
-					hit = true
 				end
 			elseif effect == 2 then
 				-- stun
 				if target:canBe("stun") and not target:hasEffect(target.EFF_MADNESS_STUNNED) then
 					target:setEffect(target.EFF_MADNESS_STUNNED, 3, {mindResistChange=mindResistChange})
-					hit = true
 				end
 			elseif effect == 3 then
 				-- slow
 				if target:canBe("slow") and not target:hasEffect(target.EFF_MADNESS_SLOW) then
 					target:setEffect(target.EFF_MADNESS_SLOW, 3, {power=0.3, mindResistChange=mindResistChange})
-					hit = true
 				end
 			end
 		end

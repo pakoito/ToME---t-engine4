@@ -41,7 +41,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		local heal = t.getHeal(self, t)
-		return ([[An invigorating ray of Sunlight shines on you, healing your body for %d life.
+		return ([[An invigorating ray of Sunlight shines upon you, healing your body for %d life.
 		The amount healed will increase with your Spellpower.]]):
 		format(heal)
 	end,
@@ -82,7 +82,7 @@ newTalent{
 		local radius = self:getTalentRadius(t)
 		local heal = t.getHeal(self, t)
 		local duration = t.getDuration(self, t)
-		return ([[A magical zone of Sunlight appears around you, healing and shielding all within radius %d for %0.2f per turn and increasing healing effects on everyone within by %d%%. The effect lasts for %d turns.
+		return ([[A magical zone of Sunlight appears around you, healing and shielding all within a radius of %d for %0.2f per turn and increasing healing effects on everyone within by %d%%. The effect lasts for %d turns.
 		It also lights up the affected zone.
 		The amount healed will increase with the Magic stat]]):
 		format(radius, heal, heal / 2, duration)

@@ -73,7 +73,7 @@ newTalent{
 	getImmune = function(self, t) return self:combatTalentLimit(t, 1, 0.17, 0.5) end,
 	hasFoes = function(self)
 		for i = 1, #self.fov.actors_dist do
-			act = self.fov.actors_dist[i]
+			local act = self.fov.actors_dist[i]
 			if act and self:reactionToward(act) < 0 and self:canSee(act) then return true end
 		end
 		return false

@@ -39,7 +39,12 @@ newTalent {
 			t2.doCounter(self, t2, target)
 		end
 	end,
-
+	on_learn = function(self, t)
+		self:attr("show_shield_combat", 1)
+	end,
+	on_unlearn = function(self, t)
+		self:attr("show_shield_combat", 1)
+	end,
 	info = function(self, t)
 		local block = t.chance(self, t)
 		local armor = t.getHardiness(self, t)
@@ -184,6 +189,8 @@ newTalent {
 	end,
 }
 
+-- Stamina cost removed, this triggers too much and tends to randomly spike your stamina to nothing
+-- It might be ok if there weren't other passives with random stamina drain too, but..
 newTalent {
 	short_name = "SKIRMISHER_COUNTER_SHOT",
 	name = "Counter Shot",
@@ -208,44 +215,36 @@ newTalent {
 	deactivate = function(self, t, p)
 		return true
 	end,
-	getStaminaPerShot = function(self, t)
-		return 10 * (1 + self:combatFatigue() * 0.01)
-	end,
 	getMult = function(self, t)
-		return self:combatTalentScale(t, .9, 1.6)
+		return self:combatTalentScale(t, .4, 1)
+	end,
+	getBlocks = function(self, t)
+		return math.min(7, math.floor(self:combatTalentScale(t, 1, 4)))
 	end,
 	-- called from the relevant buckler talents
 	doCounter = function(self, t, target)
 		local sling = self:hasArcheryWeapon()
-		local stamina = t.getStaminaPerShot(self, t)
-		if not sling or self.stamina < stamina then
+		--local stamina = t.getStaminaPerShot(self, t)
+		if not sling or (self.turn_procs.counter_shot and self.turn_procs.counter_shot > t.getBlocks(self, t) ) or not target.x or not target.y then --or self.stamina < stamina then
 			return false
 		end
+		self.turn_procs.counter_shot = 1 + (self.turn_procs.counter_shot or 0)
 		local targets = self:archeryAcquireTargets(nil, {one_shot=true, x=target.x, y=target.y, no_energy = true})
 		if targets then
-			--self:logCombat(who, "#Source# follows up with a countershot.")
-			self:incStamina(-stamina)
+			self:logCombat(who, "#ORCHID##Source# follows up with a countershot.#LAST#")
+			--self:incStamina(-stamina)
 
-			local autocrit = false
-			if self:getTalentLevelRaw(t) >= 5 then
-				autocrit = true
-			end
 
-			if autocrit then
-				self.combat_physcrit = self.combat_physcrit + 1000
-			end
 			self:archeryShoot(targets, t, nil, {mult=t.getMult(self, t)})
-			if autocrit then
-				self.combat_physcrit = self.combat_physcrit - 1000
-			end
 		end
 	end,
 
 	info = function(self, t)
 		local mult = t.getMult(self, t) * 100
-		local stamina = t.getStaminaPerShot(self, t)
-		return ([[Any time you block an attack with Buckler Expertise or Buckler Mastery you instantly counterattack with your sling for %d%% damage at the cost of %d stamina.
-			With the fifth talent point, your Counter Shot is a guaranteed critical.]])
-			:format(mult, stamina)
+		local blocks = t.getBlocks(self, t)
+		--local stamina = t.getStaminaPerShot(self, t)
+		return ([[Any time you block an attack with Buckler Expertise or Buckler Mastery you instantly counterattack with your sling for %d%% damage  This can only occur up to %d times per turn.
+			]])
+			:format(mult, blocks)
 	end,
 }

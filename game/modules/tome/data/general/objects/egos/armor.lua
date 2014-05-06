@@ -345,6 +345,5 @@ newEntity{
 			[DamageType.NATURE] = resolvers.mbonus_material(10, 10),
 			[DamageType.BLIGHT] = resolvers.mbonus_material(10, 10),
 		},
-		max_life = resolvers.mbonus_material(40, 20),
 	},
 }

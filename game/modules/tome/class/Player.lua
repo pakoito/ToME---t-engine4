@@ -434,7 +434,9 @@ function _M:updateMainShader()
 		end
 
 		-- Blur shader
-		if self:attr("confused") and self.confused >= 1 then pf.blur.shad:uniBlur(2) effects[pf.blur.shad] = true
+		if config.settings.tome.fullscreen_confusion then
+			if self:attr("confused") and self.confused >= 1 then pf.blur.shad:uniBlur(2) effects[pf.blur.shad] = true
+			end
 		end
 
 		-- Moving Blur shader
@@ -448,8 +450,10 @@ function _M:updateMainShader()
 		end
 
 		-- Wobbling shader
-		if self:attr("stunned") and self.stunned >= 1 then pf.wobbling.shad:uniWobbling(1) effects[pf.wobbling.shad] = true
-		elseif self:attr("dazed") and self.dazed >= 1 then pf.wobbling.shad:uniWobbling(0.7) effects[pf.wobbling.shad] = true
+		if config.settings.tome.fullscreen_stun then
+			if self:attr("stunned") and self.stunned >= 1 then pf.wobbling.shad:uniWobbling(1) effects[pf.wobbling.shad] = true
+			elseif self:attr("dazed") and self.dazed >= 1 then pf.wobbling.shad:uniWobbling(0.7) effects[pf.wobbling.shad] = true
+			end
 		end
 
 		game.posteffects_use = table.keys(effects)
@@ -828,8 +832,8 @@ function _M:automaticTalents()
 	end
 	table.sort(uses, function(a, b)
 		local an, nb = util.getval(a.no_energy, self, a), util.getval(b.no_energy, self, b)
-		if an < bn then return true
-		elseif an > bn then return false
+		if an < nb then return true
+		elseif an > nb then return false
 		else
 			if a.cd > b.cd then return true
 			else return false

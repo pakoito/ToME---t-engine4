@@ -127,12 +127,12 @@ newTalent{
 	sustain_stamina = 50,
 	require = techs_dex_req4,
 	tactical = { BUFF = 2 },
-	on_pre_use = function(self, t, silent) if not self:hasDualWeapon() then if not silent then game.logPlayer(self, "You require two weapons to use this talent.") end return false end return true end,
-	getSpeed = function(self, t) return self:combatTalentScale(t, 0.21, 0.70, 0.75) end,
+	on_pre_use = function(self, t, silent) if self:hasArcheryWeapon() or not self:hasDualWeapon() then if not silent then game.logPlayer(self, "You require two melee weapons to use this talent.") end return false end return true end,
+	getSpeed = function(self, t) return self:combatTalentScale(t, 0.11, 0.40, 0.75) end,
 	activate = function(self, t)
 		local weapon, offweapon = self:hasDualWeapon()
 		if not weapon then
-			game.logPlayer(self, "You cannot use Momentum without dual wielding!")
+			game.logPlayer(self, "You cannot use Momentum without dual wielding melee weapons!")
 			return nil
 		end
 
@@ -235,6 +235,10 @@ newTalent{
 	end,
 }
 
+-- This is a good candidate for replacement if someone has a clever idea
+-- A.  Its boring
+-- B.  Its pretty bad
+-- D.  I think we should solidify 2H as generally the best at multitarget hits, so having 1 less AoE than 2H Assault would be good
 newTalent{
 	name = "Sweep",
 	type = {"technique/dualweapon-attack", 3},

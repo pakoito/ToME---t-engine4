@@ -285,7 +285,7 @@ newTalent{
 	end,
 	action = function(self, t)
 		local tg = {type="hit", nolock=true, pass_terrain=true, nowarning=true, range=self:getTalentRange(t), requires_knowledge=false}
-		x, y = self:getTarget(tg)
+		local x, y = self:getTarget(tg)
 		if not x then return nil end
 		-- Target code does not restrict the target coordinates to the range, it lets the project function do it
 		-- but we cant ...

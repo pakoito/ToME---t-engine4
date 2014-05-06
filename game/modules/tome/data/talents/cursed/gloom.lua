@@ -87,19 +87,16 @@ newTalent{
 							-- confusion
 							if target:canBe("confusion") and not target:hasEffect(target.EFF_GLOOM_CONFUSED) then
 								target:setEffect(target.EFF_GLOOM_CONFUSED, 2, {power=70})
-								hit = true
 							end
 						elseif effect == 2 then
 							-- stun
 							if target:canBe("stun") and not target:hasEffect(target.EFF_GLOOM_STUNNED) then
 								target:setEffect(target.EFF_GLOOM_STUNNED, 2, {})
-								hit = true
 							end
 						elseif effect == 3 then
 							-- slow
 							if target:canBe("slow") and not target:hasEffect(target.EFF_GLOOM_SLOW) then
 								target:setEffect(target.EFF_GLOOM_SLOW, 2, {power=0.3})
-								hit = true
 							end
 						end
 					end
@@ -111,7 +108,6 @@ newTalent{
 							local incDamageChange = tWeakness.getIncDamageChange(self, tWeakness)
 							local hateBonus = tWeakness.getHateBonus(self, tWeakness)
 							target:setEffect(target.EFF_GLOOM_WEAKNESS, duration, {incDamageChange=incDamageChange,hateBonus=hateBonus})
-							hit = true
 						end
 					end
 

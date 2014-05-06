@@ -97,6 +97,7 @@ newTalent{
 		end
 
 		-- breaks active grapples if the target is not grappled
+		local grappled
 		if target:isGrappled(self) then
 			grappled = true
 		else
@@ -243,7 +244,6 @@ newTalent{
 	end,
 }
 
--- If kick, normal attack+small kick effect?
 newTalent{
 	name = "Axe Kick", 
 	type = {"technique/pugilism", 3},
@@ -255,7 +255,6 @@ newTalent{
 		return 20
 	end,
 	getDuration = function(self, t)
-		--return self:combatTalentScale(t, 1, 3)
 		return self:combatTalentLimit(t, 5, 1, 4)
 	end,
 	message = "@Source@ raises their leg and snaps it downward in a devastating axe kick.",
@@ -269,9 +268,7 @@ newTalent{
 		if core.fov.distance(self.x, self.y, x, y) > 1 then return nil end
 
 		-- breaks active grapples if the target is not grappled
-		if target:isGrappled(self) then
-			grappled = true
-		else
+		if not target:isGrappled(self) then
 			self:breakGrapples()
 		end
 
@@ -293,7 +290,8 @@ newTalent{
 	end,
 	info = function(self, t)
 		local damage = t.getDamage(self, t) * 100
-		return ([[Deliver a devastating axe kick dealing %d%% damage.  If the blow connects your target is brain damaged, causing all talents to fail for %d turns and earning 2 combo points.]])
+		return ([[Deliver a devastating axe kick dealing %d%% damage.  If the blow connects your target is brain damaged, causing all talents to fail for %d turns and earning 2 combo points.
+			This effect cannot be saved against, though it can be dodged.]])
 		:format(damage, t.getDuration(self, t))
 	end,
 }
@@ -304,13 +302,12 @@ newTalent{
 	require = techs_dex_req4,
 	points = 5,
 	random_ego = "attack",
-	--cooldown = function(self, t) return math.ceil(24 * getRelentless(self, cd)) end,
 	cooldown = 16,
 	stamina = 15,
 	message = "@Source@ lashes out with a flurry of fists.",
 	tactical = { ATTACK = { weapon = 2 } },
 	requires_target = true,
-	getDamage = function(self, t) return self:combatTalentWeaponDamage(t, 0.4, 0.8) + getStrikingStyle(self, dam) end,
+	getDamage = function(self, t) return self:combatTalentWeaponDamage(t, 0.3, 1) + getStrikingStyle(self, dam) end,
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t)}
 		local x, y, target = self:getTarget(tg)
@@ -319,8 +316,6 @@ newTalent{
 
 		-- breaks active grapples if the target is not grappled
 		if target:isGrappled(self) then
-			grappled = true
-		else
 			self:breakGrapples()
 		end
 

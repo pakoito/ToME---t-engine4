@@ -400,7 +400,7 @@ function _M:attackTargetWith(target, weapon, damtype, mult, force_dam)
 	if target:knowTalent(target.T_SKIRMISHER_BUCKLER_EXPERTISE) then
 		local t = target:getTalentFromId(target.T_SKIRMISHER_BUCKLER_EXPERTISE)
 		if t.shouldEvade(target, t) then
-			game.logSeen(target, "%s deflects the attack.", target.name:capitalize())
+			game.logSeen(target, "#ORCHID#%s deflects the attack with their buckler!#LAST#", target.name:capitalize())
 			t.onEvade(target, t, self)
 			repelled = true
 		end
@@ -680,9 +680,13 @@ function _M:attackTargetWith(target, weapon, damtype, mult, force_dam)
 
 	-- Arcane Destruction
 	if hitted and crit and weapon and self:knowTalent(self.T_ARCANE_DESTRUCTION) then
-		local typ = rng.table{{DamageType.FIRE,"ball_fire"}, {DamageType.LIGHTNING,"ball_lightning_beam"}, {DamageType.ARCANE,"ball_arcane"}}
-		self:project({type="ball", radius=2, friendlyfire=false}, target.x, target.y, typ[1], self:combatSpellpower() * 2)
-		game.level.map:particleEmitter(target.x, target.y, 2, typ[2], {radius=2, tx=target.x, ty=target.y})
+		local chance = 100
+		if self:hasDualWeapon() or self:hasShield() then chance = 50 end
+		if rng.percent(chance) then
+			local typ = rng.table{{DamageType.FIRE,"ball_fire"}, {DamageType.LIGHTNING,"ball_lightning_beam"}, {DamageType.ARCANE,"ball_arcane"}}
+			self:project({type="ball", radius=2, friendlyfire=false}, target.x, target.y, typ[1], self:combatSpellpower() * 2)
+			game.level.map:particleEmitter(target.x, target.y, 2, typ[2], {radius=2, tx=target.x, ty=target.y})
+		end
 	end
 
 	-- Onslaught
@@ -1060,7 +1064,6 @@ function _M:combatDefenseBase(fake)
 	if self:knowTalent(self.T_MISDIRECTION) then
 		mult = mult + self:callTalent(self.T_MISDIRECTION,"getDefense")/100
 	end
-
 	return math.max(0, d * mult + add) -- Add bonuses last to avoid compounding defense multipliers from talents
 end
 
@@ -1139,7 +1142,7 @@ function _M:combatAttack(weapon, ammo)
 	end
 	local d = self:combatAttackBase(weapon, ammo) + stats
 	if self:attr("dazed") then d = d / 2 end
-	if self:attr("scoured") then d = d / 1.5 end
+	if self:attr("scoured") then d = d / 1.2 end
 	return self:rescaleCombatStats(d)
 end
 
@@ -1151,7 +1154,7 @@ function _M:combatAttackRanged(weapon, ammo)
 	end
 	local d = self:combatAttackBase(weapon, ammo) + stats + (self.combat_atk_ranged or 0)
 	if self:attr("dazed") then d = d / 2 end
-	if self:attr("scoured") then d = d / 1.5 end
+	if self:attr("scoured") then d = d / 1.2 end
 
 	return self:rescaleCombatStats(d)
 end
@@ -1160,7 +1163,7 @@ end
 function _M:combatAttackStr(weapon, ammo)
 	local d = self:combatAttackBase(weapon, ammo) + (self:getStr(100, true) - 10)
 	if self:attr("dazed") then d = d / 2 end
-	if self:attr("scoured") then d = d / 1.5 end
+	if self:attr("scoured") then d = d / 1.2 end
 	return self:rescaleCombatStats(d)
 end
 
@@ -1168,7 +1171,7 @@ end
 function _M:combatAttackDex(weapon, ammo)
 	local d = self:combatAttackBase(weapon, ammo) + (self:getDex(100, true) - 10)
 	if self:attr("dazed") then d = d / 2 end
-	if self:attr("scoured") then d = d / 1.5 end
+	if self:attr("scoured") then d = d / 1.2 end
 	return self:rescaleCombatStats(d)
 end
 
@@ -1176,7 +1179,7 @@ end
 function _M:combatAttackMag(weapon, ammo)
 	local d = self:combatAttackBase(weapon, ammo) + (self:getMag(100, true) - 10)
 	if self:attr("dazed") then d = d / 2 end
-	if self:attr("scoured") then d = d / 1.5 end
+	if self:attr("scoured") then d = d / 1.2 end
 
 	return self:rescaleCombatStats(d)
 end
@@ -1449,7 +1452,7 @@ function _M:combatPhysicalpower(mod, weapon, add)
 
 	local d = math.max(0, self.combat_dam + add) + self:getStr() -- allows strong debuffs to offset strength
 	if self:attr("dazed") then d = d / 2 end
-	if self:attr("scoured") then d = d / 1.5 end
+	if self:attr("scoured") then d = d / 1.2 end
 
 	return self:rescaleCombatStats(d) * mod
 end
@@ -1481,7 +1484,7 @@ function _M:combatSpellpower(mod, add)
 
 	local d = (self.combat_spellpower > 0 and self.combat_spellpower or 0) + add + self:getMag()
 	if self:attr("dazed") then d = d / 2 end
-	if self:attr("scoured") then d = d / 1.5 end
+	if self:attr("scoured") then d = d / 1.2 end
 
 	return self:rescaleCombatStats(d) * mod * am
 end
@@ -1622,7 +1625,7 @@ function _M:physicalCrit(dam, weapon, target, atk, def, add_chance, crit_power_a
 		chance = chance - target:callTalent(target.T_SCOUNDREL,"getCritPenalty")
 	end
 
-	if self:attr("stealth") and self:knowTalent(self.T_SHADOWSTRIKE) and not target:canSee(self) then -- bug fix
+	if self:attr("stealth") and self:knowTalent(self.T_SHADOWSTRIKE) and self:callTalent(self.T_SHADOWSTRIKE,"checkWeapon") and not target:canSee(self) then -- bug fix
 		chance = 100
 		crit_power_add = crit_power_add + self:callTalent(self.T_SHADOWSTRIKE,"getMultiplier")
 	end
@@ -1667,8 +1670,8 @@ function _M:spellCrit(dam, add_chance, crit_power_add)
 	local chance = self:combatSpellCrit() + (add_chance or 0)
 	local crit = false
 
---	if self:attr("stealth") and self:knowTalent(self.T_SHADOWSTRIKE) and not target:canSee(self) then -- bug fix
-	if self:attr("stealth") and self:knowTalent(self.T_SHADOWSTRIKE) then -- bug fix
+	-- Unlike physical crits we can't know anything about our target here so we can't check if they can see us
+	if self:attr("stealth") and self:knowTalent(self.T_SHADOWSTRIKE) and self:callTalent(self.T_SHADOWSTRIKE,"checkWeapon")then
 		chance = 100
 		crit_power_add = crit_power_add + self:callTalent(self.T_SHADOWSTRIKE,"getMultiplier")
 	end
@@ -1717,8 +1720,7 @@ function _M:mindCrit(dam, add_chance, crit_power_add)
 	local chance = self:combatMindCrit() + (add_chance or 0)
 	local crit = false
 
---	if self:attr("stealth") and self:knowTalent(self.T_SHADOWSTRIKE) and not target:canSee(self) then -- bug fix
-	if self:attr("stealth") and self:knowTalent(self.T_SHADOWSTRIKE) then -- bug fix
+	if self:attr("stealth") and self:knowTalent(self.T_SHADOWSTRIKE) and self:callTalent(self.T_SHADOWSTRIKE,"checkWeapon") then -- bug fix
 		chance = 100
 		crit_power_add = crit_power_add + self:callTalent(self.T_SHADOWSTRIKE,"getMultiplier")
 	end
@@ -1773,7 +1775,7 @@ function _M:combatMindpower(mod, add)
 
 	local d = (self.combat_mindpower > 0 and self.combat_mindpower or 0) + add + self:getWil() * 0.7 + self:getCun() * 0.4
 	if self:attr("dazed") then d = d / 2 end
-	if self:attr("scoured") then d = d / 1.5 end
+	if self:attr("scoured") then d = d / 1.2 end
 
 	return self:rescaleCombatStats(d) * mod
 end
@@ -1809,7 +1811,6 @@ end
 --- Gets damage based on talent, stat, and interval
 function _M:combatStatTalentIntervalDamage(t, stat, min, max, stat_weight)
 	local stat_weight = stat_weight or 0.5
-	scaled_stat = self[stat](self)
 	return self:rescaleDamage(min + (max - min)*((stat_weight * self[stat](self)/100) + (1 - stat_weight) * self:getTalentLevel(t)/6.5))
 end
 
@@ -2256,7 +2257,7 @@ end
 
 -- grapple size check; compares attackers size and targets size
 function _M:grappleSizeCheck(target)
-	size = target.size_category - self.size_category
+	local size = target.size_category - self.size_category
 	if size > 1 then
 		self:logCombat(target, "#Source#'s grapple fails because #Target# is too big!")
 		return true

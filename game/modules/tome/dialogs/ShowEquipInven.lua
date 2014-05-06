@@ -153,12 +153,22 @@ function _M:init(title, equip_actor, filter, action, on_select, inven_actor)
 	}
 	self.key:addBinds{
 		ACCEPT = function() if self.focus_ui and self.focus_ui.ui == self.c_inven then self:use(self.c_inven.c_inven.list[self.c_inven.c_inven.sel]) end end,
-		EXIT = function() game.tooltip.locked = false game:unregisterDialog(self) end,
+		EXIT = function()
+			if self.c_inven.c_inven.scrollbar then
+				self.equip_actor.inv_scroll = self.c_inven.c_inven.scrollbar.pos or 0
+			end
+			game.tooltip.locked = false
+			game:unregisterDialog(self)
+		end,
 		MOVE_UP = function() game.log("up") if game.tooltip.locked then game.tooltip.container.scroll_inertia = math.min(game.tooltip.container.scroll_inertia, 0) - 5 end end,
 		MOVE_DOWN = function() if game.tooltip.locked then game.tooltip.container.scroll_inertia = math.max(game.tooltip.container.scroll_inertia, 0) + 5 end end,
 		LOCK_TOOLTIP = lock_tooltip,
 		LOCK_TOOLTIP_COMPARE = lock_tooltip,
+		SCREENSHOT = function() if type(game) == "table" and game.key then game.key:triggerVirtual("SCREENSHOT") end end,
 	}
+	if self.equip_actor.inv_scroll and self.c_inven.c_inven.scrollbar then
+		self.c_inven.c_inven.scrollbar.pos = util.bound(self.equip_actor.inv_scroll, 0, self.c_inven.c_inven.scrollbar.max)
+	end
 end
 
 function _M:switchSets(which)
@@ -203,6 +213,9 @@ function _M:select(item, force)
 end
 
 function _M:use(item, button, event)
+	if self.c_inven.c_inven.scrollbar then
+		self.equip_actor.inv_scroll = self.c_inven.c_inven.scrollbar.pos or 0
+	end
 	if item then
 		if self.action(item.object, item.inven, item.item, button, event) then
 			game:unregisterDialog(self)
@@ -228,6 +241,9 @@ function _M:updateTitle(title)
 		g = util.lerp(green.g, red.g, v),
 		b = util.lerp(green.b, red.b, v),
 	}
+	if self.equip_actor.inv_scroll and self.c_inven.c_inven.scrollbar then
+		self.c_inven.c_inven.scrollbar.pos = util.bound(self.equip_actor.inv_scroll, 0, self.c_inven.c_inven.scrollbar.max)
+	end
 end
 
 function _M:onDrag(item)

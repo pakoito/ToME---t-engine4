@@ -192,6 +192,7 @@ newEntity{ theme={temporal=true}, name="temporal burst (crit)", points = 6, rari
 ----------------------------------------------------------------
 -- Slaying
 ----------------------------------------------------------------
+--[[
 newEntity{ theme={physical=true}, name="slay humanoid", points = 1, rarity = 22, level_range = {1, 50},
 	combat = { inc_damage_type = {humanoid=resolvers.randartmax(5, 25),},},
 }
@@ -225,3 +226,4 @@ newEntity{ theme={physical=true}, name="slay insect", points = 1, rarity = 22, l
 newEntity{ theme={physical=true}, name="slay spiderkin", points = 1, rarity = 22, level_range = {1, 50},
 	combat = { inc_damage_type = {spiderkin=resolvers.randartmax(5, 25),},},
 }
+--]]

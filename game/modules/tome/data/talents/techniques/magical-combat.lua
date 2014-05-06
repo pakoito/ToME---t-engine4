@@ -32,7 +32,7 @@ newTalent{
 		if self.x == target.x and self.y == target.y then return nil end
 
 		local chance = t.getChance(self, t)
-		if self:hasDualWeapon() then chance = chance / 2 end
+		if self:hasDualWeapon() or self:hasShield() then chance = chance / 2 end
 
 		if rng.percent(chance) then
 			local spells = {}
@@ -78,7 +78,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Allows you to use a melee weapon to focus your spells, granting a %d%% chance per melee attack to deliver a Flame, Lightning or Earthen Missiles spell as a free action on the target.
-		When using two weapons, the chance is halved for each weapon.
+		When dual wielding or using a shield the chance is halved for each weapon.
 		Delivering the spell this way will not trigger a spell cooldown, but only works if the spell is not cooling down.
 		The chance increases with your Cunning.]]):
 		format(t.getChance(self, t))
@@ -142,7 +142,8 @@ newTalent{
 	info = function(self, t)
 		return ([[Raw magical damage channels through the caster's weapon, increasing Physical Power by %d.
 		Each time your crit with a melee blow, you will unleash a radius 2 ball of either fire, lightning or arcane damage, doing %0.2f.
-		The bonus scales with your Spellpower.]]):
+		The bonus scales with your Spellpower.
+		If you are dual wielding or using a shield this will only occur 50%% of the time.]]):
 		format(self:combatSpellpower() * t.getSPMult(self, t), self:combatSpellpower() * 2)
 	end,
 }

@@ -35,6 +35,7 @@ enum web_event_kind {
 	TE4_WEB_EVENT_LOADING,
 	TE4_WEB_EVENT_LOCAL_REQUEST,
 	TE4_WEB_EVENT_RUN_LUA,
+	TE4_WEB_EVENT_END_BROWSER,
 };
 
 typedef struct {

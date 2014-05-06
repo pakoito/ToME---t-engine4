@@ -304,7 +304,6 @@ void on_event(SDL_Event *event)
 			lastts = event->text.timestamp;
 			lastc = event->text.text[0];
 
-			printf("<==text event %ld : '%s'\n", (long int)event->text.timestamp, event->text.text);
 			lua_rawgeti(L, LUA_REGISTRYINDEX, current_keyhandler);
 			lua_pushstring(L, "receiveKey");
 			lua_gettable(L, -2);
@@ -1243,6 +1242,7 @@ int main(int argc, char *argv[])
 		if (!strncmp(arg, "--no-steam", 10)) no_steam = TRUE;
 		if (!strncmp(arg, "--type=zygote", 13)) is_zygote = TRUE;
 		if (!strncmp(arg, "--type=renderer", 15)) is_zygote = TRUE;
+		if (!strncmp(arg, "--no-sandbox", 12)) is_zygote = TRUE;
 	}
 
 #ifdef SELFEXE_WINDOWS

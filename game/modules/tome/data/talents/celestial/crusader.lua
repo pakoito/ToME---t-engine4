@@ -57,7 +57,7 @@ newTalent{
 	info = function(self, t)
 		local damage = t.getDamage(self, t)
 		return ([[You strike your foe with your two handed weapon, dealing %d%% weapon damage.
-		If the attack hits all foes in radius 2 will have their light resistance reduced by %d%% and their damage reduced by %d%% for 5 turns.]]):
+		If the attack hits, all foes in radius 2 will have their light resistance reduced by %d%% and their damage reduced by %d%% for 5 turns.]]):
 		format(100 * damage, t.getWeakness(self, t), t.getNumb(self, t))
 	end,
 }
@@ -176,7 +176,7 @@ newTalent{
 		return ([[Infuse your two handed weapon with light while spinning around.
 		All creatures in radius one take %d%% weapon damage.
 		In addition while spinning your weapon shines so much it deals %d%% light weapon damage to all foes in radius 2.
-		At level 4 your mystical, manly display of spinning around creates a manly shield that blocks all damage for 1 turn.]]):
+		At level 4 your spinning blade creates a shield that blocks all damage for 1 turn.]]):
 		format(t.get1Damage(self, t) * 100, t.get2Damage(self, t) * 100)
 	end,
 }

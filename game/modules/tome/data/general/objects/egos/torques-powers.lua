@@ -50,7 +50,7 @@ newEntity{
 	rarity = 7,
 
 	charm_power_def = {add=3, max=200, floor=true},
-	resolvers.charm("setup a psionic shield, reducing all physical, nature, temporal and acid damage by %d for 6 turns", 20, function(self, who)
+	resolvers.charm("setup a psionic shield, reducing all physical, nature, temporal and acid damage by %d for 7 turns", 20, function(self, who)
 		who:setEffect(who.EFF_PSIONIC_SHIELD, 7, {kind="kinetic", power=self:getCharmPower(who)})
 		game.logSeen(who, "%s uses %s!", who.name:capitalize(), self:getName{no_count=true})
 		return {id=true, used=true}
@@ -64,7 +64,7 @@ newEntity{
 	rarity = 7,
 
 	charm_power_def = {add=3, max=200, floor=true},
-	resolvers.charm("setup a psionic shield, reducing all fire, cold, light, and arcane damage by %d for 6 turns", 20, function(self, who)
+	resolvers.charm("setup a psionic shield, reducing all fire, cold, light, and arcane damage by %d for 7 turns", 20, function(self, who)
 		who:setEffect(who.EFF_PSIONIC_SHIELD, 7, {kind="thermal", power=self:getCharmPower(who)})
 		game.logSeen(who, "%s uses %s!", who.name:capitalize(), self:getName{no_count=true})
 		return {id=true, used=true}
@@ -78,7 +78,7 @@ newEntity{
 	rarity = 8,
 
 	charm_power_def = {add=3, max=200, floor=true},
-	resolvers.charm("setup a psionic shield, reducing all lightning, blight, mind, and darkness damage by %d for 6 turns", 20, function(self, who)
+	resolvers.charm("setup a psionic shield, reducing all lightning, blight, mind, and darkness damage by %d for 7 turns", 20, function(self, who)
 		who:setEffect(who.EFF_PSIONIC_SHIELD, 7, {kind="charged", power=self:getCharmPower(who)})
 		game.logSeen(who, "%s uses %s!", who.name:capitalize(), self:getName{no_count=true})
 		return {id=true, used=true}

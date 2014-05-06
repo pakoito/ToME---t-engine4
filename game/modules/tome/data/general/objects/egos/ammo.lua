@@ -184,7 +184,7 @@ newEntity{
 	cost = 10,
 	combat = {
 		burst_on_hit={
-			[DamageType.FIRE] = resolvers.mbonus_material(15, 5)
+			[DamageType.FIRE] = resolvers.mbonus_material(15, 10)
 		},
 	},
 }
@@ -198,7 +198,7 @@ newEntity{
 	cost = 10,
 	combat = {
 		ranged_project={
-			[DamageType.ICE] = resolvers.mbonus_material(15, 5)
+			[DamageType.COLD] = resolvers.mbonus_material(15, 5)
 		},
 	},
 }
@@ -263,7 +263,8 @@ newEntity{
 }
 
 -- Greater Egos
--- This keeps its conversion because its an excellent swap ego for resistance problems
+
+-- Mostly flat damage because combatSpellpower is so frontloaded
 newEntity{
 	power_source = {arcane=true},
 	name = "elemental ", prefix=true, instant_resolve=true,
@@ -272,34 +273,28 @@ newEntity{
 	greater_ego = 1,
 	rarity = 25,
 	cost = 35,
+
 	combat = {
-		ranged_project={
-			[DamageType.FIRE] = resolvers.mbonus_material(5, 2),
-			[DamageType.COLD] = resolvers.mbonus_material(5, 2),
-			[DamageType.ACID] = resolvers.mbonus_material(5, 2),
-			[DamageType.LIGHTNING] = resolvers.mbonus_material(5, 2),
-		},
-		convert_damage ={
-			[DamageType.FIRE] = resolvers.mbonus_material(15, 10),
-			[DamageType.COLD] = resolvers.mbonus_material(15, 10),
-			[DamageType.ACID] = resolvers.mbonus_material(15, 10),
-			[DamageType.LIGHTNING] = resolvers.mbonus_material(15, 10),
-		},
-		special_on_hit = {desc="random elemental effect", fct=function(combat, who, target)
-			local dam = 20 + (who:combatSpellpower()/5)
-			local tg = {type="hit", range=10}
-			local elem = rng.table{
-				{engine.DamageType.FIREBURN, "flame"},
-				{engine.DamageType.ICE, "freeze"},
-				{engine.DamageType.LIGHTNING_DAZE, "lightning_explosion"},
-				{engine.DamageType.ACID_BLIND, "acid"},
-			}
+		-- Define this here so it stays in scope
+		elements = {
+			{engine.DamageType.FIRE, "flame"},
+			{engine.DamageType.COLD, "freeze"},
+			{engine.DamageType.LIGHTNING, "lightning_explosion"},
+			{engine.DamageType.ACID, "acid"},
+		},	
+		special_on_hit = {desc="Random elemental explosion", fct=function(combat, who, target)
+			if who.turn_procs.elemental_explosion then return end
+			who.turn_procs.elemental_explosion = 1
+
+			local elem = rng.table(combat.elements)
+			local dam = 20 + (who:combatSpellpower() ) -- Higher because Weapon's has a wielder table					
+			local tg = {type="ball", radius=3, range=10, selffire = false, friendlyfire=false}
 			who:project(tg, target.x, target.y, elem[1], rng.avg(dam / 2, dam, 3), {type=elem[2]})		
 		end},
 	},
 }
 
--- Fix me
+
 newEntity{
 	power_source = {arcane=true},
 	name = "plaguebringer's ", prefix=true, instant_resolve=true,
@@ -313,10 +308,13 @@ newEntity{
 			[DamageType.BLIGHT] = resolvers.mbonus_material(15, 5),
 			[DamageType.ITEM_BLIGHT_DISEASE] = resolvers.mbonus_material(15, 5),
 		},
-		talent_on_hit = { [Talents.T_EPIDEMIC] = {level=1, chance=10} },
+		-- Well, Brawler Gloves do this calc for on hit Talents, and the new disease egos don't do damage, so.. What could possibly go wrong?
+		-- SCIENCE
+		talent_on_hit = { [Talents.T_EPIDEMIC] = {level=resolvers.genericlast(function(e) return e.material_level end), chance=10} },
 	},
 }
 
+-- Update Me
 newEntity{
 	power_source = {arcane=true},
 	name = "sentry's ", prefix=true, instant_resolve=true,
@@ -326,6 +324,8 @@ newEntity{
 	greater_ego = 1,
 	cost = 6,
 	combat = {
+		dam = resolvers.mbonus_material(10, 2),
+		apr  = resolvers.mbonus_material(10, 2),
 		ammo_regen = resolvers.mbonus_material(3, 1),
 		capacity = resolvers.generic(function(e) return e.combat.capacity * rng.float(1.2, 1.5) end),
 	},
@@ -334,7 +334,6 @@ newEntity{
 	end),
 }
 
--- Pretty scary!
 newEntity{
 	power_source = {arcane=true},
 	name = " of corruption", suffix=true, instant_resolve=true,
@@ -613,7 +612,7 @@ newEntity{
 	keywords = {disruption=true},
 	level_range = {30, 50},
 	greater_ego = 1,
-	rarity = 50,
+	rarity = 40,
 	cost = 40,
 	combat = {
 		inc_damage_type = {
@@ -632,7 +631,7 @@ newEntity{
 	keywords = {leech=true},
 	level_range = {30, 50},
 	greater_ego = 1,
-	rarity = 50,
+	rarity = 40,
 	cost = 40,
 	combat = {
 		ranged_project={[DamageType.ITEM_NATURE_SLOW] = resolvers.mbonus_material(15, 5)},
@@ -656,10 +655,11 @@ newEntity{
 	name = "hateful ", prefix=true, instant_resolve=true,
 	keywords = {hateful=true},
 	level_range = {1, 50},
-	rarity = 10,
+	rarity = 30,
 	cost = 20,
+	greater_ego = 1,
 	combat = {
-		ranged_project={[DamageType.DARKNESS] = resolvers.mbonus_material(15, 5)},
+		ranged_project={[DamageType.DARKNESS] = resolvers.mbonus_material(25, 5)},
 		inc_damage_type = {living=resolvers.mbonus_material(15, 5)},
 	},
 }
@@ -677,12 +677,6 @@ newEntity{
 			[DamageType.ITEM_MIND_GLOOM] = resolvers.mbonus_material(25, 10)
 		},
 	},
-	wielder = {
-		inc_stats = {
-			[Stats.STAT_WIL] = resolvers.mbonus_material(6, 1),
-			[Stats.STAT_CUN] = resolvers.mbonus_material(6, 1),
-		},
-	},
 	resolvers.genericlast(function(e)
 		e.combat.ammo_every = 6 - (e.combat.ammo_regen or 0)
 	end),
@@ -690,7 +684,7 @@ newEntity{
 
 newEntity{
 	power_source = {psionic=true},
-	name = " of psychokinesis", suffix=true, instant_resolve=true,
+	name = "psychokinetic ", prefix=true, instant_resolve=true,
 	keywords = {kinesis=true},
 	level_range = {1, 50},
 	rarity = 5,

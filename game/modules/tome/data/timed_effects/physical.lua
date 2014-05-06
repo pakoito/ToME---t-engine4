@@ -38,23 +38,70 @@ newEffect{
 	on_timeout = function(self, eff)
 	end,
 	activate = function(self, eff)
-		--[[ Changed method
-		eff.spell = self.combat_spellpower * eff.pct
-		eff.mind = self.combat_mindpower * eff.pct
-		eff.phys = self.combat_dam * eff.pct
-
-		eff.power_str = "Physical:  "..eff.phys.."\nSpell:  "..eff.spell.."\nMind:  "..eff.mind
-
-		self:effectTemporaryValue(eff, "combat_spell", -eff.spell)
-		self:effectTemporaryValue(eff, "combat_mindpower", -eff.mind)
-		self:effectTemporaryValue(eff, "combat_dam", -eff.phys)
-		--]]
 		self:effectTemporaryValue(eff, "scoured", 1)
 	end,
 	deactivate = function(self, eff)
 
 	end,
 }
+
+newEffect{
+	name = "RELENTLESS_TEMPO", image = "talents/sunder_mind.png",
+	desc = "Relentless Tempo",
+	long_desc = function(self, eff) return ("Attuning to the flow of combat, increasing their combat stats.  \nDefense:  %d\nAll Damage:  %d%%\nStamina Regeneration:  %d\n%s"):
+		format( eff.cur_defense or 0, eff.cur_damage or 0, eff.cur_stamina or 0, eff.stacks >= 5 and "All Resistance:  20%" or "") end,
+	charges = function(self, eff) return eff.stacks end,
+	type = "physical",
+	subtype = { tempo=true },
+	status = "beneficial",
+	on_gain = function(self, err) return "#Target# is gaining tempo.", "+Tempo" end,
+	on_lose = function(self, err) return "#Target# loses their tempo.", "-Tempo" end,
+	parameters = { stamina = 0, defense = 0, damage = 0, stacks = 0, resists = 0 },
+	on_merge = function(self, old_eff, new_eff)
+		old_eff.dur =3
+
+		if old_eff.stacks >= 5 then
+			if old_eff.resists ~= 20 then
+				old_eff.resists = 20
+				old_eff.resid = self:addTemporaryValue("resists", {all=old_eff.resists})
+			end
+			return old_eff
+		end
+
+		old_eff.stacks = old_eff.stacks + 1
+
+		self:removeTemporaryValue("stamina_regen", old_eff.staminaid)
+		self:removeTemporaryValue("combat_def", old_eff.defenseid)
+		self:removeTemporaryValue("inc_damage", old_eff.damageid)
+
+		old_eff.cur_stamina = old_eff.cur_stamina + new_eff.stamina
+		old_eff.cur_defense = old_eff.cur_defense + new_eff.defense
+		old_eff.cur_damage = old_eff.cur_damage + new_eff.damage
+
+		old_eff.staminaid = self:addTemporaryValue("stamina_regen", old_eff.cur_stamina)
+		old_eff.defenseid = self:addTemporaryValue("combat_def", old_eff.cur_defense)
+		old_eff.damageid = self:addTemporaryValue("inc_damage", {all = old_eff.cur_damage})
+
+		return old_eff
+	end,
+	activate = function(self, eff)
+		eff.stacks = 1
+		eff.cur_stamina = eff.stamina
+		eff.cur_defense = eff.defense
+		eff.cur_damage = eff.damage
+
+		eff.staminaid = self:addTemporaryValue("stamina_regen", eff.cur_defense)
+		eff.defenseid = self:addTemporaryValue("combat_def", eff.cur_defense)
+		eff.damageid = self:addTemporaryValue("inc_damage", {all = eff.cur_damage})
+	end,
+	deactivate = function(self, eff)
+		self:removeTemporaryValue("stamina_regen", eff.staminaid)
+		self:removeTemporaryValue("combat_def", eff.defenseid)
+		self:removeTemporaryValue("inc_damage", eff.damageid)
+		if eff.resid then self:removeTemporaryValue("resists", eff.resid) end
+	end,
+}
+
 
 newEffect{
 	name = "DELIRIOUS_CONCUSSION", image = "talents/slippery_moss.png",
@@ -81,7 +128,7 @@ newEffect{
 	desc = "Bleeding",
 	long_desc = function(self, eff) return ("Huge cut that bleeds, doing %0.2f physical damage per turn."):format(eff.power) end,
 	type = "physical",
-	subtype = { wound=true, cut=true },
+	subtype = { wound=true, cut=true, bleed=true },
 	status = "detrimental",
 	parameters = { power=1 },
 	on_gain = function(self, err) return "#Target# starts to bleed.", "+Bleeds" end,
@@ -96,7 +143,7 @@ newEffect{
 		return old_eff
 	end,
 	activate = function(self, eff)
-		if eff.src:knowTalent(self.T_BLOODY_BUTCHER) then
+		if eff.src and eff.src:knowTalent(self.T_BLOODY_BUTCHER) then
 			local t = eff.src:getTalentFromId(eff.src.T_BLOODY_BUTCHER)
 			local resist = math.min(t.getResist(eff.src, t), math.max(0, self:combatGetResist(DamageType.PHYSICAL)))
 			self:effectTemporaryValue(eff, "resists", {[DamageType.PHYSICAL] = -resist})
@@ -112,7 +159,7 @@ newEffect{
 	desc = "Deep Wound",
 	long_desc = function(self, eff) return ("Huge cut that bleeds, doing %0.2f physical damage per turn and decreasing all heals received by %d%%."):format(eff.power, eff.heal_factor) end,
 	type = "physical",
-	subtype = { wound=true, cut=true },
+	subtype = { wound=true, cut=true, bleed=true },
 	status = "detrimental",
 	parameters = {power=10, heal_factor=30},
 	on_gain = function(self, err) return "#Target# starts to bleed.", "+Deep Wounds" end,
@@ -1355,26 +1402,30 @@ newEffect{
 newEffect{
 	name = "Recovery",
 	desc = "Recovery",
-	long_desc = function(self, eff) return ("The target is recovering %d life each turn and its healing modifier has been increased by %d%%."):format(eff.regen, eff.heal_mod) end,
+	long_desc = function(self, eff) return ("The target is recovering %d life each turn."):format(math.min(100, eff.pct * self.max_life)) end,
 	type = "physical",
 	subtype = { heal=true },
 	status = "beneficial",
-	parameters = { power=10 },
+	parameters = { power=10, pct = 0.01 },
 	on_gain = function(self, err) return "#Target# is recovering from the damage!", "+Recovery" end,
 	on_lose = function(self, err) return "#Target# has finished recovering.", "-Recovery" end,
 	activate = function(self, eff)
-		eff.regenid = self:addTemporaryValue("life_regen", eff.regen)
-		eff.healid = self:addTemporaryValue("healing_factor", eff.heal_mod / 100)
+		--eff.regenid = self:addTemporaryValue("life_regen", eff.regen)
+		--eff.healid = self:addTemporaryValue("healing_factor", eff.heal_mod / 100)
 		if core.shader.active(4) then
 			eff.particle1 = self:addParticles(Particles.new("shader_shield", 1, {toback=true,  size_factor=1.5, y=-0.3, img="healarcane"}, {type="healing", time_factor=4000, noup=2.0, beamColor1={0xff/255, 0x22/255, 0x22/255, 1}, beamColor2={0xff/255, 0x60/255, 0x60/255, 1}, circleColor={0,0,0,0}, beamsCount=8}))
 			eff.particle2 = self:addParticles(Particles.new("shader_shield", 1, {toback=false, size_factor=1.5, y=-0.3, img="healarcane"}, {type="healing", time_factor=4000, noup=1.0, beamColor1={0xff/255, 0x22/255, 0x22/255, 1}, beamColor2={0xff/255, 0x60/255, 0x60/255, 1}, circleColor={0,0,0,0}, beamsCount=8}))
 		end
 	end,
+	on_timeout = function(self, eff)
+		local heal = math.min(100, self.max_life * eff.pct)
+		self:heal(heal, src)
+	end,
 	deactivate = function(self, eff)
 		self:removeParticles(eff.particle1)
 		self:removeParticles(eff.particle2)
-		self:removeTemporaryValue("life_regen", eff.regenid)
-		self:removeTemporaryValue("healing_factor", eff.healid)
+		--self:removeTemporaryValue("life_regen", eff.regenid)
+		--self:removeTemporaryValue("healing_factor", eff.healid)
 	end,
 }
 

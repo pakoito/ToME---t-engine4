@@ -119,7 +119,15 @@ function _M:init(title, store_inven, actor_inven, store_filter, actor_filter, ac
 		[{"_TAB","shift"}] = function() self:moveFocus(1) end,
 	}
 	self.key:addBinds{
-		EXIT = function() game:unregisterDialog(self) end,
+		EXIT = function()
+			if self.c_inven.c_inven.scrollbar then
+				self.actor_actor.inv_scroll = self.c_inven.c_inven.scrollbar.pos or 0
+			end
+			if self.c_store.c_inven.scrollbar then
+				self.actor_actor.store_scroll = self.c_store.c_inven.scrollbar.pos or 0
+			end
+			game:unregisterDialog(self)
+		end,
 	}
 
 	-- Add tooltips
@@ -147,6 +155,12 @@ function _M:init(title, store_inven, actor_inven, store_filter, actor_filter, ac
 			self.prev_ctrl = ctrl
 		end
 	end
+	if self.actor_actor.inv_scroll and self.c_inven.c_inven.scrollbar then
+		self.c_inven.c_inven.scrollbar.pos = util.bound(self.actor_actor.inv_scroll, 0, self.c_inven.c_inven.scrollbar.max or 0)
+	end
+	if self.actor_actor.store_scroll and self.c_store.c_inven.scrollbar then
+		self.c_store.c_inven.scrollbar.pos = util.bound(self.actor_actor.store_scroll, 0, self.c_store.c_inven.scrollbar.max or 0)
+	end
 end
 
 function _M:on_register()
@@ -160,6 +174,12 @@ end
 function _M:updateStore()
 	self:generateList()
 	self:updateTitle(self:getStoreTitle())
+	if self.actor_actor.inv_scroll and self.c_inven.c_inven.scrollbar then
+		self.c_inven.c_inven.scrollbar.pos = util.bound(self.actor_actor.inv_scroll, 0, self.c_inven.c_inven.scrollbar.max or 0)
+	end
+	if self.actor_actor.store_scroll and self.c_store.c_inven.scrollbar then
+		self.c_store.c_inven.scrollbar.pos = util.bound(self.actor_actor.store_scroll, 0, self.c_store.c_inven.scrollbar.max or 0)
+	end
 end
 
 function _M:select(item, force)
@@ -169,6 +189,8 @@ function _M:select(item, force)
 end
 
 function _M:use(item, force)
+	self.actor_actor.inv_scroll = self.c_inven.c_inven.scrollbar and self.c_inven.c_inven.scrollbar.pos or 0
+	self.actor_actor.store_scroll = self.c_store.c_inven.scrollbar and self.c_store.c_inven.scrollbar.pos or 0
 	if item and item.object then
 		if self.focus_ui and self.focus_ui.ui == self.c_store then
 			if util.getval(self.allow_buy, item.object, item.item) then

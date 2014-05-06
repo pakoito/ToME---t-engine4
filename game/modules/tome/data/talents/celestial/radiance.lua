@@ -165,7 +165,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Fire a glowing orb of light at each enemy within your Radiance.  Each orb will slowly follow its target until it connects dealing %d light damage to anything else it contacts along the way.  When the target is reached the orb will explode dealing %d light damage and healing you for 50%% of the damage dealt.  This powerful ability will dim your Radiance reducing its radius to 1 for 5 turns.]]):
+		return ([[Fire a glowing orb of light at each enemy within your Radiance.  Each orb will slowly follow its target until it connects dealing %d light damage to anything else it contacts along the way.  When the target is reached the orb will explode dealing %d light damage and healing you for 50%% of the damage dealt.  This powerful ability will dim your Radiance, reducing its radius to 1 for 5 turns.]]):
 		format(t.getMoveDamage(self, t), t.getExplosionDamage(self, t))
 	end,
 }

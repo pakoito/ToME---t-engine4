@@ -73,7 +73,7 @@ newEntity{
 	rarity = 6,
 
 	charm_power_def = {add=5, max=100, floor=true},
-	resolvers.charm(function(self) return ("harden the skin for 6 turns increasing armour by %d and armour hardiness by %d%%%%"):format(self:getCharmPower(who), 20 + self.material_level * 10) end, 20, function(self, who)
+	resolvers.charm(function(self) return ("harden the skin for 7 turns increasing armour by %d and armour hardiness by %d%%%%"):format(self:getCharmPower(who), 20 + self.material_level * 10) end, 20, function(self, who)
 		who:setEffect(who.EFF_THORNY_SKIN, 7, {ac=self:getCharmPower(who), hard=20 + self.material_level * 10})
 		game:playSoundNear(who, "talents/heal")
 		game.logSeen(who, "%s uses %s!", who.name:capitalize(), self:getName{no_count=true})
@@ -88,7 +88,7 @@ newEntity{
 	rarity = 20,
 
 	charm_power_def = {add=50, max=250, floor=true},
-	resolvers.charm("heal the target for %d", 35, function(self, who)
+	resolvers.charm("heal the target for %d", 20, function(self, who)
 		local tg = {default_target=who, type="hit", nowarning=true, range=6 + who:getWil(4), first_target="friend"}
 		local x, y = who:getTarget(tg)
 		if not x or not y then return nil end

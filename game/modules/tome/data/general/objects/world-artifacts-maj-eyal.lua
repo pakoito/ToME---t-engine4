@@ -841,7 +841,7 @@ newEntity{ base = "BASE_MASSIVE_ARMOR",
 		},
 		max_stamina = 60,
 		combat_def = 15,
-		combat_armor = 20,
+		combat_armor = 30,
 		stun_immune = 0.3,
 		knockback_immune = 0.3,
 		combat_mentalresist = 25,
@@ -1107,7 +1107,7 @@ newEntity{ base = "BASE_MASSIVE_ARMOR", -- Thanks SageAcrin!
 	metallic=false,
 	wielder = {
 		inc_stats = { [Stats.STAT_WIL] = 3, [Stats.STAT_DEX] = 3, [Stats.STAT_CON] = 3,},
-		combat_armor = 10,
+		combat_armor = 12,
 		combat_def = 4,
 		fatigue = 14,
 		resists = {

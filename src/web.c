@@ -351,6 +351,16 @@ static void handle_event(WebEvent *event) {
 			} else lua_pop(he_L, 1);
 			break;
 
+		case TE4_WEB_EVENT_END_BROWSER:
+			lua_rawgeti(he_L, LUA_REGISTRYINDEX, event->handlers);
+			lua_pushstring(he_L, "on_crash");
+			lua_gettable(he_L, -2);
+			lua_remove(he_L, -2);
+			if (!lua_isnil(he_L, -1)) {
+				docall(he_L, 0, 0);
+			} else lua_pop(he_L, 1);
+			break;
+
 		case TE4_WEB_EVENT_LOCAL_REQUEST:
 			lua_getglobal(he_L, "core");
 			lua_getfield(he_L, -1, "webview");

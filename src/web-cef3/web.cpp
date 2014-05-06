@@ -1,8 +1,22 @@
 /*
     TE4 - T-Engine 4
-    Copyright (C) 2009, 2010, 2011, 2012, 2013 Nicolas Casalini
+    Copyright (C) 2009 - 2014 Nicolas Casalini
 
-    No permission to copy or replicate in any ways.
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+    Nicolas Casalini "DarkGod"
+    darkgod@te4.org
 */
 
 #include <map>
@@ -89,6 +103,7 @@ class BrowserClient;
 
 class WebViewOpaque {
 public:
+	bool crashed;
 	CefRefPtr<RenderHandler> render;
 	CefRefPtr<CefBrowser> browser;
 	CefRefPtr<BrowserClient> view;
@@ -105,11 +120,11 @@ class BrowserClient :
 	public CefLoadHandler
 {
 	std::map<int32, CurrentDownload*> downloads;
-	WebViewOpaque *opaque;
 	CefRefPtr<CefRenderHandler> m_renderHandler;
 	int handlers;
 
 public:
+	WebViewOpaque *opaque;
 	CefRefPtr<CefBrowser> browser;
 	bool first_load;
 	BrowserClient(WebViewOpaque *opaque, RenderHandler *renderHandler, int handlers) : m_renderHandler(renderHandler) {
@@ -156,6 +171,25 @@ public:
 
 	virtual bool OnBeforeResourceLoad(CefRefPtr<CefBrowser> browser, CefRefPtr<CefFrame> frame, CefRefPtr<CefRequest> request) OVERRIDE {
 		return false;
+	}
+
+	virtual bool OnBeforePluginLoad(CefRefPtr<CefBrowser> browser, const CefString& url, const CefString& policy_url, CefRefPtr<CefWebPluginInfo> info) OVERRIDE {
+		char *name = cstring_to_c(info->GetName());
+		char *path = cstring_to_c(info->GetPath());
+		fprintf(logfile, "[WEBCORE] Forbade plugin %s from %s\n", name, path);
+		free(name);
+		free(path);
+		return true;
+	}
+
+	virtual void OnRenderProcessTerminated(CefRefPtr<CefBrowser> browser, TerminationStatus status) OVERRIDE {
+		if ((status == TS_ABNORMAL_TERMINATION) || (status == TS_PROCESS_WAS_KILLED) || (status == TS_PROCESS_CRASHED)) {
+			opaque->crashed = true;
+			WebEvent *event = new WebEvent();
+			event->kind = TE4_WEB_EVENT_END_BROWSER;
+			event->handlers = handlers;
+			push_event(event);
+		}
 	}
 
 	virtual bool OnBeforePopup(CefRefPtr<CefBrowser> browser,
@@ -314,12 +348,15 @@ void te4_web_new(web_view_type *view, int w, int h) {
 
 	CefWindowInfo window_info;
 	CefBrowserSettings browserSettings;
+	browserSettings.java = STATE_DISABLED;
+	browserSettings.plugins = STATE_DISABLED;
 	window_info.SetAsOffScreen(NULL);
 	window_info.SetTransparentPainting(true);
 	opaque->render = new RenderHandler(w, h);
 	opaque->view = new BrowserClient(opaque, opaque->render, view->handlers);
 	CefString curl("");
 	opaque->browser = CefBrowserHost::CreateBrowserSync(window_info, opaque->view.get(), curl, browserSettings);
+	opaque->crashed = false;
 
 	view->w = w;
 	view->h = h;
@@ -331,9 +368,13 @@ bool te4_web_close(web_view_type *view) {
 	WebViewOpaque *opaque = (WebViewOpaque*)view->opaque;
 	if (!view->closed) {
 		view->closed = true;
-		fprintf(logfile, "[WEBCORE] Destroying webview for browser\n");
-		opaque->browser->GetHost()->CloseBrowser(true);
-		fprintf(logfile, "[WEBCORE] Destroying send done\n");
+		if (opaque->crashed) {
+			fprintf(logfile, "[WEBCORE] Destroying webview but it was already crashed, doing nothing\n");
+		} else {
+			fprintf(logfile, "[WEBCORE] Destroying webview for browser\n");
+			opaque->browser->GetHost()->CloseBrowser(true);
+			fprintf(logfile, "[WEBCORE] Destroying send done\n");
+		}
 		return true;
 	}
 	return false;
@@ -829,7 +870,9 @@ void te4_web_shutdown() {
 	}
 
 	for (std::map<BrowserClient*, bool>::iterator it=all.begin(); it != all.end(); ++it) {
-		it->first->browser->GetHost()->CloseBrowser(true);
+		if (!it->first->opaque->crashed) {
+			it->first->browser->GetHost()->CloseBrowser(true);
+		}
 	}
 
 	while (!all_browsers.empty()) {

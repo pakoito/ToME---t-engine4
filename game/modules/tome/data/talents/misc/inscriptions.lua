@@ -90,11 +90,16 @@ newInscription{
 	points = 1,
 	tactical = { HEAL = 2 },
 	is_heal = true,
+	no_energy = true,
 	action = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
 		self:attr("allow_on_heal", 1)
 		self:heal(data.heal + data.inc_stat, t)
 		self:attr("allow_on_heal", -1)
+
+		self:removeEffectsFilter(function(e) return e.subtype.wound end, 1)
+		self:removeEffectsFilter(function(e) return e.subtype.poison end, 1)
+		
 		if core.shader.active(4) then
 			self:addParticles(Particles.new("shader_shield_temp", 1, {toback=true , size_factor=1.5, y=-0.3, img="healgreen", life=25}, {type="healing", time_factor=2000, beamsCount=20, noup=2.0}))
 			self:addParticles(Particles.new("shader_shield_temp", 1, {toback=false, size_factor=1.5, y=-0.3, img="healgreen", life=25}, {type="healing", time_factor=2000, beamsCount=20, noup=1.0}))
@@ -103,7 +108,7 @@ newInscription{
 	end,
 	info = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
-		return ([[Activate the infusion to heal yourself for %d life.]]):format(data.heal + data.inc_stat)
+		return ([[Activate the infusion to instantly heal yourself for %d and cleanse 1 wound and poison effect.]]):format(data.heal + data.inc_stat)
 	end,
 	short_info = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
@@ -465,7 +470,7 @@ newInscription{
 	action = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
 		local tg = {type="ball", nolock=true, pass_terrain=true, nowarning=true, range=data.range + data.inc_stat, radius=3, requires_knowledge=false}
-		x, y = self:getTarget(tg)
+		local x, y = self:getTarget(tg)
 		if not x then return nil end
 		-- Target code does not restrict the target coordinates to the range, it lets the project function do it
 		-- but we cant ...

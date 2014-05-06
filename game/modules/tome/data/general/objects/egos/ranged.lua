@@ -226,7 +226,7 @@ newEntity{
 	keywords = {wardens=true},
 	level_range = {30, 50},
 	greater_ego = 1,
-	rarity = 30,
+	rarity = 40,
 	cost = 40,
 	wielder = {
 		inc_stats = {
@@ -349,7 +349,7 @@ newEntity{
 	},
 	combat = {
 		ranged_project={
-			[DamageType.ICE] = resolvers.mbonus_material(15, 5),
+			[DamageType.COLD] = resolvers.mbonus_material(15, 5),
 		},
 	},
 }
@@ -431,11 +431,12 @@ newEntity{
 	cost = 22,
 	greater_ego = 1,
 	combat = {
-		talent_on_hit = { [Talents.T_MANA_CLASH] = {level=1, chance=20} },
+		--talent_on_hit = { [Talents.T_MANA_CLASH] = {level=1, chance=20} },
 	},
 	wielder = {
 		inc_stats = {
 			[Stats.STAT_WIL] = resolvers.mbonus_material(6, 1),
+			[Stats.STAT_CUN] = resolvers.mbonus_material(6, 1),
 		},
 		combat_mindpower = resolvers.mbonus_material(10, 5),
 		talents_types_mastery = {

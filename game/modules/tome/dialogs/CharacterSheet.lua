@@ -326,6 +326,9 @@ function _M:drawDialog(kind, actor_to_compare)
 		if player:attr("forbid_arcane") then
 			s:drawColorStringBlended(self.font, "#ORCHID#Zigur follower", w, h, 255, 255, 255, true) h = h + self.font_h
 		end
+		if player:attr("blood_life") then
+			s:drawColorStringBlended(self.font, "#DARK_RED#Blood of Life", w, h, 255, 255, 255, true) h = h + self.font_h
+		end
 
 		h = h + self.font_h
 		self:mouseTooltip(self.TOOLTIP_LEVEL, s:drawColorStringBlended(self.font,  "Level: #00ff00#"..player.level, w, h, 255, 255, 255, true)) h = h + self.font_h
@@ -520,10 +523,10 @@ function _M:drawDialog(kind, actor_to_compare)
 
 		print_stat(self.actor.STAT_STR, ("%-12s"):format(Stats.stats_def[self.actor.STAT_STR].name:capitalize()), self.TOOLTIP_STR)
 		print_stat(self.actor.STAT_DEX, ("%-12s"):format(Stats.stats_def[self.actor.STAT_DEX].name:capitalize()), self.TOOLTIP_DEX)
+		print_stat(self.actor.STAT_CON, ("%-12s"):format(Stats.stats_def[self.actor.STAT_CON].name:capitalize()), self.TOOLTIP_CON)
 		print_stat(self.actor.STAT_MAG, ("%-12s"):format(Stats.stats_def[self.actor.STAT_MAG].name:capitalize()), self.TOOLTIP_MAG)
 		print_stat(self.actor.STAT_WIL, ("%-12s"):format(Stats.stats_def[self.actor.STAT_WIL].name:capitalize()), self.TOOLTIP_WIL)
 		print_stat(self.actor.STAT_CUN, ("%-12s"):format(Stats.stats_def[self.actor.STAT_CUN].name:capitalize()), self.TOOLTIP_CUN)
-		print_stat(self.actor.STAT_CON, ("%-12s"):format(Stats.stats_def[self.actor.STAT_CON].name:capitalize()), self.TOOLTIP_CON)
 		h = h + self.font_h
 
 		local nb_inscriptions = 0
@@ -707,7 +710,7 @@ function _M:drawDialog(kind, actor_to_compare)
 		end
 
 		local inc_damages = {}
-		for i, t in ipairs(DamageType.dam_def) do
+		for i, t in pairs(DamageType.dam_def) do
 			if player:combatHasDamageIncrease(DamageType[t.type]) then
 				inc_damages[t] = inc_damages[t] or {}
 				inc_damages[t][1] = player:combatGetDamageIncrease(DamageType[t.type])
@@ -774,7 +777,7 @@ function _M:drawDialog(kind, actor_to_compare)
 		end
 
 		local resists_pens = {}
-		for i, t in ipairs(DamageType.dam_def) do
+		for i, t in pairs(DamageType.dam_def) do
 			if player.resists_pen[DamageType[t.type]] and player.resists_pen[DamageType[t.type]] ~= 0 then
 				resists_pens[t] = resists_pens[t] or {}
 				resists_pens[t][1] = player.resists_pen[DamageType[t.type]]
@@ -848,7 +851,7 @@ function _M:drawDialog(kind, actor_to_compare)
 		s:drawColorStringBlended(self.font, "#LIGHT_BLUE#Resistances base / cap:", w, h, 255, 255, 255, true) h = h + self.font_h
 
 		local resists = {}
-		for i, t in ipairs(DamageType.dam_def) do
+		for i, t in pairs(DamageType.dam_def) do
 			if player.resists[DamageType[t.type]] and player.resists[DamageType[t.type]] ~= 0 then
 				resists[t] = resists[t] or {}
 				resists[t][1] = player:combatGetResist(DamageType[t.type])
@@ -868,7 +871,7 @@ function _M:drawDialog(kind, actor_to_compare)
 			end
 			self:mouseTooltip(self.TOOLTIP_RESIST_ALL, s:drawColorStringBlended(self.font, ("%-10s: #00ff00#%3d%% / %d%%%s"):format("All", player.resists.all, player.resists_cap.all or 0, res_text), w, h, 255, 255, 255, true)) h = h + self.font_h
 		end
-		for i, t in ipairs(DamageType.dam_def) do
+		for i, t in pairs(DamageType.dam_def) do
 			if player.resists[DamageType[t.type]] and player.resists[DamageType[t.type]] ~= 0 then
 				self:mouseTooltip(self.TOOLTIP_RESIST, s:drawColorStringBlended(self.font, ("%s%-10s#LAST#: #00ff00#%3d%% / %d%%"):format((t.text_color or "#WHITE#"), t.name:capitalize(), player:combatGetResist(DamageType[t.type]), (player.resists_cap[DamageType[t.type]] or 0) + (player.resists_cap.all or 0)), w, h, 255, 255, 255, true)) h = h + self.font_h
 			end
@@ -890,7 +893,7 @@ function _M:drawDialog(kind, actor_to_compare)
 		end
 
 		local damage_affinitys = {}
-		for i, t in ipairs(DamageType.dam_def) do
+		for i, t in pairs(DamageType.dam_def) do
 			if player.damage_affinity[DamageType[t.type]] and player.damage_affinity[DamageType[t.type]] ~= 0 then
 				damage_affinitys[t] = damage_affinitys[t] or {}
 				damage_affinitys[t][1] = player.damage_affinity[DamageType[t.type]]
@@ -944,11 +947,17 @@ function _M:drawDialog(kind, actor_to_compare)
 
 		s:drawColorStringBlended(self.font, "#LIGHT_BLUE#Damage when hit:", w, h, 255, 255, 255, true) h = h + self.font_h
 
-		for i, t in ipairs(DamageType.dam_def) do
+		for i, t in pairs(DamageType.dam_def) do
 			if player.on_melee_hit[DamageType[t.type]] and player.on_melee_hit[DamageType[t.type]] ~= 0 then
 				local dval = player.on_melee_hit[DamageType[t.type]]
-				dval = Talents.damDesc(player, DamageType[t.type] ,type(dval) == "number" and dval or dval.dam)
-				self:mouseTooltip(self.TOOLTIP_ON_HIT_DAMAGE, s:drawColorStringBlended(self.font, ("%s%-10s#LAST#: #00ff00#%.1f"):format((t.text_color or "#WHITE#"), t.name:capitalize(), dval), w, h, 255, 255, 255, true)) h = h + self.font_h
+				if t.tdesc then
+					dval = t.tdesc(dval)
+					self:mouseTooltip(self.TOOLTIP_ON_HIT_DAMAGE, s:drawColorStringBlended(self.font, ("%s"):format(dval), w, h, 255, 255, 255, true)) h = h + self.font_h
+				else
+					dval = Talents.damDesc(player, DamageType[t.type] ,type(dval) == "number" and dval or dval.dam)
+					self:mouseTooltip(self.TOOLTIP_ON_HIT_DAMAGE, s:drawColorStringBlended(self.font, ("%s%-10s#LAST#: #00ff00#%.1f"):format((t.text_color or "#WHITE#"), t.name:capitalize(), dval), w, h, 255, 255, 255, true)) h = h + self.font_h
+
+				end
 			end
 		end
 

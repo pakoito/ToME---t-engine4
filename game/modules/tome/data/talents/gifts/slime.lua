@@ -47,6 +47,7 @@ newTalent{
 	end,
 }
 
+-- The damage on this was ludicrous, especially considering 3 of the 4 possible debuffs are among the stronger in the game and have *no save check*
 newTalent{
 	name = "Poisonous Spores",
 	type = {"wild-gift/slime", 2},
@@ -59,8 +60,8 @@ newTalent{
 	range = 10,
 	tactical = { ATTACKAREA = { NATURE = 2 }, DISABLE = 1 },
 	radius = function(self, t) return math.floor(self:combatTalentScale(t, 1, 2.7)) end, -- yields 2 at tl=3
-	getDamage = function(self, t) return self:combatTalentMindDamage(t, 30, 500) end,
-	critPower = function(self, t) return self:combatTalentMindDamage(t, 10, 60) end,
+	getDamage = function(self, t) return self:combatTalentMindDamage(t, 30, 200) end,
+	critPower = function(self, t) return self:combatTalentMindDamage(t, 10, 40) end,
 	requires_target = true,
 	action = function(self, t)
 		local tg = {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t), friendlyfire=false}
@@ -88,6 +89,8 @@ newTalent{
 	end,
 }
 
+-- Boring, but disarm was way too far
+-- Now that we have melee retaliation damage shown in tooltips its a little safer to raise the damage on this
 newTalent{
 	name = "Acidic Skin",
 	type = {"wild-gift/slime", 3},
@@ -101,12 +104,12 @@ newTalent{
 	requires_target = false,
 	tactical = { DEFEND = 1 },
 	getChance = function(self, t) return self:combatTalentLimit(t, 100, 7, 15) end, -- Limit < 100%
-	getDamage = function(self, t) return self:combatTalentMindDamage(t, 10, 50) end,
+	getDamage = function(self, t) return self:combatTalentMindDamage(t, 10, 80) end,
 	activate = function(self, t)
 		game:playSoundNear(self, "talents/slime")
 		local power = t.getDamage(self, t)
 		return {
-			onhit = self:addTemporaryValue("on_melee_hit", {[DamageType.ACID_DISARM]={dam=power, chance=t.getChance(self, t)}}),
+			onhit = self:addTemporaryValue("on_melee_hit", {[DamageType.ACID] = t.getDamage(self, t)}),
 		}
 	end,
 	deactivate = function(self, t, p)
@@ -114,8 +117,8 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Your skin drips with acid, damaging all that hit you for %0.1f Acid damage with a %d%% chance to disarm them for 3 turns.
-		The damage increases with your Mindpower.]]):format(damDesc(self, DamageType.ACID, t.getDamage(self, t)), t.getChance(self, t))
+		return ([[Your skin drips with acid, damaging all that hit you for %0.1f Acid damage.
+		The damage increases with your Mindpower.]]):format(damDesc(self, DamageType.ACID, t.getDamage(self, t)))
 	end,
 }
 

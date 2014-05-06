@@ -23,21 +23,22 @@ newTalent{
 	require = techs_con_req1,
 	mode = "passive",
 	points = 5,
+	--getHealPct = function(self, t) return math.min(.3, self:combatTalentStatDamage(t, "con", 0.03, 0.2)) end,
+	getHealPct = function(self, t) return math.min(.4, self:combatTalentScale(t, 0.03, 0.3)) end,
 	getWoundReduction = function(self, t) return self:combatTalentLimit(t, 1, 0.17, 0.5) end, -- Limit <100%
-	getHealMod = function(self, t) return self:combatTalentStatDamage(t, "con", 10, 50) end,
-	getLifeRegen = function(self, t) return self:combatTalentStatDamage(t, "con", 2, 20) + 0.001 * self.max_life end, -- Add fraction of max life
-	getDuration = function(self, t) return math.floor(self:combatTalentScale(t, 3, 7)) end,
+	getDuration = function(self, t) return 6 end,
 	do_vitality_recovery = function(self, t)
-		self:setEffect(self.EFF_RECOVERY, t.getDuration(self, t), {heal_mod = t.getHealMod(self, t), regen = t.getLifeRegen(self, t)})
+		self:setEffect(self.EFF_RECOVERY, t.getDuration(self, t), {pct = t.getHealPct(self, t) / t.getDuration(self, t)})
 	end,
 	info = function(self, t)
 		local wounds = t.getWoundReduction(self, t) * 100
-		local regen = t.getLifeRegen(self, t)
-		local healmod = t.getHealMod(self, t)
+		local healpct = t.getHealPct(self, t) * 100
+		local heal = t.getHealPct(self, t) * self.max_life
 		local duration = t.getDuration(self, t)
-		return ([[You recover faster from poisons, diseases and wounds, reducing the duration of all such effects by %d%%.  Additionally, you gain %0.2f life regen and %d%% healing modifier for %d turns when your life drops below 50%%.
-		The healing modifier and life regen will scale with your Constitution.]]):
-		format(wounds, regen, healmod, duration)
+		return ([[You recover faster from poisons, diseases and wounds, reducing the duration of all such effects by %d%%.  
+			Additionally, when your life goes below 50%%, you heal for %d%% of your max HP (%d) over %d turns up to a max of 100 per turn.
+			The healing will scale with your Constitution.]]):
+		format(wounds, healpct, heal, duration)
 	end,
 }
 
@@ -62,7 +63,7 @@ newTalent{
 					effs[#effs+1] = {"effect", eff_id}
 				elseif e.subtype.pin and self:getTalentLevel(t) >=4 then
 					effs[#effs+1] = {"effect", eff_id}
-				elseif e.subtype.slow and self:getTalentLevel(t) >=5 then
+				elseif (e.subtype.slow or e.subtype.wound) and self:getTalentLevel(t) >=5 then
 					effs[#effs+1] = {"effect", eff_id}
 				end
 			end
@@ -72,14 +73,14 @@ newTalent{
 			local eff = rng.tableRemove(effs)
 			if eff[1] == "effect" and rng.percent(t.getChance(self, t)) then
 				self:removeEffect(eff[2])
-				game.logSeen(self, "%s has recovered!", self.name:capitalize())
+				game.logSeen(self, "#ORCHID#%s has recovered!#LAST#", self.name:capitalize())
 			end
 		end
 	end,
 	info = function(self, t)
 		local chance = t.getChance(self, t)
 		return ([[You've learned to recover quickly from effects that would disable you. Each turn, you have a %d%% chance to recover from a single stun effect.
-		At talent level 2 you may also recover from blindness, at level 3 confusion, level 4 pins, and level 5 slows. 
+		At talent level 2 you may also recover from blindness, at level 3 confusion, level 4 pins, and level 5 slows and wounds. 
 		Only one effect may be recovered from each turn, and the chance to recover from an effect scales with your Constitution.]]):
 		format(chance)
 	end,

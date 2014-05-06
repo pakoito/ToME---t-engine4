@@ -105,11 +105,13 @@ local credits = {
 
 	{"Code Helpers", title=1},
 	{"Antagonist"},
+	{"Doctornull"},
 	{"Graziel"},
 	{"Grayswandir"},
 	{"Hachem Muche"},
 	{"Jules 'Quicksilver' Bean"},
 	{"Madmonk"},
+	{"Mark 'Marson' Carpente"},
 	{"Neil Stevens"},
 	{"Sebastian 'Sebsebeleb' Vråle"},
 	{"Shani"},

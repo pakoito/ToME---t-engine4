@@ -39,6 +39,7 @@ newEntity{
 	wielder = {
 		see_invisible = resolvers.mbonus_material(20, 5),
 		see_stealth = resolvers.mbonus_material(20, 5),
+		infravision = resolvers.mbonus_material(3, 3),
 		blind_immune = resolvers.mbonus_material(30, 20, function(e, v) v=v/100 return 0, v end),
 	},
 }
@@ -422,8 +423,8 @@ newEntity{
 -- Stolen from Doctornull's addon
 newEntity{
 	power_source = {arcane=true},
-	name = "faerie's ", prefix=true, instant_resolve=true,
-	keywords = {faerie=true},
+	name = "pixie's ", prefix=true, instant_resolve=true,
+	keywords = {pixie=true},
 	level_range = {15, 50},
 	greater_ego = 1,
 	rarity = 12,
@@ -487,6 +488,7 @@ newEntity{
 	keywords = {painweaver=true},
 	level_range = {30, 50},
 	rarity = 20,
+	greater_ego = true,
 	cost = 60,
 	wielder = {
 		combat_spellpower = resolvers.mbonus_material(15, 5),
@@ -563,11 +565,11 @@ newEntity{
 	resolvers.charmt(Talents.T_BLEEDING_EDGE, {2,3,4}, 20),
 	wielder = {
 		melee_project = {
-			[DamageType.BLEED] = resolvers.mbonus_material(20, 20),
+			[DamageType.BLEED] = resolvers.mbonus_material(20, 5),
 			[DamageType.ITEM_MIND_GLOOM] = resolvers.mbonus_material(10, 10),
 		},
 		ranged_project = {
-			[DamageType.BLEED] = resolvers.mbonus_material(20, 20),
+			[DamageType.BLEED] = resolvers.mbonus_material(20, 5),
 			[DamageType.ITEM_MIND_GLOOM] = resolvers.mbonus_material(10, 10),
 		},
 		inc_stats = {
@@ -642,10 +644,10 @@ newEntity{
 	cost = 60,
 	wielder = {
 		melee_project = {
-			[DamageType.ITEM_LIGHT_BLIND] = resolvers.mbonus_material(35, 10),
+			[DamageType.ITEM_LIGHT_BLIND] = resolvers.mbonus_material(25, 10),
 		},
 		ranged_project = {
-			[DamageType.ITEM_LIGHT_BLIND] = resolvers.mbonus_material(35, 10),
+			[DamageType.ITEM_LIGHT_BLIND] = resolvers.mbonus_material(25, 10),
 		},
 	},
 }

@@ -1138,7 +1138,7 @@ Though clearly a powerful piece, it must once have been much greater.]],
 	material_level = 3,
 	wielder = {
 		combat_def = 10,
-		combat_armor = 15,
+		combat_armor = 20,
 		fatigue = 24,
 
 		inc_stats = { [Stats.STAT_CON] = 5, },

@@ -47,6 +47,39 @@ newEffect{
 	end,
 }
 
+-- Use a word other than disease because diseases are associated with damage
+-- Add dummy power/dam parameters to try to stay in line with other diseases for subtype checks
+newEffect{
+	name = "ITEM_BLIGHT_ILLNESS", image = "talents/decrepitude_disease.png",
+	desc = "Illness",
+	long_desc = function(self, eff) return ("The target is infected by a disease, reducing its dexterity, strength, and constitution by %d."):format(eff.reduce) end,
+	type = "magical",
+	subtype = {disease=true, blight=true},
+	status = "detrimental",
+	parameters = {reduce = 1, dam = 0, power = 0},
+	on_gain = function(self, err) return "#Target# is afflicted by a crippling illness!" end,
+	on_lose = function(self, err) return "#Target# is free from the illness." end,
+	-- Damage each turn
+	--[[ Reverse stats on purify?
+	on_timeout = function(self, eff)
+		if self:attr("purify_disease") then self:heal(eff.dam, eff.src)
+		else if eff.dam > 0 then DamageType:get(DamageType.BLIGHT).projector(eff.src, self.x, self.y, DamageType.BLIGHT, eff.dam, {from_disease=true})
+		end end
+	end,
+	--]]
+	activate = function(self, eff)
+		eff.tmpid = self:addTemporaryValue("inc_stats", {
+			[Stats.STAT_DEX] = -eff.reduce,
+			[Stats.STAT_STR] = -eff.reduce,
+			[Stats.STAT_CON] = -eff.reduce,
+		})
+	end,
+	deactivate = function(self, eff)
+		self:removeTemporaryValue("inc_stats", eff.tmpid)
+	end,
+}
+
+
 newEffect{
 	name = "ITEM_ACID_CORRODE", image = "talents/acidic_skin.png",
 	desc = "Armor Corroded",
@@ -122,7 +155,7 @@ newEffect{
 	desc = "Stoned",
 	long_desc = function(self, eff) return "The target has been turned to stone, making it subject to shattering but improving physical(+20%), fire(+80%) and lightning(+50%) resistances." end,
 	type = "magical",
-	subtype = { earth=true, stone=true},
+	subtype = { earth=true, stone=true, stun = true},
 	status = "detrimental",
 	parameters = {},
 	on_gain = function(self, err) return "#Target# turns to stone!", "+Stoned" end,
@@ -134,6 +167,9 @@ newEffect{
 			[DamageType.FIRE]=80,
 			[DamageType.LIGHTNING]=50,
 		})
+	end,
+	on_timeout = function(self, eff)
+		if eff.dur > 7 then eff.dur = 7 end -- instakilling players is dumb and this is still lethal at 7s
 	end,
 	deactivate = function(self, eff)
 		self:removeTemporaryValue("stoned", eff.tmpid)
@@ -1948,6 +1984,21 @@ newEffect{
 		eff.durid = self:addTemporaryValue("reduce_detrimental_status_effects_time", eff.effect_reduction)
 		eff.particle = self:addParticles(Particles.new("phantasm_shield", 1))
 	end,
+	on_merge = function(self, old_eff, new_eff)
+		old_eff.defense = math.min(50, math.max(old_eff.defense, new_eff.defense)) or 0
+		old_eff.resists = math.min(40, math.max(old_eff.resists, new_eff.resists)) or 0
+		old_eff.effect_reduction = math.min(60, math.max(old_eff.effect_reduction, new_eff.effect_reduction)) or 0
+
+		self:removeTemporaryValue("combat_def", old_eff.defid)
+		self:removeTemporaryValue("resists", old_eff.resid)
+		self:removeTemporaryValue("reduce_detrimental_status_effects_time", old_eff.durid)
+
+		eff.defid = self:addTemporaryValue("combat_def", eff.defense)
+		eff.resid= self:addTemporaryValue("resists", {all=eff.resists})
+		eff.durid = self:addTemporaryValue("reduce_detrimental_status_effects_time", eff.effect_reduction)
+
+
+	end,
 	deactivate = function(self, eff)
 		self:removeTemporaryValue("combat_def", eff.defid)
 		self:removeTemporaryValue("resists", eff.resid)
@@ -2545,9 +2596,9 @@ newEffect{
 newEffect{
 	name = "SUNCLOAK", image = "talents/suncloak.png",
 	desc = "Suncloak",
-	long_desc = function(self, eff) return ("The target is protected by the sun, increasing their spell casting speed by 30%%, reducing spell cooldowns by 30%%, and preventing damage over %d%% of your maximum life from a single hit."):format(eff.cap) end,
+	long_desc = function(self, eff) return ("The target is protected by the sun, increasing their spell casting speed by %d%%, reducing spell cooldowns by %d%%, and preventing damage over %d%% of your maximum life from a single hit."):format(eff.haste, eff.haste, eff.cap) end,
 	type = "magical",
-	subtype = { sun=true, },
+	subtype = { light=true, },
 	status = "beneficial",
 	parameters = {cap = 1, haste = 0.1, cd = 0.1},
 	on_gain = function(self, err) return "#Target# is energized and protected by the Sun!", "+Suncloak" end,
@@ -2568,7 +2619,7 @@ newEffect{
 	desc = "Mark of Light",
 	long_desc = function(self, eff) return ("The creature that marked the target with light will be healed for all melee attacks against it by %d%%."):format(eff.power) end,
 	type = "magical",
-	subtype = { sun=true, },
+	subtype = { light=true, },
 	status = "detrimental",
 	parameters = { power = 10 },
 	on_gain = function(self, err) return "#Target# is marked by light!", "+Mark of Light" end,
