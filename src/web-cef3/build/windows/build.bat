@@ -12,6 +12,8 @@
 @set CXX=cl
 @set CXXFLAGS=/nologo /MT /O2 /W3 /D_CRT_SECURE_NO_DEPRECATE /EHsc /DSELFEXE_WINDOWS
 @rem @set CXXFLAGS=/nologo /MT /Od /Zi /Wall /D_CRT_SECURE_NO_DEPRECATE /EHsc
+@set SPAWNNAME=cef3spawn.exe
+@set SPAWN_C=spawn.cpp
 @set DLLNAME=te4-web.dll
 @set LIBNAME=te4-web.lib
 @set TE4_WEB_C=web.cpp web-utils.cpp
@@ -19,6 +21,8 @@
 @set TE4_WEB_LIBS="n:\libs\cef3\Release\libcef.lib" "n:\libs\cef3\out\Release\lib\libcef_dll_wrapper.lib" "user32.lib"
 
 %CXX% %CXXFLAGS% /LD /Fe%DLLNAME% %TE4_WEB_INCLUDES% %TE4_WEB_C% %TE4_WEB_LIBS%
+
+%CXX% %CXXFLAGS% /Fe%SPAWNNAME% %TE4_WEB_INCLUDES% %SPAWN_C% %TE4_WEB_LIBS%
 
 @if errorlevel 1 goto :COMPILATION_ERROR
 

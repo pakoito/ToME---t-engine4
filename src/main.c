@@ -1522,8 +1522,11 @@ int main(int argc, char *argv[])
 	
 	printf("Terminating!\n");
 	te4_web_terminate();
+	printf("Webcore shutdown complete\n");
 	SDL_Quit();
+	printf("SDL shutdown complete\n");
 	deinit_openal();
+	printf("OpenAL shutdown complete\n");
 	printf("Thanks for having fun!\n");
 
 #ifdef SELFEXE_WINDOWS

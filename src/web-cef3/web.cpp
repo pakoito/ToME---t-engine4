@@ -870,7 +870,9 @@ void te4_web_shutdown() {
 		all[it->first] = it->second;
 	}
 
+	fprintf(logfile, "[WEBCORE] Sending kill to all browsers (%d)\n", all_browsers_nb);
 	for (std::map<BrowserClient*, bool>::iterator it=all.begin(); it != all.end(); ++it) {
+		fprintf(logfile, "[WEBCORE] Sending kill to a browser (crash status %d)\n", it->first->opaque->crashed);
 		if (!it->first->opaque->crashed) {
 			it->first->browser->GetHost()->CloseBrowser(true);
 		}
@@ -880,7 +882,10 @@ void te4_web_shutdown() {
 		CefDoMessageLoopWork();
 		fprintf(logfile, "Waiting browsers to close: %d left\n", all_browsers.size());
 	}
+	
+	fprintf(logfile, "[WEBCORE] all browsers dead, shutting down\n");
 	CefShutdown();
+	fprintf(logfile, "[WEBCORE] all browsers dead, shutdown completed\n");
 
 	fclose(logfile);
 }
