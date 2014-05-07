@@ -488,7 +488,7 @@ newEntity{
 	keywords = {painweaver=true},
 	level_range = {30, 50},
 	rarity = 20,
-	greater_ego = true,
+	greater_ego = 1,
 	cost = 60,
 	wielder = {
 		combat_spellpower = resolvers.mbonus_material(15, 5),

@@ -19,7 +19,7 @@
 
 -- Baseline blind because the class has a lot of trouble with CC early game and rushing TL4 isn't reasonable
 newTalent{
-	name = "Sun Beam",
+	name = "Sun Ray", short_name = "SUN_BEAM",
 	type = {"celestial/sun", 1},
 	require = divi_req1,
 	random_ego = "attack",
@@ -62,7 +62,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		local damage = t.getDamage(self, t)
-		return ([[Calls the a beam of light from the Sun, doing %0.2f damage to the target and blinding them.
+		return ([[Calls the a beam of light from the Sun, doing %0.2f damage to the target.
 		At level 4 the beam will be so intense it blinds all foes in radius 2 for %d turns.
 		The damage dealt will increase with your Spellpower.]]):
 		format(damDesc(self, DamageType.LIGHT, damage), t.getDuration(self, t))

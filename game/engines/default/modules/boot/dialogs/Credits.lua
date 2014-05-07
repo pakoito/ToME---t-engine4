@@ -108,7 +108,7 @@ local credits = {
 	{"Antagonist"},
 	{"Graziel"},
 	{"Grayswandir"},
-	{"Hachem Muche"},
+	{"John 'Hachem Muche' Viles"},
 	{"Jules 'Quicksilver' Bean"},
 	{"Madmonk"},
 	{"Mark 'Marson' Carpente"},
