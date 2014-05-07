@@ -53,6 +53,8 @@ function _M:init(t)
 		else self.url = self.url.."?"..param end
 	end
 
+	print("Creating WebView with url", self.url)
+
 	Base.init(self, t)
 end
 

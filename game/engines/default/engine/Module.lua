@@ -546,6 +546,8 @@ function _M:loadScreen(mod)
 		local bkg = {bkgs:glTexture()}
 
 		local logo = {(core.display.loadImage("/data/gfx/background/"..backname.."-logo.png") or core.display.loadImage("/data/gfx/background/tome-logo.png")):glTexture()}
+		local pubimg, publisher = core.display.loadImage("/data/gfx/background/netcore-logo.png"), nil
+		if pubimg then publisher = {pubimg:glTexture()} end
 
 		local left = {core.display.loadImage("/data/gfx/metal-ui/waiter/left.png"):glTexture()}
 		local right = {core.display.loadImage("/data/gfx/metal-ui/waiter/right.png"):glTexture()}
@@ -643,6 +645,9 @@ function _M:loadScreen(mod)
 
 			-- Logo
 			logo[1]:toScreenFull(0, 0, logo[6], logo[7], logo[2], logo[3])
+
+			-- Publisher Logo
+			if publisher then publisher[1]:toScreenFull(sw - publisher[6], 0, publisher[6], publisher[7], publisher[2], publisher[3]) end
 
 			-- Progressbar
 			local x
