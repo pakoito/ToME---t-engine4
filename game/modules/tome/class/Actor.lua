@@ -4356,7 +4356,7 @@ function _M:preUseTalent(ab, silent, fake)
 	end
 
 	-- Failure chance?
-	if self:attr("talent_fail_chance") and (ab.mode ~= "sustained" or not self:isTalentActive(ab.id)) and util.getval(ab.no_energy, self, ab) ~= true and not fake and not self:attr("force_talent_ignore_ressources") then
+	if self:attr("talent_fail_chance") and (ab.mode ~= "sustained" or not self:isTalentActive(ab.id)) and util.getval(ab.no_energy, self, ab) ~= true and not fake and not self:attr("force_talent_ignore_ressources") and not ab.innate then
 		if rng.percent(self:attr("talent_fail_chance")) then
 			if not silent then game.logSeen(self, "%s fails to use %s.", self.name:capitalize(), ab.name) end
 			self:useEnergy()
