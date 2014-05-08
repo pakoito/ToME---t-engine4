@@ -1,5 +1,5 @@
 -- ToME - Tales of Maj'Eyal
--- Copyright (C) 2009 - 2014 Nicolas Casalini
+-- Copyright (C) 2009, 2010, 2011, 2012, 2013 Nicolas Casalini
 --
 -- This program is free software: you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -17,11 +17,11 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 local function aura_strength(self, t)
-	local add = 0
-	if self:knowTalent(self.T_FOCUSED_CHANNELING) then
-		add = getGemLevel(self)*self:callTalent(self.T_FOCUSED_CHANNELING, "impfocus")
+	local mult = 1
+	if self:knowTalent(self.T_PROJECTION_MASTERY) then
+		mult = 1 + 0.5 * self:getTalentLevel(self.T_PROJECTION_MASTERY)
 	end
-	return self:combatTalentMindDamage(t, 10, 50) + add
+	return self:combatTalentMindDamage(t, 10, 50) * mult
 end
 
 local function aura_spike_strength(self, t)
@@ -76,7 +76,7 @@ newTalent{
 	mode = "sustained",
 	sustain_psi = 30,
 	remove_on_zero = true,
-	cooldown = function(self, t) return 10 - self:callTalent(self.T_AURA_DISCIPLINE, "cooldownred")	end,
+	cooldown = 5,
 	tactical = { ATTACKAREA = { PHYSICAL = 2 } },
 	on_pre_use = function(self, t, silent)
 		if self:isTalentActive(self.T_THERMAL_AURA) and self:isTalentActive(self.T_CHARGED_AURA) then
@@ -90,8 +90,7 @@ newTalent{
 	target = aura_target,
 	getSpikedRange = function(self, t)
 		local r = 6
-		local gem_level = getGemLevel(self)
-		local mult = 1 + 0.01*gem_level*self:callTalent(self.T_REACH, "rangebonus")
+		local mult = 1 + 0.01*self:callTalent(self.T_REACH, "rangebonus")
 		return math.floor(r*mult)
 	end,
 	getNormalRange = function(self, t)
@@ -125,7 +124,7 @@ newTalent{
 		return aura_strength(self, t)
 	end,
 	getAuraSpikeStrength = function(self, t)
-		return aura_spike_strength(self, t)
+		return aura_spike_strength(self, t) * 1.5
 	end,
 	getKnockback = function(self, t)
 		return 3 + math.floor(self:getTalentLevel(t))
@@ -189,9 +188,9 @@ newTalent{
 	require = psi_wil_req2, no_sustain_autoreset = true,
 	points = 5,
 	mode = "sustained",
-	sustain_psi = 40,
+	sustain_psi = 30,
 	remove_on_zero = true,
-	cooldown = function(self, t) return 10 - self:callTalent(self.T_AURA_DISCIPLINE, "cooldownred")	end,
+	cooldown = 5,
 	tactical = { ATTACKAREA = { FIRE = 2 } },
 	on_pre_use = function(self, t, silent)
 		if self:isTalentActive(self.T_KINETIC_AURA) and self:isTalentActive(self.T_CHARGED_AURA) then
@@ -211,8 +210,7 @@ newTalent{
 	end,
 	getSpikedRadius = function(self, t)
 		local r = 6
-		local gem_level = getGemLevel(self)
-		local mult = 1 + 0.01*gem_level*self:callTalent(self.T_REACH, "rangebonus")
+		local mult = 1 + 0.01*self:callTalent(self.T_REACH, "rangebonus")
 		return math.floor(r*mult)
 	end,
 	getNormalRadius = function(self, t)
@@ -237,7 +235,7 @@ newTalent{
 		return aura_strength(self, t)
 	end,
 	getAuraSpikeStrength = function(self, t)
-		return 0.8*aura_spike_strength(self, t)
+		return aura_spike_strength(self, t) * 1.5
 	end,
 	getSpikeCost = function(self, t)
 		return t.sustain_psi/2 - 2*getGemLevel(self)
@@ -301,9 +299,9 @@ newTalent{
 	require = psi_wil_req3, no_sustain_autoreset = true,
 	points = 5,
 	mode = "sustained",
-	sustain_psi = 50,
+	sustain_psi = 30,
 	remove_on_zero = true,
-	cooldown = function(self, t) return 10 - self:callTalent(self.T_AURA_DISCIPLINE, "cooldownred") end,
+	cooldown = 5,
 	tactical = { ATTACKAREA = { LIGHTNING = 2 } },
 	on_pre_use = function(self, t, silent)
 		if self:isTalentActive(self.T_KINETIC_AURA) and self:isTalentActive(self.T_THERMAL_AURA) then
@@ -317,8 +315,7 @@ newTalent{
 	target = aura_target,
 	getSpikedRange = function(self, t)
 		local r = 6
-		local gem_level = getGemLevel(self)
-		local mult = 1 + 0.01*gem_level*self:callTalent(self.T_REACH, "rangebonus")
+		local mult = 1 + 0.01*self:callTalent(self.T_REACH, "rangebonus")
 		return math.floor(r*mult)
 	end,
 	getNormalRange = function(self, t)
@@ -352,7 +349,7 @@ newTalent{
 		return aura_strength(self, t)
 	end,
 	getAuraSpikeStrength = function(self, t)
-		return aura_spike_strength(self, t)
+		return aura_spike_strength(self, t) * 1.3
 	end,
 	getNumSpikeTargets = function(self, t)
 		return 1 + math.floor(0.5*self:getTalentLevel(t)) + getGemLevel(self)
@@ -397,6 +394,7 @@ newTalent{
 			print("[Chain lightning] targetting", fx, fy, "from", self.x, self.y)
 			local actor = game.level.map(dx, dy, Map.ACTOR)
 			if actor and not affected[actor] then
+				ignored = false
 				affected[actor] = true
 				first = actor
 
@@ -427,7 +425,7 @@ newTalent{
 		for i, actor in ipairs(targets) do
 			local tgr = {type="beam", range=self:getTalentRange(t), friendlyfire=false, talent=t, x=sx, y=sy}
 			print("[Chain lightning] jumping from", sx, sy, "to", actor.x, actor.y)
-			self:project(tgr, actor.x, actor.y, DamageType.LIGHTNING, self:mindCrit(rng.avg(0.8*dam, dam)))
+			self:project(tgr, actor.x, actor.y, DamageType.LIGHTNING_DAZE, {power_check=self:combatMindpower(), dam=self:mindCrit(rng.avg(0.8*dam, dam)), daze=50})
 			game.level.map:particleEmitter(sx, sy, math.max(math.abs(actor.x-sx), math.abs(actor.y-sy)), "lightning", {tx=actor.x-sx, ty=actor.y-sy, nb_particles=150, life=6})
 			sx, sy = actor.x, actor.y
 		end
@@ -443,7 +441,7 @@ newTalent{
 		local spikecost = t.getSpikeCost(self, t)
 		local nb = t.getNumSpikeTargets(self, t)
 		return ([[Fills the air around you with crackling energy, doing %d lightning damage to all who stand nearby. All damage done by the aura will drain one point of energy per %0.2f points of damage dealt.
-		When deactivated, if you have at least %d energy, a massive spike of electrical energy jumps between up to %d nearby targets, doing up to %d lightning damage to each.  Telekinetically wielding a gem or mindstar will result in improved spike efficiency.
+		When deactivated, if you have at least %d energy, a massive spike of electrical energy jumps between up to %d nearby targets, doing up to %d lightning damage to each with a 50%% chance of dazing them. Telekinetically wielding a gem or mindstar will result in improved spike efficiency.
 		To turn off an aura without spiking it, deactivate it and target yourself.]]):
 		format(damDesc(self, DamageType.LIGHTNING, dam), mast, spikecost, nb, damDesc(self, DamageType.LIGHTNING, spikedam))
 	end,
@@ -483,7 +481,8 @@ newTalent{
 	end,
 
 	info = function(self, t)
-		return ([[When activated, brings all auras off cooldown. Additional talent points spent in Projection Mastery allow it to be used more frequently.]])
+		return ([[When activated, brings all auras off cooldown. Additional talent points spent in Projection Mastery allow it to be used more frequently.
+		Also increases the damage done by your Auras by %d%%.]]):format(self:getTalentLevel(t)*5)
 	end,
 
 }

@@ -1,5 +1,5 @@
 -- ToME - Tales of Maj'Eyal
--- Copyright (C) 2009 - 2014 Nicolas Casalini
+-- Copyright (C) 2009, 2010, 2011, 2012, 2013 Nicolas Casalini
 --
 -- This program is free software: you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -22,10 +22,12 @@ newTalentType{ allow_random=true, is_mind=true, autolearn_mindslayer=true, type=
 newTalentType{ allow_random=true, is_mind=true, autolearn_mindslayer=true, type="psionic/projection", name = "projection", description = "Project energy to damage foes." }
 newTalentType{ allow_random=true, is_mind=true, autolearn_mindslayer=true, type="psionic/psi-fighting", name = "psi-fighting", description = "Wield melee weapons with mentally-manipulated forces." }
 newTalentType{ allow_random=true, is_mind=true, autolearn_mindslayer=true, type="psionic/focus", name = "focus", description = "Use gems to focus your energies." }
-newTalentType{ allow_random=true, is_mind=true, autolearn_mindslayer=true, type="psionic/augmented-mobility", name = "augmented mobility", min_lev = 10, description = "Use energy to move yourself and others." }
-newTalentType{ allow_random=true, is_mind=true, autolearn_mindslayer=true, type="psionic/voracity", generic = true, name = "voracity", description = "Pull energy from your surroundings." }
+newTalentType{ allow_random=true, is_mind=true, autolearn_mindslayer=true, type="psionic/augmented-mobility", generic = true, name = "augmented mobility", min_lev = 10, description = "Use energy to move yourself and others." }
+newTalentType{ allow_random=true, is_mind=true, autolearn_mindslayer=true, type="psionic/voracity", name = "voracity", description = "Pull energy from your surroundings." }
 newTalentType{ allow_random=true, is_mind=true, autolearn_mindslayer=true, type="psionic/finer-energy-manipulations", min_lev = 10, generic = true, name = "finer energy manipulations", description = "Subtle applications of the psionic arts." }
 newTalentType{ allow_random=true, is_mind=true, autolearn_mindslayer=true, type="psionic/mental-discipline", generic = true, name = "mental discipline", description = "Increase mental capacity, endurance, and flexibility." }
+newTalentType{ allow_random=true, is_mind=true, autolearn_mindslayer=true, type="psionic/telekinetic-combat", name = "telekinetic combat", min_lev = 10, description = "Mastery of combat via telekinesis." }
+newTalentType{ allow_random=true, is_mind=true, autolearn_mindslayer=true, type="psionic/force", name = "force", min_lev = 10, description = "Mastery of telekinetic forces." }
 newTalentType{ is_mind=true, type="psionic/other", name = "other", description = "Various psionic talents." }
 
 -- Advanced Talent Trees
@@ -155,7 +157,7 @@ function getGemLevel(self)
 	local gem_level = 0
 	if self:getInven("PSIONIC_FOCUS") then
 		local tk_item = self:getInven("PSIONIC_FOCUS")[1]
-		if tk_item and ((tk_item.type == "gem") or tk_item.combat.is_psionic_focus == true) then
+		if tk_item and ((tk_item.type == "gem") or (tk_item.subtype == "mindstar") or tk_item.combat.is_psionic_focus == true) then
 			gem_level = tk_item.material_level or 5
 		end
 	end
@@ -193,9 +195,10 @@ load("/data/talents/psionic/voracity.lua")
 load("/data/talents/psionic/augmented-mobility.lua")
 load("/data/talents/psionic/focus.lua")
 load("/data/talents/psionic/other.lua")
-
 load("/data/talents/psionic/psi-archery.lua")
 load("/data/talents/psionic/grip.lua")
+load("/data/talents/psionic/telekinetic-combat.lua")
+load("/data/talents/psionic/force.lua")
 
 -- Solipsist
 load("/data/talents/psionic/discharge.lua")

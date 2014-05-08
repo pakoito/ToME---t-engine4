@@ -1,5 +1,5 @@
 -- ToME - Tales of Maj'Eyal
--- Copyright (C) 2009 - 2014 Nicolas Casalini
+-- Copyright (C) 2009, 2010, 2011, 2012, 2013 Nicolas Casalini
 --
 -- This program is free software: you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -28,16 +28,8 @@ newTalent{
 	require = psi_wil_req1,
 	points = 5,
 	random_ego = "attack",
-	cooldown = function(self, t)
-		local c = 5
-		local gem_level = getGemLevel(self)
-		return math.max(c - gem_level, 0)
-	end,
-	psi = function(self, t)
-		local eff = self:hasEffect(self.EFF_MINDLASH)
-		local power = eff and eff.power or 1
-		return 10 * power
-	end,
+	cooldown = 5,
+	psi = 10,
 	tactical = { ATTACK = function(self, t, target)
 		local val = { PHYSICAL = 2}
 		local gem_level = getGemLevel(self)
@@ -58,25 +50,22 @@ newTalent{
 	end },
 	range = function(self, t)
 		local r = 5
-		local gem_level = getGemLevel(self)
-		local mult = 1 + 0.01*gem_level*self:callTalent(self.T_REACH, "rangebonus")
+		local mult = 1 + 0.01*self:callTalent(self.T_REACH, "rangebonus")
 		return math.floor(r*mult)
 	end,
 	getDamage = function (self, t)
-		local gem_level = getGemLevel(self)
-		return self:combatStatTalentIntervalDamage(t, "combatMindpower", 6, 170)*(1 + 0.3*gem_level)
+		return self:combatTalentMindDamage(t, 12, 340)
 	end,
 	requires_target = true,
 	target = function(self, t) return {type="ball", range=self:getTalentRange(t), radius=0, selffire=false, talent=t} end,
 	action = function(self, t)
-		local gem_level = getGemLevel(self)
 		local dam = t.getDamage(self, t)
 		local tg = self:getTalentTarget(t)
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
 		self:project(tg, x, y, DamageType.PHYSICAL, self:mindCrit(rng.avg(0.8*dam, dam)), {type="mindsear"})
 		local _ _, _, _, x, y = self:canProject(tg, x, y)
-		if gem_level > 0 and not tg.dead and self:knowTalent(self.T_CONDUIT) and self:isTalentActive(self.T_CONDUIT) then
+		if not tg.dead and self:knowTalent(self.T_CONDUIT) and self:isTalentActive(self.T_CONDUIT) then
 			local c =  self:getTalentFromId(self.T_CONDUIT)
 			--c.do_combat(self, c, tg)
 			local mult = 1 + 0.2*(self:getTalentLevel(c))
@@ -98,13 +87,13 @@ newTalent{
 			end
 
 		end
-		game:onTickEnd(function() self:setEffect(self.EFF_MINDLASH, 4, {}) end)
+		--game:onTickEnd(function() self:setEffect(self.EFF_MINDLASH, 2, {}) end)
 		return true
 	end,
 	info = function(self, t)
 		local dam = t.getDamage(self, t)
 		return ([[Focus energies on a distant target to lash it with physical force, doing %d damage in addition to any Conduit damage.
-		Mindslayers do not do this sort of ranged attack naturally. The use of a telekinetically-wielded gem or mindstar as a focus will improve the effects considerably.]]):
+		The damage will scale with your Mindpower.]]):
 		format(damDesc(self, DamageType.PHYSICAL, dam))
 	end,
 }
@@ -115,29 +104,23 @@ newTalent{
 	require = psi_wil_req2,
 	points = 5,
 	random_ego = "attack",
-	cooldown = function(self, t)
-		local c = 20
-		local gem_level = getGemLevel(self)
-		return c - gem_level
-	end,
+	cooldown = 15,
 	psi = 20,
 	tactical = { ATTACK = { FIRE = 2 } },
 	range = 0,
 	radius = function(self, t)
 		local r = 5
-		local gem_level = getGemLevel(self)
-		local mult = 1 + 0.01*gem_level*self:callTalent(self.T_REACH, "rangebonus")
+		local mult = 1 + 0.01*self:callTalent(self.T_REACH, "rangebonus")
 		return math.floor(r*mult)
 	end,
 	getDamage = function (self, t)
-		local gem_level = getGemLevel(self)
-		return self:combatStatTalentIntervalDamage(t, "combatMindpower", 21, 200)*(1 + 0.3*gem_level)
+		return self:combatTalentMindDamage(t, 50, 480)
 	end,
 	target = function(self, t)
 		return {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t), friendlyfire=false}
 	end,
 	action = function(self, t)
-		local dam = t.getDamage(self, t)
+		local dam = self:mindCrit(t.getDamage(self, t))
 		local tg = self:getTalentTarget(t)
 --		self:project(tg, self.x, self.y, DamageType.FIREBURN, {dur=10, initial=0, dam=dam}, {type="ball_fire", args={radius=1}})
 		self:project(tg, self.x, self.y, DamageType.FIREBURN, {dur=10, initial=0, dam=dam})
@@ -147,40 +130,70 @@ newTalent{
 	info = function(self, t)
 		local radius = self:getTalentRadius(t)
 		local dam = t.getDamage(self, t)
-		return ([[Kinetically vibrate the essence of all foes within %d squares, setting them ablaze. Does %d damage over ten turns.
-		Mindslayers do not do this sort of ranged attack naturally. The use of a telekinetically-wielded gem or mindstar as a focus will improve the effects considerably.]]):
+		return ([[Kinetically vibrate the essence of all foes within %d squares, setting them ablaze. Does %d damage over ten turns.]]):
 		format(radius, damDesc(self, DamageType.FIREBURN, dam))
 	end,
 }
 
 newTalent{
-	name = "Reach",
+	name = "Brain Storm",
 	type = {"psionic/focus", 3},
+	points = 5, 
 	require = psi_wil_req3,
-	mode = "passive",
-	points = 5,
-	rangebonus = function(self,t) return math.max(0, self:combatTalentScale(t, 3, 10)) end,
+	psi = 15,
+	cooldown = 10,
+	range = function(self, t)
+		local r = 2
+		local mult = 1 + 0.01*self:callTalent(self.T_REACH, "rangebonus")
+		return math.floor(r*mult)
+	end,
+	radius = 2,
+	tactical = { DISABLE = 2, ATTACKAREA = { LIGHTNING = 2 } },
+	getDamage = function(self, t) return self:combatTalentMindDamage(t, 30, 300) end,
+	action = function(self, t)		
+		local tg = {type="ball", range=self:getTalentRange(t), selffire=false, radius=self:getTalentRadius(t), talent=t}
+		local x, y = self:getTarget(tg)
+		if not x or not y then return nil end
+		
+		local dam=t.getDamage(self, t)
+		
+		self:project(tg, x, y, DamageType.BRAINSTORM, self:mindCrit(dam))
+		
+		-- Lightning ball gets a special treatment to make it look neat
+		local sradius = (tg.radius + 0.5) * (engine.Map.tile_w + engine.Map.tile_h) / 2
+		local nb_forks = 16
+		local angle_diff = 360 / nb_forks
+		for i = 0, nb_forks - 1 do
+			local a = math.rad(rng.range(0+i*angle_diff,angle_diff+i*angle_diff))
+			local tx = x + math.floor(math.cos(a) * tg.radius)
+			local ty = y + math.floor(math.sin(a) * tg.radius)
+			game.level.map:particleEmitter(x, y, tg.radius, "temporal_lightning", {radius=tg.radius, grids=grids, tx=tx-x, ty=ty-y, nb_particles=25, life=8})
+		end
+
+		game:playSoundNear(self, "talents/lightning")
+		return true
+	end,
 	info = function(self, t)
-		local inc = t.rangebonus(self,t)
-		local gtg = self:getTalentLevel(self.T_GREATER_TELEKINETIC_GRASP) >=5 and 1 or 0
-		local add = getGemLevel(self)*t.rangebonus(self, t)
-		return ([[You can extend your mental reach beyond your natural limits using a telekinetically-wielded gemstone or mindstar as a focus. Increases the range of various abilities by %0.1f%% to %0.1f%%, depending on the quality of the gem used as a focus (currently %0.1f%%).]]):
-		format(inc*(1+gtg), inc*(5+gtg), add)
+		local dam = t.getDamage(self, t)
+		return ([[Focus mental electricity into a ball of plasma and hurl it (mentally) at the target.
+		It will explode on impact doing %0.2f lightning damage in a radius of 2.
+		This talent will apply cross tier Brainlock.
+		The damage will increase with your Mindpower.]]):
+		format(damDesc(self, DamageType.LIGHTNING, dam))
 	end,
 }
 
 newTalent{
-	name = "Focused Channeling",
+	name = "Reach",
 	type = {"psionic/focus", 4},
 	require = psi_wil_req4,
 	mode = "passive",
 	points = 5,
-	impfocus = function(self,t) return math.max(1, self:combatTalentScale(t, 1.2, 1.75)) end,
+	rangebonus = function(self,t) return math.max(0, self:combatTalentScale(t, 20, 80)) end,
 	info = function(self, t)
-		local inc = t.impfocus(self,t)
-		local gtg = self:getTalentLevel(self.T_GREATER_TELEKINETIC_GRASP) >=5 and 1 or 0
-		local add = getGemLevel(self)*t.impfocus(self, t)
-		return ([[You can channel more energy with your auras and shields, using a telekinetically-wielded gemstone or mindstar as a focus. Increases the base strength of all auras and shields by %0.2f to %0.2f, depending on the quality of the gem or mindstar used as a focus (currently %0.2f).]]):
-		format(inc*(1+gtg), inc*(5+gtg), add)
+		local inc = t.rangebonus(self,t)
+		return ([[You can extend your mental reach beyond your natural limits. Increases the range of various abilities by %0.1f%%.]]):
+		format(inc)
 	end,
 }
+

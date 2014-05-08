@@ -1,5 +1,5 @@
 -- ToME - Tales of Maj'Eyal
--- Copyright (C) 2009 - 2014 Nicolas Casalini
+-- Copyright (C) 2009, 2010, 2011, 2012, 2013 Nicolas Casalini
 --
 -- This program is free software: you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -18,12 +18,12 @@
 -- darkgod@te4.org
 
 -- Note: This is consistent with raw damage but is applied after damage multipliers
-local function getShieldStrength(self, t) 
-	local add = 0
-	if self:knowTalent(self.T_FOCUSED_CHANNELING) then
-		add = getGemLevel(self)*self:callTalent(self.T_FOCUSED_CHANNELING, "impfocus")
+local function getShieldStrength(self, t)
+	local mult = 1
+	if self:knowTalent(self.T_ABSORPTION_MASTERY) then
+		mult = 1 + 0.5 * self:getTalentLevel(self.T_ABSORPTION_MASTERY)
 	end
-	return math.max(0, self:combatScale((1+ self:getWil(8, true))*self:getTalentLevel(t), 3.8, 1.8, 47, 45))+ add
+	return math.max(0, self:combatScale((1+ self:getWil(8, true))*self:getTalentLevel(t), 10, 2, 50, 50)*mult)
 end
 
 local function getSpikeStrength(self, t)
@@ -70,13 +70,13 @@ newTalent{
 	require = psi_wil_req1,
 	mode = "sustained", no_sustain_autoreset = true,
 	points = 5,
-	sustain_psi = 30,
-	cooldown = function(self, t) return 20 - self:callTalent(self.T_SHIELD_DISCIPLINE, "cooldownred") end,
+	sustain_psi = 10,
+	cooldown = function(self, t) return 15 - self:getTalentLevelRaw(t) end,
 	range = 10,
 	no_energy = true,
 	tactical = { DEFEND = 2 },
 	on_pre_use = function(self, t, silent)
-		if self:isTalentActive(self.T_THERMAL_SHIELD) and self:isTalentActive(self.T_CHARGED_SHIELD) and not self:attr("psionic_shield_override") then
+		if self:isTalentActive(self.T_THERMAL_SHIELD) and self:isTalentActive(self.T_CHARGED_SHIELD) then
 			if not silent then game.logSeen(self, "You may only sustain two shields at once. Shield activation cancelled.") end
 			return false
 		end
@@ -133,6 +133,8 @@ newTalent{
 		local spike_str = getSpikeStrength(self, t)
 		self:removeTemporaryValue("kinetic_shield", p.am)
 		if self:attr("save_cleanup") then return true end
+		self:removeEffect(self.EFF_THERMSPIKE_SHIELD)
+		self:removeEffect(self.EFF_CHARGESPIKE_SHIELD)
 		self:setEffect(self.EFF_KINSPIKE_SHIELD, 5, {power=spike_str, psi_gain=p.psi_gain, game_turn=p.game_turn})
 		return true
 	end,
@@ -150,22 +152,22 @@ newTalent{
 		local guaranteed_dam = total_dam - absorbable_dam
 		dam = absorbable_dam
 
-		local psigain = 0
+--		local psigain = 0
 		if kineticElement(self, t, damtype) then
 			-- Absorb damage into the shield
 			if dam <= self.kinspike_shield_absorb then
 			self.kinspike_shield_absorb = self.kinspike_shield_absorb - dam
-				psigain = 2 + 2*dam/mast
+--				psigain = 2 + 2*dam/mast
 				dam = 0
 			else
-				psigain = 2 + 2*self.kinspike_shield_absorb/mast 
+--				psigain = 2 + 2*self.kinspike_shield_absorb/mast 
 				dam = dam - self.kinspike_shield_absorb
 				self.kinspike_shield_absorb = 0
 			end
 
-			psigain = math.min(2*maxPsiAbsorb(self, t) - kss.psi_gain, psigain)
-			kss.psi_gain = kss.psi_gain + psigain
-			self:incPsi(psigain)
+--			psigain = math.min(2*maxPsiAbsorb(self, t) - kss.psi_gain, psigain)
+--			kss.psi_gain = kss.psi_gain + psigain
+--			self:incPsi(psigain)
 
 			if self.kinspike_shield_absorb <= 0 then
 				game.logPlayer(self, "Your spiked kinetic shield crumbles under the damage!")
@@ -181,9 +183,9 @@ newTalent{
 		local spike_str = getSpikeStrength(self, t)
 		local xs = (kineticElement(self, t, DamageType.NATURE) and ", nature" or "")..(kineticElement(self, t, DamageType.TEMPORAL) and ", temporal" or "")
 		local absorb = 100*getEfficiency(self,t)
-		return ([[Surround yourself with a shield that will absorb %d%% of any physical%s or acidic attack, up to a maximum of %d damage per attack. Deactivating the shield spikes it up to a temporary (five turns) %d point shield.
-		Every time your shield absorbs damage, you convert some of the attack into energy, gaining two points of Psi, plus an additional point for every %0.1f points of damage absorbed, up to a maximum %0.1f points each turn.  Spiked shields absorb energy more efficiently.
-		The shield strength increases with your Mindpower.]]):
+		return ([[Surround yourself with a shield that will absorb %d%% of any physical%s or acidic attack, up to a maximum of %d damage per attack. Deactivating the shield spikes it up to a temporary (five turns) %d point shield (only one shield can spike at once).
+		Every time your shield absorbs damage, you convert some of the attack into energy, gaining two points of Psi, plus an additional point for every %0.1f points of damage absorbed, up to a maximum %0.1f points each turn. Spiked Shields redirect this energy back into the Shield, so no Psi is gained.
+		The percentage your shield absorbs scales with cunning and the maximum amount it can absorb scales with willpower.]]):
 		format(absorb, xs, s_str, spike_str, shieldMastery(self, t), maxPsiAbsorb(self,t))
 	end,
 }
@@ -196,13 +198,13 @@ newTalent{
 	require = psi_wil_req2,
 	mode = "sustained", no_sustain_autoreset = true,
 	points = 5,
-	sustain_psi = 30,
-	cooldown = function(self, t) return 20 - self:callTalent(self.T_SHIELD_DISCIPLINE, "cooldownred") end,
+	sustain_psi = 10,
+	cooldown = function(self, t) return 15 - self:getTalentLevelRaw(t) end,
 	range = 10,
 	no_energy = true,
 	tactical = { DEFEND = 2 },
 	on_pre_use = function(self, t, silent)
-		if self:isTalentActive(self.T_KINETIC_SHIELD) and self:isTalentActive(self.T_CHARGED_SHIELD) and not self:attr("psionic_shield_override") then
+		if self:isTalentActive(self.T_KINETIC_SHIELD) and self:isTalentActive(self.T_CHARGED_SHIELD) then
 			if not silent then game.logSeen(self, "You may only sustain two shields at once. Shield activation cancelled.") end
 			return false
 		end
@@ -260,6 +262,8 @@ newTalent{
 		local spike_str = getSpikeStrength(self, t)
 		self:removeTemporaryValue("thermal_shield", p.am)
 		if self:attr("save_cleanup") then return true end
+		self:removeEffect(self.EFF_KINSPIKE_SHIELD)
+		self:removeEffect(self.EFF_CHARGESPIKE_SHIELD)
 		self:setEffect(self.EFF_THERMSPIKE_SHIELD, 5, {power=spike_str, psi_gain=p.psi_gain, game_turn=p.game_turn})
 		return true
 	end,
@@ -277,21 +281,21 @@ newTalent{
 		local guaranteed_dam = total_dam - absorbable_dam
 		dam = absorbable_dam
 
-		local psigain = 0
+--		local psigain = 0
 		if thermalElement(self, t, damtype) then
 			-- Absorb damage into the shield
 			if dam <= self.thermspike_shield_absorb then
 				self.thermspike_shield_absorb = self.thermspike_shield_absorb - dam
-				psigain = 2 + 2*dam/mast
+--				psigain = 2 + 2*dam/mast
 				dam = 0
 			else
-				psigain = 2 + 2*self.thermspike_shield_absorb/mast
+--				psigain = 2 + 2*self.thermspike_shield_absorb/mast
 				dam = dam - self.thermspike_shield_absorb
 				self.thermspike_shield_absorb = 0
 			end
-			psigain = math.min(2*maxPsiAbsorb(self, t) - tss.psi_gain, psigain)
-			tss.psi_gain = tss.psi_gain + psigain
-			self:incPsi(psigain)
+--			psigain = math.min(2*maxPsiAbsorb(self, t) - tss.psi_gain, psigain)
+--			tss.psi_gain = tss.psi_gain + psigain
+--			self:incPsi(psigain)
 			if self.thermspike_shield_absorb <= 0 then
 				game.logPlayer(self, "Your spiked thermal shield crumbles under the damage!")
 				self:removeEffect(self.EFF_THERMSPIKE_SHIELD)
@@ -306,9 +310,9 @@ newTalent{
 		local spike_str = getSpikeStrength(self, t)
 		local xs = (thermalElement(self, t, DamageType.LIGHT) and ", light" or "")..(thermalElement(self, t, DamageType.ARCANE) and ", arcane" or "")
 		local absorb = 100*getEfficiency(self,t)
-		return ([[Surround yourself with a shield that will absorb %d%% of any fire%s or cold attack, up to a maximum of %d damage per attack. Deactivating the shield spikes it up to a temporary (five turns) %d point shield.
-		Every time your shield absorbs damage, you convert some of the attack into energy, gaining two points of Psi, plus an additional point for every %0.1f points of damage absorbed, up to a maximum %0.1f points each turn.  Spiked shields absorb energy more efficiently.
-		The shield strength increases with your Mindpower.]]):
+		return ([[Surround yourself with a shield that will absorb %d%% of any fire%s or cold attack, up to a maximum of %d damage per attack. Deactivating the shield spikes it up to a temporary (five turns) %d point shield (only one shield can spike at once).
+		Every time your shield absorbs damage, you convert some of the attack into energy, gaining two points of Psi, plus an additional point for every %0.1f points of damage absorbed, up to a maximum %0.1f points each turn. Spiked Shields redirect this energy back into the Shield, so no Psi is gained.
+		The percentage your shield absorbs scales with cunning and the maximum amount it can absorb scales with willpower.]]):
 		format(absorb, xs, s_str, spike_str, shieldMastery(self, t), maxPsiAbsorb(self,t))
 	end,
 }
@@ -319,13 +323,13 @@ newTalent{
 	require = psi_wil_req3,
 	mode = "sustained", no_sustain_autoreset = true,
 	points = 5,
-	sustain_psi = 30,
-	cooldown = function(self, t) return 20 - self:callTalent(self.T_SHIELD_DISCIPLINE, "cooldownred") end,
+	sustain_psi = 10,
+	cooldown = function(self, t) return 15 - self:getTalentLevelRaw(t) end,
 	range = 10,
 	no_energy = true,
 	tactical = { DEFEND = 2 },
 	on_pre_use = function(self, t, silent)
-		if self:isTalentActive(self.T_KINETIC_SHIELD) and self:isTalentActive(self.T_THERMAL_SHIELD) and not self:attr("psionic_shield_override") then
+		if self:isTalentActive(self.T_KINETIC_SHIELD) and self:isTalentActive(self.T_THERMAL_SHIELD) then
 			if not silent then game.logSeen(self, "You may only sustain two shields at once. Shield activation cancelled.") end
 			return false
 		end
@@ -380,6 +384,8 @@ newTalent{
 		local spike_str = getSpikeStrength(self, t)
 		self:removeTemporaryValue("charged_shield", p.am)
 		if self:attr("save_cleanup") then return true end
+		self:removeEffect(self.EFF_THERMSPIKE_SHIELD)
+		self:removeEffect(self.EFF_KINSPIKE_SHIELD)
 		self:setEffect(self.EFF_CHARGESPIKE_SHIELD, 5, {power=spike_str, psi_gain=p.psi_gain, game_turn=p.game_turn})
 		return true
 	end,
@@ -397,22 +403,22 @@ newTalent{
 		local guaranteed_dam = total_dam - absorbable_dam
 		dam = absorbable_dam
 	
-		local psigain = 0
+--		local psigain = 0
 		if chargedElement(self, t, damtype) then	
 			-- Absorb damage into the shield
 			if dam <= self.chargespike_shield_absorb then
 				self.chargespike_shield_absorb = self.chargespike_shield_absorb - dam
-				psigain = 2 + 2*dam/mast
+--				psigain = 2 + 2*dam/mast
 				dam = 0
 			else
-				psigain = 2 + 2*self.chargespike_shield_absorb/mast
+--				psigain = 2 + 2*self.chargespike_shield_absorb/mast
 				dam = dam - self.chargespike_shield_absorb
 				self.chargespike_shield_absorb = 0
 			end
 			
-			psigain = math.min(2*maxPsiAbsorb(self, t) - css.psi_gain, psigain)
-			css.psi_gain = css.psi_gain + psigain
-			self:incPsi(psigain)
+--			psigain = math.min(2*maxPsiAbsorb(self, t) - css.psi_gain, psigain)
+--			css.psi_gain = css.psi_gain + psigain
+--			self:incPsi(psigain)
 
 			if self.chargespike_shield_absorb <= 0 then
 				game.logPlayer(self, "Your spiked charged shield crumbles under the damage!")
@@ -428,9 +434,9 @@ newTalent{
 		local spike_str = getSpikeStrength(self, t)
 		local xs = (chargedElement(self, t, DamageType.DARKNESS) and ", darkness" or "")..(chargedElement(self, t, DamageType.MIND) and ", mind" or "")
 		local absorb = 100*getEfficiency(self,t)
-		return ([[Surround yourself with a shield that will absorb %d%% of any lightning%s or blight attack, up to a maximum of %d damage per attack. Deactivating the shield spikes it up to a temporary (five turns) %d point shield.
-		Every time your shield absorbs damage, you convert some of the attack into energy, gaining two points of Psi, plus an additional point for every %0.1f points of damage absorbed, up to a maximum %0.1f points each turn.  Spiked shields absorb energy more efficiently.
-		The shield strength increases with your Mindpower.]]):
+		return ([[Surround yourself with a shield that will absorb %d%% of any lightning%s or blight attack, up to a maximum of %d damage per attack. Deactivating the shield spikes it up to a temporary (five turns) %d point shield (only one shield can spike at once).
+		Every time your shield absorbs damage, you convert some of the attack into energy, gaining two points of Psi, plus an additional point for every %0.1f points of damage absorbed, up to a maximum %0.1f points each turn. Spiked Shields redirect this energy back into the Shield, so no Psi is gained.
+		The percentage your shield absorbs scales with cunning and the maximum amount it can absorb scales with willpower.]]):
 		format(absorb, xs, s_str, spike_str, shieldMastery(self, t), maxPsiAbsorb(self,t))
 	end,
 }
@@ -461,6 +467,6 @@ newTalent{
 		- Kinetic Shield: Nature at level 3, Temporal at level 6
 		- Thermal Shield: Light at level 3, Arcane at level 6
 		- Charged Shield: Darkness at level 3, Mind at level 6
-		]])
+		Also increases the maximum amount absorbable by your shields by %d%%.]]):format(self:getTalentLevel(t)*5)
 	end,
 }

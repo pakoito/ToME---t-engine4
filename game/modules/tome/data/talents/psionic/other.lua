@@ -1,5 +1,5 @@
 -- ToME - Tales of Maj'Eyal
--- Copyright (C) 2009 - 2014 Nicolas Casalini
+-- Copyright (C) 2009, 2010, 2011, 2012, 2013 Nicolas Casalini
 --
 -- This program is free software: you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -29,7 +29,7 @@ newTalent{
 	action = function(self, t)
 		local inven = self:getInven("INVEN")
 		local d d = self:showInventory("Telekinetically grasp which item?", inven, function(o)
-			return (o.type == "weapon" or o.type == "gem") and o.subtype ~= "sling" and o.subtype ~= "bow"
+			return (o.type == "weapon" or o.type == "gem") and o.subtype ~= "sling"
 		end, function(o, item)
 			local pf = self:getInven("PSIONIC_FOCUS")
 			if not pf then return end
@@ -144,6 +144,49 @@ newTalent{
 		end
 		return hit
 	end,
+	callbackOnWear = function(self, t, p)
+		if self.__to_recompute_beyond_the_flesh then return end
+		self.__to_recompute_beyond_the_flesh = true
+		game:onTickEnd(function()
+			self.__to_recompute_beyond_the_flesh = nil
+			local p = self.sustain_talents[t.id]
+			self:forceUseTalent(t.id, {ignore_energy=true, ignore_cd=true, no_talent_fail=true})
+			if t.on_pre_use(self, t) then self:forceUseTalent(t.id, {ignore_energy=true, ignore_cd=true, no_talent_fail=true, talent_reuse=true}) end
+		end)
+	end,
+	callbackOnTakeoff = function(self, t, p)
+		if self.__to_recompute_beyond_the_flesh then return end
+		self.__to_recompute_beyond_the_flesh = true
+		game:onTickEnd(function()
+			self.__to_recompute_beyond_the_flesh = nil
+			local p = self.sustain_talents[t.id]
+			self:forceUseTalent(t.id, {ignore_energy=true, ignore_cd=true, no_talent_fail=true})
+			if t.on_pre_use(self, t) then self:forceUseTalent(t.id, {ignore_energy=true, ignore_cd=true, no_talent_fail=true, talent_reuse=true}) end
+		end)
+	end,
+	callbackOnActBase = function(self, t, p)
+		local p = self.sustain_talents[t.id]
+		if not p.mindstar_grab then return end
+		if not rng.percent(p.mindstar_grab.chance) then return end
+
+		local list = {}
+		self:project({type="ball", radius=p.mindstar_grab.range}, self.x, self.y, function(px, py)
+			local a = game.level.map(px, py, Map.ACTOR)
+			if a and self:reactionToward(a) < 0 then
+				local dist = core.fov.distance(self.x, self.y, px, py)
+				if dist > 1 then list[#list+1] = {dist=dist, a=a} end
+			end
+		end)
+		if #list <= 0 then return end
+		
+		table.sort(list, "dist")
+		local a = list[#list].a
+		local tx, ty = util.findFreeGrid(self.x, self.y, 5, true, {[Map.ACTOR]=true})
+		if tx and ty and a:canBe("teleport") then
+			a:move(tx, ty, true)
+			game.logSeen(a, "%s telekinetically grabs %s!", self.name:capitalize(), a.name)
+		end
+	end,
 	on_pre_use = function (self, t)
 		if not self:getInven("PSIONIC_FOCUS") then return false end
 		local tkweapon = self:getInven("PSIONIC_FOCUS")[1]
@@ -169,6 +212,10 @@ newTalent{
 				[self.STAT_CON] = power,
 			})
 		elseif tk.subtype == "mindstar" then
+			ret.mindstar_grab = {
+				chance = (tk.material_level or 1) * 7,
+				range = 2 + (tk.material_level or 1),
+			}
 		else
 			self:talentTemporaryValue(ret, "use_psi_combat", 1)
 		end
@@ -180,7 +227,7 @@ newTalent{
 	info = function(self, t)
 		local base = [[Allows you to wield a physical melee weapon, a mindstar or a gem telekinetically, gaining a special effect for each.
 		A gem will provide +4 bonus to all primary stats per tier of the gem and increases the range of some attack talents by 1 per tier.
-		A mindstar will randomly try to grab (7% chance and 1.5 range per tier of the mindstar) a far away foe and bring it to melee range.
+		A mindstar will randomly try to grab (7% chance and range 2 + 1 per tier of the mindstar) a far away foe and bring it to melee range.
 		A physical melee weapon will act as a semi independant entity, attacking foes nearby each turn while also replacing Strength and Dexterity with Willpower and Cunning for accuracy and damage calculations.
 
 		]]
@@ -220,3 +267,4 @@ newTalent{
 		return base
 	end,
 }
+

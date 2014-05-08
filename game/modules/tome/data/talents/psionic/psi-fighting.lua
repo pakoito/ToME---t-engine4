@@ -1,5 +1,5 @@
 -- ToME - Tales of Maj'Eyal
--- Copyright (C) 2009 - 2014 Nicolas Casalini
+-- Copyright (C) 2009, 2010, 2011, 2012, 2013 Nicolas Casalini
 --
 -- This program is free software: you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -32,11 +32,12 @@ newTalent{
 	require = psi_wil_req1,
 	points = 5,
 	random_ego = "attack",
-	cooldown = 10,
+	cooldown = 8,
 	psi = 10,
 	range = 1,
 	requires_target = true,
 	tactical = { ATTACK = { PHYSICAL = 2 } },
+	duration = function(self, t) return math.floor(self:combatTalentScale(t, 2, 4, "log")) end,
 	action = function(self, t)
 		local weapon = self:getInven("MAINHAND") and self:getInven("MAINHAND")[1]
 		if type(weapon) == "boolean" then weapon = nil end
@@ -49,13 +50,26 @@ newTalent{
 		if not x or not y or not target then return nil end
 		if core.fov.distance(self.x, self.y, x, y) > 1 then return nil end
 		self:attr("use_psi_combat", 1)
-		self:attackTargetWith(target, weapon.combat, nil, self:combatTalentWeaponDamage(t, 1.8, 3))
+		local speed, hit = self:attackTargetWith(target, weapon.combat, nil, self:combatTalentWeaponDamage(t, 1.8, 3))
+		if self:getInven(self.INVEN_PSIONIC_FOCUS) then
+			for i, o in ipairs(self:getInven(self.INVEN_PSIONIC_FOCUS)) do
+				if o.combat and not o.archery then
+					self:attackTargetWith(target, o.combat, nil, self:combatTalentWeaponDamage(t, 1.8, 3))
+				end
+			end
+		end
+		if hit and target:canBe("stun") then
+			target:setEffect(target.EFF_STUNNED, t.duration(self,t), {apply_power=self:combatMindpower()})
+		end
 		self:attr("use_psi_combat", -1)
 		return true
 	end,
 	info = function(self, t)
-		return ([[Gather your will, and brutally smash the target with your mainhand weapon, doing %d%% weapon damage. If Conduit is active, it will extend to include your mainhand weapon for this attack. This attack uses your Willpower and Cunning instead of Strength and Dexterity to determine Accuracy and damage.]]):
-		format(100 * self:combatTalentWeaponDamage(t, 1.8, 3))
+		return ([[Gather your will, and brutally smash the target with your mainhand weapon and then your telekinetically weilded weapon, doing %d%% weapon damage. 
+		If your mainhand weapon hits, you will also stun the target for %d turns.
+		If Conduit is active, it will extend to include your mainhand weapon for this attack. 
+		This attack uses your Willpower and Cunning instead of Strength and Dexterity to determine Accuracy and damage.]]):
+		format(100 * self:combatTalentWeaponDamage(t, 1.8, 3), t.duration(self,t))
 	end,
 }
 
@@ -181,8 +195,8 @@ newTalent{
 	info = function(self, t)
 		local targets = t.getTargNum(self,t)
 		local dur = t.duration(self,t)
-		return ([[Your telekinetically wielded weapon enters a frenzy for %d turns, striking up to %d targets every turn.]]):
-		format(dur, targets)
+		return ([[Your telekinetically wielded weapon enters a frenzy for %d turns, striking up to %d targets every turn, also increases the radius by %d.]]):
+		format(dur, targets, targets)
 	end,
 }
 

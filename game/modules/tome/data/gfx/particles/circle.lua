@@ -32,6 +32,8 @@ local r = (r or 255) / 255
 local g = (g or 255) / 255
 local b = (b or 255) / 255
 
+if grow then grow = basesize / limit_life end
+
 local nb = empty_start and -1 or 0
 
 return {
@@ -74,7 +76,7 @@ return {
 		return {
 			trail = 0,
 			life = limit_life or 1000,
-			size = basesize, sizev = 0, sizea = 0,
+			size = grow and 0 or basesize, sizev = grow, sizea = 0,
 
 			x = 0, xv = 0, xa = 0,
 			y = 0, yv = 0, ya = 0,

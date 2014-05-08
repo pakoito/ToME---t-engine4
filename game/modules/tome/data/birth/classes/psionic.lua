@@ -54,7 +54,7 @@ newBirthDescriptor{
 		"#GOLD#Stat modifiers:",
 		"#LIGHT_BLUE# * +1 Strength, +0 Dexterity, +0 Constitution",
 		"#LIGHT_BLUE# * +0 Magic, +4 Willpower, +4 Cunning",
-		"#GOLD#Life per level:#LIGHT_BLUE# -4",
+		"#GOLD#Life per level:#LIGHT_BLUE# -2",
 	},
 	power_source = {psionic=true},
 	stats = { str=1, wil=4, cun=4, },
@@ -76,19 +76,17 @@ newBirthDescriptor{
 		end,
 	},
 	talents_types = {
-		--Level 0 trees:
 		["psionic/absorption"]={true, 0.3},
 		["psionic/projection"]={true, 0.3},
 		["psionic/psi-fighting"]={true, 0.3},
 		["psionic/focus"]={true, 0.3},
-		["psionic/mental-discipline"]={true, 0.3},
 		["psionic/voracity"]={true, 0.3},
-		--Level 10 trees:
-		["psionic/finer-energy-manipulations"]={false, 0},
---		["psionic/psi-archery"]={false, 0.3},
-		["psionic/grip"]={false, 0},
-		["psionic/augmented-mobility"]={false, 0},
-		--Miscellaneous trees:
+		["psionic/dream-forge"]={true, 0.3},
+		["psionic/finer-energy-manipulations"]={false, 0.3},
+		["psionic/grip"]={false, 0.3},
+		["psionic/augmented-mobility"]={true, 0.3},
+		["psionic/telekinetic-combat"]={true, 0.3},
+		["psionic/force"]={false, 0.3},
 		["cunning/survival"]={true, 0},
 		["technique/combat-training"]={true, 0},
 	},
@@ -117,7 +115,7 @@ newBirthDescriptor{
 		end),
 	},
 	copy_add = {
-		life_rating = -4,
+		life_rating = -2,
 	},
 }
 

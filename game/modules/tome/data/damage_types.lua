@@ -3075,3 +3075,39 @@ newDamageType{
 		end
 	end,
 }
+
+newDamageType{
+	name = "telekinetic shove", type = "TK_PUSHPIN",
+	projector = function(src, x, y, type, dam)
+		local target = game.level.map(x, y, Map.ACTOR)
+		if target then
+			target:knockback(src.x, src.y, dam.push, nil, function(g, x, y)
+				if game.level.map:checkEntity(x, y, Map.TERRAIN, "block_move", target) then
+					DamageType:get(DamageType.PHYSICAL).projector(src, target.x, target.y, DamageType.PHYSICAL, dam.dam)
+					if target:canBe("pin") then
+						target:setEffect(target.EFF_PINNED, dam.dur, {apply_power=src:combatMindpower()})
+					else
+						game.logSeen(src, "%s resists!", target.name:capitalize())
+					end
+				end
+			end)
+			return dam.dam
+		end
+	end,
+}
+
+newDamageType{
+	name = "brain storm", type = "BRAINSTORM",
+	projector = function(src, x, y, type, dam)
+		local target = game.level.map(x, y, Map.ACTOR)
+		if target then
+			DamageType:get(DamageType.LIGHTNING).projector(src, target.x, target.y, DamageType.LIGHTNING, dam)
+			if target:checkHit(src:combatMindpower(), target:combatMentalResist(), 0, 95, 15) then
+				target:crossTierEffect(target.EFF_BRAINLOCKED, src:combatMindpower())
+			else
+				game.logSeen(target, "%s resists the mind attack!", target.name:capitalize())
+			end
+			return dam
+		end
+	end,
+}

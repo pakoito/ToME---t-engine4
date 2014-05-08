@@ -68,11 +68,13 @@ newTalent{
 			decay = self:addTemporaryValue("necrotic_aura_decay", decay),
 			retch = self:addTemporaryValue("retch_heal", 1),
 			particle = self:addParticles(Particles.new("necrotic-aura", 1, {radius=radius})),
+			particle2 = self:addParticles(Particles.new("circle", 1, {oversize=0.7, a=75, appear=8, speed=8, img="necro_aura", radius=radius})),
 		}
 		return ret
 	end,
 	deactivate = function(self, t, p)
 		self:removeParticles(p.particle)
+		self:removeParticles(p.particle2)
 		self:removeTemporaryValue("retch_heal", p.retch)
 		self:removeTemporaryValue("necrotic_aura_radius", p.rad)
 		self:removeTemporaryValue("necrotic_aura_decay", p.decay)

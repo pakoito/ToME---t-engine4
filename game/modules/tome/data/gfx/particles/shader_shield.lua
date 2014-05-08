@@ -24,7 +24,7 @@ local g = 1
 local b = 1
 local a = a or 1
 
-return { generator = function()
+return { blend_mode = blend and core.particles.BLEND_ADDITIVE or nil, generator = function()
 	return {
 		trail = 0,
 		life = 10,
