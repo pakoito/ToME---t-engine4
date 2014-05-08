@@ -43,6 +43,8 @@ local outline = Shader.new("textoutline", {})
 
 local credits = {
 	{img="/data/gfx/background/tome-logo.png"},
+	{"by"},
+	{img="/data/gfx/background/netcore-logo.png"},
 	false,
 	{"Project Lead", title=1},
 	{"Nicolas 'DarkGod' Casalini"},
@@ -149,7 +151,6 @@ local credits = {
 
 	{"Others", title=1},
 	{"J.R.R Tolkien - making the world an interesting place"},
-	false,
 	{"Lua Creators - making the world a better place"},
 	{"Lua - http://lua.org/"},
 	{"LibSDL - http://libsdl.org/"},

@@ -61,7 +61,7 @@ function _M:init()
 --	if config.settings.cheat then l[#l+1] = {name="webtest", fct=function() util.browserOpenUrl("asset://te4/html/test.html") end} end
 
 	self.c_background = Button.new{text=game.stopped and "Enable background" or "Disable background", fct=function() self:switchBackground() end}
-	self.c_version = Textzone.new{auto_width=true, auto_height=true, text=("#{bold}##B9E100#T-Engine4 version: %d.%d.%d"):format(engine.version[1], engine.version[2], engine.version[3])}
+	self.c_version = Textzone.new{font={"/data/font/DroidSansMono.ttf", 10}, auto_width=true, auto_height=true, text=("#{bold}##B9E100#T-Engine4 version: %d.%d.%d"):format(engine.version[1], engine.version[2], engine.version[3])}
 
 	self.c_list = List.new{width=self.iw, nb_items=#self.list, list=self.list, fct=function(item) end, font={"/data/font/DroidSans-Bold.ttf", 16}}
 
@@ -72,7 +72,7 @@ function _M:init()
 	self.base_uis = {
 		{left=0, top=0, ui=self.c_list},
 		{left=0, bottom=0, absolute=true, ui=self.c_background},
-		{right=0, top=0, absolute=true, ui=self.c_version},
+		{right=self.c_facebook.w, bottom=0, absolute=true, ui=self.c_version},
 		{right=0, bottom=self.c_facebook.h+self.c_twitter.h, absolute=true, ui=self.c_forums},
 		{right=0, bottom=self.c_twitter.h, absolute=true, ui=self.c_facebook},
 		{right=0, bottom=0, absolute=true, ui=self.c_twitter},
@@ -82,6 +82,13 @@ function _M:init()
 		self.c_tooltip = game.webtooltip
 		self.base_uis[#self.base_uis+1] = {left=9, top=9, absolute=true, ui=self.c_tooltip}
 
+	end
+
+	if game.__mod_info.publisher_logo then
+		local c_pub = ButtonImage.new{no_decoration=true, alpha_unfocus=1, file="background/"..game.__mod_info.publisher_logo..".png", fct=function()
+			if game.__mod_info.publisher_url then util.browserOpenUrl(game.__mod_info.publisher_url) end
+		end}
+		self.base_uis[#self.base_uis+1] = {right=0, top=0, absolute=true, ui=c_pub}
 	end
 
 	self:updateUI()	

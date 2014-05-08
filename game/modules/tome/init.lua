@@ -61,6 +61,7 @@ loading_wait_ticks = 260
 profile_stats_fields = {"artifacts", "characters", "deaths", "uniques", "scores", "lore", "escorts"}
 allow_userchat = true -- We can talk to the online community
 no_get_name = true -- Name setting for new characters is done by the module itself
+publisher_logo = "netcore-logo"
 if not config.settings.censor_boot then background_name = {"tome","tome2","tome3"}
 else background_name = {"tome3"}
 end

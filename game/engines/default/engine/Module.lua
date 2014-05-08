@@ -546,7 +546,10 @@ function _M:loadScreen(mod)
 		local bkg = {bkgs:glTexture()}
 
 		local logo = {(core.display.loadImage("/data/gfx/background/"..backname.."-logo.png") or core.display.loadImage("/data/gfx/background/tome-logo.png")):glTexture()}
-		local pubimg, publisher = core.display.loadImage("/data/gfx/background/netcore-logo.png"), nil
+		local pubimg, publisher = nil, nil
+		if mod.publisher_logo then
+			pubimg, publisher = core.display.loadImage("/data/gfx/background/"..mod.publisher_logo..".png"), nil
+		end
 		if pubimg then publisher = {pubimg:glTexture()} end
 
 		local left = {core.display.loadImage("/data/gfx/metal-ui/waiter/left.png"):glTexture()}

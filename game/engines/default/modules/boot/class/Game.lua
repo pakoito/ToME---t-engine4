@@ -64,12 +64,6 @@ function _M:init()
 		self.background, self.background_tw, self.background_th = self.background:glTexture()
 	end
 	
-	self.publisher = core.display.loadImage("/data/gfx/background/netcore-logo.png")
-	if self.publisher then
-		self.publisher_w, self.publisher_h = self.publisher:getSize()
-		self.publisher, self.publisher_tw, self.publisher_th = self.publisher:glTexture()
-	end
-
 	if not core.webview then self.tooltip = Tooltip.new(nil, 14, nil, colors.DARK_GREY, 380) end
 
 --	self.refuse_threads = true
