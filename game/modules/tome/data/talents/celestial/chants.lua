@@ -40,7 +40,7 @@ newTalent{
 	tactical = { BUFF = 2 },
 	range = 10,
 	getResists = function(self, t) return self:combatTalentSpellDamage(t, 5, 70) end,
-	getLifePct = function(self, t) return math.min(0.55, self:combatTalentScale(t, 0.05, 0.20, 1)) end,
+	getLifePct = function(self, t) return self:combatTalentLimit(t, 1, 0.05, 0.20) end, -- Limit < 100% bonus
 	getDamageOnMeleeHit = function(self, t) return self:combatTalentSpellDamage(t, 5, 25) end,
 	activate = function(self, t)
 		cancelChants(self)
@@ -68,8 +68,8 @@ newTalent{
 		local saves = t.getResists(self, t)
 		local life = t.getLifePct(self, t)
 		local damageonmeleehit = t.getDamageOnMeleeHit(self, t)
-		return ([[You chant the glory of the Sun, granting you %d Physical Save and Spell Save and increasing your maximum life by %d%% (Currently:  %d).
-		In addition, this talent surrounds you with a shield of light, dealing %0.2f light damage to anything that attacks you.
+		return ([[You chant the glory of the Sun, granting you %d Physical Save and Spell Save and increasing your maximum life by %0.1f%% (Currently:  %d).
+		In addition, this talent surrounds you with a shield of light, dealing %0.1f light damage to anything that hits you in melee.
 		You may only have one Chant active at once.
 		The saves and light damage will increase with your Spellpower and the life with talent level.]]):
 		format(saves, life*100, life*self.max_life, damDesc(self, DamageType.LIGHT, damageonmeleehit))
@@ -93,7 +93,7 @@ newTalent{
 	range = 10,
 	getDamageOnMeleeHit = function(self, t) return self:combatTalentSpellDamage(t, 5, 25) end,
 	getDamageChange = function(self, t)
-		return math.max(-40, -math.sqrt(self:getTalentLevel(t)) * 14)
+		return -self:combatTalentLimit(t, 50, 14, 30) -- Limit < 50% damage reduction
 	end,
 	activate = function(self, t)
 		cancelChants(self)
@@ -113,7 +113,7 @@ newTalent{
 		local range = -t.getDamageChange(self, t)
 		local damageonmeleehit = t.getDamageOnMeleeHit(self, t)
 		return ([[You chant the glory of the Sun, reducing the damage enemies 2 or more spaces away deal by %d%%.
-		In addition, this talent surrounds you with a shield of light, dealing %0.2f light damage to anything that attacks you.
+		In addition, this talent surrounds you with a shield of light, dealing %0.1f light damage to anything that hits you in melee.
 		You may only have one Chant active at once.
 		The damage reduction will increase with talent level and light damage will increase with your Spellpower.]]):
 		format(range, damDesc(self, DamageType.LIGHT, damageonmeleehit))
@@ -135,7 +135,7 @@ newTalent{
 	tactical = { BUFF = 2 },
 	no_energy = true,
 	range = 10,
-	getResists = function(self, t) return math.min(35, self:combatTalentSpellDamage(t, 5, 25)) end,
+	getResists = function(self, t) return self:combatTalentSpellDamage(t, 5, 25) end,
 	getDamageOnMeleeHit = function(self, t) return self:combatTalentSpellDamage(t, 5, 25) end,
 	activate = function(self, t)
 		cancelChants(self)
@@ -158,7 +158,7 @@ newTalent{
 		local resists = t.getResists(self, t)
 		local damage = t.getDamageOnMeleeHit(self, t)
 		return ([[You chant the glory of the Sun, granting you %d%% resistance to all damage.
-		In addition, this talent surrounds you with a shield of light, dealing %0.2f light damage to anything that attacks you.
+		In addition, this talent surrounds you with a shield of light, dealing %0.1f light damage to anything that hits you in melee.
 		You may only have one Chant active at once.
 		The effects will increase with your Spellpower.]]):
 		format(resists, damDesc(self, DamageType.LIGHT, damage))
@@ -205,10 +205,9 @@ newTalent{
 		local damage = t.getDamageOnMeleeHit(self, t)
 		local lite = t.getLite(self, t)
 		return ([[You chant the glory of the Sun, empowering your light and fire elemental attacks so that they do %d%% additional damage.
-		In addition, this talent surrounds you with a shield of light, dealing %0.2f light damage to anything that attacks you.
+		In addition, this talent surrounds you with a shield of light, dealing %0.1f light damage to anything that hits you in melee.
 		Your lite radius is also increased by %d.
-		You may only have one Chant active at once.
-		This chant costs less power to sustain.
+		You may only have one Chant active at once and this Chant costs less power to sustain.
 		The effects will increase with your Spellpower.]]):
 		format(damageinc, damDesc(self, DamageType.LIGHT, damage), lite)
 	end,

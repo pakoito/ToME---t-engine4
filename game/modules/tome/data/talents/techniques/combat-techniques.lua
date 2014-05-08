@@ -168,11 +168,12 @@ newTalent{
 	require = techs_strdex_req1,
 	mode = "passive",
 	points = 5,
+	getStamRecover = function(self, t) return self:combatTalentScale(t, 0.6, 2.5, 0.75) end,
 	passives = function(self, t, p)
-		self:talentTemporaryValue(p, "stamina_regen", self:getTalentLevel(t) / 2)
+		self:talentTemporaryValue(p, "stamina_regen", t.getStamRecover(self, t))
 	end,
 	info = function(self, t)
-		return ([[Your combat focus allows you to regenerate stamina faster (+%0.2f stamina/turn).]]):format(self:getTalentLevel(t) / 2)
+		return ([[Your combat focus allows you to regenerate stamina faster (+%0.1f stamina/turn).]]):format(t.getStamRecover(self, t))
 	end,
 }
 
@@ -182,11 +183,12 @@ newTalent{
 	require = techs_strdex_req2,
 	mode = "passive",
 	points = 5,
+	getRegen = function(self, t) return self:combatTalentScale(t, 3, 7.5, 0.75) end,
 	passives = function(self, t, p)
-		self:talentTemporaryValue(p, "life_regen", self:getTalentLevel(t) * 2.5)
+		self:talentTemporaryValue(p, "life_regen", t.getRegen(self, t))
 	end,
 	info = function(self, t)
-		return ([[Your combat focus allows you to regenerate life faster (+%0.2f life/turn).]]):format(self:getTalentLevel(t) * 2.5)
+		return ([[Your combat focus allows you to regenerate life faster (+%0.1f life/turn).]]):format(t.getRegen(self, t))
 	end,
 }
 
@@ -209,9 +211,11 @@ newTalent{
 	type = {"technique/combat-techniques-passive", 4},
 	require = techs_strdex_req4,
 	mode = "passive",
+	-- called by mod.class.Actor:die
+	getStamRecover = function(self, t) return self:combatTalentScale(t, 5, 20, 0.5) end, -- Lower scaling than other recovery talents because it effectively scales with character speed and can trigger more than once a turn
 	points = 5,
 	info = function(self, t)
-		return ([[You revel in the death of your foes, regaining %d stamina with each death.]]):format(self:getTalentLevel(t) * 4)
+		return ([[You revel in the death of your foes, regaining %0.1f stamina with each death you cause.]]):format(t.getStamRecover(self, t))
 	end,
 }
 

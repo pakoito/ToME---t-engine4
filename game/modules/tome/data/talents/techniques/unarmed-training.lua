@@ -61,8 +61,7 @@ newTalent{
 	points = 5,
 	require = { stat = { cun=function(level) return 12 + level * 6 end }, },
 	mode = "passive",
-	--getDamage = function(self, t) return self:getTalentLevel(t) * 10 end,
-	getDamage = function(self, t) return self:combatTalentScale(t, 10, 30, 0.25) end,
+	getDamage = function(self, t) return self:combatTalentScale(t, 10, 30, 0.5) end,
 	getPercentInc = function(self, t) return math.sqrt(self:getTalentLevel(t) / 5) / 4 end,
 	info = function(self, t)
 		local damage = t.getDamage(self, t)
@@ -117,6 +116,7 @@ newTalent{
 	end,
 }
 
+-- It's a bit wierd that this works against mind attacks
 newTalent{
 	name = "Reflex Defense",
 	type = {"technique/unarmed-training", 4},
@@ -126,17 +126,13 @@ newTalent{
 	cooldown = 10,
 	no_energy = true,
 	tactical = { BUFF = 2 },
-	getDefensePct = function(self, t)
-		return self:combatTalentScale(t, 0.15, 0.8) -- God scaling this is weird
-	end,
 	getDamageReduction = function(self, t) 
-		return math.min(0.8, t.getDefensePct(self, t) * self:combatDefense() / 100)
+		return self:combatTalentLimit(t, 1, 0.15, 0.50) * self:combatLimit(self:combatDefense(), 1, 0.15, 10, 0.5, 50) -- Limit < 100%, 25% for TL 5.0 and 50 defense
 	end,
 	getDamagePct = function(self, t)
-		return 0.2
+		return self:combatTalentLimit(t, 0.1, 0.3, 0.15) -- Limit trigger > 10% life
 	end,
 	activate = function(self, t)
-		
 		return {}
 	end,
 	deactivate = function(self, t, p)
@@ -151,7 +147,7 @@ newTalent{
 		return cb.value
 	end, 
 	info = function(self, t)
-		return ([[Your understanding of physiology allows you to apply your reflexes in new ways.  Whenever you would receive damage greater than %d%% of your maximum life you reduce that damage by %d%% based on your defense.]]):
+		return ([[Your understanding of physiology allows you to apply your reflexes in new ways.  Whenever you would receive damage (from any source) greater than %d%% of your maximum life you reduce that damage by %0.1f%% (based on your Defense).]]):
 		format(t.getDamagePct(self, t)*100, t.getDamageReduction(self, t)*100 )
 	end,
 }

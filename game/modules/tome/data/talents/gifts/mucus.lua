@@ -308,7 +308,7 @@ newTalent{
 	info = function(self, t)
 		local nb = t.getNb(self, t)
 		local energy = t.getEnergy(self, t)
-		return ([[You temporarily merge with your mucus, cleasing yourself of %d physical or magical effects.
+		return ([[You temporarily merge with your mucus, cleansing yourself of %d physical or magical effects.
 		You can then reemerge on any tile within sight and range that is also covered by mucus.
 		This is quick, requiring only %d%% of a turn to perform, but you must be in contact with your mucus.]]):
 		format(nb, (energy) * 100)

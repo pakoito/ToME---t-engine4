@@ -156,7 +156,6 @@ newTalent{
 	end,
 }
 
--- FIX SCALING
 newTalent{
 	name = "Execution",
 	type = {"technique/2hweapon-assault", 4},
@@ -166,7 +165,7 @@ newTalent{
 	stamina = 25,
 	requires_target = true,
 	tactical = { ATTACK = { weapon = 1 } },
-	getPower = function(self, t) return self:combatTalentScale(t, 1.6, 4.3) end,
+	getPower = function(self, t) return self:combatTalentScale(t, 1.0, 2.5, "log") end, -- +125% bonus against 50% damaged foe at talent level 5.0
 	on_pre_use = function(self, t, silent) if not self:hasTwoHandedWeapon() then if not silent then game.logPlayer(self, "You require a two handed weapon to use this talent.") end return false end return true end,
 	action = function(self, t)
 		local weapon = self:hasTwoHandedWeapon()
@@ -179,15 +178,15 @@ newTalent{
 
 		local perc = 1 - (target.life / target.max_life)
 		local power = t.getPower(self, t)
-		game.logPlayer(self, "perc " .. perc .. " power " .. power)
+--		game.logPlayer(self, "perc " .. perc .. " power " .. power) -- debugging code
 		self.turn_procs.auto_phys_crit = true
-		local speed, hit = self:attackTargetWith(target, weapon.combat, nil, power * perc)
+		local speed, hit = self:attackTargetWith(target, weapon.combat, nil, 1 + power * perc)
 		self.turn_procs.auto_phys_crit = nil
 		return true
 	end,
 	info = function(self, t)
-		return ([[Tries to perform a killing blow. For each missing %% of life of your target you deal %0.2f%% more weapon damage (I.E: at 30%% remaining life you would deal %0.2f%% weapon damage).
-		The blow is an automatic critical hit.]]):
-		format(t.getPower(self, t), t.getPower(self, t) * 70)
+		return ([[Takes advantage of a wounded foe to perform a killing strike.  This attack is an automatic critical hit that does %0.1f%% extra weapon damage for each %% of life the target is below maximum.
+		(A victim with 30%% remaining life (70%% damaged) would take %0.1f%% weapon damage.)]]):
+		format(t.getPower(self, t), 100 + t.getPower(self, t) * 70)
 	end,
 }
