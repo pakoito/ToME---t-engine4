@@ -174,6 +174,21 @@ end
 
 function _M:playSave()
 	if not self.save_sel then return end
+
+	if engine.version_compare(self.save_sel.module_version, {1, 2, 0}) == "lower" then
+		Dialog:yesnoLongPopup("Incompatible savefile", [[Due to huge changes in 1.2.0 all previous savefiles will not work with it.
+This savefile requires a game version lower than 1.2.0 and thus can not be loaded.
+
+But despair not, if you wish to finish it you can simply download the old version corresponding to the savefile on #{italic}##LIGHT_BLUE#http://te4.org/download#WHITE##{normal}#.
+
+We apologize for the annoyance, most of the time we try to keep compatibility but this once it was simply not possible.]],
+			700, function(ret) if ret then
+				util.browserOpenUrl("http://te4.org/download", {webview=true, steam=true})
+			end end, "Go to download in your browser", "Cancel"
+		)
+		return
+	end
+
 	if config.settings.cheat and not self.save_sel.cheat then
 		Dialog:yesnoPopup("Developer Mode", "#LIGHT_RED#WARNING: #LAST#Loading a savefile while in developer mode will permanently invalidate it. Proceed?", function(ret) if not ret then
 			Module:instanciate(self.save_sel.mod, self.save_sel.base_name, false)
