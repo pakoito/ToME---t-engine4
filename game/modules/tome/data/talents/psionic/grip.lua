@@ -63,45 +63,42 @@ newTalent{
 }
 
 newTalent{
-	name = "Redirect",
+	name = "Shutdown", short_name = "REDIRECT",
 	type = {"psionic/grip", 2},
 	require = psi_cun_high2,
 	points = 5,
-	psi = 40,
-	cooldown = 30,
+	psi = 20,
+	cooldown = 10,
 	tactical = { },
 	no_npc_use = true,
-	range = function(self, t) return math.floor(self:combatTalentScale(t, 3, 5, "log")) end, 
 	radius = 10,
-	target = function(self, t)
-		return {type="hit", range=self:getTalentRange(t), selffire=false, talent=t}
-	end,
+	target = function(self, t) return {type="hit", range=self:getTalentRange(t), selffire=false, talent=t} end,
+	getDamage = function (self, t) return self:combatTalentMindDamage(t, 20, 400) end,
 	action = function(self, t)
-		local tg = self:getTalentTarget(t)
-		local tx, ty = self:getTarget(tg)
-		if not tx or not ty then return nil end
-		
 		local grids = core.fov.circle_grids(self.x, self.y, self:getTalentRadius(t), true)
 		for x, yy in pairs(grids) do for y, _ in pairs(grids[x]) do
 			local i = 0
-			local p = game.level.map(x, y, Map.PROJECTILE+i)
-			while p do
-				if p.project and p.project.def.typ.source_actor ~= self then
-					p.project.def.typ.line_function = core.fov.line(p.x, p.y, tx, ty)
+			local p = game.level.map(x, y, Map.PROJECTILE)
+			if p and p.src ~= self then
+				p:terminate(x, y)
+				game.level:removeEntity(p, true)
+				p.dead = true
+
+				if p.src and p.src.x and p.src.y then
+					local dam = self:mindCrit(t.getDamage(self, t))
+					DamageType:get(DamageType.MIND).projector(self, p.src.x, p.src.y, DamageType.MIND, dam)
 				end
-				
-				i = i + 1
-				p = game.level.map(x, y, Map.PROJECTILE+i)
 			end
 		end end
-
 		game.level.map:particleEmitter(self.x, self.y, self:getTalentRadius(t), "shout", {additive=true, life=10, size=3, distorion_factor=0.0, radius=self:getTalentRadius(t), nb_circles=4, rm=0.8, rM=1, gm=0, gM=0, bm=0.8, bM=1.0, am=0.4, aM=0.6})
 		
 		return true
 	end,
 	info = function(self, t)
-		return ([[Use your mind to grab all projectiles within radius 10 of you and hurl them toward any location within range %d of you.]]):
-		format(self:getTalentRange(t))
+		return ([[Use your mind to grab all projectiles within radius 10 of you and destroy them.
+		Using the kinetic link between the projectile and its source you inflict to it %0.2f mind damage.
+		Damage scale with Mindpower.]]):
+		format(t.getDamage(self, t))
 	end,
 }
 

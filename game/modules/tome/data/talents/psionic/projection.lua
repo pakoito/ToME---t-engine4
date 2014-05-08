@@ -76,7 +76,7 @@ newTalent{
 	mode = "sustained",
 	sustain_psi = 30,
 	remove_on_zero = true,
-	cooldown = 5,
+	cooldown = function(self, t) return 5 end,
 	tactical = { ATTACKAREA = { PHYSICAL = 2 } },
 	on_pre_use = function(self, t, silent)
 		if self:isTalentActive(self.T_THERMAL_AURA) and self:isTalentActive(self.T_CHARGED_AURA) then
@@ -190,7 +190,7 @@ newTalent{
 	mode = "sustained",
 	sustain_psi = 30,
 	remove_on_zero = true,
-	cooldown = 5,
+	cooldown = function(self, t) return 5 end,
 	tactical = { ATTACKAREA = { FIRE = 2 } },
 	on_pre_use = function(self, t, silent)
 		if self:isTalentActive(self.T_KINETIC_AURA) and self:isTalentActive(self.T_CHARGED_AURA) then
@@ -301,7 +301,7 @@ newTalent{
 	mode = "sustained",
 	sustain_psi = 30,
 	remove_on_zero = true,
-	cooldown = 5,
+	cooldown = function(self, t) return 5 end,
 	tactical = { ATTACKAREA = { LIGHTNING = 2 } },
 	on_pre_use = function(self, t, silent)
 		if self:isTalentActive(self.T_KINETIC_AURA) and self:isTalentActive(self.T_THERMAL_AURA) then

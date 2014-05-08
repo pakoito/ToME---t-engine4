@@ -35,6 +35,7 @@ newTalent{
 		self:attr("allow_on_heal", -1)
 		
 		-- Go through all temporary effects
+		local effs = {}
 		for eff_id, p in pairs(self.tmp) do
 			local e = self.tempeffect_def[eff_id]
 			if e.type == "physical" and e.status == "detrimental" then
@@ -42,6 +43,7 @@ newTalent{
 			end
 		end
 
+		local known = false
 		for i = 1, t.numCure(self, t) do
 			if #effs == 0 then break end
 			local eff = rng.tableRemove(effs)
@@ -56,8 +58,8 @@ newTalent{
 		end
 		
 		if core.shader.active(4) then
-			self:addParticles(Particles.new("shader_shield_temp", 1, {toback=true , size_factor=1.5, y=-0.3, img="healarcane", life=25}, {type="healing", time_factor=2000, beamsCount=20, noup=2.0, beamColor1={0x8e/255, 0x2f/255, 0xbb/255, 1}, beamColor2={0xe7/255, 0x39/255, 0xde/255, 1}, circleDescendSpeed=4}))
-			self:addParticles(Particles.new("shader_shield_temp", 1, {toback=false, size_factor=1.5, y=-0.3, img="healarcane", life=25}, {type="healing", time_factor=2000, beamsCount=20, noup=1.0, beamColor1={0x8e/255, 0x2f/255, 0xbb/255, 1}, beamColor2={0xe7/255, 0x39/255, 0xde/255, 1}, circleDescendSpeed=4}))
+			self:addParticles(Particles.new("shader_shield_temp", 1, {toback=true , size_factor=1.5, y=-0.3, img="healarcane", life=25}, {type="healing", time_factor=2000, beamsCount=20, noup=2.0, beamColor1={0x8e/255, 0xbb/255, 0x36/255, 1}, beamColor2={0xe7/255, 0xbb/255, 0x36/255, 1}, circleDescendSpeed=4}))
+			self:addParticles(Particles.new("shader_shield_temp", 1, {toback=false, size_factor=1.5, y=-0.3, img="healarcane", life=25}, {type="healing", time_factor=2000, beamsCount=20, noup=1.0, beamColor1={0x8e/255, 0xbb/255, 0x36/255, 1}, beamColor2={0xe7/255, 0xbb/255, 0x36/255, 1}, circleDescendSpeed=4}))
 		end
 		game:playSoundNear(self, "talents/heal")
 		return true
@@ -220,7 +222,7 @@ newTalent{
 				GEM_CITRINE = "Citrine",
 				GEM_AGATE = "Agate",
 			}
-			self:setEffect(self.EFF_CRYSTAL_BUFF, 10, {name=gem_names[ammo.define_as], gem=ammo.define_as})
+			self:setEffect(self.EFF_CRYSTAL_BUFF, 10, {name=gem_names[gem.define_as], gem=gem.define_as})
 		end)
 		local co = coroutine.running()
 		d.unload = function(self) coroutine.resume(co, self.used_talent) end

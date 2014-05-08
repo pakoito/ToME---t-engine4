@@ -91,7 +91,7 @@ return {
 	end
 end, },
 function(self)
-	if nb < 2 or not limit_life then
+	if ((appear > 0 and nb < 2) or (appear == 0 and nb < 1)) or not limit_life then
 		if self.ps:emit(1) > 0 then
 			nb = nb + 1
 		end

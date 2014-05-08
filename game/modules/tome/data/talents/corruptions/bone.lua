@@ -106,7 +106,8 @@ newTalent{
 	end,
 	action = function(self, t)
 		local tg = self:getTalentTarget(t)
-		self:project(tg, self.x, self.y, DamageType.PHYSICAL, self:spellCrit(self:combatTalentSpellDamage(t, 8, 180)), {type="bones"})
+		self:project(tg, self.x, self.y, DamageType.PHYSICAL, self:spellCrit(self:combatTalentSpellDamage(t, 8, 180)))
+		game.level.map:particleEmitter(self.x, self.y, tg.radius, "circle", {oversize=1.1, a=255, limit_life=8, grow=true, speed=0, img="bone_nova", radius=self:getTalentRadius(t)})
 		game:playSoundNear(self, "talents/arcane")
 		return true
 	end,

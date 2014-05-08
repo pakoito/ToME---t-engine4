@@ -56,7 +56,7 @@ newTalent{
 	points = 5,
 	tactical = { CLOSEIN = 2 },
 	range = function(self, t)
-		return self:combatTalentLimit(t, 10, 5, 9) -- Limit base range to 10
+		return self:combatTalentLimit(t, 10, 4, 9) -- Limit base range to 10
 	end,
 	action = function(self, t)
 		local tg = {type="bolt", range=self:getTalentRange(t)}
@@ -113,6 +113,7 @@ newTalent{
 	end,
 }
 
+-- =game.player:combatTalentLimit(game.player:getTalentFromId(game.player.T_TELEKINETIC_LEAP), 10, 5, 9)
 newTalent{
 	name = "Telekinetic Leap",
 	type = {"psionic/augmented-mobility", 4},
@@ -122,7 +123,7 @@ newTalent{
 	points = 5,
 	tactical = { CLOSEIN = 2 },
 	range = function(self, t)
-		return self:combatTalentLimit(t, 10, 5, 9) -- Limit base range to 10
+		return self:combatTalentLimit(t, 10, 4, 9) -- Limit base range to 10
 	end,
 	action = function(self, t)
 		local tg = {default_target=self, type="ball", nolock=true, pass_terrain=false, nowarning=true, range=self:getTalentRange(t), radius=0, requires_knowledge=false}
