@@ -132,7 +132,17 @@ function _M:replaceAll(level)
 			local gd = g.add_displays[g.__edit_d]
 
 			for __, e in ipairs(ee) do
-				if e.z then gd.z = e.z end
+				local gd = gd
+				if e.z then
+					if g.__edit_d_z and g.__edit_d_z[e.z] and g.add_displays[g.__edit_d_z[e.z]] then
+						gd = g.add_displays[g.__edit_d_z[e.z]]
+					else
+						g.__edit_d_z = g.__edit_d_z or {}
+						g.add_displays[#g.add_displays+1] = require(g.__CLASSNAME).new{image="invis.png", force_clone=true, z=e.z}
+						g.__edit_d_z[e.z] = #g.add_displays
+						gd = g.add_displays[g.__edit_d_z[e.z]]
+					end
+				end
 				if e.copy_base then gd.image = g.image end
 				if e.add_mos then
 					-- Add all the mos

@@ -387,9 +387,6 @@ function _M:display(nb_keyframes)
 			end
 			self.background:toScreenFull(x, y, w, h, w * self.background_tw / self.background_w, h * self.background_th / self.background_h)
 		end
-		if self.publisher then
-			self.publisher:toScreenFull(self.w - self.publisher_w, 0, self.publisher_w, self.publisher_h, self.publisher_tw, self.publisher_th)
-		end
 		if self.tooltip then
 			if #self.dialogs == 0 or not self.dialogs[#self.dialogs].__show_only then
 				self.tooltip:display()
@@ -430,10 +427,6 @@ function _M:display(nb_keyframes)
 		)
 	else
 --		core.display.drawQuad(0, 0, game.w, game.h, 128, 128, 128, 128)
-	end
-
-	if self.publisher then
-		self.publisher:toScreenFull(self.w - self.publisher_w, 0, self.publisher_w, self.publisher_h, self.publisher_tw, self.publisher_th)
 	end
 
 	if self.tooltip then
