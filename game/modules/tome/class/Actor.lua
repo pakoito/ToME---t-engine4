@@ -3518,6 +3518,8 @@ function _M:onWear(o, bypass_set)
 
 	self:breakReloading()
 
+	self:fireTalentCheck("callbackOnWear", o, bypass_set)
+
 	self:updateModdableTile()
 	if self == game.player then game:playSound("actions/wear") end
 end
@@ -3609,6 +3611,7 @@ function _M:onTakeoff(o, bypass_set)
 	self:checkMindstar(o)
 
 	self:breakReloading()
+	self:fireTalentCheck("callbackOnTakeoff", o, bypass_set)
 
 	self:updateModdableTile()
 	if self == game.player then game:playSound("actions/takeoff") end
@@ -4430,6 +4433,8 @@ local sustainCallbackCheck = {
 	callbackOnStatChange = "talents_on_stat_change",
 	callbackOnTakeDamage = "talents_on_take_damage",
 	callbackOnHeal = "talents_on_heal",
+	callbackOnWear = "talents_on_wear",
+	callbackOnTakeoff = "talents_on_takeoff",
 }
 _M.sustainCallbackCheck = sustainCallbackCheck
 
