@@ -1336,7 +1336,7 @@ newEffect{
 newEffect{
 	name = "QUICKNESS", image = "effects/quickness.png",
 	desc = "Quick",
-	long_desc = function(self, eff) return ("Increases run speed by %d%%."):format(eff.power * 100) end,
+	long_desc = function(self, eff) return ("Increases physical attack speed by %d%%."):format(eff.power * 100) end,
 	type = "mental",
 	subtype = { telekinesis=true, speed=true },
 	status = "beneficial",
@@ -1344,10 +1344,10 @@ newEffect{
 	on_gain = function(self, err) return "#Target# speeds up.", "+Quick" end,
 	on_lose = function(self, err) return "#Target# slows down.", "-Quick" end,
 	activate = function(self, eff)
-		eff.tmpid = self:addTemporaryValue("movement_speed", eff.power)
+		eff.tmpid = self:addTemporaryValue("combat_physspeed", eff.power)
 	end,
 	deactivate = function(self, eff)
-		self:removeTemporaryValue("movement_speed", eff.tmpid)
+		self:removeTemporaryValue("combat_physspeed", eff.tmpid)
 	end,
 }
 newEffect{
@@ -2996,5 +2996,85 @@ newEffect{
 	end,
 	deactivate = function(self, eff)
 		self:removeParticles(eff.particle)		
+	end,
+}
+
+newEffect{
+	name = "CRYSTAL_BUFF", image = "talents/stone_touch.png",
+	desc = "Crystal Buffing",
+	long_desc = function(self, eff) return ("The power released by the %s lingers."):format(eff.name) end,
+	type = "mental",
+	subtype = { psionic=true },
+	status = "beneficial",
+	parameters = { },
+	on_gain = function(self, err) return "#Target# glints with a crystaline aura", "+Gem Buff" end,
+	on_lose = function(self, err) return "#Target# is no longer glinting.", "-Gem Buff" end,
+	gem_types = {
+		GEM_DIAMOND = function(self, eff) return {self:effectTemporaryValue(eff, "inc_stats", {[Stats.STAT_STR] = 5, [Stats.STAT_DEX] = 5, [Stats.STAT_MAG] = 5, [Stats.STAT_WIL] = 5, [Stats.STAT_CUN] = 5, [Stats.STAT_CON] = 5 }), } end,
+		GEM_PEARL = function(self, eff) return {self:effectTemporaryValue(eff,"resists", { all = 5}), self:effectTemporaryValue(eff,"combat_armour", 5) } end,
+		GEM_MOONSTONE = function(self, eff) return {self:effectTemporaryValue(eff,"combat_def", 10), self:effectTemporaryValue(eff,"combat_mentalresist", 10), self:effectTemporaryValue(eff,"combat_spellresist", 10), self:effectTemporaryValue(eff,"combat_physresist", 10), } end,
+		GEM_FIRE_OPAL = function(self, eff) return {self:effectTemporaryValue(eff,"inc_damage", { all = 10}), self:effectTemporaryValue(eff,"combat_physcrit", 5), self:effectTemporaryValue(eff,"combat_mindcrit", 5), self:effectTemporaryValue(eff,"combat_spellcrit", 5) } end,
+		GEM_BLOODSTONE = function(self, eff) return {self:effectTemporaryValue(eff,"stun_immune", 0.6) } end,
+		GEM_RUBY = function(self, eff) return {self:effectTemporaryValue(eff,"inc_stats", {[Stats.STAT_STR] = 4, [Stats.STAT_DEX] = 4, [Stats.STAT_MAG] = 4, [Stats.STAT_WIL] = 4, [Stats.STAT_CUN] = 4, [Stats.STAT_CON] = 4 }) } end,
+		GEM_AMBER = function(self, eff) return {self:effectTemporaryValue(eff,"inc_damage", { all = 8}), self:effectTemporaryValue(eff,"combat_physcrit", 4), self:effectTemporaryValue(eff,"combat_mindcrit", 4), self:effectTemporaryValue(eff,"combat_spellcrit", 4) } end,
+		GEM_TURQUOISE = function(self, eff) return {self:effectTemporaryValue(eff,"see_stealth", 10), self:effectTemporaryValue(eff,"see_invisible", 10) } end,
+		GEM_JADE = function(self, eff) return {elf:effectTemporaryValue(eff,"resists", { all = 4}), self:effectTemporaryValue(eff,"combat_armour", 4) } end,
+		GEM_SAPPHIRE = function(self, eff) return {self:effectTemporaryValue(eff,"combat_def", 8), self:effectTemporaryValue(eff,"combat_mentalresist", 8), self:effectTemporaryValue(eff,"combat_spellresist", 8), self:effectTemporaryValue(eff,"combat_physresist", 8), } end,
+		GEM_QUARTZ = function(self, eff) return {self:effectTemporaryValue(eff,"stun_immune", 0.3) } end,
+		GEM_EMERALD = function(self, eff) return {self:effectTemporaryValue(eff,"resists", { all = 3}), self:effectTemporaryValue(eff,"combat_armour", 3) } end,
+		GEM_LAPIS_LAZULI = function(self, eff) return {self:effectTemporaryValue(eff,"combat_def", 6), self:effectTemporaryValue(eff,"combat_mentalresist", 6), self:effectTemporaryValue(eff,"combat_spellresist", 6), self:effectTemporaryValue(eff,"combat_physresist", 6), } end,
+		GEM_GARNET = function(self, eff) return {self:effectTemporaryValue(eff,"inc_damage", { all = 6}), self:effectTemporaryValue(eff,"combat_physcrit", 3), self:effectTemporaryValue(eff,"combat_mindcrit", 3), self:effectTemporaryValue(eff,"combat_spellcrit", 3) } end,
+		GEM_ONYX = function(self, eff) return {self:effectTemporaryValue(eff,"inc_stats", {[Stats.STAT_STR] = 3, [Stats.STAT_DEX] = 3, [Stats.STAT_MAG] = 3, [Stats.STAT_WIL] = 3, [Stats.STAT_CUN] = 3, [Stats.STAT_CON] = 3 }) } end,
+		GEM_AMETHYST = function(self, eff) return {self:effectTemporaryValue(eff,"inc_damage", { all = 4}), self:effectTemporaryValue(eff,"combat_physcrit", 2), self:effectTemporaryValue(eff,"combat_mindcrit", 2), self:effectTemporaryValue(eff,"combat_spellcrit", 2) } end,
+		GEM_OPAL = function(self, eff) return {self:effectTemporaryValue(eff,"inc_stats", {[Stats.STAT_STR] = 2, [Stats.STAT_DEX] = 2, [Stats.STAT_MAG] = 2, [Stats.STAT_WIL] = 2, [Stats.STAT_CUN] = 2, [Stats.STAT_CON] = 2 }) } end,
+		GEM_TOPAZ = function(self, eff) return {self:effectTemporaryValue(eff,"combat_def", 4), self:effectTemporaryValue(eff,"combat_mentalresist", 4), self:effectTemporaryValue(eff,"combat_spellresist", 4), self:effectTemporaryValue(eff,"combat_physresist", 4), } end,
+		GEM_AQUAMARINE = function(self, eff) return {self:effectTemporaryValue(eff,"resists", { all = 2}), self:effectTemporaryValue(eff,"combat_armour", 2) } end,
+		GEM_AMETRINE = function(self, eff) return {self:effectTemporaryValue(eff,"inc_damage", { all = 2}), self:effectTemporaryValue(eff,"combat_physcrit", 1), self:effectTemporaryValue(eff,"combat_mindcrit", 1), self:effectTemporaryValue(eff,"combat_spellcrit", 1) } end,
+		GEM_ZIRCON = function(self, eff) return {self:effectTemporaryValue(eff,"resists", { all = 1}), self:effectTemporaryValue(eff,"combat_armour", 1) } end,
+		GEM_SPINEL = function(self, eff) return {self:effectTemporaryValue(eff,"combat_def", 2), self:effectTemporaryValue(eff,"combat_mentalresist", 2), self:effectTemporaryValue(eff,"combat_spellresist", 2), self:effectTemporaryValue(eff,"combat_physresist", 2), } end,
+		GEM_CITRINE = function(self, eff) return {self:effectTemporaryValue(eff,"lite", 1), self:effectTemporaryValue(eff,"infravision", 2) } end,
+		GEM_AGATE = function(self, eff) return {self:effectTemporaryValue(eff,"inc_stats", {[Stats.STAT_STR] = 1, [Stats.STAT_DEX] = 1, [Stats.STAT_MAG] = 1, [Stats.STAT_WIL] = 1, [Stats.STAT_CUN] = 1, [Stats.STAT_CON] = 1 }) } end,
+	},
+	activate = function(self, eff)
+		local buff = self.tempeffect_def.EFF_CRYSTAL_BUFF.gem_types[eff.gem]
+		eff.id1 = buff(self, eff)
+	end,
+	deactivate = function(self, eff)
+
+	end,
+}
+
+newEffect{
+	name = "WEAPON_WARDING", image = "talents/warding_weapon.png",
+	desc = "Weapon Warding",
+	long_desc = function(self, eff) return ("Block then next melee attack and retaliate."):format() end,
+	type = "mental",
+	subtype = { tactic=true },
+	status = "beneficial",
+	parameters = { nb=1 },
+	on_gain = function(self, eff) return nil, nil end,
+	on_lose = function(self, eff) return nil, nil end,
+	do_block = function(self, eff, target, hitted, crit, weapon, damtype, mult, dam)
+		local weapon = self:getInven("MAINHAND") and self:getInven("MAINHAND")[1]
+		if type(weapon) == "boolean" then weapon = nil end
+		if not weapon or self:attr("disarmed") then return end
+
+		if self:getInven(self.INVEN_PSIONIC_FOCUS) then
+			local t = self:getTalentFromId(self.T_WARDING_WEAPON)
+			for i, o in ipairs(self:getInven(self.INVEN_PSIONIC_FOCUS)) do
+				if o.combat and not o.archery then
+					self:attackTargetWith(target, o.combat, nil, self:combatTalentWeaponDamage(t, 0.75, 1.1))
+				end
+			end
+			if self:getTalentLevelRaw(t) >= 3 and target:canBe("disarmed") then
+				target:setEffect(target.EFF_DISARMED, 3, {apply_power=self:combatMindpower()})
+			end
+		end
+		eff.dur = 0
+		return true
+	end,
+	activate = function(self, eff)
+	end,
+	deactivate = function(self, eff)
 	end,
 }

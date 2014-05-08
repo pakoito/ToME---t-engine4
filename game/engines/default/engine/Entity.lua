@@ -642,7 +642,7 @@ end
 _M.temporary_values_conf = {}
 
 --- Computes a "temporary" value into a property
--- Example: You cant to give an actor a boost to life_regen, but you do not want it to be permanent<br/>
+-- Example: You want to give an actor a boost to life_regen, but you do not want it to be permanent<br/>
 -- You cannot simply increase life_regen, so you use this method which will increase it AND
 -- store the increase. it will return an "increase id" that can be passed to removeTemporaryValue()
 -- to remove the effect.

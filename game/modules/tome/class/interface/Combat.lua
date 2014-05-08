@@ -406,6 +406,13 @@ function _M:attackTargetWith(target, weapon, damtype, mult, force_dam)
 		end
 	end
 
+	if target:hasEffect(target.EFF_WEAPON_WARDING) then
+		local e = target.tempeffect_def[target.EFF_WEAPON_WARDING]
+		if e.do_block(target, target.tmp[target.EFF_WEAPON_WARDING], self) then
+			repelled = true
+		end
+	end
+
 	if repelled then
 		self:logCombat(target, "#Target# repels an attack from #Source#.")
 	elseif self:checkEvasion(target) then
