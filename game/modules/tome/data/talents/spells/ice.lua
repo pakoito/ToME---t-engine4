@@ -60,6 +60,7 @@ newTalent{
 		local damage = t.getDamage(self, t)
 		return ([[Hurl ice shards at the targets in the selected area. Each shard %s and does %0.2f ice damage, hitting all adjacent targets on impact.
 		This spell will never hit the caster.
+		If the target is wet the damage increases by 30%% and the ice freeze chance increases to 50%%.
 		The damage will increase with your Spellpower.]]):
 		format(necroEssenceDead(self, true) and "affects all foes on its path" or "travels slowly", damDesc(self, DamageType.COLD, damage))
 	end,
@@ -82,7 +83,7 @@ newTalent{
 	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 10, 280) end,
 	action = function(self, t)
 		local tg = self:getTalentTarget(t)
-		local grids = self:project(tg, self.x, self.y, DamageType.COLDNEVERMOVE, {dur=4, dam=self:spellCrit(t.getDamage(self, t))})
+		local grids = self:project(tg, self.x, self.y, DamageType.COLDNEVERMOVE, {shatter_reduce=2, dur=4, dam=self:spellCrit(t.getDamage(self, t))})
 		game.level.map:particleEmitter(self.x, self.y, tg.radius, "ball_ice", {radius=tg.radius})
 		game:playSoundNear(self, "talents/ice")
 		return true
@@ -92,6 +93,7 @@ newTalent{
 		local radius = self:getTalentRadius(t)
 		return ([[Blast a wave of cold all around you with a radius of %d, doing %0.2f cold damage and freezing creatures to the ground for 4 turns.
 		Affected creatures can still act, but cannot move.
+		For each affected creature that is also wet the cooldown of Shatter decreases by 2.
 		The damage will increase with your Spellpower.]]):format(radius, damDesc(self, DamageType.COLD, damage))
 	end,
 }
@@ -122,6 +124,8 @@ newTalent{
 					end
 
 					if not act.dead then
+						act:setEffect(act.EFF_WET, 5, {apply_power=self:combatSpellpower()})
+
 						local add_crit = 0
 						if act.rank == 2 then add_crit = 50
 						elseif act.rank >= 3 then add_crit = 25 end
@@ -146,6 +150,7 @@ newTalent{
 		* Critters will be instantly killed
 		* +50%% critical chance against Normal rank
 		* +25%% critical chance against Elites or Bosses
+		All affected foes will get the wet effect.
 		At most, it will affect %d foes.
 		The damage will increase with your Spellpower.]]):
 		format(damDesc(self, DamageType.COLD, damage), targetcount)

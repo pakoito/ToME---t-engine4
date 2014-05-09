@@ -1094,6 +1094,38 @@ newDamageType{
 	end,
 }
 
+-- Cold damage + freeze chance, increased if wet
+newDamageType{
+	name = "ice storm", type = "ICE_STORM", text_color = "#1133F3#",
+	projector = function(src, x, y, type, dam)
+		local chance = 25
+
+		local target = game.level.map(x, y, Map.ACTOR)
+		if target and target:hasEffect(target.EFF_WET) then dam = dam * 1.3 chance = 50 end
+
+		local realdam = DamageType:get(DamageType.COLD).projector(src, x, y, DamageType.COLD, dam)
+		if rng.percent(chance) then
+			DamageType:get(DamageType.FREEZE).projector(src, x, y, DamageType.FREEZE, {dur=2, hp=70+dam*1.5})
+		end
+		return realdam
+	end,
+}
+
+-- Increased cold damage + freeze chance if wet
+newDamageType{
+	name = "glacial vapour", type = "GLACIAL_VAPOUR", text_color = "#1133F3#",
+	projector = function(src, x, y, type, dam)
+		local chance = 0
+		local target = game.level.map(x, y, Map.ACTOR)
+		if target and target:hasEffect(target.EFF_WET) then dam = dam * 1.3 chance = 15 end
+		local realdam = DamageType:get(DamageType.COLD).projector(src, x, y, DamageType.COLD, dam)
+		if rng.percent(chance) then
+			DamageType:get(DamageType.FREEZE).projector(src, x, y, DamageType.FREEZE, {dur=2, hp=70+dam*1.2})
+		end
+		return realdam
+	end,
+}
+
 -- Cold damage + freeze ground
 newDamageType{
 	name = "cold ground", type = "COLDNEVERMOVE",
@@ -1104,6 +1136,10 @@ newDamageType{
 		if target then
 			if target:canBe("pin") and target:canBe("stun") and not target:attr("fly") and not target:attr("levitation") then
 				target:setEffect(target.EFF_FROZEN_FEET, dam.dur, {apply_power=math.max(src:combatSpellpower(), src:combatMindpower())})
+			end
+
+			if dam.shatter_reduce and target:hasEffect(target.EFF_WET) then
+				src:alterTalentCoolingdown(src.T_SHATTER, -dam.shatter_reduce)
 			end
 		end
 	end,
@@ -1232,6 +1268,10 @@ newDamageType{
 		end
 		local target = game.level.map(x, y, Map.ACTOR)
 		if target then
+			if base.apply_wet then
+				target:setEffect(target.EFF_WET, base.apply_wet, {})
+			end
+
 			if target:checkHit(base.power or src:combatSpellpower(), target:combatPhysicalResist(), 0, 95, 15) and target:canBe("knockback") then
 				target:knockback(srcx, srcy, base.dist or 1)
 				target:crossTierEffect(target.EFF_OFFBALANCE, base.power or src:combatSpellpower())

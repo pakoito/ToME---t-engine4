@@ -43,7 +43,7 @@ newTalent{
 		-- Add a lasting map effect
 		game.level.map:addEffect(self,
 			x, y, t.getDuration(self, t),
-			DamageType.COLD, t.getDamage(self, t),
+			DamageType.GLACIAL_VAPOUR, t.getDamage(self, t),
 			self:getTalentRadius(t),
 			5, nil,
 			{type="ice_vapour"},
@@ -56,6 +56,7 @@ newTalent{
 		local damage = t.getDamage(self, t)
 		local duration = t.getDuration(self, t)
 		return ([[Glacial fumes rise from the ground, doing %0.2f cold damage in a radius of 3 each turn for %d turns.
+		Creatures that are wet will take 30%% more damage and have 15%% chance to get frozen.
 		The damage will increase with your Spellpower.]]):
 		format(damDesc(self, DamageType.COLD, damage), duration)
 	end,
@@ -131,7 +132,7 @@ newTalent{
 		-- Add a lasting map effect
 		game.level.map:addEffect(self,
 			self.x, self.y, t.getDuration(self, t),
-			DamageType.WAVE, {dam=t.getDamage(self, t), x=self.x, y=self.y},
+			DamageType.WAVE, {dam=t.getDamage(self, t), x=self.x, y=self.y, apply_wet=5},
 			1,
 			5, nil,
 			MapEffect.new{color_br=30, color_bg=60, color_bb=200, effect_shader="shader_images/water_effect1.png"},
@@ -151,6 +152,7 @@ newTalent{
 		local radius = self:getTalentRadius(t)
 		return ([[A wall of water rushes out from the caster with an initial radius of 1, increasing 1 per turn to a maximum eventual radius of %d, doing %0.2f cold damage and %0.2f physical damage to all inside, as well as knocking back targets each turn.
 		The tidal wave lasts for %d turns.
+		All creatures hit gain the wet effect which reduces their stun/freeze resistance by half of their value and interracts with other cold spells.
 		The damage and duration will increase with your Spellpower.]]):
 		format(radius, damDesc(self, DamageType.COLD, damage/2), damDesc(self, DamageType.PHYSICAL, damage/2), duration)
 	end,
@@ -212,7 +214,7 @@ newTalent{
 		-- Add a lasting map effect
 		game.level.map:addEffect(self,
 			self.x, self.y, t.getDuration(self, t),
-			DamageType.ICE, t.getDamage(self, t),
+			DamageType.ICE_STORM, t.getDamage(self, t),
 			3,
 			5, nil,
 			{type="icestorm", only_one=true},
@@ -231,6 +233,7 @@ newTalent{
 		local duration = t.getDuration(self, t)
 		return ([[A furious ice storm rages around the caster ,doing %0.2f cold damage in a radius of 3 each turn for %d turns.
 		It has a 25%% chance to freeze damaged targets.
+		If the target is wet the damage increases by 30%% and the freeze chance increases to 50%%.
 		The damage and duration will increase with your Spellpower.]]):format(damDesc(self, DamageType.COLD, damage), duration)
 	end,
 }

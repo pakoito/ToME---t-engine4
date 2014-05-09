@@ -710,6 +710,17 @@ function _M:startTalentCooldown(t)
 	if t.cooldownStart then t.cooldownStart(self, t) end
 end
 
+--- Alter the remanining cooldown of a talent
+-- @param t the talent affect cooldown
+-- @param v the value to add/remove to the cooldown
+function _M:alterTalentCoolingdown(t, v)
+	t = self:getTalentFromId(t)
+	if not self.talents_cd[t.id] then return nil end
+	self.talents_cd[t.id] = self.talents_cd[t.id] + v
+	if self.talents_cd[t.id] <= 0 then self.talents_cd[t.id] = nil end
+	return self.talents_cd[t.id]
+end
+
 --- Is talent in cooldown?
 function _M:isTalentCoolingDown(t)
 	t = self:getTalentFromId(t)

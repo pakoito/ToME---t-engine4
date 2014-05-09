@@ -2770,3 +2770,24 @@ newEffect{
 		self:removeParticles(eff.particle)
 	end,
 }
+
+newEffect{
+	name = "WET",
+	desc = "Wet",
+	long_desc = function(self, eff) return ("Target is drenched with magical water, ."):format() end,
+	type = "magical",
+	subtype = { water=true, ice=true },
+	status = "detrimental",
+	parameters = { power=10 },
+	on_gain = function(self, err) return nil, "+Wet" end,
+	on_lose = function(self, err) return nil, "-Wet" end,
+	activate = function(self, eff)
+		if self:attr("stun_immune") then
+			self:effectTemporaryValue(eff, "stun_immune", -self:attr("stun_immune") / 2)
+		end
+		eff.particle = self:addParticles(Particles.new("circle", 1, {oversize=0.7, a=90, appear=8, speed=-2, img="necromantic_circle", radius=0}))
+	end,
+	deactivate = function(self, eff)
+		self:removeParticles(eff.particle)
+	end,
+}
