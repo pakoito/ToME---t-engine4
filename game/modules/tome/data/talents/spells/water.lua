@@ -68,7 +68,11 @@ newTalent{
 	points = 5,
 	random_ego = "attack",
 	mana = 14,
-	cooldown = function(self, t) return math.floor(self:combatTalentLimit(t, 20, 8, 12, true)) end, -- Limit cooldown <20
+	cooldown = function(self, t)
+		local mod = 1
+		if self:attr("freeze_next_cd_reduce") then mod = 1 - self.freeze_next_cd_reduce self:attr("freeze_next_cd_reduce", -self.freeze_next_cd_reduce) end
+		return math.floor(self:combatTalentLimit(t, 20, 8, 12, true)) * mod
+	end, -- Limit cooldown <20
 	tactical = { ATTACK = { COLD = 1 }, DISABLE = { stun = 3 } },
 	range = 10,
 	direct_hit = true,
@@ -80,15 +84,25 @@ newTalent{
 		local tg = {type="hit", range=self:getTalentRange(t), talent=t}
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
+		local _ _, _, _, x, y = self:canProject(tg, x, y)
+		local target = game.level.map(x, y, Map.ACTOR)
+		if not x or not y then return nil end
+
 		local dam = self:spellCrit(t.getDamage(self, t))
 		self:project(tg, x, y, DamageType.COLD, dam, {type="freeze"})
 		self:project(tg, x, y, DamageType.FREEZE, {dur=t.getDuration(self, t), hp=70 + dam * 1.5})
+
+		if target and self:reactionToward(target) >= 0 then
+			self:attr("freeze_next_cd_reduce", 0.5)
+		end
+
 		game:playSoundNear(self, "talents/water")
 		return true
 	end,
 	info = function(self, t)
 		local damage = t.getDamage(self, t)
 		return ([[Condenses ambient water on a target, freezing it for %d turns and damaging it for %0.2f.
+		If this is used on a friendly target the cooldown is halved.
 		The damage will increase with your Spellpower.]]):format(t.getDuration(self, t), damDesc(self, DamageType.COLD, damage))
 	end,
 }
