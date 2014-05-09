@@ -1247,6 +1247,9 @@ newDamageType{
 				end
 			else
 				game.logSeen(target, "%s resists!", target.name:capitalize())
+				if dam.shock then
+					target:setEffect(target.EFF_SHOCKED, dam.shock, {apply_power=src:combatSpellpower()})
+				end
 			end
 		end
 		return realdam

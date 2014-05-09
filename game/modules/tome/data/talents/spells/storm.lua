@@ -82,13 +82,14 @@ newTalent{
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
 		local dam = t.getDamage(self, t)
-		self:projectile(tg, x, y, DamageType.LIGHTNING_DAZE, {daze=100, dam=self:spellCrit(rng.avg(dam / 3, dam, 3))}, {type="lightning_explosion"})
+		self:projectile(tg, x, y, DamageType.LIGHTNING_DAZE, {shock=5, daze=100, dam=self:spellCrit(rng.avg(dam / 3, dam, 3))}, {type="lightning_explosion"})
 		game:playSoundNear(self, "talents/lightning")
 		return true
 	end,
 	info = function(self, t)
 		local damage = t.getDamage(self, t)
 		return ([[Conjures up a bolt of lightning, doing %0.2f to %0.2f lightning damage and dazing the target for 3 turns.
+		If the target resists the daze effect it is instead shocked, which halves stun/daze resistance, for 5 turns.
 		The damage will increase with your Spellpower.]]):
 		format(damDesc(self, DamageType.LIGHTNING, damage/3), damDesc(self, DamageType.LIGHTNING, damage))
 	end,

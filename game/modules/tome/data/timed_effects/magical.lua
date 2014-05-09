@@ -2772,22 +2772,37 @@ newEffect{
 }
 
 newEffect{
+	name = "SHOCKED",
+	desc = "Shocked",
+	long_desc = function(self, eff) return ("Target is reeling from an lightning shock, halving its stun resistance."):format() end,
+	type = "magical",
+	subtype = { lightning=true },
+	status = "detrimental",
+	on_gain = function(self, err) return nil, "+Shocked" end,
+	on_lose = function(self, err) return nil, "-Shocked" end,
+	activate = function(self, eff)
+		if self:attr("stun_immune") then
+			self:effectTemporaryValue(eff, "stun_immune", -self:attr("stun_immune") / 2)
+		end
+	end,
+	deactivate = function(self, eff)
+	end,
+}
+
+newEffect{
 	name = "WET",
 	desc = "Wet",
-	long_desc = function(self, eff) return ("Target is drenched with magical water, ."):format() end,
+	long_desc = function(self, eff) return ("Target is drenched with magical water, halving its stun resistance."):format() end,
 	type = "magical",
 	subtype = { water=true, ice=true },
 	status = "detrimental",
-	parameters = { power=10 },
 	on_gain = function(self, err) return nil, "+Wet" end,
 	on_lose = function(self, err) return nil, "-Wet" end,
 	activate = function(self, eff)
 		if self:attr("stun_immune") then
 			self:effectTemporaryValue(eff, "stun_immune", -self:attr("stun_immune") / 2)
 		end
-		eff.particle = self:addParticles(Particles.new("circle", 1, {oversize=0.7, a=90, appear=8, speed=-2, img="necromantic_circle", radius=0}))
 	end,
 	deactivate = function(self, eff)
-		self:removeParticles(eff.particle)
 	end,
 }
