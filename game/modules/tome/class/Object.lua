@@ -862,7 +862,7 @@ function _M:getTextualDesc(compare_with, use_actor)
 				return col[2],(" %s"):format(DamageType.dam_def[item].name),{"color","LAST"}
 			end)
 
-		desc:add({"color","ORANGE"}, "General effects: ", {"color","LAST"}, true)
+--		desc:add({"color","ORANGE"}, "General effects: ", {"color","LAST"}, true)
 
 		compare_table_fields(w, compare_with, field, "inc_stats", "%+d", "Changes stats: ", function(item)
 				return (" %s"):format(Stats.stats_def[item].short_name:capitalize())
@@ -1275,7 +1275,7 @@ function _M:getTextualDesc(compare_with, use_actor)
 		self:triggerHook{"Object:descWielder", compare_with=compare_with, compare_fields=compare_fields, compare_table_fields=compare_table_fields, desc=desc, w=w, field=field}
 
 		-- Do not show "general effect" if nothing to show
-		if desc[#desc-2] == "General effects: " then table.remove(desc) table.remove(desc) table.remove(desc) table.remove(desc) end
+--		if desc[#desc-2] == "General effects: " then table.remove(desc) table.remove(desc) table.remove(desc) table.remove(desc) end
 
 		local can_combat_unarmed = false
 		local compare_unarmed = {}
