@@ -1358,14 +1358,14 @@ function _M:combatTalentLimit(t, limit, low, high, raw)
 	if low then
 		local p = limit*(x_high-x_low)
 		local m = x_high*high - x_low*low
-		local halfpoint = (p-m)/(high - low)
-		local add = (limit*(x_high*low-x_low*high) + high*low*(x_low-x_high))/(p-m)
-		return (limit-add)*tl/(tl + halfpoint) + add
+--		local halfpoint = (p-m)/(high - low) -- point at which half progress towards the limit is reached
+--		local add = (limit*(x_high*low-x_low*high) + high*low*(x_low-x_high))/(p-m)
+		local ah = (limit*(x_high*low-x_low*high)+ high*low*(x_low-x_high))/(high - low) -- add*halfpoint product calculated at once to avoid possible divide by zero
+		return (limit*tl + ah)/(tl + (p-m)/(high - low)) --factored version of above formula
 --		return (limit-add)*tl/(tl + halfpoint) + add, halfpoint, add
-	else
-		local add = 0
-		local halfpoint = limit*x_high/(high-add)-x_high
-		return (limit-add)*tl/(tl + halfpoint) + add
+	else -- assume low and x_low are both 0
+		local halfpoint = limit*x_high/high-x_high
+		return limit*tl/(tl + halfpoint)
 --		return (limit-add)*tl/(tl + halfpoint) + add, halfpoint, add
 	end
 end
@@ -1379,19 +1379,19 @@ end
 -- halfpoint and add are internally computed to match the desired high/low values
 -- note that the progression low->high->limit must be monotone, consistently increasing or decreasing
 function _M:combatStatLimit(stat, limit, low, high)
-	local x_low, x_high = 10,100 -- Implied talent levels for low and high values respectively
+	local x_low, x_high = 10,100 -- Implied stat levels for low and high values respectively
 	stat = type(stat) == "string" and self:getStat(stat,nil,true) or stat
 	if low then
 		local p = limit*(x_high-x_low)
 		local m = x_high*high - x_low*low
-		local halfpoint = (p-m)/(high - low)
-		local add = (limit*(x_high*low-x_low*high) + high*low*(x_low-x_high))/(p-m)
-		return (limit-add)*stat/(stat + halfpoint) + add
+--		local halfpoint = (p-m)/(high - low) -- point at which half progress towards the limit is reached
+--		local add = (limit*(x_high*low-x_low*high) + high*low*(x_low-x_high))/(p-m)
+		local ah = (limit*(x_high*low-x_low*high)+ high*low*(x_low-x_high))/(high - low) -- add*halfpoint product calculated at once to avoid possible divide by zero
+		return (limit*stat + ah)/(stat + (p-m)/(high - low)) --factored version of above formula
 --		return (limit-add)*stat/(stat + halfpoint) + add, halfpoint, add
-	else
-		local add = 0
-		local halfpoint = limit*x_high/(high-add)-x_high
-		return (limit-add)*stat/(stat + halfpoint) + add
+	else -- assume low and x_low are both 0
+		local halfpoint = limit*x_high/high-x_high
+		return limit*stat/(stat + halfpoint)
 --		return (limit-add)*stat/(stat + halfpoint) + add, halfpoint, add
 	end
 end
