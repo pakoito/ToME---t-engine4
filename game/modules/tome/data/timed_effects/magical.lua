@@ -1993,11 +1993,11 @@ newEffect{
 		self:removeTemporaryValue("resists", old_eff.resid)
 		self:removeTemporaryValue("reduce_detrimental_status_effects_time", old_eff.durid)
 
-		eff.defid = self:addTemporaryValue("combat_def", eff.defense)
-		eff.resid= self:addTemporaryValue("resists", {all=eff.resists})
-		eff.durid = self:addTemporaryValue("reduce_detrimental_status_effects_time", eff.effect_reduction)
-
-
+		old_eff.defid = self:addTemporaryValue("combat_def", old_eff.defense)
+		old_eff.resid= self:addTemporaryValue("resists", {all=old_eff.resists})
+		old_eff.durid = self:addTemporaryValue("reduce_detrimental_status_effects_time", old_eff.effect_reduction)
+		old_eff.dur = math.max(old_eff.dur, new_eff.dur)
+		return old_eff
 	end,
 	deactivate = function(self, eff)
 		self:removeTemporaryValue("combat_def", eff.defid)
