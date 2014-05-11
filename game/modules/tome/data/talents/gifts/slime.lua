@@ -103,12 +103,12 @@ newTalent{
 	requires_target = false,
 	tactical = { DEFEND = 1 },
 	getChance = function(self, t) return self:combatTalentLimit(t, 100, 7, 15) end, -- Limit < 100%
-	getDamage = function(self, t) return self:combatTalentMindDamage(t, 10, 80) end,
+	getDamage = function(self, t) return self:combatTalentMindDamage(t, 10, 50) end,
 	activate = function(self, t)
 		game:playSoundNear(self, "talents/slime")
 		local power = t.getDamage(self, t)
 		return {
-			onhit = self:addTemporaryValue("on_melee_hit", {[DamageType.ACID] = t.getDamage(self, t)}),
+			onhit = self:addTemporaryValue("on_melee_hit", {[DamageType.ACID_DISARM]={dam=power, chance=t.getChance(self, t)}}),
 		}
 	end,
 	deactivate = function(self, t, p)
