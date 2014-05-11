@@ -54,6 +54,11 @@ newBirthDescriptor{
 		"#LIGHT_BLUE# * +4 Magic, +0 Willpower, +0 Cunning",
 		"#GOLD#Life per level:#LIGHT_BLUE# +2",
 	},
+	birth_example_particles = {
+		function(actor)
+			if core.shader.allow("adv") then actor:addParticles(Particles.new("shader_ring_rotating", 1, {toback=true, a=0.5, rotation=0, radius=1.5, img="bone_shield"}, {type="boneshield", chargesCount=4})) end
+		end,
+	},
 	power_source = {arcane=true, technique=true},
 	stats = { str=4, mag=4, dex=1, },
 	talents_types = {

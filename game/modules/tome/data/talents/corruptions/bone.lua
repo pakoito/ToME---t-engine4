@@ -132,7 +132,7 @@ newTalent{
 	callbackOnRest = function(self, t)
 		local nb = t.getNb(self, t)
 		local p = self.sustain_talents[t.id]
-		if not p or #p.particles < nb then return true end
+		if not p or p.nb < nb then return true end
 	end,
 	callbackOnActBase = function(self, t)
 		local p = self.sustain_talents[t.id]
@@ -140,29 +140,53 @@ newTalent{
 		if p.next_regen <= 0 then
 			p.next_regen = p.between_regens or 10
 
-			if #p.particles < t.getNb(self, t) then
-				p.particles[#p.particles+1] = self:addParticles(Particles.new("bone_shield", 1))
+			if p.nb < t.getNb(self, t) then
+				p.nb = p.nb + 1
+				if p.adv_gfx then
+					if p.particles[1] and p.particles[1]._shader and p.particles[1]._shader.shad then
+						p.particles[1]._shader:setUniform("chargesCount", p.nb)
+						p.particles[1].shader.chargesCount = p.nb
+					end
+				else
+					p.particles[#p.particles+1] = self:addParticles(Particles.new("bone_shield", 1))
+				end
 				game.logSeen(self, "A part of %s's bone shield regenerates.", self.name)
 			end
 		end
 	end,
 	absorb = function(self, t, p)
-		local pid = table.remove(p.particles)
-		if pid then
-			game.logPlayer(self, "Your bone shield absorbs the damage!")
+		if not p.nb or p.nb <= 0 then return end
+
+		p.nb = p.nb - 1
+		if p.adv_gfx then
+			if p.particles[1] and p.particles[1]._shader and p.particles[1]._shader.shad then
+				p.particles[1]._shader:setUniform("chargesCount", p.nb)
+				p.particles[1].shader.chargesCount = p.nb
+			end
+		else
+			local pid = table.remove(p.particles)
 			self:removeParticles(pid)
 		end
-		return pid
+
+		game.logPlayer(self, "Your bone shield absorbs the damage!")
+		return true
 	end,
 	activate = function(self, t)
 		local nb = t.getNb(self, t)
 
+		local adv_gfx = core.shader.allow("adv") and true or false
 		local ps = {}
-		for i = 1, nb do ps[#ps+1] = self:addParticles(Particles.new("bone_shield", 1)) end
+		if adv_gfx then
+			ps[1] = self:addParticles(Particles.new("shader_ring_rotating", 1, {toback=true, a=0.5, rotation=0, radius=1.5, img="bone_shield"}, {type="boneshield", chargesCount=nb}))
+		else
+			for i = 1, nb do ps[#ps+1] = self:addParticles(Particles.new("bone_shield", 1)) end
+		end
 
 		game:playSoundNear(self, "talents/spell_generic2")
 		return {
+			adv_gfx = adv_gfx,
 			particles = ps,
+			nb = nb,
 			next_regen = t.getRegen(self, t),
 			between_regens = t.getRegen(self, t),
 		}
