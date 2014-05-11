@@ -47,7 +47,6 @@ newTalent{
 	end,
 }
 
--- The damage on this was ludicrous, especially considering 3 of the 4 possible debuffs are among the stronger in the game and have *no save check*
 newTalent{
 	name = "Poisonous Spores",
 	type = {"wild-gift/slime", 2},
@@ -59,8 +58,8 @@ newTalent{
 	cooldown = 10,
 	range = 10,
 	tactical = { ATTACKAREA = { NATURE = 2 }, DISABLE = 1 },
-	radius = function(self, t) return math.floor(self:combatTalentScale(t, 1, 2.7)) end, -- yields 2 at tl=3
-	getDamage = function(self, t) return self:combatTalentMindDamage(t, 30, 200) end,
+	radius = function(self, t) return math.floor(self:combatTalentScale(t, 1, 2.7)) end,
+	getDamage = function(self, t) return self:combatTalentMindDamage(t, 30, 390) end,
 	critPower = function(self, t) return self:combatTalentMindDamage(t, 10, 40) end,
 	requires_target = true,
 	action = function(self, t)
@@ -75,7 +74,7 @@ newTalent{
 				target:setEffect(poison, 10, {src=self, power=dam/10, 
 				reduce=self:combatTalentLimit(t, 100, 12, 20), 
 				fail=math.ceil(self:combatTalentLimit(t, 100, 6, 10)),
-				heal_factor=self:combatTalentLimit(t, 100, 24, 40)}) -- Limit effects <100%
+				heal_factor=self:combatTalentLimit(t, 100, 24, 40)})
 			end
 		end, 0, {type="slime"})
 
