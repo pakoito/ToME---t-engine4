@@ -398,7 +398,7 @@ end
 function _M:updateMainShader()
 	if game.fbo_shader then
 		local effects = {}
-		local pf = game.posteffects
+		local pf = game.posteffects or {}
 
 		-- Set shader HP warning
 		if self.life ~= self.shader_old_life then
