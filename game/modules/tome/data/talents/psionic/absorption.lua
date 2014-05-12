@@ -71,7 +71,7 @@ newTalent{
 	mode = "sustained", no_sustain_autoreset = true,
 	points = 5,
 	sustain_psi = 10,
-	cooldown = function(self, t) return 15 - self:getTalentLevelRaw(t) end,
+	cooldown = function(self, t) return math.ceil(self:combatTalentLimit(t, 5, 14, 10, true)) end, --Limit > 5 Note: Shield Discipline
 	range = 10,
 	no_energy = true,
 	tactical = { DEFEND = 2 },
@@ -199,7 +199,7 @@ newTalent{
 	mode = "sustained", no_sustain_autoreset = true,
 	points = 5,
 	sustain_psi = 10,
-	cooldown = function(self, t) return 15 - self:getTalentLevelRaw(t) end,
+	cooldown = function(self, t) return math.ceil(self:combatTalentLimit(t, 5, 14, 10, true)) end, --Limit > 5 Note: Shield Discipline
 	range = 10,
 	no_energy = true,
 	tactical = { DEFEND = 2 },
@@ -324,7 +324,7 @@ newTalent{
 	mode = "sustained", no_sustain_autoreset = true,
 	points = 5,
 	sustain_psi = 10,
-	cooldown = function(self, t) return 15 - self:getTalentLevelRaw(t) end,
+	cooldown = function(self, t) return math.ceil(self:combatTalentLimit(t, 5, 14, 10, true)) end, --Limit > 5 Note: Shield Discipline
 	range = 10,
 	no_energy = true,
 	tactical = { DEFEND = 2 },

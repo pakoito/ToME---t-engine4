@@ -61,7 +61,7 @@ newTalent{
 	points = 5,
 	require = { stat = { cun=function(level) return 12 + level * 6 end }, },
 	mode = "passive",
-	getDamage = function(self, t) return self:combatTalentScale(t, 10, 30, 0.5) end,
+	getDamage = function(self, t) return self:getTalentLevel(t) * 10 end,
 	getPercentInc = function(self, t) return math.sqrt(self:getTalentLevel(t) / 5) / 4 end,
 	info = function(self, t)
 		local damage = t.getDamage(self, t)

@@ -28,10 +28,11 @@ newTalent{
 	no_energy = true,
 	tactical = { BUFF = 2 },
 	getSpeed = function(self, t) return self:combatTalentScale(t, 0.2, 1.0, 0.75) end,
+	getKBVulnerable = function(self, t) return self:combatTalentLimit(t, 1, 0.2, 0.8) end,
 	activate = function(self, t)
 		return {
 			speed = self:addTemporaryValue("movement_speed", t.getSpeed(self, t)),
-			knockback = self:addTemporaryValue("knockback_immune", -t.getSpeed(self, t))
+			knockback = self:addTemporaryValue("knockback_immune", -t.getKBVulnerable(self, t))
 		}
 	end,
 	deactivate = function(self, t, p)
@@ -41,9 +42,10 @@ newTalent{
 	end,
 	info = function(self, t)
 		local inc = t.getSpeed(self, t)
-		return ([[Gently float yourself a little above the ground, allowing you to slide around the battle quickly.
-		Increases your movement speed and decreases your knockback resistance by %d%%.]]):
-		format(inc*100)
+		return ([[You telekinetically float just off the ground.
+		This allows you to slide around the battle quickly, increasing your movement speed by %d%%.
+		It also makes you more vulnerable to being pushed around (-%d%% knockback resistance).]]):
+		format(inc*100, t.getKBVulnerable(self, t)*100)
 	end,
 }
 
@@ -56,7 +58,7 @@ newTalent{
 	points = 5,
 	tactical = { CLOSEIN = 2 },
 	range = function(self, t)
-		return self:combatTalentLimit(t, 10, 4, 9) -- Limit base range to 10
+		return self:combatTalentLimit(t, 10, 4, 9) -- Limit < 10
 	end,
 	action = function(self, t)
 		local tg = {type="bolt", range=self:getTalentRange(t)}
@@ -77,8 +79,7 @@ newTalent{
 	info = function(self, t)
 		local range = self:getTalentRange(t)
 		return ([[Briefly extend your telekinetic reach to grab an enemy and haul them towards you.
-		Works on enemies up to %d squares away. The cooldown decreases, and the range increases, with additional talent points spent.
-		This talent receives a reduced benefit from the Reach talent.]]):
+		Works on enemies up to %d squares away. The cooldown decreases, and the range increases, with additional talent points spent.]]):
 		format(range)
 	end,
 }
@@ -92,7 +93,7 @@ newTalent{
 	psi = 30,
 	no_energy = true,
 	require = psi_cun_req3,
-	getDuration = function(self, t) return math.floor(self:combatLimit(self:combatMindpower(0.1), 10, 4, 0, 6, 6)) end, -- Limit < 80
+	getDuration = function(self, t) return math.floor(self:combatLimit(self:combatMindpower(0.1), 10, 4, 0, 6, 6)) end, -- Limit < 10
 	speed = function(self, t) return self:combatTalentScale(t, 0.6, 2.0, 0.75) end,
 	getBoost = function(self, t)
 		return self:combatScale(self:getTalentLevel(t)*self:combatStatTalentIntervalDamage(t, "combatMindpower", 1, 9), 15, 0, 49, 34)
@@ -107,7 +108,7 @@ newTalent{
 		local percentinc = 100 * inc
 		local boost = t.getBoost(self, t)
 		return ([[Encase your body in a sheath of thought-quick forces, allowing you to control your body's movements directly without the inefficiency of dealing with crude mechanisms like nerves and muscles.
-		Increases Accuracy by %d, your critical strike chance by %0.2f%% and your physical speed by %d%% for %d turns.
+		Increases Accuracy by %d, your critical strike chance by %0.1f%% and your physical speed by %d%% for %d turns.
 		The duration improves with your Mindpower.]]):
 		format(boost, 0.5*boost, percentinc, t.getDuration(self, t))
 	end,
@@ -123,7 +124,7 @@ newTalent{
 	points = 5,
 	tactical = { CLOSEIN = 2 },
 	range = function(self, t)
-		return self:combatTalentLimit(t, 10, 4, 9) -- Limit base range to 10
+		return self:combatTalentLimit(t, 10, 4, 9) -- Limit < 10
 	end,
 	action = function(self, t)
 		local tg = {default_target=self, type="ball", nolock=true, pass_terrain=false, nowarning=true, range=self:getTalentRange(t), radius=0, requires_knowledge=false}
