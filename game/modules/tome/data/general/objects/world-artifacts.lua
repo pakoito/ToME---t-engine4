@@ -1603,12 +1603,12 @@ newEntity{ base = "BASE_MACE",
 			local o, item, inven_id = who:findInAllInventoriesBy("define_as", "URESLAK_FEMUR")
 			if not o or not who:getInven(inven_id).worn then return end
 
-			who:onTakeoff(o, true)
+			who:onTakeoff(o, inven_id, true)
 			local b = rng.table(o.ureslak_bonuses)
 			o.name = "Ureslak's "..b.name.." Femur"
 			o.combat.damtype = b.damtype
 			o.wielder = b.wielder
-			who:onWear(o, true)
+			who:onWear(o, inven_id, true)
 			game.logSeen(who, "#GOLD#Ureslak's Femur glows and shimmers!")
 		end },
 	},
@@ -2937,20 +2937,20 @@ newEntity{ base = "BASE_LONGSWORD", define_as="CORPUS",
 		special_on_kill = {desc="grows dramatically in power", fct=function(combat, who, target)
 			local o, item, inven_id = who:findInAllInventoriesBy("define_as", "CORPUS")
 			if not o or not who:getInven(inven_id).worn then return end
-			who:onTakeoff(o, true)
+			who:onTakeoff(o, inven_id, true)
 			o.combat.physcrit = (o.combat.physcrit or 0) + 2
 			o.wielder.combat_critical_power = (o.wielder.combat_critical_power or 0) + 4
-			who:onWear(o, true)
+			who:onWear(o, inven_id, true)
 			if not rng.percent(o.combat.physcrit*0.8) or o.combat.physcrit < 30 then return end
 			o.summon(o, who)
 		end},
 		special_on_crit = {desc="grows in power", on_kill=1, fct=function(combat, who, target)
 			local o, item, inven_id = who:findInAllInventoriesBy("define_as", "CORPUS")
 			if not o or not who:getInven(inven_id).worn then return end
-			who:onTakeoff(o, true)
+			who:onTakeoff(o, inven_id, true)
 			o.combat.physcrit = (o.combat.physcrit or 0) + 1
 			o.wielder.combat_critical_power = (o.wielder.combat_critical_power or 0) + 2
-			who:onWear(o, true)
+			who:onWear(o, inven_id, true)
 			if not rng.percent(o.combat.physcrit*0.8) or o.combat.physcrit < 30 then return end
 			o.summon(o, who)
 		end},
@@ -3047,9 +3047,9 @@ newEntity{ base = "BASE_LONGSWORD",
 			if not o or not who:getInven(inven_id).worn then return end
 			if o.wielder.combat_mentalresist >= 0 then return end
 			o.skipfunct=1
-			who:onTakeoff(o, true)
+			who:onTakeoff(o, inven_id, true)
 			o.wielder.combat_mentalresist = (o.wielder.combat_mentalresist or 0) + 2
-			who:onWear(o, true)
+			who:onWear(o, inven_id, true)
 			o.skipfunct=nil
 		end},
 	},
@@ -3240,7 +3240,8 @@ newEntity{ base = "BASE_GAUNTLETS",
 		local Stats = require "engine.interface.ActorStats"
 		local Talents = require "engine.interface.ActorTalents"
 		local DamageType = require "engine.DamageType"
-		who:onTakeoff(self, true)
+		local _, _, inven_id = who:findInAllInventoriesByObject(self)
+		who:onTakeoff(self, inven_id, true)
 		self.wielder=nil
 		if level==2 then -- LEVEL 2
 		self.desc = [[These once brilliant voratun gauntlets appear heavily decayed. Originally used in the spellhunt, they were often used to destroy arcane artifacts, ridding the world of their influence.]]
@@ -3365,7 +3366,7 @@ newEntity{ base = "BASE_GAUNTLETS",
 		end
 		end
 
-		who:onWear(self, true)
+		who:onWear(self, inven_id, true)
 	end,
 	max_power = 150, power_regen = 1,
 	use_power = { name = "destroy an arcane item (of a higher tier than the gauntlets)", power = 1, use = function(self, who, obj_inven, obj_item)
@@ -3805,9 +3806,9 @@ newEntity{ base = "BASE_LITE", --Thanks Frumple!
 		who:project({type="ball", range=0, radius=self.wielder.lite}, who.x, who.y, engine.DamageType.LITE, 100) -- Light the space!
 		if (5 + math.floor(self.charge/20)) > self.wielder.lite and self.wielder.lite < 10 then
 			local p = self.power
-			who:onTakeoff(self, true)
+			who:onTakeoff(self, who.INVEN_LITE, true)
 			self.wielder.lite = math.min(10, 5+math.floor(self.charge/20))
-			who:onWear(self, true)
+			who:onWear(self, who.INVEN_LITE, true)
 			self.power = p
 		end
 	end,
@@ -3842,9 +3843,9 @@ newEntity{ base = "BASE_LITE", --Thanks Frumple!
 			self.charge=0
 			
 			local p = self.power
-			who:onTakeoff(self, true)
+			who:onTakeoff(self, who.INVEN_LITE, true)
 			self.wielder.lite = 5
-			who:onWear(self, true)
+			who:onWear(self, who.INVEN_LITE, true)
 			self.power = p
 			return {id=true, used=true}
 		end
@@ -4667,10 +4668,10 @@ newEntity{ base = "BASE_TOOL_MISC", --Thanks Alex!
 		use = function(self, who)
 			self.direction = self.direction * -1
 			self.finished = false
-			who:onTakeoff(self, true)
+			who:onTakeoff(self, who.INVEN_TOOL, true)
 			self.wielder.inc_damage.all = 0
 			self.wielder.flat_damage_armor.all = 0
-			who:onWear(self, true)
+			who:onWear(self, who.INVEN_TOOL, true)
 			game.logPlayer(who, "#GOLD#The sands slowly begin falling in the other direction.")
 		end
 	},
@@ -4689,7 +4690,7 @@ newEntity{ base = "BASE_TOOL_MISC", --Thanks Alex!
 		local who = self.worn_by
 		local direction=self.direction
 		if self.finished == true then return end
-		who:onTakeoff(self, true)
+		who:onTakeoff(self, who.INVEN_TOOL, true)
 		
 		self.wielder.resists.all = self.wielder.resists.all + direction * 3
 		self.wielder.movement_speed = self.wielder.movement_speed + direction * 0.04
@@ -4708,7 +4709,7 @@ newEntity{ base = "BASE_TOOL_MISC", --Thanks Alex!
 			self.finished=true
 		end
 		
-		who:onWear(self, true)
+		who:onWear(self, who.INVEN_TOOL, true)
 	end,
 }
 
@@ -6210,9 +6211,9 @@ newEntity{ base = "BASE_GREATMAUL",
 			local DamageType = require "engine.DamageType"
 			local Stats = require "engine.interface.ActorStats"
 			local d
-			d = who:showInventory("Use which gem?", who:getInven("INVEN"), function(gem) return gem.type == "gem" and gem.imbue_powers and gem.material_level end, 
-				function(gem, gem_item)
-				who:onTakeoff(self)
+			d = who:showInventory("Use which gem?", who:getInven("INVEN"), function(gem) return gem.type == "gem" and gem.imbue_powers and gem.material_level end, function(gem, gem_item)
+				local _, _, inven_id = who:findInAllInventoriesByObject(self)
+				who:onTakeoff(self, inven_id)
 				local name_old=self.name
 				local old_hotkey
 				for i, v in pairs(who.hotkey) do
@@ -6346,7 +6347,7 @@ newEntity{ base = "BASE_GREATMAUL",
 					self.talent_on_spell = self.talent_on_spell or {}
 					table.append(self.talent_on_spell, gem.talent_on_spell)
 				end
-				who:onWear(self)
+				who:onWear(self, inven_id)
 				for i, v in pairs(who.hotkey) do
 					if v[2]==name_old then
 						v[2]=self.name
@@ -6763,7 +6764,8 @@ newEntity{ base = "BASE_MASSIVE_ARMOR",
 		local boost = self.blood_charge
 		local dur = self.blood_dur
 		local storepower=self.power
-		who:onTakeoff(self, true)
+		local _, _, inven_id = who:findInAllInventoriesByObject(self)
+		who:onTakeoff(self, inven_id, true)
 		
 		self.wielder = {
 			inc_stats = { [Stats.STAT_STR] = math.ceil(10 + boost * dur/5),  [Stats.STAT_CON] = math.ceil(10 + boost * dur/5), },
@@ -6775,7 +6777,7 @@ newEntity{ base = "BASE_MASSIVE_ARMOR",
 			on_melee_hit={[DamageType.PHYSICAL] = math.ceil(30 + boost * dur * 0.8)},
 			resists={[DamageType.PHYSICAL] = math.ceil(20 + boost/5 * dur)},
 		}
-		who:onWear(self, true)
+		who:onWear(self, inven_id, true)
 		self.power = storepower
 		if self.blood_dur > 0 then
 			self.blood_dur = self.blood_dur - 1

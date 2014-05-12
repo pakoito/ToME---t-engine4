@@ -509,6 +509,26 @@ function _M:findInAllInventoriesBy(prop, value)
 	end
 end
 
+--- Finds an object by property in an inventory
+-- @param inven the inventory to look into
+-- @param prop the property to look for
+-- @param value the value to look for, can be a function
+function _M:findInInventoryByObject(so)
+	for item, o in ipairs(inven) do
+		if o == so then return o, item end
+	end
+end
+
+--- Finds an object by property in all the actor's inventories
+-- @param prop the property to look for
+-- @param value the value to look for, can be a function
+function _M:findInAllInventoriesByObject(so)
+	for inven_id, inven in pairs(self.inven) do
+		local o, item = self:findInInventoryByObject(inven, so)
+		if o and item then return o, item, inven_id end
+	end
+end
+
 --- Applies fct over all items
 -- @param inven the inventory to look into
 -- @param fct the function to be called. It will receive three parameters: inven, item, object

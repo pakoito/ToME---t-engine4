@@ -1357,6 +1357,9 @@ function _M:handleEffect(player, eff_id, e, p, x, y, hs, bx, by, is_first, scale
 		self.tbuff[eff_id..":"..dur..":"..charges] = {eff_id, "tbuff"..eff_id, function(x, y)
 			core.display.drawQuad(x+4, y+4, 32, 32, 0, 0, 0, 255)
 			e.display_entity:toScreen(self.hotkeys_display_icons.tiles, x+4, y+4, 32, 32)
+			if e.get_fractional_percent then
+				core.display.drawQuadPart(x +4 , y + 4, 32, 32, e.get_fractional_percent(self, p), 128, 128, 128, 200)
+			end
 			UI:drawFrame(self.buffs_base, x, y, icon[1], icon[2], icon[3], 1)
 
 			if txt and not txt2 then

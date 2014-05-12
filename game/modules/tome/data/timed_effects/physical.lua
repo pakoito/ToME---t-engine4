@@ -1057,7 +1057,13 @@ newEffect{
 	parameters = {power=1000},
 	on_gain = function(self, err) return "#Target# prepares for the next kill!.", "+Wild Speed" end,
 	on_lose = function(self, err) return "#Target# slows down.", "-Wild Speed" end,
+	get_fractional_percent = function(self, eff)
+		local d = game.turn - eff.start_turn
+		return util.bound(360 - d / eff.possible_end_turns * 360, 0, 360)
+	end,
 	activate = function(self, eff)
+		eff.start_turn = game.turn
+		eff.possible_end_turns = 10 * (eff.dur+1)
 		eff.tmpid = self:addTemporaryValue("wild_speed", 1)
 		eff.moveid = self:addTemporaryValue("movement_speed", eff.power/100)
 		if self.ai_state then eff.aiid = self:addTemporaryValue("ai_state", {no_talents=1}) end -- Make AI not use talents while using it
@@ -1079,7 +1085,13 @@ newEffect{
 	parameters = {power=1000},
 	on_gain = function(self, err) return "#Target# prepares for the next kill!.", "+Hunter" end,
 	on_lose = function(self, err) return "#Target# slows down.", "-Hunter" end,
+	get_fractional_percent = function(self, eff)
+		local d = game.turn - eff.start_turn
+		return util.bound(360 - d / eff.possible_end_turns * 360, 0, 360)
+	end,
 	activate = function(self, eff)
+		eff.start_turn = game.turn
+		eff.possible_end_turns = 10 * (eff.dur+1)
 		eff.tmpid = self:addTemporaryValue("wild_speed", 1)
 		eff.moveid = self:addTemporaryValue("movement_speed", eff.power/100)
 		if self.ai_state then eff.aiid = self:addTemporaryValue("ai_state", {no_talents=1}) end -- Make AI not use talents while using it
@@ -1101,7 +1113,13 @@ newEffect{
 	parameters = {power=1000},
 	on_gain = function(self, err) return "#Target# prepares for the next kill!.", "+Step Up" end,
 	on_lose = function(self, err) return "#Target# slows down.", "-Step Up" end,
+	get_fractional_percent = function(self, eff)
+		local d = game.turn - eff.start_turn
+		return util.bound(360 - d / eff.possible_end_turns * 360, 0, 360)
+	end,
 	activate = function(self, eff)
+		eff.start_turn = game.turn
+		eff.possible_end_turns = 10 * (eff.dur+1)
 		eff.tmpid = self:addTemporaryValue("step_up", 1)
 		eff.moveid = self:addTemporaryValue("movement_speed", eff.power/100)
 		if self.ai_state then eff.aiid = self:addTemporaryValue("ai_state", {no_talents=1}) end -- Make AI not use talents while using it
@@ -1123,7 +1141,13 @@ newEffect{
 	parameters = {},
 	on_gain = function(self, err) return "#Target# turns into pure lightning!.", "+Lightning Speed" end,
 	on_lose = function(self, err) return "#Target# is back to normal.", "-Lightning Speed" end,
+	get_fractional_percent = function(self, eff)
+		local d = game.turn - eff.start_turn
+		return util.bound(360 - d / eff.possible_end_turns * 360, 0, 360)
+	end,
 	activate = function(self, eff)
+		eff.start_turn = game.turn
+		eff.possible_end_turns = 10 * (eff.dur+1)
 		eff.tmpid = self:addTemporaryValue("lightning_speed", 1)
 		eff.moveid = self:addTemporaryValue("movement_speed", eff.power/100)
 		eff.resistsid = self:addTemporaryValue("resists", {
