@@ -104,7 +104,7 @@ function _M:addObject(inven_id, o)
 
 	-- Do whatever is needed when wearing this object
 	if inven.worn then
-		self:onWear(o)
+		self:onWear(o, self.inven_def[inven.id].short_name)
 	end
 
 	self:onAddObject(o)
@@ -162,8 +162,8 @@ end
 -- @param item the item id to drop
 -- @param no_unstack if the item was a stack takes off the whole stack if true
 -- @return the object removed or nil if no item existed and a boolean saying if there is no more objects
-function _M:removeObject(inven, item, no_unstack)
-	local inven = self:getInven(inven)
+function _M:removeObject(inven_id, item, no_unstack)
+	local inven = self:getInven(inven_id)
 
 	if not inven[item] then return false, true end
 
@@ -180,7 +180,7 @@ function _M:removeObject(inven, item, no_unstack)
 
 	-- Do whatever is needed when taking off this object
 	if inven.worn then
-		self:onTakeoff(o)
+		self:onTakeoff(o, self.inven_def[inven.id].short_name)
 	end
 
 	self:onRemoveObject(o)
@@ -400,10 +400,10 @@ function _M:takeoffObject(inven, item)
 end
 
 --- Call when an object is worn
-function _M:onWear(o)
+function _M:onWear(o, inven_id)
 	-- Apply wielder properties
 	o.wielded = {}
-	o:check("on_wear", self)
+	o:check("on_wear", self, inven_id)
 	if o.wielder then
 		for k, e in pairs(o.wielder) do
 			o.wielded[k] = self:addTemporaryValue(k, e)
@@ -412,7 +412,7 @@ function _M:onWear(o)
 end
 
 --- Call when an object is taken off
-function _M:onTakeoff(o)
+function _M:onTakeoff(o, inven_id)
 	if o.wielded then
 		for k, id in pairs(o.wielded) do
 			if type(id) == "table" then
@@ -422,7 +422,7 @@ function _M:onTakeoff(o)
 			end
 		end
 	end
-	o:check("on_takeoff", self)
+	o:check("on_takeoff", self, inven_id)
 	o.wielded = nil
 end
 

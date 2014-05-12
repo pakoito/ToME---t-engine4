@@ -26,7 +26,7 @@ local DamageType = require "engine.DamageType"
 -------------------------------------------------------
 --Nature and Antimagic---------------------------------
 -------------------------------------------------------
- newEntity{
+newEntity{
 	power_source = {nature=true},
 	name = "blooming ", prefix=true, instant_resolve=true,
 	keywords = {blooming=true},
@@ -221,7 +221,7 @@ newEntity{
 	},
 }
 
- newEntity{
+newEntity{
 	power_source = {psionic=true},
 	name = "hungering ", prefix=true, instant_resolve=true,
 	keywords = {hungering=true},
@@ -241,26 +241,26 @@ newEntity{
 	charm_power = resolvers.mbonus_material(80, 20),
 	charm_power_def = {add=5, max=10, floor=true},
 	resolvers.charm("inflict mind damage; gain psi and hate", 20,
-		function(self, who)
-			local tg = {type="hit", range=10,}
-			local x, y, target = who:getTarget(tg)
-			if not x or not y then return nil end
-			if target then
-				if target:checkHit(who:combatMindpower(), target:combatMentalResist(), 0, 95, 5) then
-					local damage = self:getCharmPower(who) + (who:combatMindpower() * (1 + self.material_level/5))
-					who:project(tg, x, y, engine.DamageType.MIND, {dam=damage, alwaysHit=true}, {type="mind"})
-					who:incPsi(damage/10)
-					who:incHate(damage/10)
-				else
-					game.logSeen(target, "%s resists the mind attack!", target.name:capitalize())
-				end
-			end
-			return {id=true, used=true}
-		end
+									function(self, who)
+										local tg = {type="hit", range=10,}
+										local x, y, target = who:getTarget(tg)
+										if not x or not y then return nil end
+										if target then
+											if target:checkHit(who:combatMindpower(), target:combatMentalResist(), 0, 95, 5) then
+												local damage = self:getCharmPower(who) + (who:combatMindpower() * (1 + self.material_level/5))
+												who:project(tg, x, y, engine.DamageType.MIND, {dam=damage, alwaysHit=true}, {type="mind"})
+												who:incPsi(damage/10)
+												who:incHate(damage/10)
+											else
+												game.logSeen(target, "%s resists the mind attack!", target.name:capitalize())
+											end
+										end
+										return {id=true, used=true}
+									end
 	),
 }
 
- newEntity{
+newEntity{
 	power_source = {psionic=true},
 	name = " of nightfall", suffix=true, instant_resolve=true,
 	keywords = {nightfall=true},
@@ -287,6 +287,19 @@ newEntity{
 ------------------------------------------------
 -- Mindstar Sets -------------------------------
 ------------------------------------------------
+local other_hand = function(object, who, inven_id)
+	if inven_id == "MAINHAND" then return "OFFHAND" end
+	if inven_id == "OFFHAND" then return "MAINHAND" end
+end
+
+local set_complete
+
+local set_broken = function(self, who, inven_id, set_objects)
+	if inven_id == "MAINHAND" then
+		game.logPlayer(who, "#SLATE#The link between the mindstars is broken.")
+	end
+end
+
 -- Wild Cards: Capable of completing other sets
 newEntity{
 	power_source = {nature=true},
@@ -311,35 +324,25 @@ newEntity{
 			[DamageType.NATURE] = resolvers.mbonus_material(8, 2),
 		},
 	},
-	resolvers.charm("completes a nature powered mindstar set", 20,
-		function(self, who, ms_inven)
-			if who:getInven("PSIONIC_FOCUS") and who:getInven("PSIONIC_FOCUS")[1] == self then
-				game.logPlayer(who, "You cannot use %s while using it as a psionic focus.", self.name)
-				return
-			end		
-			who:showEquipment("Harmonize with which mindstar?", function(o) return o.subtype == "mindstar" and o.set_list and o ~= self  and o.power_source and o.power_source.nature and not o.set_complete end, function(o)
-				-- remove any existing set properties
-				self.define_as =nil
-				self.set_list = nil
-				self.on_set_complete = nil
-
-				-- define the mindstar so it matches the set list of the target mindstar
-				self.define_as = o.set_list[1][2]
-				-- then set the mindstar's set list as the definition of the target mindstar
-				self.set_list = { {"define_as", o.define_as} }
-				-- and copies the target mindstar's on set complete
-				self.on_set_complete = o.on_set_complete
-				-- remove the mindstar and rewear it to trigger set bonuses
-				local obj = who:takeoffObject(ms_inven, 1)
-				who:wearObject(obj, true)
-				return true
-			end)
-			return {id=true, used=true}
-		end
-	),
+	ms_set_harmonious = true,
+	set_list = {
+		multiple = true,
+		harmonious = {{"ms_set_nature", true, inven_id = other_hand,},},},
+	on_set_complete = {
+		multiple = true,
+		harmonious = function(self, who, inven_id, set_objects)
+			for _, d in ipairs(set_objects) do
+				if d.object ~= self then
+					return d.object.on_set_complete.harmonious(self, who, inven_id, set_objects)
+				end
+			end
+		end,},
+	on_set_broken = {
+		multiple = true,
+		harmonious = set_broken,},
 }
 
- newEntity{
+newEntity{
 	power_source = {psionic=true},
 	name = "resonating ", prefix=true, instant_resolve=true,
 	keywords = {resonating=true},
@@ -360,37 +363,34 @@ newEntity{
 			[DamageType.MIND] = resolvers.mbonus_material(8, 2),
 		},
 	},
-	resolvers.charm("completes a psionic powered mindstar set", 20,
-		function(self, who, ms_inven)
-			if who:getInven("PSIONIC_FOCUS") and who:getInven("PSIONIC_FOCUS")[1] == self then
-				game.logPlayer(who, "You cannot use %s while using it as a psionic focus.", self.name)
-				return
-			end		
-			who:showEquipment("Resonate with which mindstar?", function(o) return o.subtype == "mindstar" and o.set_list and o ~= self and o.power_source and o.power_source.psionic and not o.set_complete end, function(o)
-				-- remove any existing set properties
-				self.define_as =nil
-				self.set_list = nil
-				self.on_set_complete = nil
-
-				-- define the mindstar so it matches the set list of the target mindstar
-				self.define_as = o.set_list[1][2]
-				-- then set the mindstar's set list as the definition of the target mindstar
-				self.set_list = { {"define_as", o.define_as} }
-				-- and copies the target mindstar's on set complete
-				self.on_set_complete = o.on_set_complete
-				-- remove the mindstar and rewear it to trigger set bonuses
-				local obj = who:takeoffObject(ms_inven, 1)
-				who:wearObject(obj, true)
-				return true
-			end)
-			return {id=true, used=true}
-		end
-	),
+	ms_set_resonating = true,
+	set_list = {
+		multiple = true,
+		resonating = {{"ms_set_psionic", true, inven_id = other_hand,},},},
+	on_set_complete = {
+		multiple = true,
+		resonating = function(self, who, inven_id, set_objects)
+			for _, d in ipairs(set_objects) do
+				if d.object ~= self then
+					return d.object.on_set_complete.resonating(self, who, inven_id, set_objects)
+				end
+			end
+		end,},
+	on_set_broken = {
+		multiple = true,
+		resonating = set_broken,},
 }
 
+set_complete = function(self, who, inven_id, set_objects)
+	if inven_id == "MAINHAND" then
+		game.logPlayer(who, "#GREEN#Your mindstars resonate with Nature's purity.")
+	end
+	self:specialSetAdd({"wielder","nature_summon_regen"}, self.material_level)
+end
+
 -- Caller's Set: For summoners!
- newEntity{
-	power_source = {nature=true},  define_as = "MS_EGO_SET_CALLERS",
+newEntity{
+	power_source = {nature=true},
 	name = "caller's ", prefix=true, instant_resolve=true,
 	keywords = {callers=true},
 	level_range = {30, 50},
@@ -411,18 +411,30 @@ newEntity{
 			[DamageType.PHYSICAL] = resolvers.mbonus_material(8, 2),
 		},
 	},
-	set_list = { {"define_as", "MS_EGO_SET_SUMMONERS"} },
-	on_set_complete = function(self, who)
-		game.logPlayer(who, "#GREEN#Your mindstars resonate with Nature's purity.")
-		self:specialSetAdd({"wielder","nature_summon_regen"}, self.material_level)
-	end,
-	on_set_broken = function(self, who)
-		game.logPlayer(who, "#SLATE#The link between the mindstars is broken.")
-	end
+	ms_set_callers_callers = true, ms_set_nature = true,
+	set_list = {
+		multiple = true,
+		harmonious = {{"ms_set_harmonious", true, inven_id = other_hand,},},
+		callers = {{"ms_set_callers_summoners", true, inven_id = other_hand,},},},
+	on_set_complete = {
+		multiple = true,
+		harmonious = set_complete,
+		callers = set_complete,},
+	on_set_broken = {
+		multiple = true,
+		harmonious = set_broken,
+		callers = set_broken,},
 }
 
- newEntity{
-	power_source = {nature=true}, define_as = "MS_EGO_SET_SUMMONERS",
+set_complete = function(self, who, inven_id, set_objects)
+	if inven_id == "MAINHAND" then
+		game.logPlayer(who, "#GREEN#Your mindstars resonate with Nature's purity.")
+	end
+	self:specialSetAdd({"wielder","nature_summon_max"}, 1)
+end
+
+newEntity{
+	power_source = {nature=true},
 	name = "summoner's ", prefix=true, instant_resolve=true,
 	keywords = {summoners=true},
 	level_range = {30, 50},
@@ -433,18 +445,31 @@ newEntity{
 		combat_mindpower = resolvers.mbonus_material(10, 2),
 		combat_mindcrit = resolvers.mbonus_material(5, 1),
 	},
-	set_list = { {"define_as", "MS_EGO_SET_CALLERS"} },
-	on_set_complete = function(self, who)
-		game.logPlayer(who, "#GREEN#Your mindstars resonate with Nature's purity.")
-		self:specialSetAdd({"wielder","nature_summon_max"}, 1)
-	end,
-	on_set_broken = function(self, who)
-		game.logPlayer(who, "#SLATE#The link between the mindstars is broken.")
-	end
+	ms_set_callers_summoners = true, ms_set_nature = true,
+	set_list = {
+			multiple = true,
+			harmonious = {{"ms_set_harmonious", true, inven_id = other_hand,},},
+			callers = {{"ms_set_callers_callers", true, inven_id = other_hand,},},},
+	on_set_complete = {
+		multiple = true,
+		harmonious = set_complete,
+		callers = set_complete,},
+	on_set_broken = {
+		multiple = true,
+		harmonious = set_broken,
+		callers = set_broken,},
 }
 
 -- Drake sets; these may seem odd but they're designed to keep sets from over writing each other when resolved
 -- Basically it allows a set on suffix without a set_list, keeps the drop tables balanced without being bloated, and allows one master item to complete multiple subsets
+set_complete = function(self, who, inven_id)
+	if inven_id == "MAINHAND" then
+		game.logPlayer(who, "#PURPLE#You feel the spirit of the wyrm stirring inside you!")
+	end
+	self:specialSetAdd({"wielder","blind_immune"}, self.material_level / 10)
+	self:specialSetAdd({"wielder","stun_immune"}, self.material_level / 10)
+end
+
 newEntity{
 	power_source = {nature=true}, define_as = "MS_EGO_SET_WYRM",
 	name = "wyrm's ", prefix=true, instant_resolve=true,
@@ -469,71 +494,27 @@ newEntity{
 			[DamageType.ACID] = resolvers.mbonus_material(8, 2),
 		},
 	},
-	set_list = { {"define_as", "MS_EGO_SET_DRAKE_STAR"} },
-	on_set_complete = function(self, who)
-		game.logPlayer(who, "#PURPLE#You feel the spirit of the wyrm stirring inside you!")
-		self:specialSetAdd({"wielder","blind_immune"}, self.material_level / 10)
-		self:specialSetAdd({"wielder","stun_immune"}, self.material_level / 10)
-	end,
-	on_set_broken = function(self, who)
-		game.logPlayer(who, "#SLATE#The link between the mindstars is broken.")
-	end,
-	resolvers.charm("call the drake in an elemental mindstar (this will remove other set bonuses)", 20,
-		function(self, who, ms_inven)
-			if who:getInven("PSIONIC_FOCUS") and who:getInven("PSIONIC_FOCUS")[1] == self then
-				game.logPlayer(who, "You cannot use %s while using it as a psionic focus.", self.name)
-				return
-			end		
-			who:showEquipment("Call the drake in which mindstar (this will destroy other set bonuses)?", function(o) return o.subtype == "mindstar" and o.is_drake_star and o ~= self end, function(o)
-				-- remove any existing sets from the mindstar
-				o.set_list = nil
-				o.on_set_complete = nil
-				o.on_set_broken = nil
-				o.define_as = nil
-
-				-- create the set list
-				o.define_as = "MS_EGO_SET_DRAKE_STAR"
-				o.set_list = { {"define_as", "MS_EGO_SET_WYRM"} }
-
-				-- define on_set_complete based on keywords
-				if o.keywords.flames then
-					o.on_set_complete = function(self, who)
-						self:specialSetAdd({"wielder","global_speed_add"}, self.material_level / 100)
-					end
-				elseif o.keywords.frost then
-					o.on_set_complete = function(self, who)
-						self:specialSetAdd({"wielder","combat_armor"}, self.material_level * 3)
-					end
-				elseif o.keywords.sand then
-					o.on_set_complete = function(self, who)
-						self:specialSetAdd({"wielder","combat_physresist"}, self.material_level * 2)
-						self:specialSetAdd({"wielder","combat_spellresist"}, self.material_level * 2)
-						self:specialSetAdd({"wielder","combat_mentalresist"}, self.material_level * 2)
-					end
-				elseif o.keywords.storms then
-					o.on_set_complete = function(self, who)
-						local Stats = require "engine.interface.ActorStats"
-
-						self:specialSetAdd({"wielder","inc_stats"}, {
-							[Stats.STAT_STR] = self.material_level,
-							[Stats.STAT_DEX] = self.material_level,
-							[Stats.STAT_CON] = self.material_level,
-							[Stats.STAT_MAG] = self.material_level,
-							[Stats.STAT_WIL] = self.material_level,
-							[Stats.STAT_CUN] = self.material_level,
-						})
-					end
-				end
-
-				-- rewear the wyrm star to trigger set bonuses
-				local obj = who:takeoffObject(ms_inven, 1)
-				who:wearObject(obj, true, true)
-				return true
-			end)
-			return {id=true, used=true}
-		end
-	),
+	ms_set_wyrm = true, ms_set_nature = true,
+	set_list = {
+		multiple = true,
+		harmonious = {{"ms_set_harmonious", true, inven_id = other_hand,},},
+		wyrm = {{"ms_set_drake", true, inven_id = other_hand,},},},
+	on_set_complete = {
+		multiple = true,
+		harmonious = set_complete,
+		wyrm = set_complete,},
+	on_set_broken = {
+		multiple = true,
+		harmonious = set_broken,
+		wyrm = set_broken,},
 }
+
+set_complete = function(self, who, inven_id)
+	if inven_id == "MAINHAND" then
+		game.logPlayer(who, "#PURPLE#You feel the spirit of the wyrm stirring inside you!")
+	end
+	self:specialSetAdd({"wielder","global_speed_add"}, self.material_level / 100)
+end
 
 newEntity{
 	power_source = {nature=true}, is_drake_star = true,
@@ -558,7 +539,27 @@ newEntity{
 		},
 		global_speed_add = resolvers.mbonus_material(5, 1, function(e, v) v=v/100 return 0, v end),
 	},
+	ms_set_drake = true, ms_set_nature = true,
+	set_list = {
+		multiple = true,
+		harmonious = {{"ms_set_harmonious", true, inven_id = other_hand,},},
+		wyrm = {{"ms_set_wyrm", true, inven_id = other_hand,},},},
+	on_set_complete = {
+		multiple = true,
+		harmonious = set_complete,
+		wyrm = set_complete,},
+	on_set_broken = {
+		multiple = true,
+		harmonious = set_broken,
+		wyrm = set_broken,},
 }
+
+set_complete = function(self, who, inven_id)
+	if inven_id == "MAINHAND" then
+		game.logPlayer(who, "#PURPLE#You feel the spirit of the wyrm stirring inside you!")
+	end
+	self:specialSetAdd({"wielder","combat_armor"}, self.material_level * 3)
+end
 
 newEntity{
 	power_source = {nature=true}, is_drake_star = true,
@@ -583,7 +584,29 @@ newEntity{
 			[DamageType.COLD] = resolvers.mbonus_material(16, 4),
 		},
 	},
+	ms_set_drake = true, ms_set_nature = true,
+	set_list = {
+		multiple = true,
+		harmonious = {{"ms_set_harmonious", true, inven_id = other_hand,},},
+		wyrm = {{"ms_set_wyrm", true, inven_id = other_hand,},},},
+	on_set_complete = {
+		multiple = true,
+		harmonious = set_complete,
+		wyrm = set_complete,},
+	on_set_broken = {
+		multiple = true,
+		harmonious = set_broken,
+		wyrm = set_broken,},
 }
+
+set_complete = function(self, who, inven_id)
+	if inven_id == "MAINHAND" then
+		game.logPlayer(who, "#PURPLE#You feel the spirit of the wyrm stirring inside you!")
+	end
+	self:specialSetAdd({"wielder","combat_physresist"}, self.material_level * 2)
+	self:specialSetAdd({"wielder","combat_spellresist"}, self.material_level * 2)
+	self:specialSetAdd({"wielder","combat_mentalresist"}, self.material_level * 2)
+end
 
 newEntity{
 	power_source = {nature=true}, is_drake_star = true,
@@ -607,7 +630,34 @@ newEntity{
 			[DamageType.PHYSICAL] = resolvers.mbonus_material(8, 2),
 		},
 	},
+	ms_set_drake = true, ms_set_nature = true,
+	set_list = {
+		multiple = true,
+		harmonious = {{"ms_set_harmonious", true, inven_id = other_hand,},},
+		wyrm = {{"ms_set_wyrm", true, inven_id = other_hand,},},},
+	on_set_complete = {
+		multiple = true,
+		harmonious = set_complete,
+		wyrm = set_complete,},
+	on_set_broken = {
+		multiple = true,
+		harmonious = set_broken,
+		wyrm = set_broken,},
 }
+
+set_complete = function(self, who, inven_id)
+	if inven_id == "MAINHAND" then
+		game.logPlayer(who, "#PURPLE#You feel the spirit of the wyrm stirring inside you!")
+	end
+	local Stats = require "engine.interface.ActorStats"
+	self:specialSetAdd({"wielder","inc_stats"}, {
+											 [Stats.STAT_STR] = self.material_level,
+											 [Stats.STAT_DEX] = self.material_level,
+											 [Stats.STAT_CON] = self.material_level,
+											 [Stats.STAT_MAG] = self.material_level,
+											 [Stats.STAT_WIL] = self.material_level,
+											 [Stats.STAT_CUN] = self.material_level,})
+end
 
 newEntity{
 	power_source = {nature=true}, is_drake_star = true,
@@ -637,12 +687,33 @@ newEntity{
 			[Stats.STAT_WIL] = resolvers.mbonus_material(3, 1),
 			[Stats.STAT_CUN] = resolvers.mbonus_material(3, 1),
 			[Stats.STAT_CON] = resolvers.mbonus_material(3, 1),
+		},
 	},
-	},
+	ms_set_drake = true, ms_set_nature = true,
+	set_list = {
+		multiple = true,
+		harmonious = {{"ms_set_harmonious", true, inven_id = other_hand,},},
+		wyrm = {{"ms_set_wyrm", true, inven_id = other_hand,},},},
+	on_set_complete = {
+		multiple = true,
+		harmonious = set_complete,
+		wyrm = set_complete,},
+	on_set_broken = {
+		multiple = true,
+		harmonious = set_broken,
+		wyrm = set_broken,},
 }
 
 -- Mentalist Set: For a yet to be written psi class and/or Mindslayers
- newEntity{
+
+set_complete = function(self, who, inven_id)
+	if inven_id == "MAINHAND" then
+		game.logPlayer(who, "#YELLOW#Your mindstars resonate with psionic energy.")
+	end
+	self:specialSetAdd({"wielder","psi_regen"}, self.material_level / 10)
+end
+
+newEntity{
 	power_source = {psionic=true},  define_as = "MS_EGO_SET_DREAMERS",
 	name = "dreamer's ", prefix=true, instant_resolve=true,
 	keywords = {dreamers=true},
@@ -655,17 +726,29 @@ newEntity{
 		max_psi = resolvers.mbonus_material(40, 10),
 		resists = { [DamageType.MIND] = resolvers.mbonus_material(20, 5), }
 	},
-	set_list = { {"define_as", "MS_EGO_SET_EPIPHANOUS"} },
-	on_set_complete = function(self, who)
-		game.logPlayer(who, "#YELLOW#Your mindstars resonate with psionic energy.")
-		self:specialSetAdd({"wielder","psi_regen"}, self.material_level / 10)
-	end,
-	on_set_broken = function(self, who)
-		game.logPlayer(who, "#SLATE#The link between the mindstars is broken.")
-	end
+	ms_set_dreamers_dreamers = true, ms_set_psionic = true,
+	set_list = {
+		multiple = true,
+		resonating = {{"ms_set_resonating", true, inven_id = other_hand,},},
+		dreamers = {{"ms_set_dreamers_epiphanous", true, inven_id = other_hand,},},},
+	on_set_complete = {
+		multiple = true,
+		resonating = set_complete,
+		dreamers = set_complete,},
+	on_set_broken = {
+		multiple = true,
+		resonating = set_broken,
+		dreamers = set_broken,},
 }
 
- newEntity{
+set_complete = function(self, who, inven_id)
+	if inven_id == "MAINHAND" then
+		game.logPlayer(who, "#YELLOW#Your mindstars resonate with psionic energy.")
+	end
+	self:specialSetAdd({"wielder","psi_on_crit"}, self.material_level)
+end
+
+newEntity{
 	power_source = {psionic=true}, define_as = "MS_EGO_SET_EPIPHANOUS",
 	name = "epiphanous ", prefix=true, instant_resolve=true,
 	keywords = {epiphanous=true},
@@ -678,18 +761,23 @@ newEntity{
 		combat_mindcrit = resolvers.mbonus_material(5, 1),
 		inc_damage = { [DamageType.MIND] = resolvers.mbonus_material(20, 5), },
 	},
-	set_list = { {"define_as", "MS_EGO_SET_DREAMERS"} },
-	on_set_complete = function(self, who)
-		game.logPlayer(who, "#YELLOW#Your mindstars resonate with psionic energy.")
-		self:specialSetAdd({"wielder","psi_on_crit"}, self.material_level)
-	end,
-	on_set_broken = function(self, who)
-		game.logPlayer(who, "#SLATE#The link between the mindstars is broken.")
-	end
+	ms_set_dreamers_epiphanous = true, ms_set_psionic = true,
+	set_list = {
+		multiple = true,
+		resonating = {{"ms_set_resonating", true, inven_id = other_hand,},},
+		dreamers = {{"ms_set_dreamers_dreamers", true, inven_id = other_hand,},},},
+	on_set_complete = {
+		multiple = true,
+		resonating = set_complete,
+		dreamers = set_complete,},
+	on_set_broken = {
+		multiple = true,
+		resonating = set_broken,
+		dreamers = set_broken,},
 }
 
 -- Mitotic Set: Single Mindstar that splits in two
- newEntity{
+newEntity{
 	power_source = {nature=true},
 	name = "mitotic ", prefix=true, instant_resolve=true,
 	keywords = {mitotic=true},
@@ -702,55 +790,63 @@ newEntity{
 		melee_project = { [DamageType.ITEM_ACID_CORRODE]= resolvers.mbonus_material(15, 5), [DamageType.ITEM_NATURE_SLOW]= resolvers.mbonus_material(15, 5),},
 	},
 	resolvers.charm("divide the mindstar in two", 1,
-		function(self, who)
-			-- Check for free slot first
-			if who:getFreeHands() == 0 then
-				game.logPlayer(who, "You must have a free hand to divide %s", self.name)
-			return
-			end
+									function(self, who)
+										-- Check for free slot first
+										if who:getFreeHands() == 0 then
+											game.logPlayer(who, "You must have a free hand to divide %s", self.name)
+											return
+										end
 
-			if who:getInven("PSIONIC_FOCUS") and who:getInven("PSIONIC_FOCUS")[1] == self then
-				game.logPlayer(who, "You cannot split %s while using it as a psionic focus.", self.name)
-				return
-			end
+										if who:getInven("PSIONIC_FOCUS") and who:getInven("PSIONIC_FOCUS")[1] == self then
+											game.logPlayer(who, "You cannot split %s while using it as a psionic focus.", self.name)
+											return
+										end
 
-			local o = self
+										local o = self
 
-			-- Remove some properties before cloning
-			o.cost = self.cost / 2 -- more don't split for extra gold discouragement
-			o.max_power = nil
-			o.power_regen = nil
-			o.use_power = nil
-			local o2 = o:clone()
+										-- Remove some properties before cloning
+										o.cost = self.cost / 2 -- more don't split for extra gold discouragement
+										o.max_power = nil
+										o.power_regen = nil
+										o.use_power = nil
+										local o2 = o:clone()
 
-			-- Build the item set
-			o.define_as = "MS_EGO_SET_MITOTIC_ACID"
-			o2.define_as = "MS_EGO_SET_MITOTIC_SLIME"
-			o.set_list = { {"define_as", "MS_EGO_SET_MITOTIC_SLIME"} }
-			o2.set_list = { {"define_as", "MS_EGO_SET_MITOTIC_ACID"} }
+										-- Build the item set
+										o.define_as = "MS_EGO_SET_MITOTIC_ACID"
+										o2.define_as = "MS_EGO_SET_MITOTIC_SLIME"
+										o.set_list = { {"define_as", "MS_EGO_SET_MITOTIC_SLIME"} }
+										o2.set_list = { {"define_as", "MS_EGO_SET_MITOTIC_ACID"} }
 
-			o.on_set_complete = function(self, who)
-				self:specialWearAdd({"combat","burst_on_crit"}, { [engine.DamageType.ACID_BLIND] = 10 * self.material_level } )
-				game.logPlayer(who, "#GREEN#The mindstars pulse with life.")
-			end
-			o.on_set_broken = function(self, who)
-				game.logPlayer(who, "#SLATE#The link between the mindstars is broken.")
-			end
+										o.on_set_complete = function(self, who)
+											self:specialWearAdd({"combat","burst_on_crit"}, { [engine.DamageType.ACID_BLIND] = 10 * self.material_level } )
+											game.logPlayer(who, "#GREEN#The mindstars pulse with life.")
+										end
+										o.on_set_broken = function(self, who)
+											game.logPlayer(who, "#SLATE#The link between the mindstars is broken.")
+										end
 
-			o2.on_set_complete = function(self, who)
-				self:specialWearAdd({"combat","burst_on_crit"}, { [engine.DamageType.SLIME] = 10 * self.material_level } )
-			end
+										o2.on_set_complete = function(self, who)
+											self:specialWearAdd({"combat","burst_on_crit"}, { [engine.DamageType.SLIME] = 10 * self.material_level } )
+										end
 
-			-- Wearing the second mindstar will complete the set and thus update the first mindstar
-			who:wearObject(o2, true, true)
+										-- Wearing the second mindstar will complete the set and thus update the first mindstar
+										who:wearObject(o2, true, true)
 
-			-- Because we're removing the use_power we're not returning that it was used; instead we'll have the actor use energy manually
-			who:useEnergy()
-		end
+										-- Because we're removing the use_power we're not returning that it was used; instead we'll have the actor use energy manually
+										who:useEnergy()
+									end
 	),
 }
 
 -- Wrathful Set: Geared towards Afflicted
+
+set_complete = function(self, who, inven_id)
+	if inven_id == "MAINHAND" then
+		game.logPlayer(who, "#GREY#You feel a swell of hatred from your mindstars.")
+	end
+	self:specialSetAdd({"wielder","combat_mindpower"}, 2 * self.material_level)
+end
+
 newEntity{
 	power_source = {psionic=true}, define_as = "MS_EGO_SET_HATEFUL",
 	name = "hateful ", prefix=true, instant_resolve=true,
@@ -770,17 +866,29 @@ newEntity{
 		},
 		inc_damage_type = {humanoid=resolvers.mbonus_material(20, 5)},
 	},
-	set_list = { {"define_as", "MS_EGO_SET_WRATHFUL"} },
-	on_set_complete = function(self, who)
-		self:specialSetAdd({"wielder","combat_mindpower"}, 2 * self.material_level)
-		game.logPlayer(who, "#GREY#You feel a swell of hatred from your mindstars.")
-	end,
-	on_set_broken = function(self, who)
-		game.logPlayer(who, "#SLATE#The mindstar resonance has faded.")
-	end,
+	ms_set_wrathful_hateful = true, ms_set_psionic = true,
+	set_list = {
+		multiple = true,
+		resonating = {{"ms_set_resonating", true, inven_id = other_hand,},},
+		wrathful = {{"ms_set_wrathful_wrathful", true, inven_id = other_hand,},},},
+	on_set_complete = {
+		multiple = true,
+		resonating = set_complete,
+		wrathful = set_complete,},
+	on_set_broken = {
+		multiple = true,
+		resonating = set_broken,
+		wrathful = set_broken,},
 }
 
- newEntity{
+set_complete = function(self, who, inven_id)
+	if inven_id == "MAINHAND" then
+		game.logPlayer(who, "#GREY#You feel a swell of hatred from your mindstars.")
+	end
+	self:specialSetAdd({"wielder","max_hate"}, 2 * self.material_level)
+end
+
+newEntity{
 	power_source = {psionic=true}, define_as = "MS_EGO_SET_WRATHFUL",
 	name = "wrathful ", prefix=true, instant_resolve=true,
 	keywords = {wrath=true},
@@ -793,12 +901,17 @@ newEntity{
 		hate_on_crit = resolvers.mbonus_material(5, 1),
 		combat_mindcrit = resolvers.mbonus_material(10, 2),
 	},
-	set_list = { {"define_as", "MS_EGO_SET_HATEFUL"} },
-	on_set_complete = function(self, who)
-		self:specialSetAdd({"wielder","max_hate"}, 2 * self.material_level)
-		game.logPlayer(who, "#GREY#You feel a swell of hatred from your mindstars.")
-	end,
-	on_set_broken = function(self, who)
-		game.logPlayer(who, "#SLATE#The mindstar resonance has faded.")
-	end,
+	ms_set_wrathful_wrathful = true, ms_set_psionic = true,
+	set_list = {
+		multiple = true,
+		resonating = {{"ms_set_resonating", true, inven_id = other_hand,},},
+		wrathful = {{"ms_set_wrathful_hateful", true, inven_id = other_hand,},},},
+	on_set_complete = {
+		multiple = true,
+		resonating = set_complete,
+		wrathful = set_complete,},
+	on_set_broken = {
+		multiple = true,
+		resonating = set_broken,
+		wrathful = set_broken,},
 }

@@ -419,7 +419,7 @@ function _M:updateMainShader()
 			if (self:attr("no_healing") or ((self.healing_factor or 1) <= 0)) then
 				game.fbo_shader:setUniform("intensify", {0.3,1.3,0.3,1})
 			else
-				game.fbo_shader:setUniform("intensify", {0,0,0,0}) 
+				game.fbo_shader:setUniform("intensify", {0,0,0,0})
 			end
 		end
 
@@ -557,7 +557,7 @@ function _M:playerFOV()
 					game.level.map.seens(act.x, act.y, 0.6)
 				end
 			end
-		end end 
+		end end
 	end
 
 	if not self:attr("blind") then
@@ -612,7 +612,7 @@ function _M:playerFOV()
 		-- Inner Sight; works even while blinded
 		if self:attr("blind_sight") then
 			self:computeFOV(self:attr("blind_sight"), "block_sight", function(x, y, dx, dy, sqdist) game.level.map:applyLite(x, y, 0.6) end, true, true, true)
-		end	
+		end
 	end
 end
 
@@ -706,7 +706,7 @@ end
 function _M:die(src, death_note)
 	if self.runStop then self:runStop("died") end
 	if self.restStop then self:restStop("died") end
-	
+
 	return self:onPartyDeath(src, death_note)
 end
 
@@ -1312,8 +1312,8 @@ end
 
 --- Call when an object is worn
 -- This doesnt call the base interface onWear, it copies the code because we need some tricky stuff
-function _M:onWear(o, bypass_set)
-	mod.class.Actor.onWear(self, o, bypass_set)
+function _M:onWear(o, bypass_set, slot)
+	mod.class.Actor.onWear(self, o, bypass_set, slot)
 
 	if not self.no_power_reset_on_wear then
 		o:forAllStack(function(so)

@@ -203,7 +203,7 @@ function _M:init(t, no_default)
 	t.max_negative = t.max_negative or 50
 	t.positive = t.positive or 0
 	t.negative = t.negative or 0
-	
+
 	t.soul = t.soul or 1
 
 	t.max_hate = t.max_hate or 100
@@ -476,7 +476,7 @@ function _M:actBase()
 
 	if self:knowTalent(self.T_GESTURE_OF_GUARDING) then self:setEffect(self.EFF_GESTURE_OF_GUARDING,1,{}) end
 	if self:knowTalent(self.T_DUAL_WEAPON_DEFENSE) then self:setEffect(self.EFF_DUAL_WEAPON_DEFENSE,1,{}) end
-	if self:knowTalent(self.T_COUNTER_ATTACK) then self:setEffect(self.EFF_COUNTER_ATTACKING,1,{}) end 
+	if self:knowTalent(self.T_COUNTER_ATTACK) then self:setEffect(self.EFF_COUNTER_ATTACKING,1,{}) end
 	if self:knowTalent(self.T_DEFENSIVE_THROW) then self:setEffect(self.EFF_DEFENSIVE_GRAPPLING,1,{}) end
 
 	-- Compute timed effects
@@ -2017,8 +2017,8 @@ function _M:onTakeHit(value, src, death_note)
 		if #acts > 0 then
 			game:delayedLogMessage(self, nil, "mitosis_damage", "#DARK_GREEN##Source# shares damage with %s oozes!", string.his_her(self))
 			value = value / (#acts+1)
-			for _, act in ipairs(acts) do 
-				act:takeHit(value, src) 
+			for _, act in ipairs(acts) do
+				act:takeHit(value, src)
 			end
 		end
 	end
@@ -2169,7 +2169,7 @@ function _M:onTakeHit(value, src, death_note)
 			end
 		end
 	end
-	
+
 	if value > 0 and self:hasEffect(self.EFF_RAMPAGE) then
 		local eff = self:hasEffect(self.EFF_RAMPAGE)
 		value = self.tempeffect_def[self.EFF_RAMPAGE].do_onTakeHit(self, eff, value)
@@ -2222,7 +2222,7 @@ function _M:onTakeHit(value, src, death_note)
 			self.summoner:incFeedback(feedback_gain)
 		end
 		-- Trigger backlash retribution damage
-		if src and src.turn_procs and self:knowTalent(self.T_BACKLASH) and not src.no_backlash_loops and not src.turn_procs.backlash then         
+		if src and src.turn_procs and self:knowTalent(self.T_BACKLASH) and not src.no_backlash_loops and not src.turn_procs.backlash then
 			if src.y and src.x and not src.dead then
 				local t = self:getTalentFromId(self.T_BACKLASH)
 				t.doBacklash(self, src, feedback_gain, t)
@@ -2246,7 +2246,7 @@ function _M:onTakeHit(value, src, death_note)
 
 	if self:hasEffect(self.EFF_CAUTERIZE) then
 		local eff = self:hasEffect(self.EFF_CAUTERIZE)
-		if eff.invulnerable then 
+		if eff.invulnerable then
 			eff.dam = eff.dam + value / 10
 			return 0
 		end
@@ -2424,7 +2424,7 @@ function _M:onTakeHit(value, src, death_note)
 		end
 		if self:getPositive() >= drain then
 			self:incPositive(- drain)
-			
+
 			-- Only calculate crit once per turn to avoid log spam
 			if not self.turn_procs.shield_of_light_heal then
 				local t = self:getTalentFromId(self.T_SHIELD_OF_LIGHT)
@@ -2450,7 +2450,7 @@ function _M:onTakeHit(value, src, death_note)
 			if self.player then world:gainAchievement("AVOID_DEATH", self) end
 		end
 	end
-	
+
 	-- Shade's reform
 	if value >= self.life and self.ai_state and self.ai_state.can_reform then
 		local t = self:getTalentFromId(self.T_SHADOW_REFORM)
@@ -2463,7 +2463,7 @@ function _M:onTakeHit(value, src, death_note)
 			game.level.map:particleEmitter(self.x, self.y, 1, "teleport_in")
 		end
 	end
-	
+
 	-- Shadow decoy
 	if value >= self.life and self:isTalentActive(self.T_SHADOW_DECOY) then
 		local t = self:getTalentFromId(self.T_SHADOW_DECOY)
@@ -2525,7 +2525,7 @@ function _M:onTakeHit(value, src, death_note)
 			game:delayedLogMessage(src, self, "life_leech"..self.uid, "#CRIMSON##Source# leeches life from #Target#!")
 		end
 	end
-	
+
 	-- Life steal from weapon
 	if value > 0 and src and not src.dead and src.attr and src:attr("lifesteal") then
 		local leech = math.min(value, self.life) * src.lifesteal / 100
@@ -2552,7 +2552,7 @@ function _M:onTakeHit(value, src, death_note)
 	if self:fireTalentCheck("callbackOnHit", cb, src, death_note) then
 		value = cb.value
 	end
-	
+
 	local hd = {"Actor:takeHit", value=value, src=src, death_note=death_note}
 	if self:triggerHook(hd) then value = hd.value end
 
@@ -2819,7 +2819,7 @@ function _M:die(src, death_note)
 		if self.x and self.y and src.x and src.y and core.fov.distance(self.x, self.y, rsrc.x, rsrc.y) <= rsrc.necrotic_aura_radius then
 			rsrc:incSoul(1)
 			if rsrc:attr("extra_soul_chance") and rng.percent(rsrc:attr("extra_soul_chance")) then
-				rsrc:incSoul(1)				
+				rsrc:incSoul(1)
 				game.logPlayer(rsrc, "%s rips more animus from its victim. (+1 more soul)", rsrc.name:capitalize())
 			end
 			rsrc.changed = true
@@ -3043,7 +3043,7 @@ function _M:resolveLevelTalents()
 	if not self.start_level or not self._levelup_talents then return end
 
 	local maxfact = 1  -- Balancing parameter for levels > 50: maxtalent level = actorlevel/50*maxfact * normal max talent level
-	maxfact=math.max(maxfact,self.level/50) 
+	maxfact=math.max(maxfact,self.level/50)
 
 	for tid, info in pairs(self._levelup_talents) do
 		if not info.max or (self.talents[tid] or 0) < math.floor(info.max*maxfact) then
@@ -3086,7 +3086,7 @@ function _M:levelup()
 	end
 
 	if self:knowTalent(self.T_LEGACY_OF_THE_NALOREN) then self:callTalent(self.T_LEGACY_OF_THE_NALOREN,"updateTalent") end-- Update Bonus Talent levels
-	
+
 	-- Gain some basic resistances
 	if not self.no_auto_resists then
 		-- Make up a random list of resists the first time
@@ -3346,7 +3346,7 @@ function _M:updateModdableTile()
 					table.insert(add, 1, {_isshaderaura=true, image_alter="sdm", sdm_double=not baseh or baseh < 2, image=base, shader=def.shader, shader_args=def.shader_args, textures=def.textures, display_h=2, display_y=-1})
 				end
 				if not base1 then add[#add+1] = {_isshaderaura=true, image=base, display_y=basey, display_h=baseh} end
-			
+
 				self:removeAllMOs()
 				if self.x and game.level then game.level.map:updateMap(self.x, self.y) end
 			end
@@ -3427,34 +3427,68 @@ end
 
 --- Call when an object is worn
 -- This doesnt call the base interface onWear, it copies the code because we need some tricky stuff
-function _M:onWear(o, bypass_set)
+function _M:onWear(o, inven_id, bypass_set)
 	o.wielded = {}
 
 	if self.player then o:forAllStack(function(so) so.__transmo = false end) end
 
-	if o.set_list and not bypass_set then
-		local list = {}
-		for i, d in ipairs(o.set_list) do
-			local po, item, inven_id = self:findInAllInventoriesBy(d[1], d[2])
-			if po and self:getInven(inven_id).worn then
-				list[#list+1] = po
+	local set_list_list = o.set_list
+	if type(set_list_list) == 'function' then
+		set_list_list = set_list_list(o, self, inven_id)
+	end
+	if set_list_list and not bypass_set then
+		if not set_list_list.multiple then set_list_list = {single = set_list_list} end
+		set_list_list = table.clone(set_list_list)
+		set_list_list.multiple = nil
+		for set_id, set_list in pairs(set_list_list) do
+			local set_objects = {}
+			for _, conditions in ipairs(set_list) do
+				-- Find the object in the inventory.
+				local object, index, object_inven_id
+				if conditions.inven_id then
+					object_inven_id = util.getval(conditions.inven_id, o, self, inven_id)
+					object, index = self:findInInventoryBy(
+						self:getInven(object_inven_id), conditions[1], conditions[2])
+				else
+					object, index, object_inven_id =
+						self:findInAllInventoriesBy(conditions[1], conditions[2])
+				end
+				-- If we're wearing it, add it to the list.
+				if object and self:getInven(object_inven_id).worn and
+					(not object.set_complete or not object.set_complete[set_id])
+				then
+					table.insert(set_objects, {
+												 object = object,
+												 index = index,
+												 inven_id = object_inven_id,
+												 data = conditions.data,})
+				end
 			end
-		end
-		if #list == #o.set_list then
-			for i, po in ipairs(list) do
-				self:onTakeoff(po, true)
-				po:check("on_set_complete", self)
-				self:onWear(po, true)
-				po.set_complete = true
+			-- If we found all the objects.
+			if #set_objects == #set_list then
+				-- Add self to set objects.
+				table.insert(set_objects, {
+											 object = o,
+											 inven_id = inven_id,
+											 data = set_list.self_data,})
+				-- Apply set bonuses.
+				for _, d in pairs(set_objects) do
+					if d.object ~= o then self:onTakeoff(d.object, d.inven_id, true) end
+					local complete =  d.object.on_set_complete
+					if type(complete) == "table" then complete = complete[set_id] end
+					complete(d.object, self, d.inven_id, set_objects)
+					if d.object ~= o then self:onWear(d.object, d.inven_id, true) end
+					d.object.set_complete = d.object.set_complete or {}
+					d.object.set_complete[set_id] = set_objects
+				end
 			end
-			o:check("on_set_complete", self)
-			o.set_complete = true
 		end
 	end
 
 	self:checkMindstar(o)
 
-	o:check("on_wear", self)
+	o:check("on_wear", self, inven_id)
+
 	if o.wielder then
 		for k, e in pairs(o.wielder) do
 			o.wielded[k] = self:addTemporaryValue(k, e)
@@ -3525,8 +3559,8 @@ function _M:onWear(o, bypass_set)
 end
 
 --- Call when an object is taken off
-function _M:onTakeoff(o, bypass_set)
-	engine.interface.ActorInventory.onTakeoff(self, o)
+function _M:onTakeoff(o, inven_id, bypass_set)
+	engine.interface.ActorInventory.onTakeoff(self, o, inven_id)
 
 	if o.talent_on_spell then
 		self.talent_on_spell = self.talent_on_spell or {}
@@ -3552,30 +3586,28 @@ function _M:onTakeoff(o, bypass_set)
 			self.talent_on_mind[id] = nil
 		end
 	end
-	
-	if o.set_list and o.set_complete and not bypass_set then
-		local list = {}
-		for i, d in ipairs(o.set_list) do
-			local po, item, inven_id = self:findInAllInventoriesBy(d[1], d[2])
-			if po then
-				self:onTakeoff(po, true)
-				po:check("on_set_broken", self)
-				if po._special_set then
-					for k, id in pairs(po._special_set) do
-						po:removeTemporaryValue(k, id)
+
+	if o.set_complete and not bypass_set then
+		for set_id, set_objects in pairs(o.set_complete) do
+			for _, d in ipairs(set_objects) do
+				if d.object ~= o then self:onTakeoff(d.object, d.inven_id, true) end
+				local broken = d.object.on_set_broken
+				if type(broken) == "table" then broken = broken[set_id] end
+				broken(d.object, self, d.inven_id, set_objects)
+				if d.object._special_set then
+					for k, id in pairs(d.object._special_set) do
+						d.object:removeTemporaryValue(k, id)
 					end
-					po._special_set = nil
+					d.object._special_set = nil
 				end
-				self:onWear(po, true)
-				po.set_complete = nil
+				if d.object ~= o then self:onWear(d.object, d.inven_id, true) end
+				d.object.set_complete[set_id] = nil
+				-- Remove if empty.
+				local empty = true
+				for k, v in pairs(d.object.set_complete) do empty = false break end
+				if empty then d.object.set_complete = nil end
 			end
 		end
-		o:check("on_set_broken", self)
-		if o._special_set then
-			for k, id in pairs(o._special_set) do o:removeTemporaryValue(k, id) end
-			o._special_set = nil
-		end
-		o.set_complete = nil
 	end
 
 	if o._special_wear then
@@ -3623,7 +3655,7 @@ function _M:checkMindstar(o)
 	local new
 	local old
 	local psb = self:getTalentFromId(self.T_PSIBLADES) --I5
-	
+
 	if o.wielded then
 		new = self:attr("psiblades_active")
 		old = o.psiblade_active
@@ -3978,7 +4010,7 @@ function _M:unlearnTalent(t_id, nb, no_unsustain, extra)
 		self:attr("autolearn_mindslayer_done", -1)
 		if not self:attr("autolearn_mindslayer_done") then
 			self:unlearnTalent(self.T_TELEKINETIC_GRASP)
-			self:unlearnTalent(self.T_BEYOND_THE_FLESH)			
+			self:unlearnTalent(self.T_BEYOND_THE_FLESH)
 		end
 	end
 
@@ -4184,7 +4216,7 @@ end
 -- @param ab the talent (not the id, the table)
 -- @return true to continue, false to stop
 function _M:preUseTalent(ab, silent, fake)
-	if not self:attr("no_talent_fail") then 
+	if not self:attr("no_talent_fail") then
 	if self:attr("feared") and (ab.mode ~= "sustained" or not self:isTalentActive(ab.id)) then
 		if not silent then game.logSeen(self, "%s is too afraid to use %s.", self.name:capitalize(), ab.name) end
 		return false
@@ -4466,7 +4498,7 @@ function _M:postUseTalent(ab, ret, silent)
 
 	self.changed = true
 
-	if self.talent_kind_log then 
+	if self.talent_kind_log then
 		if ab.is_spell then self.talent_kind_log.spell = (self.talent_kind_log.spell or 0) + 1 end
 		if ab.is_summon then self.talent_kind_log.summon = (self.talent_kind_log.summon or 0) + 1 end
 		if ab.is_mind then self.talent_kind_log.mind = (self.talent_kind_log.mind or 0) + 1 end
@@ -4513,10 +4545,10 @@ function _M:postUseTalent(ab, ret, silent)
 				local target = game.level.map(c[1], c[2], Map.ACTOR)
 				if target and self:reactionToward(target) < 0 then tgts[#tgts+1] = target end
 			end
-			if #tgts > 0 then 
+			if #tgts > 0 then
 				self.turn_procs.corrupted_strength = true
 				DamageType:projectingFor(self, {project_type={talent=self:getTalentFromId(self.T_CORRUPTED_STRENGTH)}})
-				self:attackTarget(rng.table(tgts), DamageType.BLIGHT, self:combatTalentWeaponDamage(self.T_CORRUPTED_STRENGTH, 0.5, 1.1), true) 
+				self:attackTarget(rng.table(tgts), DamageType.BLIGHT, self:combatTalentWeaponDamage(self.T_CORRUPTED_STRENGTH, 0.5, 1.1), true)
 				DamageType:projectingFor(self, nil)
 			end
 		end
@@ -4969,9 +5001,9 @@ function _M:checkSetTalentAuto(tid, v, opt)
 		if util.getval(t.no_energy, self, t) ~= true then list[#list+1] = "- requires a turn to use" end
 		if t.requires_target then list[#list+1] = "- requires a target, your last hostile one will be automatically used" end
 		if t.auto_use_warning then list[#list+1] = t.auto_use_warning end
-		if opt == 2 then 
-			list[#list+1] = "- will only trigger if no enemies are visible" 
-			list[#list+1] = "- will automatically target you if a target is required" 
+		if opt == 2 then
+			list[#list+1] = "- will only trigger if no enemies are visible"
+			list[#list+1] = "- will automatically target you if a target is required"
 		end
 		if opt == 3 then list[#list+1] = "- will only trigger if enemies are visible" end
 		if opt == 4 then list[#list+1] = "- will only trigger if enemies are visible and adjacent" end
@@ -5059,7 +5091,7 @@ function _M:removeEffectsFilter(t, nb, silent, force)
 
 	for eff_id, p in pairs(self.tmp) do
 		local e = self.tempeffect_def[eff_id]
-		if type(t) == "function" then 
+		if type(t) == "function" then
 			if t(e) then effs[#effs+1] = eff_id end
 		elseif (not t.type or t.type == e.type) and (not t.status or e.status == t.status) and (not t.ignore_crosstier or not e.subtype["cross tier"]) then
 			effs[#effs+1] = eff_id
@@ -5084,14 +5116,14 @@ end
 function _M:talentCooldownFilter(t, change, nb, duplicate)
 	nb = nb or 100000
 	change = change or 1
-	
+
 	local changed = 0
 	local talents = {}
 
 	-- For each talent currently on cooldown find its definition (e) and add it to another table if the filter (t) applies
 	for tid, cd in pairs(self.talents_cd) do
 		if type(t) == "function" then
-			local e = self:getTalentFromId(tid)  
+			local e = self:getTalentFromId(tid)
 			if t(e) then talents[#talents+1] = {tid, cd} end
 		else -- Apply to all talents on cooldown the filter isn't a function
 			talents[#talents+1] = {tid, cd}
@@ -5106,19 +5138,19 @@ function _M:talentCooldownFilter(t, change, nb, duplicate)
 
 		---[[ Change the cooldown to the reduced value or mark it as off cooldown
 		t[2] = t[2] - change
-		if t[2] <= 0 then 
+		if t[2] <= 0 then
 			self.talents_cd[ t[1] ] = nil
 			table.remove(talents, i)
 			removed = true
-		else 
-			self.talents_cd[ t[1] ] = t[2] 
-		end 
+		else
+			self.talents_cd[ t[1] ] = t[2]
+		end
 		--]]
 
 		if not duplicate then
 			if not removed then table.remove(talents, i) end -- only remove if it hasn't already been removed
 		end
-		
+
 		nb = nb - 1
 		changed = changed + 1
 	end
@@ -5444,7 +5476,7 @@ function _M:on_project_acquire(tx, ty, who, t, x, y, damtype, dam, particles, is
 		local spread = self.projectile_evasion_spread or 1
 		mods.x = x + rng.range(-spread, spread)
 		mods.y = y + rng.range(-spread, spread)
-		
+
 		local dir = game.level.map:compassDirection(mods.x-x, mods.y-y)
 		if not dir then
 			dir = "but fumbles!"
