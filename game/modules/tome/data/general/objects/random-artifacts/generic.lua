@@ -89,9 +89,6 @@ newEntity{ theme={mental=true}, name="equilibrium on hit", points = 1, rarity = 
 newEntity{ theme={mental=true}, name="max hate", points = 1, rarity = 16, level_range = {1, 50},
 	wielder = { max_hate = resolvers.randartmax(2, 10), },
 }
-newEntity{ theme={mental=true}, name="hate per kill", points = 1, rarity = 16, level_range = {1, 50},
-	wielder = { hate_per_kill = resolvers.randartmax(1, 5), },
-}
 newEntity{ theme={mental=true}, name="hate on crit", points = 1, rarity = 16, level_range = {1, 50},
 	wielder = { hate_on_crit = resolvers.randartmax(1, 5), },
 }

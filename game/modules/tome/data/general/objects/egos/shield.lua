@@ -232,8 +232,8 @@ newEntity{
 -- This is close to strictly better than the others in this category so it gets a higher rarity/level req
 newEntity{
 	power_source = {psionic=true},
-	name = " of gloom", prefix=true, instant_resolve=true,
-	keywords = {gloom=true},
+	name = "gloomy ", prefix=true, instant_resolve=true,
+	keywords = {gloomy=true},
 	level_range = {30, 50},
 	rarity = 25,
 	cost = 12,
@@ -580,26 +580,6 @@ newEntity{
 		},
 	},
 }
-
---[[
-Killing this feels weird but there are a lot of anti-poison/disease general tools going in 1.2 and since the stats on this sucked most people hated it anyway
-newEntity{
-	power_source = {nature=true},
-	name = " of harmony", suffix=true, instant_resolve=true,
-	keywords = {harmony=true},
-	level_range = {10, 50},
-	greater_ego = 1,
-	rarity = 14,
-	cost = 12,
-	resolvers.charmt(Talents.T_WATERS_OF_LIFE, 4, 30),
-	wielder = {
-		talents_types_mastery = {
-			["wild-gift/harmony"] = resolvers.mbonus_material(2, 2, function(e, v) v=v/10 return 0, v end),
-		},
-		healing_factor = resolvers.mbonus_material(10, 10, function(e, v) v=v/100 return 0, v end),
-	},
-}
---]]
 
 newEntity{
 	power_source = {arcane=true},

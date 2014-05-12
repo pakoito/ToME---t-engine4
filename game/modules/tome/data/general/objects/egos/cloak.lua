@@ -390,21 +390,20 @@ newEntity{
 
 newEntity{
 	power_source = {nature=true},
-	name = " of the hunt", suffix=true, instant_resolve=true,
-	keywords = {hunt=true},
+	name = " of the hunter", suffix=true, instant_resolve=true,
+	keywords = {hunter=true},
 	level_range = {30, 50},
 	greater_ego = 1,
 	rarity = 30,
 	cost = 60,
-	--resolvers.charmt(Talents.T_BLINDING_SPEED, {2,3,4}, 45),
 	wielder = {
+		max_stamina = resolvers.mbonus_material(30, 10),
 		combat_atk = resolvers.mbonus_material(20, 15),
 		max_life = resolvers.mbonus_material(70, 40),
 		fatigue = resolvers.mbonus_material(6, 4, function(e, v) return 0, -v end),
 	},
 }
 
--- Partially tested
 newEntity{
 	power_source = {arcane=true},
 	name = " of the voidstalker", suffix=true, instant_resolve=true,
@@ -422,7 +421,6 @@ newEntity{
 			[DamageType.DARKNESS] = resolvers.mbonus_material(20, 10),
 		},
 	},
-	--charm_power = resolvers.mbonus_material(80, 20),
 	charm_power_def = {add=5, max=10, floor=true},
 	resolvers.charm("blink to a random location within 2 spaces of target hostile creature", 10, function(self, who)
 		local tg = {type="hit", range=8, friendlyfire = false}

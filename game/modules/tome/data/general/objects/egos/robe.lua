@@ -386,32 +386,6 @@ newEntity{
 }
 newEntity{
 	power_source = {arcane=true},
-	name = " of chaos", suffix=true, instant_resolve=true,
-	keywords = {chaos=true},
-	level_range = {20, 50},
-	greater_ego = 1,
-	rarity = 20,
-	cost = 40,
-	wielder = {
-		resists={
-			[DamageType.FIRE] = resolvers.mbonus_material(10, 5),
-			[DamageType.COLD] = resolvers.mbonus_material(10, 5, function(e, v) return 0, -v end),
-			[DamageType.BLIGHT] = resolvers.mbonus_material(10, 5),
-			[DamageType.NATURE] = resolvers.mbonus_material(10, 5, function(e, v) return 0, -v end),
-			[DamageType.PHYSICAL] = resolvers.mbonus_material(10, 5),
-			[DamageType.ARCANE] = resolvers.mbonus_material(10, 5, function(e, v) return 0, -v end),
-		},
-		resists_pen = { 
-			[DamageType.FIRE] = resolvers.mbonus_material(15, 5),
-			[DamageType.BLIGHT] = resolvers.mbonus_material(15, 5),
-			[DamageType.PHYSICAL] = resolvers.mbonus_material(15, 5),
-		},
-		combat_spellcrit = resolvers.mbonus_material(10, 15),
-		spellsurge_on_crit = resolvers.mbonus_material(5, 5),
-	},	
-}
-newEntity{
-	power_source = {arcane=true},
 	name = "sunsealed ", prefix=true, instant_resolve=true,
 	keywords = {sunseal=true},
 	level_range = {40, 50},

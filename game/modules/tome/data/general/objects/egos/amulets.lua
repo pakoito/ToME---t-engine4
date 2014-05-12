@@ -238,6 +238,7 @@ newEntity{
 	end),
 }
 
+--[[ Disabled pending revamp of concept which will probably never come
 newEntity{
 	power_source = {psionic=true},
 	name = " of seduction", suffix=true, instant_resolve=true,
@@ -275,6 +276,7 @@ newEntity{
 		return {id=true, used=true}
 	end),
 }
+--]]
 
 newEntity{
 	power_source = {technique=true},

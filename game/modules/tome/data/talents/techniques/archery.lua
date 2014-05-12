@@ -100,7 +100,7 @@ newTalent{
 newTalent{
 	name = "Reload",
 	type = {"technique/archery-base", 1},
-	cooldown = 0,
+	cooldown = 2,
 	innate = true,
 	points = 1,
 	tactical = { AMMO = 2 },
