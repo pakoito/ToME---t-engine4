@@ -3476,7 +3476,7 @@ function _M:onWear(o, inven_id, bypass_set)
 					if d.object ~= o then self:onTakeoff(d.object, d.inven_id, true) end
 					local complete =  d.object.on_set_complete
 					if type(complete) == "table" then complete = complete[set_id] end
-					complete(d.object, self, d.inven_id, set_objects)
+					if complete then complete(d.object, self, d.inven_id, set_objects) end
 					if d.object ~= o then self:onWear(d.object, d.inven_id, true) end
 					d.object.set_complete = d.object.set_complete or {}
 					d.object.set_complete[set_id] = set_objects
@@ -3593,7 +3593,7 @@ function _M:onTakeoff(o, inven_id, bypass_set)
 				if d.object ~= o then self:onTakeoff(d.object, d.inven_id, true) end
 				local broken = d.object.on_set_broken
 				if type(broken) == "table" then broken = broken[set_id] end
-				broken(d.object, self, d.inven_id, set_objects)
+				if broken then broken(d.object, self, d.inven_id, set_objects) end
 				if d.object._special_set then
 					for k, id in pairs(d.object._special_set) do
 						d.object:removeTemporaryValue(k, id)
