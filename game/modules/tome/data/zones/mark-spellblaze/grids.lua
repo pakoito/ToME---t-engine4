@@ -27,7 +27,7 @@ newEntity{ base = "ALTAR",
 	define_as = "ALTAR_CORRUPT",
 	on_move = function(self, x, y, who)
 		if not who.player then return end
-		local o, inven, item = who:findInAllInventoriesBy("define_as", "SANDQUEEN_HEART")
+		local o, item, inven = who:findInAllInventoriesBy("define_as", "SANDQUEEN_HEART")
 		if not o then return end
 
 		require("engine.ui.Dialog"):yesnoPopup("Heart of the Sandworm Queen", "The altar seems to react to the heart. You feel you could corrupt it here.", function(ret)
