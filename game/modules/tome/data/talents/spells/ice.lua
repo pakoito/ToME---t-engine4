@@ -84,7 +84,8 @@ newTalent{
 	action = function(self, t)
 		local tg = self:getTalentTarget(t)
 		local grids = self:project(tg, self.x, self.y, DamageType.COLDNEVERMOVE, {shatter_reduce=2, dur=4, dam=self:spellCrit(t.getDamage(self, t))})
-		game.level.map:particleEmitter(self.x, self.y, tg.radius, "ball_ice", {radius=tg.radius})
+--		game.level.map:particleEmitter(self.x, self.y, tg.radius, "ball_ice", {radius=tg.radius})
+		game.level.map:particleEmitter(self.x, self.y, tg.radius, "circle", {oversize=1.1, a=255, limit_life=16, grow=true, speed=0, img="ice_nova", radius=tg.radius})
 		game:playSoundNear(self, "talents/ice")
 		return true
 	end,

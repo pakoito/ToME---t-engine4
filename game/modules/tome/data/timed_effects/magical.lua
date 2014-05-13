@@ -2798,11 +2798,17 @@ newEffect{
 	status = "detrimental",
 	on_gain = function(self, err) return nil, "+Wet" end,
 	on_lose = function(self, err) return nil, "-Wet" end,
+	on_merge = function(self, old_eff, new_eff)
+		old_eff.dur = new_eff.dur
+		return old_eff
+	end,
 	activate = function(self, eff)
 		if self:attr("stun_immune") then
 			self:effectTemporaryValue(eff, "stun_immune", -self:attr("stun_immune") / 2)
 		end
+		eff.particle = self:addParticles(Particles.new("circle", 1, {shader=true, oversize=0.7, a=155, appear=8, speed=0, img="water_drops", radius=0}))
 	end,
 	deactivate = function(self, eff)
+		self:removeParticles(eff.particle)
 	end,
 }
