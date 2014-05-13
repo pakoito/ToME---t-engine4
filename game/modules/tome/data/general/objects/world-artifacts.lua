@@ -6186,7 +6186,7 @@ newEntity{ base = "BASE_GREATMAUL",
 	power_source = {arcane=true},
 	unique = true,
 	color = colors.BLUE,
-	name = "Tirakai's Maul",
+	name = "Tirakai's Maul", image = "object/artifact/tirakais_maul.png",
 	desc = [[This massive hammer is formed from a thick mass of strange crystalline growths. In the side of the hammer itself you see an empty slot; it looks like a gem of your own could easily fit inside it.]],
 	gemDesc = "None", -- Defined by the elemental properties and used by special_desc
 	special_desc = function(self)
