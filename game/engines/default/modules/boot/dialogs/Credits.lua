@@ -181,6 +181,7 @@ function _M:init()
 	}
 
 	self.list = { self:makeEntry(credits[1]) }
+	self.list[1].y = self.list[1].y - self.list[1].h
 	self.next_credit = 2
 end
 

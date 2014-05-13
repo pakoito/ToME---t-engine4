@@ -1573,7 +1573,6 @@ function _M:setupCommands()
 			print("===============")
 		end end,
 		[{"_g","ctrl"}] = function() if config.settings.cheat then
-			error("for johnny0, with love :)")
 do return end
 			local f, err = loadfile("/data/general/events/glimmerstone.lua")
 			print(f, err)
