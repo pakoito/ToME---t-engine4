@@ -2134,6 +2134,16 @@ function _M:onDealloc()
 	print("Played ToME for "..time.." seconds")
 end
 
+function _M:saveVersion(token)
+	if token == "new" then
+		token = util.uuid()
+		self.__savefile_version_tokens[token] = true
+		return token
+	end
+	return true
+--	return self.__savefile_version_tokens[token]
+end
+
 --- When a save is being made, stop running/resting
 function _M:onSavefilePush()
 	self.player:runStop("saving")
