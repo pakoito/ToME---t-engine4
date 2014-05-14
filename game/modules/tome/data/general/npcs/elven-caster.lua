@@ -62,7 +62,7 @@ newEntity{ base = "BASE_NPC_ELVEN_CASTER",
 	},
 	combat_armor = 0, combat_def = 0,
 	resolvers.talents{
-		[Talents.T_EARTHEN_MISSILES]={base=2, every=8, max=6},
+		[Talents.T_EARTHEN_MISSILES]={base=1, every=8, max=6},
 		[Talents.T_SHOCK]={base=1, every=8, max=5},
 	},
 }
@@ -79,7 +79,7 @@ newEntity{ base = "BASE_NPC_ELVEN_CASTER",
 	},
 	combat_armor = 0, combat_def = 0,
 	resolvers.talents{
-		[Talents.T_LIGHTNING]={base=2, every=8, max=6},
+		[Talents.T_LIGHTNING]={base=1, every=8, max=6},
 		[Talents.T_THUNDERSTORM]={base=1, every=8, max=5},
 	},
 	resolvers.sustains_at_birth(),

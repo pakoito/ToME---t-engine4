@@ -18,6 +18,7 @@ newEntity{
 	infravision = 10,
 	combat_def = 1,
 	never_move = 1,
+	slow_projectiles_outgoing = 50,
 	blind_immune = 1,
 	cut_immune = 1,
 	fear_immune = 1,
@@ -80,7 +81,7 @@ newEntity{ base = "BASE_NPC_CRYSTAL",
 	rarity = 1,
 	resists = { [DamageType.FIRE] = 100, [DamageType.COLD] = -100 },
 	resolvers.talents{
-		[Talents.T_FLAME]={base=1, every=7, max=5},
+		[Talents.T_FLAME_BOLT]={base=1, every=1, max=20},
 	},
 	ingredient_on_death = "RED_CRYSTAL_SHARD",
 }
@@ -92,7 +93,7 @@ newEntity{ base = "BASE_NPC_CRYSTAL",
 	rarity = 1,
 	resists = { [DamageType.COLD] = 100, [DamageType.FIRE] = -100 },
 	resolvers.talents{
-		[Talents.T_ICE_SHARDS]={base=1, every=7, max=5},
+		[Talents.T_ICE_BOLT]={base=1, every=1, max=20},
 	}
 }
 
@@ -103,7 +104,7 @@ newEntity{ base = "BASE_NPC_CRYSTAL",
 	rarity = 2,
 	resists = { [DamageType.LIGHT] = 100 ,[DamageType.DARKNESS] = -100 },
 	resolvers.talents{
-		[Talents.T_SOUL_ROT]={base=1, every=7, max=5},
+		[Talents.T_BLIGHT_BOLT]={base=1, every=1, max=20},
 	}
 }
 

@@ -56,7 +56,7 @@ newEntity{ base = "BASE_NPC_TROLL",
 	desc = [[Green-skinned and ugly, this massive humanoid glares at you, clenching wart-covered green fists.]],
 	level_range = {1, nil}, exp_worth = 1,
 	rarity = 1,
-	max_life = resolvers.rngavg(100,120),
+	max_life = resolvers.rngavg(50,70),
 	combat_armor = 4, combat_def = 0,
 }
 
@@ -66,7 +66,7 @@ newEntity{ base = "BASE_NPC_TROLL",
 	desc = [[A giant troll with scabrous black skin. With a shudder, you notice the belt of dwarf skulls around his massive waist.]],
 	level_range = {3, nil}, exp_worth = 1,
 	rarity = 1,
-	max_life = resolvers.rngavg(120,140),
+	max_life = resolvers.rngavg(70,90),
 	combat_armor = 7, combat_def = 0,
 	resolvers.talents{[Talents.T_STUN]={base=1, every=7, max=5}, [Talents.T_KNOCKBACK]={base=1, every=7, max=5}, },
 }

@@ -154,5 +154,11 @@ newBirthDescriptor{
 		resolvers.inventory{ id=true, inven="QS_QUIVER",
 			{type="ammo", subtype="arrow", name="quiver of elm arrows", autoreq=true, ego_chance=-1000},
 		},
+		resolvers.generic(function(e)
+			e.auto_shoot_talent = e.T_SHOOT
+		end),
+	},
+	copy_add = {
+		max_life = 25,
 	},
 }

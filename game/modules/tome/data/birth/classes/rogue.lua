@@ -77,6 +77,8 @@ newBirthDescriptor{
 		[ActorTalents.T_TRAP_MASTERY] = 1,
 		[ActorTalents.T_LETHALITY] = 1,
 		[ActorTalents.T_DUAL_STRIKE] = 1,
+		[ActorTalents.T_KNIFE_MASTERY] = 1,
+		[ActorTalents.T_WEAPON_COMBAT] = 1,
 	},
 	copy = {
 		equipment = resolvers.equip{ id=true,
@@ -130,6 +132,8 @@ newBirthDescriptor{
 		[ActorTalents.T_SHADOW_COMBAT] = 1,
 		[ActorTalents.T_PHASE_DOOR] = 1,
 		[ActorTalents.T_LETHALITY] = 1,
+		[ActorTalents.T_KNIFE_MASTERY] = 1,
+		[ActorTalents.T_WEAPON_COMBAT] = 1,
 	},
 	copy = {
 		resolvers.inscription("RUNE:_MANASURGE", {cooldown=25, dur=10, mana=620}),
@@ -231,6 +235,7 @@ newBirthDescriptor{
 		[ActorTalents.T_SKIRMISHER_KNEECAPPER] = 1,
 		[ActorTalents.T_SKIRMISHER_SLING_SUPREMACY] = 1,
 		[ActorTalents.T_SKIRMISHER_BUCKLER_EXPERTISE] = 1,
+		[ActorTalents.T_WEAPON_COMBAT] = 1,
 	},
 	copy = {
 		resolvers.equip{

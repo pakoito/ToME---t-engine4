@@ -53,8 +53,8 @@ newEntity{
 
 	resolvers.talents{
 		[Talents.T_LETHALITY]={base=1, every=6, max=5},
-		[Talents.T_KNIFE_MASTERY]={base=1, every=6, max=6},
-		[Talents.T_WEAPON_COMBAT]={base=1, every=6, max=6},
+		[Talents.T_KNIFE_MASTERY]={base=0, every=6, max=6},
+		[Talents.T_WEAPON_COMBAT]={base=0, every=6, max=6},
 	},
 	power_source = {technique=true},
 }
@@ -88,7 +88,7 @@ newEntity{ base = "BASE_NPC_THIEF",
 	resolvers.talents{
 		[Talents.T_STEALTH]={base=2, every=6, max=8},
 		[Talents.T_DISARM]={base=2, every=6, max=6},
-		[Talents.T_VILE_POISONS]={base=1, every=6, max=5},
+		[Talents.T_VILE_POISONS]={base=0, every=6, max=5},
 		[Talents.T_VENOMOUS_STRIKE]={last=15, base=0, every=6, max=5},
 	},
 	max_life = resolvers.rngavg(70,90),

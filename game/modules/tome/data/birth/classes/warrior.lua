@@ -124,6 +124,7 @@ newBirthDescriptor{
 		[ActorTalents.T_SHIELD_WALL] = 1,
 		[ActorTalents.T_WEAPON_COMBAT] = 1,
 		[ActorTalents.T_ARMOUR_TRAINING] = 2,
+		[ActorTalents.T_WEAPONS_MASTERY] = 1,
 	},
 	copy = {
 		resolvers.equip{ id=true,

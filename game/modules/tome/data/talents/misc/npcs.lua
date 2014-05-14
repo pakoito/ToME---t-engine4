@@ -560,6 +560,120 @@ newTalent{
 	end,
 }
 
+-- Crystal Flame replacement
+newTalent{
+	name = "Flame Bolt",
+	type = {"spell/other",1},
+	points = 1,
+	random_ego = "attack",
+	mana = 12,
+	cooldown = 3,
+	tactical = { ATTACK = { FIRE = 2 } },
+	range = 10,
+	reflectable = true,
+	proj_speed = 20,
+	requires_target = true,
+	target = function(self, t)
+		local tg = {type="bolt", range=self:getTalentRange(t), talent=t, display={particle="bolt_fire", trail="firetrail"}}
+		return tg
+	end,
+	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 1, 180) end,
+	action = function(self, t)
+		local tg = self:getTalentTarget(t)
+		local x, y = self:getTarget(tg)
+		if not x or not y then return nil end
+		local grids = nil
+
+			self:projectile(tg, x, y, DamageType.FIREBURN, self:spellCrit(t.getDamage(self, t)), function(self, tg, x, y, grids)
+				game.level.map:particleEmitter(x, y, 1, "flame")
+				if self:attr("burning_wake") then
+					game.level.map:addEffect(self, x, y, 4, engine.DamageType.INFERNO, self:attr("burning_wake"), 0, 5, nil, {type="inferno"}, nil, self:spellFriendlyFire())
+				end
+			end)
+
+		game:playSoundNear(self, "talents/fire")
+		return true
+	end,
+	info = function(self, t)
+		local damage = t.getDamage(self, t)
+		return ([[Conjures up a bolt of fire, setting the target ablaze and doing %0.2f fire damage over 3 turns.
+		The damage will increase with your Spellpower.]]):
+		format(damDesc(self, DamageType.FIRE, damage))
+	end,
+}
+
+-- Crystal Ice Shards replacement
+-- Very slow, moderate damage, freezes
+newTalent{
+	name = "Ice Bolt",
+	type = {"spell/other",1},
+	points = 1,
+	random_ego = "attack",
+	mana = 12,
+	cooldown = 3,
+	tactical = { ATTACK = { FIRE = 2 } },
+	range = 10,
+	reflectable = true,
+	proj_speed = 6,
+	requires_target = true,
+	target = function(self, t)
+		return {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t), talent=t}
+	end,
+	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 1, 140) end,
+	action = function(self, t)
+		local tg = self:getTalentTarget(t)
+		local x, y = self:getTarget(tg)
+		if not x or not y then return nil end
+		local grids = self:project(tg, x, y, function(px, py)
+			local actor = game.level.map(px, py, Map.ACTOR)
+			if actor and actor ~= self then
+				local tg2 = {type="bolt", range=self:getTalentRange(t), talent=t, display={particle="arrow", particle_args={tile="particles_images/ice_shards"}}}
+				self:projectile(tg2, px, py, DamageType.ICE, self:spellCrit(t.getDamage(self, t)), {type="freeze"})
+			end
+		end)
+		game:playSoundNear(self, "talents/ice")
+		return true
+	end,
+	info = function(self, t)
+		local damage = t.getDamage(self, t)
+		return ([[Hurl ice shard at the target dealing %0.2f ice damage.
+		The damage will increase with your Spellpower.]]):
+		format(damDesc(self, DamageType.COLD, damage))
+	end,
+}
+
+-- Crystal Soul Rot replacement
+-- Slower projectile, higher damage, crit bonus
+newTalent{
+	name = "Blight Bolt",
+	type = {"spell/other",1},
+	points = 1,
+	random_ego = "attack",
+	mana = 12,
+	cooldown = 3,
+	tactical = { ATTACK = { BLIGHT = 2 } },
+	range = 10,
+	reflectable = true,
+	proj_speed = 10,
+	requires_target = true,
+	getCritChance = function(self, t) return self:combatTalentScale(t, 7, 25, 0.75) end,
+	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 1, 140) end,
+	action = function(self, t)
+		local tg = {type="bolt", range=self:getTalentRange(t), talent=t, display={particle="bolt_slime"}}
+		local x, y = self:getTarget(tg)
+		if not x or not y then return nil end
+		self:projectile(tg, x, y, DamageType.BLIGHT, self:spellCrit(self:combatTalentSpellDamage(t, 1, 140), t.getCritChance(self, t)), {type="slime"})
+		game:playSoundNear(self, "talents/slime")
+		return true
+	end,
+	info = function(self, t)
+		return ([[Projects a bolt of pure blight, doing %0.2f blight damage.
+		This spell has an improved critical strike chance of +%0.2f%%.
+		The damage will increase with your Spellpower.]]):
+		format(damDesc(self, DamageType.BLIGHT, self:combatTalentSpellDamage(t, 1, 180)), t.getCritChance(self, t))
+	end,
+}
+
 newTalent{
 	name = "Water Jet",
 	type = {"spell/other", },

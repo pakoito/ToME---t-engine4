@@ -339,8 +339,9 @@ newInscription{
 	info = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
 		return ([[Activate the infusion to increase three of your primary stats by %d for %d turns.
-		Also while Heroism is active, you will only die when reaching -%d life. However, when below 0 you cannot see how much life you have left.
-		It will always increase your three highest stats.]]):format(data.power + data.inc_stat, data.dur, data.die_at + data.inc_stat * 30)
+		While Heroism is active, you will only die when reaching -%d life. However, when below 0 you cannot see how much life you have left.
+		It will always increase your three highest stats.
+		If your life is below 0 when this effect wears off it will be set to 1.]]):format(data.power + data.inc_stat, data.dur, data.die_at + data.inc_stat * 30)
 	end,
 	short_info = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
