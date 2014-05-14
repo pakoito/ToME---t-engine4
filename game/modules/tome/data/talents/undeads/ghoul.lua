@@ -48,7 +48,7 @@ newTalent{
 	range = function(self, t) return math.floor(self:combatTalentScale(t, 5, 10, 0.5, 0, 1)) end,
 	requires_target = true,
 	action = function(self, t)
-		local tg = {type="hit", range=self:getTalentRange(t)}
+		local tg = {type="hit", range=self:getTalentRange(t), nolock=true}
 		local x, y, target = self:getTarget(tg)
 		if not x or not y then return nil end
 		if core.fov.distance(self.x, self.y, x, y) > self:getTalentRange(t) then return nil end

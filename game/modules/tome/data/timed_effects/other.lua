@@ -2459,7 +2459,7 @@ newEffect{
 
 newEffect{
 	name = "RELOAD_DISARMED", image = "talents/disarm.png",
-	desc = "Disarmed",
+	desc = "Reloading",
 	long_desc = function(self, eff) return "The target has replenished some ammo." end,
 	type = "other",
 	subtype = { disarm=true },

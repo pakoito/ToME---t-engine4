@@ -102,7 +102,7 @@ newTalent{
 			self:getTalentRadius(t),
 			5, nil,
 			{zdepth=6, type="mucus"},
-			nil, self:spellFriendlyFire()
+			nil, 0, 0
 		)
 
 		game:playSoundNear(self, "talents/slime")

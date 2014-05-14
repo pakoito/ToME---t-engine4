@@ -35,7 +35,7 @@ newTalent{
 	getDamage = function(self, t)
 		local mult = 1
 		if self:attr("amplify_sun_beam") then mult = 1 + self:attr("amplify_sun_beam") / 100 end
-		return self:combatTalentSpellDamage(t, 20, 240) * mult
+		return self:combatTalentSpellDamage(t, 20, 220) * mult
 	end,
 	getDuration = function(self, t) return math.floor(self:combatTalentScale(t, 2, 4)) end,
 	action = function(self, t)
@@ -148,7 +148,7 @@ newTalent{
 	cooldown = 15,
 	positive = -20,
 	tactical = { ATTACKAREA = {LIGHT = 2}, CLOSEIN = 2 },
-	range = function(self, t) return self:combatTalentLimit(t, 10, 4, 9) end,
+	range = function(self, t) return math.floor(self:combatTalentLimit(t, 10, 4, 9)) end,
 	direct_hit = true,
 	target = function(self, t)
 		return {type="beam", range=self:getTalentRange(t), talent=t}

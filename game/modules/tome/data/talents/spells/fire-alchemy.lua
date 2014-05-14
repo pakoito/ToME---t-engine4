@@ -140,7 +140,7 @@ newTalent{
 				e.y = e.src.y
 				return true
 			end,
-			false
+			0, 0
 		)
 		ef.name = "firestorm"
 		game:playSoundNear(self, "talents/fire")

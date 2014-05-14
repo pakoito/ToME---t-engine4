@@ -23,7 +23,6 @@ newTalent{
 	require = techs_con_req1,
 	mode = "passive",
 	points = 5,
-	--getHealPct = function(self, t) return math.min(.3, self:combatTalentStatDamage(t, "con", 0.03, 0.2)) end,
 	getHealPct = function(self, t) return math.min(.4, self:combatTalentScale(t, 0.03, 0.3)) end,
 	getWoundReduction = function(self, t) return self:combatTalentLimit(t, 1, 0.17, 0.5) end, -- Limit <100%
 	getDuration = function(self, t) return 6 end,

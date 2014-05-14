@@ -225,7 +225,7 @@ newTalent {
 		if level >= 3 then return {global_speed_add = 0.1, duration = 1} end
 	end,
 	info = function(self, t)
-		return ([[Lowers the cooldown of Vault and Cunning Roll by %d, and their stamina costs by %d. At Rank 3 you also gain 10%% global speed for 1 turn after Trained Reactions activates. At rank 5 this speed bonus becomes 20%% and lasts for 2 rounds.]])
+		return ([[Lowers the cooldown of Vault and Tumble by %d, and their stamina costs by %d. At Rank 3 you also gain 10%% global speed for 1 turn after Trained Reactions activates. At rank 5 this speed bonus becomes 20%% and lasts for 2 rounds.]])
 			:format(t.cooldown_bonus(self, t),
 							t.stamina_bonus(self, t))
 	end,

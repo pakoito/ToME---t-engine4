@@ -99,9 +99,6 @@ newBirthDescriptor{
 		resolvers.inventory{ id=true,
 			{type="weapon", subtype="greatsword", name="iron greatsword", ignore_material_restriction=true, autoreq=true, ego_chance= -1000},
 		},
-		resolvers.inventory{ id=true, inven="QS_MAINHAND",
-			{type="weapon", subtype="longbow", name="elm longbow", autoreq=true, ego_chance=-1000},
-		},
 
 	},
 	copy_add = {

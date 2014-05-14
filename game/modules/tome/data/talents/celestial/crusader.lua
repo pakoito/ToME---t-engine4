@@ -25,7 +25,7 @@
 newTalent{
 	name = "Absorption Strike",
 	type = {"celestial/crusader", 1},
-	require = divi_req1,
+	require = divi_req_high1,
 	points = 5,
 	cooldown = 8,
 	positive = -7,
@@ -66,7 +66,7 @@ newTalent{
 newTalent{
 	name = "Mark of Light",
 	type = {"celestial/crusader", 2},
-	require = divi_req2,
+	require = divi_req_high2,
 	points = 5,
 	no_energy = true,
 	cooldown = 15,
@@ -95,7 +95,7 @@ newTalent{
 newTalent{
 	name = "Righteous Strength",
 	type = {"celestial/crusader",3},
-	require = divi_req3,
+	require = divi_req_high3,
 	points = 5,
 	mode = "sustained",
 	sustain_positive = 20,
@@ -132,7 +132,7 @@ newTalent{
 newTalent{
 	name = "Flash of the Blade",
 	type = {"celestial/crusader", 4},
-	require = divi_req4,
+	require = divi_req_high4,
 	random_ego = "attack",
 	points = 5,
 	cooldown = 9,

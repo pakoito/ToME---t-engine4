@@ -1992,8 +1992,10 @@ function _M:onTakeHit(value, src, death_note)
 	
 	if self:knowTalent(self.T_SKIRMISHER_TRAINED_REACTIONS) then
 		local t = self:getTalentFromId(self.T_SKIRMISHER_TRAINED_REACTIONS)
-		value = t.onHit(self, t, value)
-		print("[onTakeHit] After Trained Reactions life% trigger ", value)
+		if self:isTalentActive(t.id) then
+			value = t.onHit(self, t, value)
+			print("[onTakeHit] After Trained Reactions life% trigger ", value)
+		end
 	end
   
 	if value > 0 and self:knowTalent(self.T_MITOSIS) and self:isTalentActive(self.T_MITOSIS) then

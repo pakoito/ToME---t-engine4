@@ -2131,6 +2131,15 @@ newDamageType{
 				target.damage_shield_absorb = target.damage_shield_absorb + shield_power
 				target.damage_shield_absorb_max = target.damage_shield_absorb_max + shield_power
 				shield.dur = math.max(2, shield.dur)
+
+				-- Limit the number of times a shield can be extended
+				if shield.dur_extended then
+					shield.dur_extended = shield.dur_extended + 1
+					if shield.dur_extended >= 20 then
+						game.logPlayer(target, "#DARK_ORCHID#Your damage shield cannot be extended any farther and has exploded.")
+						target:removeEffect(target.EFF_DAMAGE_SHIELD)
+					end
+				else shield.dur_extended = 1 end
 			end
 			if dam >= 100 then target:attr("allow_on_heal", -1) end
 		elseif target then

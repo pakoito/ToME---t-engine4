@@ -1211,7 +1211,7 @@ newTalent{
 	direct_hit = true,
 	tactical = { ATTACK = 3 },
 	action = function(self, t)
-		local tg = {type="hit", range=self:getTalentRange(t), talent=t}
+		local tg = {type="hit", range=self:getTalentRange(t), talent=t, nolock=true}
 		local tx, ty = self:getTarget(tg)
 		if not tx or not ty then return nil end
 		local _ _, _, _, tx, ty = self:canProject(tg, tx, ty)
