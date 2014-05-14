@@ -44,7 +44,9 @@
 #define ENGINE_POINTS 0
 #define ENGINE_LINES 1
 #define BLEND_NORMAL 0
-#define BLEND_ADDITIVE 1
+#define BLEND_SHINY 1
+#define BLEND_ADDITIVE 2
+#define BLEND_MIXED 3
 
 int MAX_THREADS = 1;
 extern int nb_cpus;
@@ -233,7 +235,9 @@ static void particles_draw(particles_type *ps, float x, float y, float zoom)
 
 	SDL_mutexP(ps->lock);
 
-	if (ps->blend_mode == BLEND_ADDITIVE) glBlendFunc(GL_SRC_ALPHA,GL_ONE);
+	if (ps->blend_mode == BLEND_SHINY) glBlendFunc(GL_SRC_ALPHA,GL_ONE);
+	else if (ps->blend_mode == BLEND_ADDITIVE) glBlendFunc(GL_ONE, GL_ONE);
+	else if (ps->blend_mode == BLEND_MIXED) glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
 
 	if (multitexture_active) tglActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, ps->texture);
@@ -650,8 +654,16 @@ int luaopen_particles(lua_State *L)
 	lua_pushnumber(L, BLEND_NORMAL);
 	lua_rawset(L, -3);
 
+	lua_pushstring(L, "BLEND_SHINY");
+	lua_pushnumber(L, BLEND_SHINY);
+	lua_rawset(L, -3);
+
 	lua_pushstring(L, "BLEND_ADDITIVE");
 	lua_pushnumber(L, BLEND_ADDITIVE);
+	lua_rawset(L, -3);
+
+	lua_pushstring(L, "BLEND_MIXED");
+	lua_pushnumber(L, BLEND_MIXED);
 	lua_rawset(L, -3);
 
 	lua_pop(L, 1);
