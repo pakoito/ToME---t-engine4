@@ -22,7 +22,7 @@ base_size = 32
 local nb = 0
 
 return {
-	blend_mode=additive and core.particles.BLEND_ADDITIVE or nil,
+	blend_mode=additive and core.particles.BLEND_SHINY or nil,
 	system_rotation = 0, system_rotationv = rotation or 0.3,
 	generator = function()
 	local fs = 38 * (radius or 1)

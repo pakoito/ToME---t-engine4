@@ -21,7 +21,7 @@ base_size = 64
 
 local nb = 0
 
-return { blend_mode=core.particles.BLEND_ADDITIVE, generator = function()
+return { blend_mode=core.particles.BLEND_SHINY, generator = function()
 	local ad = rng.range(0, 360)
 	local a = math.rad(ad)
 	local dir = math.rad(ad)

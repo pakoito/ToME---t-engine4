@@ -21,7 +21,11 @@ base_size = 64
 
 local shader = shader or false
 
-if shader then use_shader = {type="volumetric_aura"} end
+if core.shader.active(4) then
+	if shader then use_shader = {type="volumetric_aura"} end
+else
+	shader = false
+end
 
 local speed = speed or 0.023
 local a = (a or 60) / 255
@@ -37,7 +41,7 @@ if grow then grow = basesize / limit_life end
 local nb = empty_start and -1 or 0
 
 return {
-	blend_mode = shader and core.particles.BLEND_ADDITIVE or nil,
+	blend_mode = shader and core.particles.BLEND_SHINY or nil,
 	system_rotation = base_rot or rng.range(0, 360), system_rotationv = speed,
 	generator = function()
 	if nb == -1 then

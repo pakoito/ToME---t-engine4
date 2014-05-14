@@ -67,7 +67,7 @@ end
 local nbp = #points
 
 -- Populate the lightning based on the forks
-return { blend_mode=core.particles.BLEND_ADDITIVE, engine=core.particles.ENGINE_LINES, generator = function()
+return { blend_mode=core.particles.BLEND_SHINY, engine=core.particles.ENGINE_LINES, generator = function()
 	local p = table.remove(points, 1)
 
 	return {
