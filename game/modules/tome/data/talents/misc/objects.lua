@@ -551,7 +551,6 @@ newTalent{
 		}
 		return p
 	end,
-	
 	getBlockedTypes = function(self, t)
 	
 		local bt = {[DamageType.PHYSICAL]=true}
@@ -582,17 +581,17 @@ newTalent{
 			e_string = table.concat(list, ", ")
 		end
 		return bt, e_string
-		end,
-	
+	end,
+	getPower = function(self, t) return 120+self:getCun()+self:getDex() end,
 	action = function(self, t)
 		local properties = t.getProperties(self, t)
 		local bt, bt_string = t.getBlockedTypes(self, t)
-		self:setEffect(self.EFF_BLOCKING, 1 + (self:knowTalent(self.T_ETERNAL_GUARD) and 1 or 0), {power = 120+self:getCun()+self:getDex(), d_types=bt, properties=properties})
+		self:setEffect(self.EFF_BLOCKING, 1 + (self:knowTalent(self.T_ETERNAL_GUARD) and 1 or 0), {power = t.getPower(self, t), d_types=bt, properties=properties})
 		return true
 	end,
 	info = function(self, t)
-		return ([[Raise your dagger into blocking position for one turn, reducing the damage of all physical attacks by %d. If you block all of an attack's damage, the attacker will be vulnerable to a deadly counterstrike (a normal attack will instead deal 200%% damage) for one turn and be left disarmed for 3 turns.
-		The blocking value will increase with your Dexterity and Cunning.]]):format(120 + self:getCun() + self:getDex())
+		return ([[Raise your dagger into blocking position for one turn, reducing the damage of all physical melee attacks against you by %d. If you block all of an attack's damage, the attacker will be vulnerable to a deadly counterstrike (a normal attack will instead deal 200%% damage) for one turn and be left disarmed for 3 turns.
+		The blocking value will increase with your Dexterity and Cunning.]]):format(t.getPower(self, t))
 	end,
 }
 
@@ -606,7 +605,7 @@ newTalent{
 		if not self:isTalentCoolingDown(t) then
 			self:startTalentCooldown(t)
 			cb.value=0
-			game.logPlayer(self, "Your shield protects you from the blow!")
+			game.logSeen(self, "#CRIMSON#%s's shield deflects the blow!", self.name)
 			return true
 		else
 		return false

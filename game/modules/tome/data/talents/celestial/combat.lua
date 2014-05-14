@@ -69,14 +69,15 @@ newTalent{
 	info = function(self, t)
 		local damage = t.getDamage(self, t)
 		local shieldflat = t.getShieldFlat(self, t)
-		return ([[Infuse your weapon with the power of the Sun, adding %0.2f light damage on each melee hit.
+		return ([[Infuse your weapon with the power of the Sun, adding %0.1f light damage on each melee hit.
 		Additionally, if you have a temporary damage shield active, melee attacks will increase its power by %d.
 		The damage dealt and shield bonus will increase with your Spellpower.]]):
 		format(damDesc(self, DamageType.LIGHT, damage), shieldflat)
 	end,
 }
 
--- Boring scaling, TL4 effect?
+-- A potentially very powerful ranged attack that gets more effective with range
+-- 2nd attack does reduced damage to balance high damage on 1st attack (so that the talent is always useful at low levels and close ranges)
 newTalent{
 	name = "Wave of Power",
 	type = {"celestial/combat",2},
@@ -88,7 +89,16 @@ newTalent{
 	tactical = { ATTACK = 2 },
 	requires_target = true,
 	range = function(self, t) return 2 + math.max(0, self:combatStatScale("str", 0.8, 8)) end,
-	getDamage = function(self, t) return self:combatTalentWeaponDamage(t, 0.9, 2) end,
+	SecondStrikeChance = function(self, t, range)
+		return self:combatLimit(self:getTalentLevel(t)*range, 100, 15, 4, 70, 50)
+	end, -- 15% for TL 1.0 at range 4, 70% for TL 5.0 at range 10
+	getDamage = function(self, t, second)
+		if second then
+			return self:combatTalentWeaponDamage(t, 0.9, 2)*self:combatTalentLimit(t, 1.0, 0.4, 0.65)
+		else
+			return self:combatTalentWeaponDamage(t, 0.9, 2)
+		end
+	end,
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t), talent=t}
 		local x, y = self:getTarget(tg)
@@ -97,21 +107,23 @@ newTalent{
 		local target = game.level.map(x, y, Map.ACTOR)
 		if target then
 			self:attackTarget(target, nil, t.getDamage(self, t), true)
-			if self:getTalentLevel(t) >= 4 and core.fov.distance(self.x, self.y, target.x, target.y) > 3 then 
-				self:attackTarget(target, nil, t.getDamage(self, t), true)
+			local range = core.fov.distance(self.x, self.y, target.x, target.y)
+			if range > 1 and rng.percent(t.SecondStrikeChance(self, t, range)) then
+				game.logSeen(self, "#CRIMSON#"..self.name.."strikes twice with Wave of Power!#NORMAL#")
+				self:attackTarget(target, nil, t.getDamage(self, t, true), true)
 			end
-
 		else
 			return
 		end
 		return true
 	end,
 	info = function(self, t)
-		local damage = t.getDamage(self, t)
-		return ([[In a pure display of power, you project a melee attack, doing %d%% damage.
-		At talent level 4 you will strike an additional time if the target is over range 3.
+		local range = self:getTalentRange(t)
+		return ([[In a pure display of power, you project a ranged melee attack, doing %d%% weapon damage.
+		If the target is outside of melee range, you have a chance to project a second attack against it for %d%% weapon damage.
+		The second strike chance (which increases with distance) is %0.1f%% at range 2 and %0.1f%% at the maximum range of %d.
 		The range will increase with your Strength.]]):
-		format(100 * damage)
+		format(t.getDamage(self, t)*100, t.getDamage(self, t, true)*100, t.SecondStrikeChance(self, t, 2), t.SecondStrikeChance(self, t, range), range)
 	end,
 }
 
@@ -126,8 +138,13 @@ newTalent{
 	sustain_positive = 10,
 	tactical = { BUFF = 2 },
 	range = 10,
-	getMartyrDamage = function(self, t) return self:combatTalentScale(t, 5, 25) end,
-	getLifeDamage = function(self, t) return self:combatTalentScale(t, 0.1, 0.8) end,
+	getMartyrDamage = function(self, t) return self:combatTalentLimit(t, 50, 5, 25) end, --Limit < 50%
+	getLifeDamage = function(self, t) return self:combatTalentLimit(t, 1.0, 0.1, 0.8) end, -- Limit < 100%
+	getMaxDamage = function(self, t) return self:combatTalentSpellDamage(t, 10, 400) end,
+	getDamage = function(self, t)
+		local damage = (self:attr("weapon_of_wrath_life") or t.getLifeDamage(self, t)) * (self.max_life - math.max(0, self.life)) -- avoid problems with die_at
+		return math.min(t.getMaxDamage(self, t), damage) -- The Martyr effect provides the upside for high HP NPC's
+	end,
 	activate = function(self, t)
 		game:playSoundNear(self, "talents/spell_generic2")
 		-- Is this any better than having the callback call getLifeDamage?  I figure its better to calculate it once
@@ -145,23 +162,20 @@ newTalent{
 	callbackOnMeleeAttack = function(self, t, target, hitted, crit, weapon, damtype, mult, dam)
 		if hitted and self:attr("weapon_of_wrath_martyr") and not self.turn_procs.weapon_of_wrath and not target.dead then
 			target:setEffect(target.EFF_MARTYRDOM, 4, {power = self:attr("weapon_of_wrath_martyr")})
-
-			local damage = self:attr("weapon_of_wrath_life") * (self.max_life - math.max(0, self.life)) -- avoid problems with die_at
+			local damage = t.getDamage(self, t)
 			if damage == 0 then return end
-			damage = math.min(300, damage) -- No need to try to scale this in a clever way, NPC HP is too variant
-
 			local tg = {type="hit", range=10, selffire=true, talent=t}
 			self:project(tg, target.x, target.y, DamageType.FIRE, damage)
-
 			self.turn_procs.weapon_of_wrath = true
 		end
 	end,
 	info = function(self, t)
 		local martyr = t.getMartyrDamage(self, t)
 		local damagepct = t.getLifeDamage(self, t)
-		local damage = damagepct * (self.max_life - math.max(0, self.life))
-		return ([[Your weapon attacks burn with righteous fury dealing %d%% of your lost HP (Current:  %d) fire damage up to 300 damage and causing your target to take %d%% of the damage they deal.]]):
-		format(damagepct*100, damage, martyr)
+		local damage = t.getDamage(self, t)
+		return ([[Your weapon attacks burn with righteous fury, dealing %d%% of your lost HP as additional Fire damage (up to %d, Current:  %d).
+		Targets struck are also afflicted with a Martyrdom effect that causes them to take %d%% of all damage they deal for 4 turns.]]):
+		format(damagepct*100, t.getMaxDamage(self, t, 10, 400), damage, martyr)
 	end,
 } 
 

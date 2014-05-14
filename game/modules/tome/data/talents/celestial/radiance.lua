@@ -32,14 +32,14 @@ newTalent{
 	require = divi_req1,
 	points = 5,
 	radius = function(self, t) return self:combatTalentScale(t, 3, 7) end,
-	getResist = function(self, t) return math.min(100, self:combatTalentScale(t, 20, 90)) end,
+	getResist = function(self, t) return self:combatTalentLimit(t, 100, 25, 75) end,
 	passives = function(self, t, p)
 		self:talentTemporaryValue(p, "radiance_aura", radianceRadius(self))
 		self:talentTemporaryValue(p, "blind_immune", t.getResist(self, t) / 100)
 	end,
 	info = function(self, t)
 		return ([[You are so infused with sunlight that your body glows permanently in radius %d, even in dark places.
-		The light protects your eyes, giving %d%% blindness resistance.
+		Your vision adapts to this glow, giving you %d%% blindness resistance.
 		The light radius overrides your normal light if it is bigger (it does not stack).
 		]]):
 		format(radianceRadius(self), t.getResist(self, t))
@@ -74,7 +74,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[The light of your Radiance allows you to see that which would normally be unseen.
-		All actors in your Radiance aura have their invisibility and stealth power reduced by %d.
+		All enemies in your Radiance aura have their invisibility and stealth power reduced by %d.
 		In addition, all actors affected by illumination are easier to see and therefore hit; their defense is reduced by %d and all evasion bonuses from being unseen are negated.
 		The effects increase with your Spellpower.]]):
 		format(t.getPower(self, t), t.getDef(self, t))
@@ -109,9 +109,9 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Your Radiance is so powerful it burns all foes caught in it, doing up to %0.2f light damage (reduced with distance) to all foes caught inside.
+		return ([[Your Radiance is so powerful it burns all foes caught in it, doing up to %0.1f light damage (reduced with distance) to all foes caught inside.
 		At level 4 the light is so bright it has %d%% chances to daze them for 3 turns.
-		The damage increase with your Spellpower.]]):
+		The damage increases with your Spellpower.]]):
 		format(damDesc(self, DamageType.LIGHT, t.getDamage(self, t)), t.getDaze(self, t))
 	end,
 }
@@ -160,7 +160,7 @@ newTalent{
 		end)
 		
 		-- EFF_RADIANCE_DIM does nothing by itself its just used by radianceRadius
-		self:setEffect(self.EFF_RADIANCE_DIM, 8, {})
+		self:setEffect(self.EFF_RADIANCE_DIM, 5, {})
 
 		return true
 	end,

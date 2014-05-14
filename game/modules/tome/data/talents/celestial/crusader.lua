@@ -74,7 +74,7 @@ newTalent{
 	tactical = { DISABLE=2, HEAL=2 },
 	range = 5,
 	requires_target = true,
-	getPower = function(self, t) return self:combatTalentScale(t, 10, 50) end,
+	getPower = function(self, t) return self:combatTalentLimit(t, 100, 15, 50) end, --Limit < 100%
 	on_pre_use = function(self, t, silent) if not self:hasTwoHandedWeapon() then if not silent then game.logPlayer(self, "You require a two handed weapon to use this talent.") end return false end return true end,
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t)}
@@ -122,7 +122,7 @@ newTalent{
 	info = function(self, t)
 		return ([[While wielding a two handed weapon, your critical strike chance is increased by %d%%, and your melee criticals instill you with righteous strength, increasing all physical and light damage you deal by %d%%, stacking up to 3 times.
 		In addition, your melee critical strikes leave a lasting lightburn on the target, dealing %0.2f light damage over 5 turns and reducing opponents armour by %d.
-		The damage increase with your Spellpower.]]):
+		The damage increases with your Spellpower.]]):
 		format(t.getCrit(self, t), t.getPower(self, t), damDesc(self, DamageType.LIGHT, t.getDamage(self, t)), t.getArmor(self, t))
 	end,
 }

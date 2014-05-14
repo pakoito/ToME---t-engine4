@@ -62,8 +62,8 @@ newTalent{
 	end,
 	info = function(self, t)
 		local damage = t.getDamage(self, t)
-		return ([[Calls the a beam of light from the Sun, doing %0.2f damage to the target.
-		At level 4 the beam will be so intense it blinds all foes in radius 2 for %d turns.
+		return ([[Calls forth a beam of light from the Sun, doing %0.1f Light damage to the target.
+		At level 4 the beam will be so intense it will also blind the target and everyone in a radius 2 around it for %d turns.
 		The damage dealt will increase with your Spellpower.]]):
 		format(damDesc(self, DamageType.LIGHT, damage), t.getDuration(self, t))
 	end,
@@ -86,9 +86,9 @@ newTalent{
 	no_npc_use = true,
 	requires_target = true,
 	range = 10,
-	getCap = function(self, t) return math.max(50, 100 - self:getTalentLevelRaw(t) * 10) end,
+	getCap = function(self, t) return self:combatTalentLimit(t, 30, 90, 70) end,
 	getHaste = function(self, t) return math.min(0.5, self:combatTalentSpellDamage(t, 0.1, 0.4)) end,
-	getCD = function(self, t) return math.min(0.5, self:combatTalentSpellDamage(t, 5, 450) / 1000) end,
+	getCD = function(self, t) return self:combatLimit(self:combatTalentSpellDamage(t, 5, 450), 0.5, .03, 32, .35, 350) end, -- Limit < 50% cooldown reduction
 	action = function(self, t)
 		self:setEffect(self.EFF_SUNCLOAK, 6, {cap=t.getCap(self, t), haste=t.getHaste(self, t), cd=t.getCD(self, t)})
 		game:playSoundNear(self, "talents/flame")
@@ -96,7 +96,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[You wrap yourself in a cloak of sunlight that empowers your magic and protects you for 6 turns.
-		While the cloak is active your spell casting speed is increased by %d%%, your spell cooldowns are reduced by %d%%, and you cannot take more than %d%% of your maximum life from a single blow.
+		While the cloak is active, your spell casting speed is increased by %d%%, your spell cooldowns are reduced by %d%%, and you cannot take more than %d%% of your maximum life from a single blow.
 		The effects will increase with your Spellpower.]]):
 		format(t.getHaste(self, t)*100, t.getCD(self, t)*100, t.getCap(self, t))
    end,
@@ -110,7 +110,7 @@ newTalent{
 	mode = "passive",
 	points = 5,
 	getCrit = function(self, t) return self:combatTalentScale(t, 2, 10, 0.75) end,
-	getProcChance = function(self, t) return self:combatTalentScale(t, 40, 100) end,
+	getProcChance = function(self, t) return self:combatTalentLimit(t, 100, 30, 75) end,
 	passives = function(self, t, p)
 		self:talentTemporaryValue(p, "combat_spellcrit", t.getCrit(self, t))
 		self:talentTemporaryValue(p, "combat_physcrit", t.getCrit(self, t))
@@ -118,7 +118,7 @@ newTalent{
 	callbackOnCrit = function(self, t, kind, dam, chance)
 		if kind ~= "spell" and kind ~= "physical" then return end
 		if not rng.percent(t.getProcChance(self, t)) then return end
-		if self.turn_procs.sun_vengeance then return end
+		if self.turn_procs.sun_vengeance then return end --Note: this will trigger a lot since it get's multiple chances a turn
 		self.turn_procs.sun_vengeance = true
 
 		if self:isTalentCoolingDown(self.T_SUN_BEAM) then
@@ -133,7 +133,7 @@ newTalent{
 		local chance = t.getProcChance(self, t)
 		return ([[Infuse yourself with the raging fury of the Sun, increasing your physical and spell critical chance by %d%%.
 		Each time you crit with a physical attack or a spell you have %d%% chance to gain Sun's Vengeance for 2 turns.
-		While affected by Sun's Vengeance your Sun Beam will take no turn to use and deal 25%% more damage.
+		While affected by Sun's Vengeance, your Sun Beam will take no time to use and will deal 25%% more damage.
 		If Sun Beam was on cooldown, the remaining turns are reduced by one instead.
 		This effect can only happen once per turn.]]):
 		format(crit, chance)
@@ -175,8 +175,8 @@ newTalent{
 	info = function(self, t)
 		local radius = self:getTalentRadius(t)
 		local damage = t.getDamage(self, t)
-		return ([[A path of sunlight appears in front of you for 5 turns. All foes standing inside take %0.2f light damage per turn.
-		While standing in the path your movements cost no turns.
+		return ([[A path of sunlight appears in front of you for 5 turns. All foes standing inside take %0.1f Light damage per turn.
+		While standing in the path, your movement takes no time.
 		The damage done will increase with your Spellpower.]]):format(damDesc(self, DamageType.LIGHT, damage / 5), radius)
 	end,
 }
