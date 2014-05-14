@@ -133,7 +133,7 @@ newEntity{ base = "BASE_INFUSION",
 	inscription_data = {
 		cooldown = resolvers.rngrange(7, 13),
 		heal = resolvers.mbonus_level(80, 20, function(e, v) return v * 0.06 end),
-		use_stat_mod = 3,
+		use_stat_mod = 2.4,
 	},
 	inscription_talent = "INFUSION:_HEALING",
 }

@@ -90,7 +90,7 @@ newInscription{
 	points = 1,
 	tactical = { HEAL = 2 },
 	is_heal = true,
---	no_energy = true,
+	no_energy = true,
 	action = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
 		self:attr("allow_on_heal", 1)
