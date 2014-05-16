@@ -523,30 +523,46 @@ void te4_web_load() {
 	spawnname = malloc(strlen(self) + strlen(spawnbname) + 1);
 	strcpy(spawnname, self);
 	strcpy(strrchr(spawnname, '/') + 1, spawnbname);
-	libname = "lib64/libte4-web.so";
-	void *web = SDL_LoadObject(libname);
+	const char *name = "lib64/libte4-web.so";
+	char *lib = malloc(strlen(self) + strlen(name) + 1);
+	strcpy(lib, self);
+	strcpy(strrchr(lib, '/') + 1, name);
+	libname = lib;
+	void *web = SDL_LoadObject(lib);
 #elif defined(TE4_RELPATH32)
 	const char *spawnbname = "cef3spawn32";
 	spawnname = malloc(strlen(self) + strlen(spawnbname) + 1);
 	strcpy(spawnname, self);
 	strcpy(strrchr(spawnname, '/') + 1, spawnbname);
-	libname = "lib/libte4-web.so";
-	void *web = SDL_LoadObject(libname);
+	const char *name = "lib/libte4-web.so";
+	char *lib = malloc(strlen(self) + strlen(name) + 1);
+	strcpy(lib, self);
+	strcpy(strrchr(lib, '/') + 1, name);
+	libname = lib;
+	void *web = SDL_LoadObject(lib);
 #else
 	const char *spawnbname = "cef3spawn";
 	spawnname = malloc(strlen(self) + strlen(spawnbname) + 1);
 	strcpy(spawnname, self);
 	strcpy(strrchr(spawnname, '/') + 1, spawnbname);
-	libname = "libte4-web.so";
-	void *web = SDL_LoadObject(libname);
+	const char *name = "libte4-web.so";
+	char *lib = malloc(strlen(self) + strlen(name) + 1);
+	strcpy(lib, self);
+	strcpy(strrchr(lib, '/') + 1, name);
+	libname = lib;
+	void *web = SDL_LoadObject(lib);
 #endif
 #elif defined(SELFEXE_WINDOWS)
 	const char *spawnbname = "cef3spawn.exe";
 	spawnname = malloc(strlen(self) + strlen(spawnbname) + 1);
 	strcpy(spawnname, self);
 	strcpy(strrchr(spawnname, '\\') + 1, spawnbname);
-	libname = "te4-web.dll";
-	void *web = SDL_LoadObject(libname);
+	const char *name = "te4-web.dll";
+	char *lib = malloc(strlen(self) + strlen(name) + 1);
+	strcpy(lib, self);
+	strcpy(strrchr(lib, '/') + 1, name);
+	libname = lib;
+	void *web = SDL_LoadObject(lib);
 #elif defined(SELFEXE_MACOSX)
 	spawnname = NULL;
 	const char *name = "libte4-web.dylib";
