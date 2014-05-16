@@ -560,7 +560,7 @@ void te4_web_load() {
 	const char *name = "te4-web.dll";
 	char *lib = malloc(strlen(self) + strlen(name) + 1);
 	strcpy(lib, self);
-	strcpy(strrchr(lib, '/') + 1, name);
+	strcpy(strrchr(lib, '\\') + 1, name);
 	libname = lib;
 	void *web = SDL_LoadObject(lib);
 #elif defined(SELFEXE_MACOSX)
