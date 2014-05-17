@@ -30,7 +30,7 @@ newEffect{
 	name = "ITEM_NUMBING_DARKNESS", image = "effects/bane_blinded.png",
 	desc = "Numbing Darkness",
 	long_desc = function(self, eff) return ("The target is losing hope, all damage it does is reduced by %d%%."):format(eff.reduce) end,
-	type = "magic",
+	type = "magical",
 	subtype = { darkness=true,}, no_ct_effect = true,
 	status = "detrimental",
 	parameters = {power=10, reduce=5},
@@ -59,14 +59,6 @@ newEffect{
 	parameters = {reduce = 1, dam = 0, power = 0},
 	on_gain = function(self, err) return "#Target# is afflicted by a crippling illness!" end,
 	on_lose = function(self, err) return "#Target# is free from the illness." end,
-	-- Damage each turn
-	--[[ Reverse stats on purify?
-	on_timeout = function(self, eff)
-		if self:attr("purify_disease") then self:heal(eff.dam, eff.src)
-		else if eff.dam > 0 then DamageType:get(DamageType.BLIGHT).projector(eff.src, self.x, self.y, DamageType.BLIGHT, eff.dam, {from_disease=true})
-		end end
-	end,
-	--]]
 	activate = function(self, eff)
 		eff.tmpid = self:addTemporaryValue("inc_stats", {
 			[Stats.STAT_DEX] = -eff.reduce,

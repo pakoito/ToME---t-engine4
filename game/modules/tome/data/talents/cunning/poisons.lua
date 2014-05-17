@@ -182,33 +182,27 @@ newTalent{
 	points = 5,
 	mode = "passive",
 	require = cuns_req_high4,
+	getRadius = function(self, t) return self:combatTalentScale(t, 1, 3) end,
 	on_kill = function(self, t, target)
-		local possible = {}
-		for _, coord in pairs(util.adjacentCoords(target.x, target.y)) do
-			if game.level.map:isBound(coord[1], coord[2]) then
-				local tgt = game.level.map(coord[1], coord[2], Map.ACTOR)
-				if tgt and not tgt.dead then possible[tgt] = true end
+		local poisons = {}
+		for k, v in pairs(target.tmp) do
+			local e = target.tempeffect_def[k]
+			if e.subtype.poison and v.src and v.src == self then
+				poisons[k] = target:copyEffect(k)
 			end
 		end
-		possible[self] = nil
-		possible[target] = nil
-		possible = table.keys(possible)
 
-		for eff_id, p in pairs(target.tmp) do
-			local e = target.tempeffect_def[eff_id]
-			if e.subtype.poison and p.src == self then
-				for i, tgt in ipairs(possible) do if rng.percent(20 + self:getTalentLevelRaw(t) * 8) and not tgt:hasEffect(eff_id) and self:reactionToward(tgt) < 0 then
-					p.src = nil
-					local pp = table.clone(p)
-					pp.src = self
-					p.src = self
-					tgt:setEffect(eff_id, pp.dur, pp)
-				end end
+		local tg = {type="ball", range = 10, radius=t.getRadius(self, t), selffire = false, friendlyfire = false, talent=t}
+		self:project(tg, target.x, target.y, function(tx, ty)
+			local target2 = game.level.map(tx, ty, Map.ACTOR)
+			if not target2 or target2 == self then return end
+			for eff, p in pairs(poisons) do
+				target2:setEffect(eff, p.dur, table.clone(p))
 			end
-		end
+		end)
 	end,
 	info = function(self, t)
-		return ([[When you kill a creature, all the poisons affecting it will have a %d%% chance to spread to adjacent foes.]]):format(20 + self:getTalentLevelRaw(t) * 8)
+		return ([[When you kill a creature, all the poisons affecting it will have a %d%% chance to spread to foes in a radius of %d.]]):format(20 + self:getTalentLevelRaw(t) * 8, t.getRadius(self, t))
 	end,
 }
 

@@ -76,13 +76,13 @@ newTalent{
 	points = 5,
 	random_ego = "attack",
 	cooldown = 6,
-	stamina = 10,
+	stamina = 20,
 	message = "@Source@ throws a concussive punch.",
 	tactical = { ATTACK = { weapon = 2 }, },
 	requires_target = true,
 	--on_pre_use = function(self, t, silent) if not self:hasEffect(self.EFF_COMBO) then if not silent then game.logPlayer(self, "You must have a combo going to use this ability.") end return false end return true end,
 	getDamage = function(self, t) return self:combatTalentWeaponDamage(t, 0.6, 1.5) + getStrikingStyle(self, dam) end,
-	getAreaDamage = function(self, t) return self:combatTalentStatDamage(t, "str", 10, 550) * (1 + getStrikingStyle(self, dam)) end,
+	getAreaDamage = function(self, t) return self:combatTalentStatDamage(t, "str", 10, 450) * (1 + getStrikingStyle(self, dam)) end,
 	radius = function(self, t) return (1 + self:getCombo(combo) ) end,
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t)}
@@ -131,7 +131,7 @@ newTalent{
 	cooldown = function(self, t)
 		return self:combatTalentScale(t, 30, 10)
 	end,
-	stamina = 10,
+	stamina = 20,
 	range = function(self, t)
 		return (2 + self:getCombo(combo) ) or 1
 	end,
@@ -145,7 +145,7 @@ newTalent{
 	requires_target = true,
 	no_npc_use = true, -- I mark this by default if I don't understand how the AI might use something, which is always
 	target = function(self, t)
-		return {type="ball", range=self:getTalentRange(t), selffire=false, radius=self:getTalentRadius(t)}
+		return {type="ball", range=self:getTalentRange(t), selffire=false, radius=self:getTalentRadius(t), nolock = true}
 	end,
 	action = function(self, t)
 		if not (self:getCombo(combo) > 0) then return end -- abort if we have no CP, this is to make it base 2+requires CP because base 1 autotargets in melee range
@@ -182,7 +182,9 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[You spin into a flying leap and deliver a powerful kick dealing %d%% weapon damage to all enemies in a radius of 1 as you land.  The range will increase by 1 per combo point and total damage will increase by 10%% per combo point.  You must have at least 1 CP to use this talent.]]):format(t.getDamage(self, t)*100)	
+		return ([[You spin into a flying leap and deliver a powerful kick dealing %d%% weapon damage to all enemies in a radius of 1 as you land.  The range will increase by 1 per combo point and total damage will increase by 10%% per combo point (max %d%%).  
+			You must have at least 1 CP to use this talent.
+			Using this talent removes your combo points.]]):format(t.getDamage(self, t)*100, t.getDamage(self, t)*100*1.5)	
 	end,
 }
 

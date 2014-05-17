@@ -412,7 +412,7 @@ setDefaultProjector(function(src, x, y, type, dam, tmp, no_martyr)
 			dam = dam * (1 - src.necrotic_minion_be_nice)
 		end
 
-		print("[PROJECTOR] final dam", dam)
+		print("[PROJECTOR] final dam after static checks", dam)
 
 		local hd = {"DamageProjector:final", src=src, x=x, y=y, type=type, dam=dam, tmp=tmp, no_martyr=no_martyr}
 		if src:triggerHook(hd) then dam = hd.dam if hd.stopped then return hd.stopped end end
@@ -423,6 +423,9 @@ setDefaultProjector(function(src, x, y, type, dam, tmp, no_martyr)
 				if ret.stopped then return ret.stopped end
 			end
 		end
+
+		print("[PROJECTOR] final dam after hooks and callbacks", dam)
+
 
 		local source_talent = src.__projecting_for and src.__projecting_for.project_type and (src.__projecting_for.project_type.talent_id or src.__projecting_for.project_type.talent) and src.getTalentFromId and src:getTalentFromId(src.__projecting_for.project_type.talent or src.__projecting_for.project_type.talent_id)
 		local dead
@@ -1760,7 +1763,7 @@ newDamageType{
 newDamageType{
 	name = "item darkness numbing", type = "ITEM_DARKNESS_NUMBING",
 	tdesc = function(dam) 
-		return ("#LIGHT_GREEN#%d%%#LAST# chance to #GREY#reduce damage#LAST#"):format(dam) 
+		return ("#LIGHT_GREEN#%d%%#LAST# chance to inflict #GREY#damage reduction#LAST#"):format(dam) 
 	end,
 	projector = function(src, x, y, type, dam)
 		local target = game.level.map(x, y, Map.ACTOR)

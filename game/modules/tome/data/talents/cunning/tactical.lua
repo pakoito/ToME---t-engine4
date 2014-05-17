@@ -50,7 +50,6 @@ newTalent{
 		else
 			defense = t.getMaximum(self, t)
 		end
-		print("[Tactical Expert] returning ", defense)
 		return defense
 	end,
 	info = function(self, t)

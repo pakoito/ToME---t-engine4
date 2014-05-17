@@ -39,7 +39,8 @@ newTalent{
 	no_unlearn_last = true,
 	getAttack = function(self, t) return self:getDex(25, true) end,
 	getDamage = function(self, t) return self:combatStatScale("dex", 5, 35) end,
-	getFlatReduction = function(self, t) return 2+math.min(35, self:combatStatScale("str", 1, 30)) end, -- limit because high flat reduction can fuck melee players
+	getFlatReduction = function(self, t) return math.min(35, self:combatStatScale("str", 1, 30, 0.75)) end,
+	-- 13 Strength = 2, 20 = 5, 30 = 9, 40 = 12, 50 = 16, 55 = 17, 70 = 22, 80 = 25
 	activate = function(self, t)
 		cancelStances(self)
 		local ret = {

@@ -90,7 +90,7 @@ newEffect{
 		eff.cur_defense = eff.defense
 		eff.cur_damage = eff.damage
 
-		eff.staminaid = self:addTemporaryValue("stamina_regen", eff.cur_defense)
+		eff.staminaid = self:addTemporaryValue("stamina_regen", eff.cur_stamina)
 		eff.defenseid = self:addTemporaryValue("combat_def", eff.cur_defense)
 		eff.damageid = self:addTemporaryValue("inc_damage", {all = eff.cur_damage})
 	end,
@@ -255,6 +255,11 @@ newEffect{
 	activate = function(self, eff)
 		eff.tmpid = self:addTemporaryValue("never_move", 1)
 	end,
+	-- There are situations this matters, such as copyEffect
+	on_merge = function(self, old_eff, new_eff)
+		old_eff.dur = math.max(old_eff.dur, new_eff.dur)
+		return old_eff
+	end,
 	on_timeout = function(self, eff)
 		if self:attr("purify_poison") then self:heal(eff.power, eff.src)
 		else DamageType:get(DamageType.NATURE).projector(eff.src, self.x, self.y, DamageType.NATURE, eff.power)
@@ -277,6 +282,11 @@ newEffect{
 	on_lose = function(self, err) return "#Target# is no longer poisoned.", "-Insidious Poison" end,
 	activate = function(self, eff)
 		eff.healid = self:addTemporaryValue("healing_factor", -eff.heal_factor / 100)
+	end,
+	-- There are situations this matters, such as copyEffect
+	on_merge = function(self, old_eff, new_eff)
+		old_eff.dur = math.max(old_eff.dur, new_eff.dur)
+		return old_eff
 	end,
 	on_timeout = function(self, eff)
 		if self:attr("purify_poison") then self:heal(eff.power, eff.src)
@@ -305,6 +315,11 @@ newEffect{
 		else DamageType:get(DamageType.NATURE).projector(eff.src, self.x, self.y, DamageType.NATURE, eff.power)
 		end
 	end,
+	-- There are situations this matters, such as copyEffect
+	on_merge = function(self, old_eff, new_eff)
+		old_eff.dur = math.max(old_eff.dur, new_eff.dur)
+		return old_eff
+	end,
 	activate = function(self, eff)
 		eff.tmpid = self:addTemporaryValue("talent_fail_chance", eff.fail)
 	end,
@@ -329,6 +344,11 @@ newEffect{
 		else DamageType:get(DamageType.NATURE).projector(eff.src, self.x, self.y, DamageType.NATURE, eff.power)
 		end
 	end,
+	-- There are situations this matters, such as copyEffect
+	on_merge = function(self, old_eff, new_eff)
+		old_eff.dur = math.max(old_eff.dur, new_eff.dur)
+		return old_eff
+	end,
 	activate = function(self, eff)
 		eff.tmpid = self:addTemporaryValue("numbed", eff.reduce)
 	end,
@@ -352,6 +372,11 @@ newEffect{
 		if self:attr("purify_poison") then self:heal(eff.power, eff.src)
 		else DamageType:get(DamageType.NATURE).projector(eff.src, self.x, self.y, DamageType.NATURE, eff.power)
 		end
+	end,
+	-- There are situations this matters, such as copyEffect
+	on_merge = function(self, old_eff, new_eff)
+		old_eff.dur = math.max(old_eff.dur, new_eff.dur)
+		return old_eff
 	end,
 	activate = function(self, eff)
 	end,
@@ -2055,6 +2080,49 @@ newEffect{
 		if eff.counterattacks <= 0 or eff.chance <= 0 then eff.dur = 0 end
 	end,
 	deactivate = function(self, eff)
+	end,
+}
+
+newEffect{
+	name = "BRAWLER_BLOCK", image = "talents/block.png",
+	desc = "Blocking",
+	long_desc = function(self, eff)
+		return ("Blocking up to %d total damage."):
+			format(self.brawler_block or 0)
+	end,
+	type = "physical",
+	subtype = {tactic=true},
+	status = "beneficial",
+	parameters = {block = 0},
+	activate = function(self, eff)
+		self.brawler_block = eff.block
+	end,
+	deactivate = function(self, eff)
+		self.brawler_block = nil
+	end,
+	callbackOnTakeDamage = function(self, eff, src, x, y, type, value, tmp)
+		if not (self:attr("brawler_block") ) or value <= 0 then return end
+		print("[PALM CALLBACK] dam start", value)
+
+		local dam = value
+		game:delayedLogDamage(src, self, 0, ("#STEEL_BLUE#(%d blocked)#LAST#"):format(math.min(dam, self.brawler_block)), false)
+		if dam < self.brawler_block then
+			self.brawler_block = self.brawler_block - dam
+			dam = 0
+		else
+			dam = dam - self.brawler_block
+			self.brawler_block = 0
+		end
+
+		-- If we are at the end of the capacity, release the time shield damage
+		if self.brawler_block <= 0 then
+			game.logPlayer(self, "#ORCHID#You cannot block any more attacks!#LAST#")
+			self:removeEffect(self.EFF_BRAWLER_BLOCK)
+		end
+
+		print("[PALM CALLBACK] dam end", dam)
+
+		return {dam = dam}
 	end,
 }
 

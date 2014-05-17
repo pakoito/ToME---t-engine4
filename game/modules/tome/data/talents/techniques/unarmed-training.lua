@@ -72,7 +72,6 @@ newTalent{
 	end,
 }
 
--- Not thoroughly tested yet
 newTalent{
 	name = "Unified Body",
 	type = {"technique/unarmed-training", 2},
@@ -105,7 +104,7 @@ newTalent{
 	require = techs_cun_req3,
 	mode = "passive",
 	points = 5,
-	getPower = function(self, t) return self:combatTalentScale(t, 0.3, 2, 0.75) end,
+	getPower = function(self, t) return self:combatTalentScale(t, 0.1, 2, 0.75) end,
 	do_reflexes = function(self, t)
 		self:setEffect(self.EFF_REFLEXIVE_DODGING, 1, {power=t.getPower(self, t)})
 	end,
@@ -122,21 +121,12 @@ newTalent{
 	type = {"technique/unarmed-training", 4},
 	require = techs_cun_req4, -- bit icky since this is clearly dex, but whatever, cun turns defense special *handwave*
 	points = 5,
-	mode = "sustained",
-	cooldown = 10,
-	no_energy = true,
-	tactical = { BUFF = 2 },
+	mode = "passive",
 	getDamageReduction = function(self, t) 
 		return self:combatTalentLimit(t, 1, 0.15, 0.50) * self:combatLimit(self:combatDefense(), 1, 0.15, 10, 0.5, 50) -- Limit < 100%, 25% for TL 5.0 and 50 defense
 	end,
 	getDamagePct = function(self, t)
 		return self:combatTalentLimit(t, 0.1, 0.3, 0.15) -- Limit trigger > 10% life
-	end,
-	activate = function(self, t)
-		return {}
-	end,
-	deactivate = function(self, t, p)
-		return true
 	end,
 	callbackOnHit = function(self, t, cb)
 		if ( cb.value > (t.getDamagePct(self, t) * self.max_life) ) then

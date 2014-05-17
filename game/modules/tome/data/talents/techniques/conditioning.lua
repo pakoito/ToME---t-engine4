@@ -25,7 +25,7 @@ newTalent{
 	points = 5,
 	getHealPct = function(self, t) return math.min(.4, self:combatTalentScale(t, 0.03, 0.3)) end,
 	getWoundReduction = function(self, t) return self:combatTalentLimit(t, 1, 0.17, 0.5) end, -- Limit <100%
-	getDuration = function(self, t) return 6 end,
+	getDuration = function(self, t) return 8 end,
 	do_vitality_recovery = function(self, t)
 		self:setEffect(self.EFF_RECOVERY, t.getDuration(self, t), {pct = t.getHealPct(self, t) / t.getDuration(self, t)})
 	end,

@@ -123,7 +123,7 @@ newTalent {
 	end,
 	on_pre_use = function(self, t, silent) return sling_equipped(self, silent) end,
 	damage_multiplier = function(self, t)
-		return self:combatTalentWeaponDamage(t, 0.4, 1)
+		return self:combatTalentWeaponDamage(t, 0.2, 0.8)
 	end,
 	-- Maximum number of shots fired.
 	limit_shots = function(self, t)

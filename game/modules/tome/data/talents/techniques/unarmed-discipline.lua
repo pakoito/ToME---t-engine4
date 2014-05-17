@@ -81,7 +81,8 @@ newTalent{
 		local damage = t.getDamage(self, t) * 100
 		return ([[Unleash a flurry of disruptive kicks at your target's vulnerable areas.  For each combo point you attack for %d%% weapon damage and deactivate one physical sustain.
 			At talent level 3 #DARK_ORCHID#Magical#LAST# sustains will also be effected.
-			At talent level 5 #YELLOW#Mental#LAST# sustains will also be effected.]])
+			At talent level 5 #YELLOW#Mental#LAST# sustains will also be effected.
+			Using this talent removes your combo points.]])
 		:format(damage)
 	end,
 }
@@ -142,6 +143,74 @@ newTalent{
 }
 
 newTalent{
+	name = "Open Palm Block",
+	short_name = "BREATH_CONTROL",
+	type = {"technique/unarmed-discipline", 3},
+	require = techs_dex_req3,
+	points = 5,
+	random_ego = "attack",
+	cooldown = 8,
+	stamina = 25,
+	message = "@Source@ prepares to block incoming attacks.",
+	tactical = { ATTACK = 3, DEFEND = 3 },
+	requires_target = true,
+	getBlock = function(self, t) return self:combatTalentPhysicalDamage(t, 10, 75) end,
+	action = function(self, t)
+		local blockval = t.getBlock(self, t) * self:getCombo()
+		self:setEffect(self.EFF_BRAWLER_BLOCK, 2, {block = blockval})
+
+		self:clearCombo()
+
+		return true
+	end,
+	info = function(self, t)
+		local block = t.getBlock(self, t)
+		local maxblock = block*5
+		return ([[Toughen your body blocking up to %d damage per combo point (Max %d) across 2 turns.
+			Current block value:  %d
+			Using this talent removes your combo points.]])
+		:format(block, maxblock, block * self:getCombo())
+	end,
+}
+
+
+newTalent{
+	name = "Roundhouse Kick",
+	type = {"technique/unarmed-discipline", 4},
+	require = techs_dex_req4,
+	points = 5,
+	random_ego = "attack",
+	cooldown = 12,
+	stamina = 18,
+	range = 0,
+	radius = function(self, t) return 1 end,
+	tactical = { ATTACKAREA = { PHYSICAL = 2 }, DISABLE = { knockback = 2 } },
+	requires_target = true,
+	getDamage = function(self, t) return self:combatTalentPhysicalDamage(t, 15, 150) * getUnarmedTrainingBonus(self) end,
+	target = function(self, t)
+		return {type="cone", range=self:getTalentRange(t), radius=self:getTalentRadius(t), selffire=false, talent=t}
+	end,
+	action = function(self, t)
+		local tg = self:getTalentTarget(t)
+		local x, y, target = self:getTarget(tg)
+		if not x or not y then return nil end
+
+		self:breakGrapples()
+
+		self:project(tg, x, y, DamageType.PHYSKNOCKBACK, {dam=t.getDamage(self, t), dist=4})
+
+		return true
+	end,
+	info = function(self, t)
+		local damage = t.getDamage(self, t)
+		return ([[Attack your foes in a frontal arc with a roundhouse kick, which deals %0.2f physical damage and knocks your foes back.
+		This will break any grapples you're maintaining, and the damage will scale with your Physical Power.]]):
+		format(damDesc(self, DamageType.PHYSICAL, (damage)))
+	end,
+}
+
+--[[
+newTalent{
 	name = "Tempo",
 	type = {"technique/unarmed-discipline", 3},
 	short_name = "BREATH_CONTROL",
@@ -181,46 +250,11 @@ newTalent{
 		local resistance = t.getResist(self, t)
 		local defense = t.getDefense(self, t)
 
-		return ([[Your years of fighting have trained you for sustained engagements.  Each turn you attack at least once you gain %d Stamina Regeneration, %d Defense, and %d%% Damage Increase.
+		return (Your years of fighting have trained you for sustained engagements.  Each turn you attack at least once you gain %d Stamina Regeneration, %d Defense, and %d%% Damage Increase.
 			This effect lasts 2 turns and stacks up to 5 times.
 			At talent level 3 you gain %d%% All Resistance upon reaching 5 stacks.
-		 ]]):
-		format(stamina, defense, damage, resistance ) -- 
-	end,
-}
-
-newTalent{
-	name = "Roundhouse Kick",
-	type = {"technique/unarmed-discipline", 4},
-	require = techs_dex_req4,
-	points = 5,
-	random_ego = "attack",
-	cooldown = 12,
-	stamina = 18,
-	range = 0,
-	radius = function(self, t) return 1 end,
-	tactical = { ATTACKAREA = { PHYSICAL = 2 }, DISABLE = { knockback = 2 } },
-	requires_target = true,
-	getDamage = function(self, t) return self:combatTalentPhysicalDamage(t, 15, 150) * getUnarmedTrainingBonus(self) end,
-	target = function(self, t)
-		return {type="cone", range=self:getTalentRange(t), radius=self:getTalentRadius(t), selffire=false, talent=t}
-	end,
-	action = function(self, t)
-		local tg = self:getTalentTarget(t)
-		local x, y, target = self:getTarget(tg)
-		if not x or not y then return nil end
-
-		self:breakGrapples()
-
-		self:project(tg, x, y, DamageType.PHYSKNOCKBACK, {dam=t.getDamage(self, t), dist=4})
-
-		return true
-	end,
-	info = function(self, t)
-		local damage = t.getDamage(self, t)
-		return ([[Attack your foes in a frontal arc with a roundhouse kick, which deals %0.2f physical damage and knocks your foes back.
-		This will break any grapples you're maintaining, and the damage will scale with your Physical Power.]]):
-		format(damDesc(self, DamageType.PHYSICAL, (damage)))
-	end,
-}
-
+		 ):
+		--format(stamina, defense, damage, resistance ) -- 
+	--end,
+--}
+--]]

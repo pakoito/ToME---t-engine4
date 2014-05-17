@@ -216,7 +216,7 @@ newTalent {
 		return true
 	end,
 	getMult = function(self, t)
-		return self:combatTalentScale(t, .4, 1)
+		return self:combatTalentScale(t, .2, 0.6)
 	end,
 	getBlocks = function(self, t)
 		return math.min(7, math.floor(self:combatTalentScale(t, 1, 4)))
