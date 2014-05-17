@@ -22,6 +22,8 @@ load("/data/general/npcs/all.lua")
 load("/data/general/npcs/bone-giant.lua")
 load("/data/general/npcs/faeros.lua")
 load("/data/general/npcs/gwelgoroth.lua")
+load("/data/general/npcs/shivgoroth.lua")
+load("/data/general/npcs/undead-rat.lua")
 load("/data/general/npcs/mummy.lua")
 load("/data/general/npcs/ritch.lua")
 
