@@ -30,12 +30,11 @@ local sniper_bonuses = function(self, calc_all)
 	local level = self:getTalentLevel(t)
 
 	if level > 0 or calc_all then
-		bonuses.crit_chance = math.min(25, self:combatTalentScale(t, 1, 10))
-		bonuses.crit_power = math.min(.5, self:combatTalentScale(t, 0.1, 0.2))
+		bonuses.crit_chance = self:combatTalentScale(t, 3, 10)
+		bonuses.crit_power = self:combatTalentScale(t, 0.1, 0.2, 0.75)
 	end
 	if level >= 5 or calc_all then
-		local resists_pen = math.min(30, self:combatStatScale("cun", 1, 20))
-		bonuses.resists_pen = {[DamageType.PHYSICAL] = resists_pen}
+		bonuses.resists_pen = {[DamageType.PHYSICAL] = self:combatStatLimit("cun", 100, 15, 50)} -- Limit < 100%
 	end
 	return bonuses
 end
@@ -92,13 +91,13 @@ newTalent {
 	range = archery_range,
 	on_pre_use = function(self, t, silent) return sling_equipped(self, silent) end,
 	pin_duration = function(self, t)
-		return math.floor(1 + self:getTalentLevel(t) * 0.2)
+		return math.floor(self:combatTalentScale(t, 1, 2))
 	end,
 	slow_duration = function(self, t)
-		return math.floor(3 + self:getTalentLevel(t) / 3)
+		return math.floor(self:combatTalentScale(t, 3, 4.7))
 	end,
 	slow_power = function(self, t)
-		return math.min(0.6, 0.1 + self:getCun(0.5, true) + self:combatTalentScale(t, 0, 0.5))
+		return self:combatLimit(self:getCun()*.5 + self:getTalentLevel(t)*10, 0.6, 0.2, 15, 0.5, 100) --Limit < 60%, 20% at TL 1 for 10 Cun, 50% at TL5, Cun 100
 	end,
 	archery_onreach = pen_on,
 	archery_onmiss = pen_off,
@@ -117,8 +116,9 @@ newTalent {
 	end,
 	action = fire_shot,
 	info = function(self, t)
-		return ([[Nail your opponent in the knee for %d%% weapon damage, knocking them down (%d turn pin) and slowing their movement by %d%% for %d turns afterwards.
-			This shot will pass through enemies to reach its target.]])
+		return ([[Strike your opponent in the knee (or other critical point in an ambulatory appendage) for %d%% weapon damage, knocking them down (%d turn pin) and slowing their movement by %d%% for %d turns afterwards.
+		This shot will bypass other enemies between you and your target.
+		The slow effect becomes more powerful with your Cunning.]])
 		:format(t.damage_multiplier(self, t) * 100,
 				t.pin_duration(self, t),
 				t.slow_power(self, t) * 100,
@@ -144,8 +144,8 @@ newTalent {
 	requires_target = true,
 	range = archery_range,
 	on_pre_use = function(self, t, silent) return sling_equipped(self, silent) end,
-	getDistanceBonus = function(self, t)
-		return 0.3
+	getDistanceBonus = function(self, t, range)
+		return self:combatScale(range, -.5, 1, 2.5, 10, 0.25) --Slow scaling to allow for greater range variability
 	end,
 	getDamage = function(self, t)
 		return 1
@@ -168,14 +168,13 @@ newTalent {
 		-- THIS IS WHY I HATE YOUR CODE STRUCTURE GRAYSWANDIR
 		local bonuses = sniper_bonuses(self)
 		local dist = core.fov.distance(self.x, self.y, targets[1].x, targets[1].y)
-		local damage = t.damage_multiplier(self, t) + ( t.getDistanceBonus(self, t) * dist )
+		local damage, distbonus = t.damage_multiplier(self, t), t.getDistanceBonus(self, t, dist)
 
 		local target = game.level.map(targets[1].x, targets[1].y, engine.Map.ACTOR)
 		if not target then return end
-		game.logSeen(self, "#DARK_ORCHID#%s snipes %s for %d%% weapon damage (+%d%% range bonus)!#LAST#", self.name:capitalize(), target.name:capitalize(), damage*100, t.getDistanceBonus(self, t) * dist * 100 )
-
-
-		local params = {mult = damage}
+		game:delayedLogMessage(self, target, "kill_shot", "#DARK_ORCHID##Source# snipes #Target# (%+d%%%%%%%% weapon bonus for range)!#LAST#", distbonus*100)
+		
+		local params = {mult = damage + distbonus}
 		if bonuses.crit_chance then params.crit_chance = bonuses.crit_chance end
 		if bonuses.crit_power then params.crit_power = bonuses.crit_power end
 		if bonuses.resists_pen then params.resists_pen = bonuses.resists_pen end
@@ -184,11 +183,14 @@ newTalent {
 		return true
 	end, 
 	info = function(self, t)
-		return ([[Snipe a target at long range dealing %d%% damage increased by %d%% for each tile between you and the target.
-			This shot will pass through enemies to reach its target.]])
-		:format(t.damage_multiplier(self, t) * 100, t.getDistanceBonus(self, t)*100
-				)
-	end,
+		local range = self:getTalentRange(t)
+		return ([[Employ a specialized sniping shot at a target.
+		This shot is focused on precision at long range and deals base %d%% ranged damage with a bonus that increases with distance.
+		The ranged bonus is %d%% (penalty) at point blank range, while at your maximum range of %d it is %d%%.
+		This shot will bypass other enemies between you and your target.]])
+		:format(t.damage_multiplier(self, t) * 100, t.getDistanceBonus(self, t, 1)*100, range, t.getDistanceBonus(self, t, range)*100)
+
+		end,
 }
 
 newTalent {
@@ -220,8 +222,10 @@ newTalent {
 	archery_target_parameters = {limit_shots = 1, multishots = 3},
 	action = fire_shot,
 	info = function(self, t)
-		return ([[Apply directly to the forehead! Shoot 3 quick sling bullets for %d%% damage in succession into your opponent’s brow. Each bullet will try to stun or increase the target's stun duration by 1.
-			This shot will pass through enemies to reach its target.]])
+		return ([[Fire three shots in quick succession at a vulnerable point on the target (usually the head).
+		Each shot deals %d%% Ranged damage and will try to stun or increase the target's stun duration by 1.
+		These shots will bypass other enemies between you and your target.
+		The chance to stun increases with your Accuracy.]])
 		:format(t.damage_multiplier(self, t) * 100)
 	end,
 }
@@ -236,7 +240,7 @@ newTalent {
 	mode = "passive",
 	info = function(self, t)
 		local bonuses = sniper_bonuses(self, true)
-		return ([[Your mastery of called shots is unparalleled. Gain %d%% bonus critical chance and %d%% critical damage on your Called Shots. At rank 3 lowers the cooldowns of your Called Shots by 2 each. At rank 5 gain %d%% physical resist piercing with all Called Shot attacks.]])
+		return ([[Your mastery of called shots is unparalleled. and you gain %d%% bonus critical chance and %d%% critical damage with your Called Shots Talents. At rank 3 the cooldowns of all of your Called Shots Talents are reduced by 2 each. At rank 5 you gain %d%% Physical resistance penetration with all Called Shot attacks.]])
 		:format(bonuses.crit_chance,
 			bonuses.crit_power * 100,
 			bonuses.resists_pen[DamageType.PHYSICAL])

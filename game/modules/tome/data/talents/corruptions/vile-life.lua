@@ -162,8 +162,8 @@ newTalent{
 	requires_target = true,
 	range = 1,
 	target = function(self, t) return {type="hit", range=self:getTalentRange(t), talent=t} end,
-	getNb = function(self, t) return math.floor(self:combatTalentScale(t, 2, 9)) end,
-	getDam = function(self, t) return 4 end,
+	getNb = function(self, t) return math.floor(self:combatTalentScale(t, 2, 4, "log")) end,
+	getDam = function(self, t) return self:combatTalentLimit(t, 2, 10, 5) end, --Limit < 10% life/effect
 	action = function(self, t)
 		local tg = self:getTalentTarget(t)
 		local x, y = self:getTarget(tg)
@@ -194,7 +194,7 @@ newTalent{
 					self:removeEffect(eff_id)
 					local dead, val = self:takeHit(dam, self, {source_talent=t})
 					target:heal(val, self)
-					game.logPlayer(self, "#CRIMSON#%s transfers an effect (%s) to %s!", self.name:capitalize(), e.desc, target.name)
+					game:delayedLogMessage(self, target, "vile_transplant"..e.desc, ("#CRIMSON##Source# transfers an effect (%s) to #Target#!"):format(e.desc))
 				end
 				nb = nb - 1
 			end
@@ -205,8 +205,9 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[You touch a nearby creature to transfer up to %d physical or magical detrimental effects currently affecting you.
-		The transfer takes %d%% of your remaining life and heals the target for the same value.]]):
+		return ([[You transfer up to %d physical or magical detrimental effects currently affecting you to a nearby creature by touching it.
+		The transfer takes %0.1f%% of your remaining life for each effect transferred and heals the target for the same amount.
+		The chance to transfer each effect increases with your Spellpower.]]):
 		format(t.getNb(self, t), t.getDam(self, t))
 	end,
 }

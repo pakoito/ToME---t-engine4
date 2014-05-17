@@ -35,7 +35,7 @@ newTalent {
 	getDamage = function(self, t) return self:getTalentLevel(t) * 10 end,
 	getPercentInc = function(self, t) return math.sqrt(self:getTalentLevel(t) / 5) / 2 end,
 	ammo_mastery_reload = function(self, t)
-		return math.floor(self:getTalentLevel(t) / 2)
+		return math.floor(self:combatTalentScale(t, 0, 2.7, "log"))
 	end,
 	passives = function(self, t, p)
 		self:talentTemporaryValue(p, 'ammo_mastery_reload', t.ammo_mastery_reload(self, t))
@@ -127,7 +127,7 @@ newTalent {
 	end,
 	-- Maximum number of shots fired.
 	limit_shots = function(self, t)
-		return math.floor(6 + self:getTalentLevel(t))
+		return math.floor(self:combatTalentScale(t, 6, 11, "log"))
 	end,
 	action = function(self, t)
 		-- Get list of possible targets, possibly doubled.
@@ -173,7 +173,7 @@ newTalent {
 		return fired
 	end,
 	info = function(self, t)
-		return ([[Take aim and unload %d shots for %d%% weapon damage each against random enemies inside a cone. Each enemy can only be hit once, or twice starting with the third talent point. Using Swift Shot lowers the cooldown by 1.]])
+		return ([[Take aim and unload up to %d shots for %d%% weapon damage each against random enemies inside a cone. Each enemy can only be hit once (twice for talent level 3 and higher). Using Swift Shot lowers the cooldown by 1.]])
 			:format(t.limit_shots(self, t),
 							t.damage_multiplier(self, t) * 100)
 	end,
@@ -206,7 +206,7 @@ newTalent {
 	activate = function(self, t) return {} end,
 	deactivate = function(self, t, p) return true end,
 	info = function(self, t)
-		return ([[Your basic Shot talent now fires %d sling bullets for %d%% weapon damage while this is activated, at a cost of %d Stamina per attack.]])
+		return ([[While activated, your basic Shot talent now fires %d sling bullets, each dealing %d%% Ranged damage, at a cost of %d Stamina per attack.]])
 		:format(t.bullet_count(self, t), t.damage_multiplier(self, t) * 100, t.shot_stamina(self, t))
 	end,
 }
