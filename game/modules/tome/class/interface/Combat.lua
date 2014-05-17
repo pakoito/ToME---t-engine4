@@ -1263,7 +1263,7 @@ end
 -- limit = value approached as x increases
 -- y_high = value to match at when x = x_high
 -- y_low (optional) = value to match when x = x_low
---	returns (limit - add)*x/(x + halfpoint) + add (= add when x = 0 and limit when x = infinity), halfpoint, add
+--	returns (limit - add)*x/(x + halfpoint) + add (= add when x = 0 and limit when x = infinity)
 -- halfpoint and add are internally computed to match the desired high/low values
 -- note that the progression low->high->limit must be monotone, consistently increasing or decreasing
 function _M:combatLimit(x, limit, y_low, x_low, y_high, x_high)
@@ -1272,9 +1272,11 @@ function _M:combatLimit(x, limit, y_low, x_low, y_high, x_high)
 	if y_low and x_low then
 		local p = limit*(x_high-x_low)
 		local m = x_high*y_high - x_low*y_low
-		local halfpoint = (p-m)/(y_high - y_low)
-		local add = (limit*(x_high*y_low-x_low*y_high) + y_high*y_low*(x_low-x_high))/(p-m)
-		return (limit-add)*x/(x + halfpoint) + add
+--		local halfpoint = (p-m)/(y_high - y_low)
+--		local add = (limit*(x_high*y_low-x_low*y_high) + y_high*y_low*(x_low-x_high))/(p-m)
+--		return (limit-add)*x/(x + halfpoint) + add
+		local ah = (limit*(x_high*y_low-x_low*y_high)+ y_high*y_low*(x_low-x_high))/(y_high - y_low) -- add*halfpoint product calculated at once to avoid possible divide by zero
+		return (limit*x + ah)/(x + (p-m)/(y_high - y_low)) --factored version of above formula
 --		return (limit-add)*x/(x + halfpoint) + add, halfpoint, add
 	else
 		local add = 0
