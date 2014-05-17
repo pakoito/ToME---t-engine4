@@ -2476,3 +2476,21 @@ newEffect{
 		self:removeTemporaryValue("disarmed", eff.tmpid)
 	end,
 }
+
+newEffect{
+	name = "SPACETIME_TUNING", image = "talents/spacetime_tuning.png",
+	desc = "Spacetime Tuning",
+	long_desc = function(self, eff) return ("Tuning Paradox at a rate of %d per turn."):format(eff.power) end,
+	type = "other",
+	subtype = { time=true },
+	status = "beneficial",
+	parameters = { power=10},
+	on_gain = function(self, err) return "#Target# retunes the fabric of spaceime.", "+Spacetime Tuning" end,
+	on_timeout = function(self, eff)
+		if not self.resting then
+			self:removeEffect(self.EFF_SPACETIME_TUNING)
+		else
+			self:incParadox(eff.power)
+		end
+	end,
+}

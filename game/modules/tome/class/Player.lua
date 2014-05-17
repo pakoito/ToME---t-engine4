@@ -858,6 +858,14 @@ function _M:onRestStart()
 		self:attr("mana_regen", self:attr("mana_regen_on_rest"))
 		self.resting.mana_regen = self:attr("mana_regen_on_rest")
 	end
+	if self.preferred_paradox and (self:getParadox() ~= self:getMinParadox() or self.preferred_paradox > self:getParadox())then
+		local power = 0
+		if math.abs(self:getParadox() - self.preferred_paradox) > 1 then
+			local duration = self:callTalent(self.T_SPACETIME_TUNING, "getDuration")
+			power = (self.preferred_paradox - self:getParadox())/duration
+			self:setEffect(self.EFF_SPACETIME_TUNING, duration, {power=power})
+		end
+	end
 end
 
 --- We stopped resting
@@ -901,7 +909,9 @@ function _M:restCheck()
 	-- Reload
 	local ammo = self:hasAmmo()
 	if ammo and ammo.combat.shots_left < ammo.combat.capacity then return true end
-
+	-- Spacetime Tuning handles Paradox regen
+	if self:hasEffect(self.EFF_SPACETIME_TUNING) then return true end
+	
 	-- Check resources, make sure they CAN go up, otherwise we will never stop
 	if not self.resting.rest_turns then
 		if self.air_regen < 0 then return false, "losing breath!" end
@@ -910,7 +920,6 @@ function _M:restCheck()
 		if self:getStamina() < self:getMaxStamina() and self.stamina_regen > 0 then return true end
 		if self:getPsi() < self:getMaxPsi() and self.psi_regen > 0 then return true end
 		if self:getEquilibrium() > self:getMinEquilibrium() and self.equilibrium_regen < 0 then return true end
-		if self:getParadox() > 0 and self:getParadox() > self.min_paradox and self:isTalentActive(self.T_SPACETIME_TUNING) then return true end
 		if self.life < self.max_life and self.life_regen> 0 then return true end
 		for act, def in pairs(game.party.members) do if game.level:hasEntity(act) and not act.dead then
 			if act.life < act.max_life and act.life_regen > 0 and not act:attr("no_life_regen") then return true end

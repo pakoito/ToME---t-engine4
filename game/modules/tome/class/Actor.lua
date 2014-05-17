@@ -532,10 +532,6 @@ function _M:actBase()
 				self.tempeffect_def[self.EFF_CURSE_OF_NIGHTMARES].doNightmare(self, eff)
 			end
 		end
-		-- this handles spacetime tuning paradox regen
-		if self:isTalentActive(self.T_SPACETIME_TUNING) then
-			self:incParadox(-1)
-		end
 		-- this handles Carbon Spike regrowth
 		if self:isTalentActive(self.T_CARBON_SPIKES) then
 			local t = self:getTalentFromId(self.T_CARBON_SPIKES)
@@ -1897,9 +1893,6 @@ function _M:onTakeHit(value, src, death_note)
 	-- Un-daze
 	if self:hasEffect(self.EFF_DAZED) then
 		self:removeEffect(self.EFF_DAZED)
-	end
-	if self:hasEffect(self.EFF_SPACETIME_TUNING) then
-		self:removeEffect(self.EFF_SPACETIME_TUNING)
 	end
 
 	if self:isTalentActive(self.T_SUSPENDED) then
@@ -4043,8 +4036,9 @@ end
 --- Paradox checks
 function _M:getModifiedParadox()
 	local will_modifier = 1 + self:callTalent(self.T_PARADOX_MASTERY,"WilMult")
-	local modified_paradox = math.max(0, self:getParadox() - ((self:getWil() + (self:attr("paradox_reduce_fails") or 0)) * will_modifier))
-	return modified_paradox
+	will_modifier = (self:getWil() + (self:attr("paradox_reduce_fails") or 0)) * will_modifier
+	local modified_paradox = math.max(0, self:getParadox() - will_modifier)
+	return modified_paradox, will_modifier
 end
 
 function _M:paradoxFailChance()
@@ -4694,7 +4688,7 @@ function _M:postUseTalent(ab, ret, silent)
 	-- Cancel stealth!
 	if ab.id ~= self.T_STEALTH and ab.id ~= self.T_HIDE_IN_PLAIN_SIGHT and not util.getval(ab.no_break_stealth, self, ab) then self:breakStealth() end
 	if ab.id ~= self.T_LIGHTNING_SPEED then self:breakLightningSpeed() end
-	if ab.id ~= self.T_GATHER_THE_THREADS and ab.id ~= self.T_SPACETIME_TUNING and ab.is_spell then self:breakChronoSpells() end
+	if ab.id ~= self.T_GATHER_THE_THREADS and ab.is_spell then self:breakChronoSpells() end
 	if not ab.no_reload_break then self:breakReloading() end
 	self:breakStepUp()
 	--if not (util.getval(ab.no_energy, self, ab) or ab.no_break_channel) and not (ab.mode == "sustained" and self:isTalentActive(ab.id)) then self:breakPsionicChannel(ab.id) end
@@ -4811,9 +4805,6 @@ end
 function _M:breakChronoSpells()
 	if self:hasEffect(self.EFF_GATHER_THE_THREADS) then
 		self:removeEffect(self.EFF_GATHER_THE_THREADS)
-	end
-	if self:isTalentActive(self.T_SPACETIME_TUNING) then
-		self:forceUseTalent(self.T_SPACETIME_TUNING, {ignore_energy=true})
 	end
 end
 

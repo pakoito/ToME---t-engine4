@@ -17,39 +17,75 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-
 newTalent{
 	name = "Spacetime Tuning",
 	type = {"chronomancy/other", 1},
-	mode = "sustained",
-	sustain_paradox = 0,
-	--hide = true,
 	points = 1,
-	--message = "@Source@ retunes the fabric of spacetime.",
-	cooldown = 5,
 	tactical = { PARADOX = 2 },
 	no_npc_use = true,
-	no_energy = true,
 	no_unlearn_last = true,
-	activate = function(self, t)
-		return {}
+	on_learn = function(self, t)
+		if not self.preferred_paradox then self.preferred_paradox = 0 end
 	end,
-	deactivate = function(self, t, p)
-		local _, failure = self:paradoxFailChance()
-		local _, backfire = self:paradoxBackfireChance()
-		local _, anomaly = self:paradoxAnomalyChance()
-		game.logPlayer(self, "Your current failure chance is %d%%, your current anomaly chance is %d%%, and your current backfire chance is %d%%.", failure, anomaly, backfire)
+	on_unlearn = function(self, t)
+		if self.preferred_paradox then self.preferred_paradox = nil end
+	end,
+	getDuration = function(self, t) 
+		local power = math.floor(self:combatSpellpower()/10)
+		return math.max(20 - power, 10)
+	end,
+	action = function(self, t)
+		function getQuantity(title, prompt, default, min, max)
+			local result
+			local co = coroutine.running()
+
+			local dialog = engine.dialogs.GetQuantity.new(
+				title,
+				prompt,
+				default,
+				max,
+				function(qty)
+					result = qty
+					coroutine.resume(co)
+				end,
+				min)
+			dialog.unload = function(dialog)
+				if not dialog.qty then coroutine.resume(co) end
+			end
+
+			game:registerDialog(dialog)
+			coroutine.yield()
+			return result
+		end
+
+		local paradox = getQuantity(
+			"Spacetime Tuning",
+			"What's your preferred paradox level?",
+			math.floor(self.paradox))
+		if not paradox then return end
+		if paradox > 1000 then paradox = 1000 end
+		self.preferred_paradox = paradox
 		return true
 	end,
 	info = function(self, t)
+		local duration = t.getDuration(self, t)
+		local preference = self.preferred_paradox
+		local multiplier = getParadoxModifier(self, pm)*100
+		local _, will_modifier = self:getModifiedParadox()
+		local after_will = self:getModifiedParadox()
 		local _, failure = self:paradoxFailChance()
 		local _, anomaly = self:paradoxAnomalyChance()
 		local _, backfire = self:paradoxBackfireChance()
-		return ([[Reduces your paradox by one each turn while sustained.  Casting a spell will cancel this sustain.
+		return ([[Use to set your preferred Paradox.  While resting you'll adjust your Paradox towards this number over %d turns.
+		The time it takes you to adjust your Paradox scales down with your Spellpower to a minimum of 10 turns.
 		
-		Current failure chance  : %d%%
-		Current anomaly chance  : %d%%
-		Current backfire chance : %d%%]]):format(failure, anomaly, backfire)
+		Preferred Paradox           : %d
+		Paradox effect multiplier   : %d%%
+		Willpower failure modifier  : %d
+		Paradox after Willpower     : %d
+		Current Failure chance      : %d%%
+		Current Anomaly chance      : %d%%
+		Current Backfire chance     : %d%%]]):format(duration, preference, multiplier, will_modifier, after_will, failure, anomaly, backfire)
 	end,
 }
 
