@@ -28,5 +28,8 @@ return {
 		scrollingSpeed = scrollingSpeed or 0.004,
 		chargesCount = chargesCount or 6,
 	},
-	clone = false,
+	resetargs = {
+		unused = function() return rng.range(1, 99999) end,
+	},
+	clone = true,
 }
