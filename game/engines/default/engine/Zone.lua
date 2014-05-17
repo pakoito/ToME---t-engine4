@@ -30,6 +30,18 @@ module(..., package.seeall, class.make)
 
 _no_save_fields = {temp_memory_levels=true, _tmp_data=true}
 
+
+--- List of rules to run through when applying an ego to an entity.
+_M.ego_rules = {}
+
+--- Adds an ego rule.
+-- Static method
+function _M:addEgoRule(kind, rule)
+	self.ego_rules[kind] = self.ego_rules[kind] or {}
+	table.insert(self.ego_rules[kind], rule)
+end
+
+
 --- Setup classes to use for level generation
 -- Static method
 -- @param t table that contains the name of the classes to use
@@ -361,7 +373,7 @@ function _M:makeEntity(level, type, filter, force_level, prob_filter)
 	-- Generate a specific probability list, slower to generate but no need to "try and be lucky"
 	elseif filter then
 		local base_list = nil
-		if filter.base_list then 
+		if filter.base_list then
 			if _G.type(filter.base_list) == "table" then base_list = filter.base_list
 			else
 				local _, _, class, file = filter.base_list:find("(.*):(.*)")
@@ -433,7 +445,7 @@ local pick_ego = function(self, level, e, eegos, egos_list, type, picked_etype, 
 	if _G.type(etype) == "number" then etype = "" end
 
 	local egos = e.egos and level:getEntitiesList(type.."/"..e.egos..":"..etype)
-	
+
 	if not egos then egos = self:generateEgoEntities(level, type, etype, eegos, e.__CLASSNAME) end
 
 	if self.ego_filter then ego_filter = self.ego_filter(self, level, type, etype, e, ego_filter, egos_list, picked_etype) end
@@ -475,8 +487,8 @@ function _M:finishEntity(level, type, e, ego_filter)
 				ego.instant_resolve = nil
 				-- Void the uid, we dont want to erase the base entity's one
 				ego.uid = nil
-				-- Merge additively but with array appending, so that nameless resolvers are not lost
-				table.mergeAddAppendArray(e, ego, true)
+				-- Merge according to Object's ego rules.
+				table.ruleMergeAppendAdd(e, ego, self.ego_rules[type] or {})
 				e.name = newname
 				e.egoed = true
 			end
@@ -563,8 +575,8 @@ function _M:finishEntity(level, type, e, ego_filter)
 				ego.instant_resolve = nil
 				-- Void the uid, we dont want to erase the base entity's one
 				ego.uid = nil
-				-- Merge additively but with array appending, so that nameless resolvers are not lost
-				table.mergeAddAppendArray(e, ego, true)
+				-- Merge according to Object's ego rules.
+				table.ruleMergeAppendAdd(e, ego, self.ego_rules[type] or {})
 				e.name = newname
 				e.egoed = true
 			end

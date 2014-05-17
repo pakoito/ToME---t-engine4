@@ -286,6 +286,83 @@ function table.readonly(src)
    });
 end
 
+-- Make a new table with each k, v = f(k, v) in the original.
+function table.map(f, source)
+	local result = {}
+	for k, v in pairs(source) do
+		k2, v2 = f(k, v)
+		result[k2] = v2
+	end
+	return result
+end
+
+-- Make a new table with each k, v = k, f(v) in the original.
+function table.mapv(f, source)
+	local result = {}
+	for k, v in pairs(source) do
+		result[k] = f(v)
+	end
+	return result
+end
+
+-- Find the keys that are only in left, only in right, and are common
+-- to both.
+function table.compareKeys(left, right)
+	local result = {left = {}, right = {}, both = {}}
+	for k, _ in pairs(left) do
+		if right[k] then
+			result.both[k] = true
+		else
+			result.left[k] = true
+		end
+	end
+	for k, _ in pairs(right) do
+		if not left[k] then
+			result.right[k] = true
+		end
+	end
+	return result
+end
+
+--[=[
+  Decends recursively through a table by the given list of keys.
+
+  1st return: The first non-table value found, or the final value if
+  we ran out of keys.
+
+  2nd return: If the list of keys was exhausted
+
+  Meant to replace multiple ands to get a value:
+  "a and a.b and a.b.c" turns to "rget(a, 'b', 'c')"
+]=]
+function table.get(table, ...)
+	if type(table) ~= 'table' then return table, false end
+	for _, key in ipairs({...}) do
+		if type(table) ~= 'table' then return table, false end
+		table = table[key]
+	end
+	return table, true
+end
+
+--[=[
+  Set the nested value in a table, creating empty tables as needed.
+]=]
+function table.set(table, ...)
+	if type(table) ~= 'table' then return false end
+	local args = {...}
+	for i = 1, #args - 2 do
+		local key = args[i]
+		local subtable = table[key]
+		if not subtable then
+			subtable = {}
+			table[key] = subtable
+		end
+		table = subtable
+	end
+	table[args[#args - 1]] = args[#args]
+end
+
+
 -- Taken from http://lua-users.org/wiki/SortedIteration and modified
 local function cmp_multitype(op1, op2)
 	local type1, type2 = type(op1), type(op2)
@@ -318,6 +395,22 @@ function table.orderedPairs(t)
 	end
 end
 
+-- ordering is a function({k1, v1}, {k2, v2}), it should return true
+-- when left is < right.
+function table.orderedPairs(t, ordering)
+	if not next(t) then return function() end end
+	t = table.listify(t)
+	if #t > 1 then table.sort(t, ordering) end
+	local index = 1
+	return function()
+		if index <= #t then
+			value = t[index]
+			index = index + 1
+			return value[1], value[2]
+		end
+	end
+end
+
 --- Shuffles the content of a table (list)
 function table.shuffle(t)
 	local n = #t
@@ -327,6 +420,89 @@ function table.shuffle(t)
 	end
 	return t
 end
+
+-- Common table rules.
+table.rules = {}
+
+--[[
+Applies a series of rules to a pair of tables. rules should be a list of functions
+to be applied, in order, until one returns true.
+
+All keys in the table src are looped through, starting with array
+indices, and then the rest of the keys. The rules are given the
+following arguments:
+The dst table's value for the current key.
+The src table's value for the current key.
+The current key.
+The dst table.
+The src table.
+The list of rules.
+A state table which the rules are free to modify.
+--]]
+function table.applyRules(dst, src, rules, state)
+	if not dst or not src then return end
+	state = state or {}
+	local used_keys = {}
+	-- First loop through with ipairs so we get the numbers in order.
+	for k, v in ipairs(src) do
+		used_keys[k] = true
+		for _, rule in ipairs(rules) do
+			if rule(dst[k], src[k], k, dst, src, rules, state) then
+				break
+			end
+		end
+	end
+	-- Then loop through with pairs, skipping the ones we got with ipairs.
+	for k, v in pairs(src) do
+		if not used_keys[k] then
+			for _, rule in ipairs(rules) do
+				if rule(dst[k], src[k], k, dst, src, rules, state) then
+					break
+				end
+			end
+		end
+	end
+end
+
+-- Simply overwrites the value.
+table.rules.overwrite = function(dvalue, svalue, key, dst)
+	dst[key] = svalue
+	return true
+end
+-- Does the recursion.
+table.rules.recurse = function(dvalue, svalue, key, dst, src, rules, state)
+	if type(dvalue) ~= 'table' or type(svalue) ~= 'table' then return end
+	state = table.clone(state)
+	state.path = table.clone(state.path) or {}
+	table.insert(state.path, key)
+	table.applyRules(dvalue, svalue, rules, state)
+	return true
+end
+-- Appends indices.
+table.rules.append = function(dvalue, svalue, key, dst, src, rules, state)
+	if type(key) ~= 'number' then return end
+	table.insert(dst, svalue)
+	return true
+end
+-- Adds numbers
+table.rules.add = function(dvalue, svalue, key, dst)
+	if type(dvalue) ~= 'number' or type(svalue) ~= 'number' then return end
+	dst[key] = dvalue + svalue
+	return true
+end
+
+--[[
+A convenience method for merging tables, appending numeric indices,
+and adding number values in addition to other rules.
+--]]
+function table.ruleMergeAppendAdd(dst, src, rules)
+	rules = table.clone(rules)
+	for _, rule in pairs {'append', 'recurse', 'add', 'overwrite'} do
+		table.insert(rules, table.rules[rule])
+	end
+	table.applyRules(dst, src, rules)
+end
+
 
 function string.ordinal(number)
 	local suffix = "th"
@@ -1921,7 +2097,7 @@ function util.showMainMenu(no_reboot, reboot_engine, reboot_engine_version, rebo
 			core.steam.cancelGrabSubscribedAddons()
 			core.steam.sessionTicketCancel()
 		end
-		
+
 		-- Tell the C engine to discard the current lua state and make a new one
 		print("[MAIN] rebooting lua state: ", reboot_engine, reboot_engine_version, reboot_module, reboot_name, reboot_new)
 		core.game.reboot("te4core", -1, reboot_engine or "te4", reboot_engine_version or "LATEST", reboot_module or "boot", reboot_name or "player", reboot_new, reboot_einfo or "")
@@ -2041,4 +2217,3 @@ function require_first(...)
 	end
 	return nil
 end
-

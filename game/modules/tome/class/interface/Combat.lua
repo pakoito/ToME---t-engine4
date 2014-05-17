@@ -342,7 +342,7 @@ end
 function _M:attackTargetWith(target, weapon, damtype, mult, force_dam)
 	damtype = damtype or (weapon and weapon.damtype) or DamageType.PHYSICAL
 	mult = mult or 1
-	
+
 	--Life Steal
 	if weapon and weapon.lifesteal then
 		self:attr("lifesteal", weapon.lifesteal)
@@ -351,7 +351,7 @@ function _M:attackTargetWith(target, weapon, damtype, mult, force_dam)
 
 	local mode = "other"
 	if self:hasShield() then mode = "shield"
-	elseif self:hasTwoHandedWeapon() then mode = "twohanded" 
+	elseif self:hasTwoHandedWeapon() then mode = "twohanded"
 	elseif self:hasDualWeapon() then mode = "dualwield"
 	end
 	self.turn_procs.weapon_type = {kind=weapon and weapon.talented or "unknown", mode=mode}
@@ -426,7 +426,7 @@ function _M:attackTargetWith(target, weapon, damtype, mult, force_dam)
 				game:delayedLogDamage(self, target, 0, ("%s(%d parried#LAST#)"):format(DamageType:get(damtype).text_color or "#aaaaaa#", deflect), false)
 				dam = math.max(dam - deflect,0)
 				print("[ATTACK] after DUAL_WEAPON_DEFENSE", dam)
-			end 
+			end
 		end
 		if target.knowTalent and target:hasEffect(target.EFF_GESTURE_OF_GUARDING) and not target:attr("encased_in_ice") then
 			local deflected = math.min(dam, target:callTalent(target.T_GESTURE_OF_GUARDING, "doGuard")) or 0
@@ -487,10 +487,10 @@ function _M:attackTargetWith(target, weapon, damtype, mult, force_dam)
 		if weapon and weapon.phasing then
 			self:attr("damage_shield_penetrate", weapon.phasing)
 		end
-	
+
 		local oldproj = DamageType:getProjectingFor(self)
 		if self.__talent_running then DamageType:projectingFor(self, {project_type={talent=self.__talent_running}}) end
-		
+
 		if weapon and weapon.crushing_blow then self:attr("crushing_blow", 1) end
 
 		-- Damage conversion?
@@ -515,7 +515,7 @@ function _M:attackTargetWith(target, weapon, damtype, mult, force_dam)
 		if dam > 0 then
 			DamageType:get(damtype).projector(self, target.x, target.y, damtype, math.max(0, dam))
 		end
-		
+
 		if weapon and weapon.crushing_blow then self:attr("crushing_blow", -1) end
 
 		if self.__talent_running then DamageType:projectingFor(self, oldproj) end
@@ -658,7 +658,7 @@ function _M:attackTargetWith(target, weapon, damtype, mult, force_dam)
 		self:incStamina(-8)
 		self.shattering_impact_last_turn = game.turn
 	end
-	
+
 	-- Damage Backlash
 	if dam > 0 and self.attr and self:attr("damage_backfire") then
 		local hurt = math.min(dam, target.life) * self.damage_backfire / 100
@@ -772,13 +772,35 @@ function _M:attackTargetWith(target, weapon, damtype, mult, force_dam)
 	end
 
 	-- Special effect
-	if hitted and weapon and weapon.special_on_hit and weapon.special_on_hit.fct and (not target.dead or weapon.special_on_hit.on_kill) then
-		weapon.special_on_hit.fct(weapon, self, target, dam)
+	if hitted and weapon and weapon.special_on_hit then
+		local specials = weapon.special_on_hit
+		if specials.fct then specials = {specials} end
+		for _, special in ipairs(specials) do
+			if special.fct and (not target.dead or special.on_kill) then
+				special.fct(weapon, self, target, dam)
+			end
+		end
 	end
 
-	if hitted and crit and weapon and weapon.special_on_crit and weapon.special_on_crit.fct and (not target.dead or weapon.special_on_crit.on_kill) then
-		weapon.special_on_crit.fct(weapon, self, target, dam)
-      end
+	if hitted and crit and weapon and weapon.special_on_crit then
+		local specials = weapon.special_on_crit
+		if specials.fct then specials = {specials} end
+		for _, special in ipairs(specials) do
+			if special.fct and (not target.dead or special.on_kill) then
+				special.fct(weapon, self, target, dam)
+			end
+		end
+	end
+
+	if hitted and weapon and weapon.special_on_kill and target.dead then
+		local specials = weapon.special_on_kill
+		if specials.fct then specials = {specials} end
+		for _, special in ipairs(specials) do
+			if special.fct then
+				special.fct(weapon, self, target, dam)
+			end
+		end
+	end
 
 	if hitted and weapon and weapon.special_on_kill and weapon.special_on_kill.fct and target.dead then
 		weapon.special_on_kill.fct(weapon, self, target, dam)
@@ -836,9 +858,9 @@ function _M:attackTargetWith(target, weapon, damtype, mult, force_dam)
 		if cadam then
 			game.logSeen(self, "%s counters the attack!", target.name:capitalize())
 			target:attackTarget(self, nil, cadam, true)
-		end 
-	end 
-	
+		end
+	end
+
 	-- Gesture of Guarding counterattack
 	if hitted and not target.dead and not target:attr("stunned") and not target:attr("dazed") and not target:attr("stoned") and target:hasEffect(target.EFF_GESTURE_OF_GUARDING) then
 		local t = target:getTalentFromId(target.T_GESTURE_OF_GUARDING)
@@ -868,8 +890,8 @@ function _M:attackTargetWith(target, weapon, damtype, mult, force_dam)
 	-- Roll with it
 	if hitted and target:attr("knockback_on_hit") and not target.turn_procs.roll_with_it and rng.percent(util.bound(dam, 0, 100)) then
 		local ox, oy = self.x, self.y
-		game:onTickEnd(function() 
-			target:knockback(ox, oy, 1) 
+		game:onTickEnd(function()
+			target:knockback(ox, oy, 1)
 			if not target:hasEffect(target.EFF_WILD_SPEED) then target:setEffect(target.EFF_WILD_SPEED, 1, {power=200}) end
 		end)
 		target.turn_procs.roll_with_it = true
@@ -959,7 +981,7 @@ function _M:attackTargetWith(target, weapon, damtype, mult, force_dam)
 
 	self.turn_procs.weapon_type = nil
 	self.__global_accuracy_damage_bonus = nil
-	
+
 	--Life Steal
 	if weapon and weapon.lifesteal then
 		self:attr("lifesteal", -weapon.lifesteal)
@@ -1005,7 +1027,7 @@ function _M:combatGetTraining(weapon)
 	if type(_M.weapon_talents[weapon.talented]) == "table" then
 		local ktid, max = _M.weapon_talents[weapon.talented][1], self:getTalentLevel(_M.weapon_talents[weapon.talented][1])
 		for i, tid in ipairs(_M.weapon_talents[weapon.talented]) do
-			if self:knowTalent(tid) then 
+			if self:knowTalent(tid) then
 				if self:getTalentLevel(tid) > max then
 					ktid = tid
 					max = self:getTalentLevel(tid)
@@ -1063,7 +1085,7 @@ function _M:combatDefenseBase(fake)
 	end
 	local d = math.max(0, self.combat_def + (self:getDex() - 10) * 0.35 + (self:getLck() - 50) * 0.4)
 	local mult = 1
-	
+
 	if self:hasLightArmor() and self:knowTalent(self.T_MOBILE_DEFENCE) then
 		mult = mult + self:callTalent(self.T_MOBILE_DEFENCE,"getDef")
 	end
@@ -1310,7 +1332,7 @@ function _M:combatTalentScale(t, low, high, power, add, shift, raw)
 	if power == "log" then -- always >= 0
 		return math.max(0, m * math.log10(tl + shift) + b + add)
 --		return math.max(0, m * math.log10(tl + shift) + b + add), m, b
-	else 
+	else
 		return math.max(0, m * (tl + shift)^power + b + add)
 --		return math.max(0, m * (tl + shift)^power + b + add), m, b
 	end
@@ -1339,7 +1361,7 @@ function _M:combatStatScale(stat, low, high, power, add, shift)
 	if power == "log" then -- always >= 0
 		return math.max(0, m * math.log10(stat + shift) + b + add)
 --		return math.max(0, m * math.log10(stat + shift) + b + add), m, b
-	else 
+	else
 		return math.max(0, m * (stat + shift)^power + b + add)
 --		return math.max(0, m * (stat + shift)^power + b + add), m, b
 	end
@@ -1901,11 +1923,11 @@ function _M:combatMentalResist(fake)
 
 	local d = self.combat_mentalresist + (self:getCun() + self:getWil() + (self:getLck() - 50) * 0.5) * 0.35 + add
 	if self:attr("dazed") then d = d / 2 end
-	
+
 	local nm = self:hasEffect(self.EFF_CURSE_OF_NIGHTMARES)
 	if nm and rng.percent(20) and not fake then
 		d = d * (1-self.tempeffect_def.EFF_CURSE_OF_NIGHTMARES.getVisionsReduction(nm, nm.level)/100)
-	end	
+	end
 	return self:rescaleCombatStats(d)
 end
 
@@ -1923,8 +1945,8 @@ end
 --- Returns the resistance
 function _M:combatGetResist(type)
 	local power = 100
-	if self.force_use_resist and self.force_use_resist ~= type then 
-		type = self.force_use_resist 
+	if self.force_use_resist and self.force_use_resist ~= type then
+		type = self.force_use_resist
 		power = self.force_use_resist_percent or 100
 	end
 
@@ -2321,5 +2343,5 @@ end
 function _M:logCombat(target, style, ...)
 	if not game.uiset or not game.uiset.logdisplay then return end
 	local visible, srcSeen, tgtSeen = game:logVisible(self, target)  -- should a message be displayed?
-	if visible then game.uiset.logdisplay(game:logMessage(self, srcSeen, target, tgtSeen, style, ...)) end 
+	if visible then game.uiset.logdisplay(game:logMessage(self, srcSeen, target, tgtSeen, style, ...)) end
 end

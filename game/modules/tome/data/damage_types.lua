@@ -47,7 +47,7 @@ setDefaultProjector(function(src, x, y, type, dam, tmp, no_martyr)
 		src.elemental_mastery = old
 		return dam
 	end
-	
+
 	if src:attr("twilight_mastery") then
 		local ndam = dam * src.twilight_mastery
 		local old = src.twilight_mastery
@@ -236,7 +236,7 @@ setDefaultProjector(function(src, x, y, type, dam, tmp, no_martyr)
 		if dam ~= lastdam then
 			game:delayedLogDamage(src, target, 0, ("%s(%d to psi shield)#LAST#"):format(DamageType:get(type).text_color or "#aaaaaa#", lastdam-dam), false)
 		end
-		
+
 		--target.T_STONE_FORTRESS could be checked/applied here (ReduceDamage function in Dwarven Fortress talent)
 
 		-- Damage Smearing
@@ -263,8 +263,8 @@ setDefaultProjector(function(src, x, y, type, dam, tmp, no_martyr)
 				if src:checkClassification(tostring(k)) then res = math.max(res, v) end
 			end
 
-			res = math.min(res, target.resists_cap_actor_type or 90) 
-			
+			res = math.min(res, target.resists_cap_actor_type or 90)
+
 			if res ~= 0 then
 				print("[PROJECTOR] before entity", src.type, "resists dam", dam)
 				if res >= 100 then dam = 0
@@ -310,7 +310,7 @@ setDefaultProjector(function(src, x, y, type, dam, tmp, no_martyr)
 			dam= dam - demon_block
 			target:incVim((-demon_block)/20)
 		end
-		
+
 		-- Static reduce damage
 		if dam > 0 and target.isTalentActive and target:isTalentActive(target.T_ANTIMAGIC_SHIELD) then
 			local t = target:getTalentFromId(target.T_ANTIMAGIC_SHIELD)
@@ -359,16 +359,16 @@ setDefaultProjector(function(src, x, y, type, dam, tmp, no_martyr)
 			local def = src.tempeffect_def[src.EFF_CURSE_OF_MISFORTUNE]
 			dam = def.doUnfortunateEnd(src, eff, target, dam)
 		end
-		
+
 		if src:attr("crushing_blow") and (dam * (1.25 + (src.combat_critical_power or 0)/200)) > target.life then
 			dam = dam * (1.25 + (src.combat_critical_power or 0)/200)
 			game.logPlayer(src, "You end your target with a crushing blow!")
 		end
-		
+
 		if target:attr("resist_unseen") and not target:canSee(src) then
 			dam = dam * (1 - math.min(target.resist_unseen,100)/100)
 		end
-		
+
 		-- Sanctuary: reduces damage if it comes from outside of Gloom
 		if target.isTalentActive and target:isTalentActive(target.T_GLOOM) and target:knowTalent(target.T_SANCTUARY) then
 			if tmp and tmp.sanctuaryDamageChange then
@@ -397,7 +397,7 @@ setDefaultProjector(function(src, x, y, type, dam, tmp, no_martyr)
 					print("[PROJECTOR] Chant of Fortress (source) dam", dam)
 				end
 			end
-		end		
+		end
 
 		-- Psychic Projection
 		if src.attr and src:attr("is_psychic_projection") and not game.zone.is_dream_scape then
@@ -408,7 +408,7 @@ setDefaultProjector(function(src, x, y, type, dam, tmp, no_martyr)
 			end
 		end
 
-		if src.necrotic_minion_be_nice and src.summoner == target then 
+		if src.necrotic_minion_be_nice and src.summoner == target then
 			dam = dam * (1 - src.necrotic_minion_be_nice)
 		end
 
@@ -649,7 +649,7 @@ newDamageType{
 			else
 				local old = src.fire_convert_to
 				src.fire_convert_to = nil
-				dam = DamageType:get(old[1]).projector(src, x, y, old[1], dam * old[2] / 100) + 
+				dam = DamageType:get(old[1]).projector(src, x, y, old[1], dam * old[2] / 100) +
 				       DamageType:get(type).projector(src, x, y, type, dam * (100 - old[2]) / 100)
 				src.fire_convert_to = old
 				return dam
@@ -803,7 +803,7 @@ newDamageType{
 		end
 		local target = game.level.map(x, y, Map.ACTOR)
 		if target then
-			local energyDrain = (game.energy_to_act * 0.2)	
+			local energyDrain = (game.energy_to_act * 0.2)
 			target.energy.value = target.energy.value - energyDrain
 		end
 	end,
@@ -1731,8 +1731,19 @@ newDamageType{
 -- Log entries are pretty limited currently because it can be quite spammy with the default messages already
 newDamageType{
 	name = "item mind gloom", type = "ITEM_MIND_GLOOM",
-	tdesc = function(dam) 
-		return ("#LIGHT_GREEN#%d%%#LAST# chance to cause #YELLOW#random insanity#LAST#"):format(dam) 
+	tdesc = function(dam, oldDam)
+		parens = ""
+		dam = dam or 0
+		if oldDam then
+			diff = dam - oldDam
+			if diff > 0 then
+				parens = (" (#LIGHT_GREEN#+%d%%#LAST#)"):format(diff)
+			elseif diff < 0 then
+				parens = (" (#RED#%d%%#LAST#)"):format(diff)
+			end
+		end
+		return ("* #LIGHT_GREEN#%d%%#LAST# chance to cause #YELLOW#random insanity#LAST#%s")
+			:format(dam, parens)
 	end,
 	projector = function(src, x, y, type, dam)
 		local target = game.level.map(x, y, Map.ACTOR)
@@ -1762,8 +1773,19 @@ newDamageType{
 
 newDamageType{
 	name = "item darkness numbing", type = "ITEM_DARKNESS_NUMBING",
-	tdesc = function(dam) 
-		return ("#LIGHT_GREEN#%d%%#LAST# chance to inflict #GREY#damage reduction#LAST#"):format(dam) 
+	tdesc = function(dam, oldDam)
+		parens = ""
+		dam = dam or 0
+		if oldDam then
+			diff = dam - oldDam
+			if diff > 0 then
+				parens = (" (#LIGHT_GREEN#+%d%%#LAST#)"):format(diff)
+			elseif diff < 0 then
+				parens = (" (#RED#%d%%#LAST#)"):format(diff)
+			end
+		end
+		return ("* #LIGHT_GREEN#%d%%#LAST# chance to inflict #GREY#damage reduction#LAST#%s")
+			:format(dam, parens)
 	end,
 	projector = function(src, x, y, type, dam)
 		local target = game.level.map(x, y, Map.ACTOR)
@@ -1777,18 +1799,29 @@ newDamageType{
 
 newDamageType{
 	name = "item temporal energize", type = "ITEM_TEMPORAL_ENERGIZE",
-	tdesc = function(dam) 
-		return ("#LIGHT_GREEN#%d%%#LAST# chance to gain #LIGHT_STEEL_BLUE#%d%% of a turn#LAST#"):format(dam, 10) 
+	tdesc = function(dam, oldDam)
+		parens = ""
+		dam = dam or 0
+		if oldDam then
+			diff = dam - oldDam
+			if diff > 0 then
+				parens = (" (#LIGHT_GREEN#+%d%%#LAST#)"):format(diff)
+			elseif diff < 0 then
+				parens = (" (#RED#%d%%#LAST#)"):format(diff)
+			end
+		end
+		return ("* #LIGHT_GREEN#%d%%#LAST# chance to gain #LIGHT_STEEL_BLUE#10%% of a turn#LAST#%s")
+			:format(dam, parens)
 	end,
 	projector = function(src, x, y, type, dam)
 		local target = game.level.map(x, y, Map.ACTOR)
 		if target and src and src.name and rng.percent(dam) then
-				if src.turn_procs and src.turn_procs.item_temporal_energize and src.turn_procs.item_temporal_energize > 3 then 
+				if src.turn_procs and src.turn_procs.item_temporal_energize and src.turn_procs.item_temporal_energize > 3 then
 					game.logSeen(src, "#LIGHT_STEEL_BLUE#%s can't gain any more energy this turn! ", src.name:capitalize())
 				return
 				end
 
-				local energy = (game.energy_to_act * 0.1)	
+				local energy = (game.energy_to_act * 0.1)
 				src.energy.value = src.energy.value + energy
 				--game.logSeen(target, "Time seems to bend and quicken energizing %s!", src.name:capitalize())
 
@@ -1799,8 +1832,19 @@ newDamageType{
 
 newDamageType{
 	name = "item acid corrode", type = "ITEM_ACID_CORRODE", text_color = "#GREEN#",
-	tdesc = function(dam) 
-		return ("#LIGHT_GREEN#%d%%#LAST# chance to #GREEN#corrode armor#LAST#"):format(dam) 
+	tdesc = function(dam, oldDam)
+		parens = ""
+		dam = dam or 0
+		if oldDam then
+			diff = dam - oldDam
+			if diff > 0 then
+				parens = (" (#LIGHT_GREEN#+%d%%#LAST#)"):format(diff)
+			elseif diff < 0 then
+				parens = (" (#RED#%d%%#LAST#)"):format(diff)
+			end
+		end
+		return ("* #LIGHT_GREEN#%d%%#LAST# chance to #GREEN#corrode armor#LAST#%s")
+			:format(dam, parens)
 	end,
 	projector = function(src, x, y, type, dam)
 		local target = game.level.map(x, y, Map.ACTOR)
@@ -1814,8 +1858,19 @@ newDamageType{
 
 newDamageType{
 	name = "item light blind", type = "ITEM_LIGHT_BLIND",
-	tdesc = function(dam) 
-		return ("#LIGHT_GREEN#%d%%#LAST# chance to #YELLOW#blind#LAST#"):format(dam) 
+	tdesc = function(dam, oldDam)
+		parens = ""
+		dam = dam or 0
+		if oldDam then
+			diff = dam - oldDam
+			if diff > 0 then
+				parens = (" (#LIGHT_GREEN#+%d%%#LAST#)"):format(diff)
+			elseif diff < 0 then
+				parens = (" (#RED#%d%%#LAST#)"):format(diff)
+			end
+		end
+		return ("* #LIGHT_GREEN#%d%%#LAST# chance to #YELLOW#blind#LAST#%s")
+			:format(dam, parens)
 	end,
 	projector = function(src, x, y, type, dam)
 		local target = game.level.map(x, y, Map.ACTOR)
@@ -1832,8 +1887,19 @@ newDamageType{
 
 newDamageType{
 	name = "item lightning daze", type = "ITEM_LIGHTNING_DAZE",
-	tdesc = function(dam) 
-		return ("#LIGHT_GREEN#%d%%#LAST# chance to #ROYAL_BLUE#daze#LAST#"):format(dam) 
+	tdesc = function(dam, oldDam)
+		parens = ""
+		dam = dam or 0
+		if oldDam then
+			diff = dam - oldDam
+			if diff > 0 then
+				parens = (" (#LIGHT_GREEN#+%d%%#LAST#)"):format(diff)
+			elseif diff < 0 then
+				parens = (" (#RED#%d%%#LAST#)"):format(diff)
+			end
+		end
+		return ("* #LIGHT_GREEN#%d%%#LAST# chance to #ROYAL_BLUE#daze#LAST#%s")
+			:format(dam, parens)
 	end,
 	projector = function(src, x, y, type, dam)
 		local target = game.level.map(x, y, Map.ACTOR)
@@ -1848,11 +1914,22 @@ newDamageType{
 		end
 	end,
 }
-  
+
 newDamageType{
 	name = "item blight disease", type = "ITEM_BLIGHT_DISEASE", text_color = "#DARK_GREEN#",
-	tdesc = function(dam) 
-		return ("#LIGHT_GREEN#%d%%#LAST# chance to #DARK_GREEN#disease#LAST#"):format(dam) 
+	tdesc = function(dam, oldDam)
+		parens = ""
+		dam = dam or 0
+		if oldDam then
+			diff = dam - oldDam
+			if diff > 0 then
+				parens = (" (#LIGHT_GREEN#+%d%%#LAST#)"):format(diff)
+			elseif diff < 0 then
+				parens = (" (#RED#%d%%#LAST#)"):format(diff)
+			end
+		end
+		return ("* #LIGHT_GREEN#%d%%#LAST# chance to #DARK_GREEN#disease#LAST#%s")
+			:format(dam, parens)
 	end,
 	projector = function(src, x, y, type, dam)
 		local target = game.level.map(x, y, Map.ACTOR)
@@ -1866,8 +1943,19 @@ newDamageType{
 
 newDamageType{
 	name = "item manaburn arcane", type = "ITEM_ANTIMAGIC_MANABURN", text_color = "#PURPLE#",
-	tdesc = function(dam)
-		return ("#DARK_ORCHID#%d arcane resource#LAST# burn"):format(dam) 
+	tdesc = function(dam, oldDam)
+		parens = ""
+		dam = dam or 0
+		if oldDam then
+			diff = dam - oldDam
+			if diff > 0 then
+				parens = (" (#LIGHT_GREEN#+%d#LAST#)"):format(diff)
+			elseif diff < 0 then
+				parens = (" (#RED#%d#LAST#)"):format(diff)
+			end
+		end
+		return ("* #DARK_ORCHID#%d arcane resource#LAST# burn%s")
+			:format(dam or 0, parens)
 	end,
 	projector = function(src, x, y, type, dam)
 		local target = game.level.map(x, y, Map.ACTOR)
@@ -1897,8 +1985,19 @@ newDamageType{
 
 newDamageType{
 	name = "item nature slow", type = "ITEM_NATURE_SLOW", text_color = "#LIGHT_GREEN#",
-	tdesc = function(dam)
-		return ("Slows global speed by #LIGHT_GREEN#%d%%#LAST#"):format(dam) 
+	tdesc = function(dam, oldDam)
+		parens = ""
+		dam = dam or 0
+		if oldDam then
+			diff = dam - oldDam
+			if diff > 0 then
+				parens = (" (#LIGHT_GREEN#+%d%%#LAST#)"):format(diff)
+			elseif diff < 0 then
+				parens = (" (#RED#%d%%#LAST#)"):format(diff)
+			end
+		end
+		return ("* Slows global speed by #LIGHT_GREEN#%d%%#LAST#%s")
+			:format(dam, parens)
 	end,
 	projector = function(src, x, y, type, dam)
 		local target = game.level.map(x, y, Map.ACTOR)
@@ -1911,8 +2010,19 @@ newDamageType{
 -- Reduces all offensive powers by 20%
 newDamageType{
 	name = "item antimagic scouring", type = "ITEM_ANTIMAGIC_SCOURING", text_color = "#ORCHID#",
-	tdesc = function(dam)
-		return ("#LIGHT_GREEN#%d%%#LAST# chance to #ORCHID#reduce powers#LAST# by %d%%"):format(dam, 20) 
+	tdesc = function(dam, oldDam)
+		parens = ""
+		dam = dam or 0
+		if oldDam then
+			diff = dam - oldDam
+			if diff > 0 then
+				parens = (" (#LIGHT_GREEN#+%d%%#LAST#)"):format(diff)
+			elseif diff < 0 then
+				parens = (" (#RED#%d%%#LAST#)"):format(diff)
+			end
+		end
+		return ("* #LIGHT_GREEN#%d%%#LAST# chance to #ORCHID#reduce powers#LAST# by %d%%%s")
+			:format(dam, parens)
 	end,
 	projector = function(src, x, y, type, dam)
 		local target = game.level.map(x, y, Map.ACTOR)
@@ -2118,17 +2228,17 @@ newDamageType{
 	projector = function(src, x, y, type, dam)
 		local target = game.level.map(x, y, Map.ACTOR)
 		if target and not target:attr("undead") then
-			
+
 			target:setEffect(target.EFF_EMPOWERED_HEALING, 1, {power=(dam/200)})
 			if dam >= 100 then target:attr("allow_on_heal", 1) end
 			target:heal(dam, src)
-			
+
 			-- If the target is shielded already then add to the shield power, else add a shield
 			local shield_power = dam * util.bound((target.healing_factor or 1), 0, 2.5)
-			if not target:hasEffect(target.EFF_DAMAGE_SHIELD) then 
+			if not target:hasEffect(target.EFF_DAMAGE_SHIELD) then
 				target:setEffect(target.EFF_DAMAGE_SHIELD, 2, {power=shield_power})
 			else
-				-- Shields can't usually merge, so change the parameters manually 
+				-- Shields can't usually merge, so change the parameters manually
 				local shield = target:hasEffect(target.EFF_DAMAGE_SHIELD)
 				shield.power = shield.power + shield_power
 				target.damage_shield_absorb = target.damage_shield_absorb + shield_power
@@ -2162,8 +2272,8 @@ newDamageType{
 			if dam >= 100 then src:attr("allow_on_heal", 1) end
 			src:heal(dam / 2, src)
 			if dam >= 100 then src:attr("allow_on_heal", -1) end
-		
-			
+
+
 		end
 	end,
 }
@@ -3083,7 +3193,7 @@ newDamageType{
 		local target = game.level.map(x, y, Map.ACTOR)
 		if target then
 			local realdam = DamageType:get(DamageType.SLIME).projector(src, x, y, DamageType.SLIME, {dam=dam.dam, power=0.30})
-			
+
 			if dam.nb > 0 then
 				dam.done = dam.done or {}
 				dam.done[target.uid] = true
@@ -3103,7 +3213,7 @@ newDamageType{
 				end
 			end
 			return realdam
-		end		
+		end
 	end,
 }
 

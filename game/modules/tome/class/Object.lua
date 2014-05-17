@@ -443,7 +443,7 @@ function _M:getTextualDesc(compare_with, use_actor)
 		end
 	end
 
-	local compare_table_fields = function(item1, items, infield, field, outformat, text, kfunct, mod, isinversed)
+	local compare_table_fields = function(item1, items, infield, field, outformat, text, kfunct, mod, isinversed, filter)
 		mod = mod or 1
 		isinversed = isinversed or false
 		local ret = tstring{}
@@ -467,6 +467,7 @@ function _M:getTextualDesc(compare_with, use_actor)
 		end
 		local count1 = 0
 		for k, v in pairs(tab) do
+			if filter and not filter(k, v) then goto filtered end
 			local count = 0
 			if isinversed then
 				ret:add(("%s"):format((count1 > 0) and " / " or ""), (v[1] or 0) > 0 and {"color","RED"} or {"color","LIGHT_GREEN"}, outformat:format((v[1] or 0)), {"color","LAST"})
@@ -501,6 +502,7 @@ function _M:getTextualDesc(compare_with, use_actor)
 				ret:add(")")
 			end
 			ret:add(kfunct(k))
+			::filtered::
 		end
 
 		if add then
@@ -556,7 +558,7 @@ function _M:getTextualDesc(compare_with, use_actor)
 		if combat.wil_attack then
 			desc:add("Accuracy is based on willpower for this weapon.", true)
 		end
-		
+
 		if combat.is_psionic_focus then
 			desc:add("This weapon will act as a psionic focus.", true)
 		end
@@ -592,7 +594,7 @@ function _M:getTextualDesc(compare_with, use_actor)
 		for tid, data in pairs(talents) do
 			desc:add(talents[tid][3] and {"color","WHITE"} or {"color","GREEN"}, ("When this weapon hits: %s (%d%% chance level %d)."):format(self:getTalentFromId(tid).name, talents[tid][1], talents[tid][2]), {"color","LAST"}, true)
 		end
-		
+
 		local talents = {}
 		if combat.talent_on_crit then
 			for tid, data in pairs(combat.talent_on_crit) do
@@ -630,82 +632,125 @@ function _M:getTextualDesc(compare_with, use_actor)
 		end
 		--]]
 
-		-- Store the DamageTypes with tdesc defined in dt_string
-		-- Store the DamageTypes without tdesc in combat2 (to be displayed normally)
-		local found = false
-		local dt_string = tstring{}
-		local combat2 = { melee_project = {} }
-		for i, v in pairs(combat.melee_project or {}) do
-			local def = DamageType.dam_def[i]
-			if def and def.tdesc then
-				local d = def.tdesc(v)
-				found = true
-				dt_string:add(d, {"color","LAST"}, true)
-				
-			else
-				combat2.melee_project[i] = v
+		-- get_items takes the combat table and returns a table of items to print.
+		-- Each of these items one of the following:
+		-- id -> {priority, string}
+		-- id -> {priority, message_function(this, compared), value}
+		-- header is the section header.
+		local compare_list = function(header, get_items)
+			local priority_ordering = function(left, right)
+				return left[2][1] < right[2][1]
 			end
-		end
 
+			if next(compare_with) then
+				-- Grab the left and right items.
+				local left = get_items(combat)
+				local right = {}
+				for i, v in ipairs(compare_with) do
+					for k, item in pairs(get_items(v[field])) do
+						if not right[k] then
+							right[k] = item
+						elseif type(right[k]) == 'number' then
+							right[k] = right[k] + item
+						else
+							right[k] = item
+						end
+					end
+				end
 
-		local ranged_string = tstring{}
-		local ranged_combat = { ranged_project = {} }
-		for i, v in pairs(combat.ranged_project or {}) do
-			local def = DamageType.dam_def[i]
-			if def and def.tdesc then
-				local d = def.tdesc(v)
-				found = true
-				ranged_string:add(d, {"color","LAST"}, true)
-				
+				-- Exit early if no items.
+				if not next(left) and not next(right) then return end
+
+				desc:add(header, true)
+
+				local combined = table.clone(left)
+				table.merge(combined, right)
+
+				for k, _ in table.orderedPairs(combined, priority_ordering) do
+					l = left[k]
+					r = right[k]
+					message = (l and l[2]) or (r and r[2])
+					if type(message) == 'function' then
+						desc:add(message(l and l[3], r and r[3] or 0), true)
+					elseif type(message) == 'string' then
+						prefix = '* '
+						color = 'WHITE'
+						if l and not r then
+							color = 'GREEN'
+							prefix = '+ '
+						end
+						if not l and r then
+							color = 'RED'
+							prefix = '- '
+						end
+						desc:add({'color',color}, prefix, message, {'color','LAST'}, true)
+					end
+				end
 			else
-				ranged_combat.ranged_project[i] = v
-			end
-		end
-
-		-- Add the on hit section only if theres a tdesc DT or a special_on_hit
-		if found or special ~= ""  then
-			desc:add({"color","ORANGE"}, "When this weapon hits: ", {"color","LAST"}, true)
-
-		end
-
-		-- Add the special_on_hit desc first always in green
-		if special ~= "" then
-			desc:add({"color","GREEN"}, special:capitalize(), {"color","LAST"}, true)
-		end
-
-		-- Add the extended melee_project descriptions after special_on_hit, colors defined by tdesc
-		if found then
-			desc:merge(dt_string)
-			desc:merge(ranged_string)
-		end
-
-		-- only special_on_hit display is modified, not special_on_crit and so on
-		special = ""
-		if combat.special_on_crit then
-			special = combat.special_on_crit.desc
-		end
-		found = false
-		for i, v in ipairs(compare_with or {}) do
-			if v[field] and v[field].special_on_crit then
-				if special ~= v[field].special_on_crit.desc then
-					desc:add({"color","RED"}, "When this weapon crits: "..v[field].special_on_crit.desc, {"color","LAST"}, true)
-				else
-					found = true
+				local items = get_items(combat)
+				if next(items) then
+					desc:add(header, true)
+					for k, v in table.orderedPairs(items, priority_ordering) do
+						message = v[2]
+						if type(message) == 'function' then
+							desc:add(message(v[3]), true)
+						elseif type(message) == 'string' then
+							desc:add({'color','WHITE'}, '* ', message, {'color','LAST'}, true)
+						end
+					end
 				end
 			end
 		end
-		if special ~= "" then
-			desc:add(found and {"color","WHITE"} or {"color","ORANGE"}, "When this weapon crits: "..special, {"color","LAST"}, true)
+
+		local get_special_list = function(combat, key)
+			local special = combat[key]
+
+			-- No special
+			if not special then return {} end
+
+			-- Single special
+			if special.desc then
+				return {[special.desc] = {10, special.desc}}
+			end
+
+			-- Multiple specials
+			local list = {}
+			for _, special in pairs(special) do
+				list[special.desc] = {10, special.desc}
+			end
+			return list
 		end
 
-		local special = ""
-		if combat.special_on_kill then
-			special = combat.special_on_kill.desc
-		end
+		compare_list(
+			"On weapon hit:",
+			function(combat)
+				local list = {}
+				-- Get complex damage types
+				for dt, amount in pairs(combat.melee_project or combat.ranged_project or {}) do
+					local dt_def = DamageType:get(dt)
+					if dt_def and dt_def.tdesc then
+						list[dt] = {0, dt_def.tdesc, amount}
+					end
+				end
+				-- Get specials
+				table.merge(list, get_special_list(combat, 'special_on_hit'))
+				return list
+			end
+		)
 
-		if special ~= "" then
-			desc:add(found and {"color","WHITE"} or {"color","ORANGE"}, "When this weapon kills: "..special, {"color","LAST"}, true)
-		end
+		compare_list(
+			"On weapon crit:",
+			function(combat)
+				return get_special_list(combat, 'special_on_crit')
+			end
+		)
+
+		compare_list(
+			"On weapon kill:",
+			function(combat)
+				return get_special_list(combat, 'special_on_kill')
+			end
+		)
 
 		found = false
 		for i, v in ipairs(compare_with or {}) do
@@ -719,7 +764,7 @@ function _M:getTextualDesc(compare_with, use_actor)
 		elseif found then
 			desc:add({"color","RED"}, "When used from stealth a simple attack with it will not break stealth.", {"color","LAST"}, true)
 		end
-		
+
 		if combat.crushing_blow then
 			desc:add({"color", "YELLOW"}, "Crushing Blows: ", {"color", "LAST"}, "Damage dealt by this weapon is increased by half your critical multiplier, if doing so would kill the target.", true)
 		end
@@ -727,23 +772,30 @@ function _M:getTextualDesc(compare_with, use_actor)
 		compare_fields(combat, compare_with, field, "travel_speed", "%+d%%", "Travel speed: ", 100, false, false, add_table)
 
 		compare_fields(combat, compare_with, field, "phasing", "%+d%%", "Damage Shield penetration (this weapon only): ", 1, false, false, add_table)
-		
+
 		compare_fields(combat, compare_with, field, "lifesteal", "%+d%%", "Lifesteal (this weapon only): ", 1, false, false, add_table)
 
 		if combat.tg_type and combat.tg_type == "beam" then
 			desc:add({"color","YELLOW"}, ("Shots beam through all targets."), {"color","LAST"}, true)
 		end
 
-		-- Use the second combat table for melee_project so we don't repeat the tdesc entries
-		compare_table_fields(combat2, compare_with, field, "melee_project", "%+d", "Damage (Melee): ", function(item)
+		compare_table_fields(
+			combat, compare_with, field, "melee_project", "%+d", "Damage (Melee): ",
+			function(item)
 				local col = (DamageType.dam_def[item] and DamageType.dam_def[item].text_color or "#WHITE#"):toTString()
 				return col[2], (" %s"):format(DamageType.dam_def[item].name),{"color","LAST"}
-			end)
+			end,
+			nil, nil,
+			function(k, v) return not DamageType.dam_def[k].tdesc end)
 
-		compare_table_fields(ranged_combat, compare_with, field, "ranged_project", "%+d", "Damage (Ranged): ", function(item)
+		compare_table_fields(
+			combat, compare_with, field, "ranged_project", "%+d", "Damage (Ranged): ",
+			function(item)
 				local col = (DamageType.dam_def[item] and DamageType.dam_def[item].text_color or "#WHITE#"):toTString()
 				return col[2], (" %s"):format(DamageType.dam_def[item].name),{"color","LAST"}
-			end)
+			end,
+			nil, nil,
+			function(k, v) return not DamageType.dam_def[k].tdesc end)
 
 		compare_table_fields(combat, compare_with, field, "burst_on_hit", "%+d", "Burst (radius 1) on hit: ", function(item)
 				local col = (DamageType.dam_def[item] and DamageType.dam_def[item].text_color or "#WHITE#"):toTString()
@@ -1181,7 +1233,7 @@ function _M:getTextualDesc(compare_with, use_actor)
 		compare_fields(w, compare_with, field, "infravision", "%+d", "Infravision radius: ")
 		compare_fields(w, compare_with, field, "heightened_senses", "%+d", "Heightened senses radius: ")
 		compare_fields(w, compare_with, field, "sight", "%+d", "Sight radius: ")
-		
+
 		compare_fields(w, compare_with, field, "see_stealth", "%+d", "See stealth: ")
 
 		compare_fields(w, compare_with, field, "see_invisible", "%+d", "See invisible: ")
@@ -1218,10 +1270,10 @@ function _M:getTextualDesc(compare_with, use_actor)
 
 		compare_fields(w, compare_with, field, "nature_summon_max", "%+d", "Max wilder summons: ")
 		compare_fields(w, compare_with, field, "nature_summon_regen", "%+.2f", "Life regen bonus (wilder-summons): ")
-		
+
 		compare_fields(w, compare_with, field, "shield_dur", "%+d", "Damage Shield Duration: ")
 		compare_fields(w, compare_with, field, "shield_factor", "%+d%%", "Damage Shield Power: ")
-		
+
 		compare_fields(w, compare_with, field, "iceblock_pierce", "%+d%%", "Ice block penetration: ")
 
 		compare_fields(w, compare_with, field, "slow_projectiles", "%+d%%", "Slows Projectiles: ")
@@ -1229,13 +1281,13 @@ function _M:getTextualDesc(compare_with, use_actor)
 		compare_fields(w, compare_with, field, "paradox_reduce_fails", "%+d", "Reduces paradox failures(equivalent to willpower): ")
 
 		compare_fields(w, compare_with, field, "damage_backfire", "%+d%%", "Damage Backlash: ", nil, true)
-		
+
 		compare_fields(w, compare_with, field, "resist_unseen", "%-d%%", "Reduce all damage from unseen attackers: ")
 
 		if w.undead then
 			desc:add("The wearer is treated as an undead.", true)
 		end
-		
+
 		if w.demon then
 			desc:add("The wearer is treated as a demon.", true)
 		end
@@ -1243,7 +1295,7 @@ function _M:getTextualDesc(compare_with, use_actor)
 		if w.blind then
 			desc:add("The wearer is blinded.", true)
 		end
-		
+
 		if w.sleep then
 			desc:add("The wearer is asleep.", true)
 		end
@@ -1251,7 +1303,7 @@ function _M:getTextualDesc(compare_with, use_actor)
 		if w.blind_fight then
 			desc:add({"color", "YELLOW"}, "Blind-Fight: ", {"color", "LAST"}, "This item allows the wearer to attack unseen targets without any penalties.", true)
 		end
-		
+
 		if w.lucid_dreamer then
 			desc:add({"color", "YELLOW"}, "Lucid Dreamer: ", {"color", "LAST"}, "This item allows the wearer to act while sleeping.", true)
 		end
@@ -1259,7 +1311,7 @@ function _M:getTextualDesc(compare_with, use_actor)
 		if w.no_breath then
 			desc:add("The wearer no longer has to breathe.", true)
 		end
-		
+
 		if w.quick_weapon_swap then
 			desc:add({"color", "YELLOW"}, "Quick Weapon Swap:", {"color", "LAST"}, "This item allows the wearer to swap to their secondary weapon without spending a turn.", true)
 		end
