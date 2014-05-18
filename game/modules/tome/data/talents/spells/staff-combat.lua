@@ -46,7 +46,8 @@ newTalent{
 		local particle = "bolt_fire"
 		local explosion = "flame"
 
-		local damtype = combat.damtype
+		local damtype = combat.element or combat.damtype or engine.DamageType.PHYSICAL
+		
 		if     damtype == DamageType.FIRE then      explosion = "flame"               particle = "bolt_fire"      trail = "firetrail"
 		elseif damtype == DamageType.COLD then      explosion = "freeze"              particle = "ice_shards"     trail = "icetrail"
 		elseif damtype == DamageType.ACID then      explosion = "acid"                particle = "bolt_acid"      trail = "acidtrail"

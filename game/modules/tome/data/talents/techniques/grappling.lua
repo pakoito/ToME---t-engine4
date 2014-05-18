@@ -240,7 +240,7 @@ newTalent{
 newTalent{
 	name = "Hurricane Throw",
 	type = {"technique/grappling", 4},
-	require = techs_str_req4,
+	require = techs_req4,
 	points = 5,
 	random_ego = "attack",
 	requires_target = true,

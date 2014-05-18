@@ -126,19 +126,21 @@ local function set_element(element, new_flavor, player)
 	local dam = o.combat.dam
 	local inven = player:getInven("MAINHAND")
 	local o = player:takeoffObject(inven, 1)
+
 	local dam_tables = {
 		magestaff = {engine.DamageType.FIRE, engine.DamageType.COLD, engine.DamageType.LIGHTNING, engine.DamageType.ARCANE},
 		starstaff = {engine.DamageType.LIGHT, engine.DamageType.DARKNESS, engine.DamageType.TEMPORAL, engine.DamageType.PHYSICAL},
 		vilestaff = {engine.DamageType.DARKNESS, engine.DamageType.BLIGHT, engine.DamageType.ACID, engine.DamageType.FIRE}, -- yes it overlaps, it's okay
 	}
 
-	update_table(dam_tables[o.flavor_name], dam_tables[new_flavor], o.combat.damtype, element, "inc_damage", dam, o.combat.is_greater)
-	if o.combat.of_warding then update_table(dam_tables[o.flavor_name], dam_tables[new_flavor], o.combat.damtype, element, "wards", 2, o.combat.is_greater) end
-	if o.combat.of_greater_warding then update_table(dam_tables[o.flavor_name], dam_tables[new_flavor], o.combat.damtype, element, "wards", 3, o.combat.is_greater) end
-	if o.combat.of_breaching then update_table(dam_tables[o.flavor_name], dam_tables[new_flavor], o.combat.damtype, element, "resists_pen", dam/2, o.combat.is_greater) end
-	if o.combat.of_protection then update_table(dam_tables[o.flavor_name], dam_tables[new_flavor], o.combat.damtype, element, "resists", dam/2, o.combat.is_greater) end
+	update_table(dam_tables[o.flavor_name], dam_tables[new_flavor], o.combat.element, element, "inc_damage", dam, o.combat.is_greater)
+	if o.combat.of_warding then update_table(dam_tables[o.flavor_name], dam_tables[new_flavor], o.combat.element, element, "wards", 2, o.combat.is_greater) end
+	if o.combat.of_greater_warding then update_table(dam_tables[o.flavor_name], dam_tables[new_flavor], o.combat.element, element, "wards", 3, o.combat.is_greater) end
+	if o.combat.of_breaching then update_table(dam_tables[o.flavor_name], dam_tables[new_flavor], o.combat.element, element, "resists_pen", dam/2, o.combat.is_greater) end
+	if o.combat.of_protection then update_table(dam_tables[o.flavor_name], dam_tables[new_flavor], o.combat.element, element, "resists", dam/2, o.combat.is_greater) end
 
-	o.combat.damtype = element
+	--o.combat.damtype = element
+	o.combat.element = element
 	if not o.unique then o.name = o.name:gsub(o.flavor_name, new_flavor) end
 	o.flavor_name = new_flavor
 	o:resolve()

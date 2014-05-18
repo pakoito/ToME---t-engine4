@@ -259,7 +259,7 @@ newEntity{
 			local explosion, particle, trail
 
 			local DamageType = require "engine.DamageType"
-			local damtype = combat.damtype
+			local damtype = combat.element
 			if     damtype == DamageType.FIRE then      explosion = "flame"               particle = "bolt_fire"      trail = "firetrail"
 			elseif damtype == DamageType.COLD then      explosion = "freeze"              particle = "ice_shards"     trail = "icetrail"
 			elseif damtype == DamageType.ACID then      explosion = "acid"                particle = "bolt_acid"      trail = "acidtrail"
@@ -354,7 +354,7 @@ newEntity{
 			if not combat then return end
 
 			local DamageType = require "engine.DamageType"
-			local damtype = combat.damtype
+			local damtype = combat.element
 			if     damtype == DamageType.FIRE then      explosion = "flame"
 			elseif damtype == DamageType.COLD then      explosion = "freeze"
 			elseif damtype == DamageType.ACID then      explosion = "acid"
@@ -457,7 +457,7 @@ newEntity{
 			local combat = weapon.combat
 
 			local DamageType = require "engine.DamageType"
-			local damtype = combat.damtype
+			local damtype = combat.element
 			if     damtype == DamageType.FIRE then      explosion = "flame"
 			elseif damtype == DamageType.COLD then      explosion = "freeze"
 			elseif damtype == DamageType.ACID then      explosion = "acid"
@@ -554,7 +554,7 @@ newEntity{
 		combat_critical_power = resolvers.mbonus_material(25, 15),
 		see_invisible = resolvers.mbonus_material(15, 5),
 		melee_project = {
-			[DamageType.SHADOWFLAME] = resolvers.mbonus_material(20, 15),
+			[DamageType.FIRE] = resolvers.mbonus_material(20, 15),
 		},
 	},
 }
@@ -626,7 +626,7 @@ newEntity{
 	slot_forbid = false,
 	twohanded = false,
 	keywords = {magewarrior=true},
-	level_range = {40, 50},
+	level_range = {20, 50},
 	greater_ego = 1,
 	rarity = 35,
 	cost = 60,

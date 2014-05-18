@@ -85,12 +85,13 @@ newBirthDescriptor{
 		[ActorTalents.T_SLASH] = 1,
 		[ActorTalents.T_WEAPONS_MASTERY] = 1,
 		[ActorTalents.T_WEAPON_COMBAT] = 1,
+		[ActorTalents.T_ARMOUR_TRAINING] = 1,
 	},
 	copy = {
 		max_life = 110,
 		resolvers.equip{ id=true,
 			{type="weapon", subtype="battleaxe", name="iron battleaxe", autoreq=true, ego_chance=-1000},
-			{type="armor", subtype="light", name="rough leather armour", autoreq=true, ego_chance=-1000}
+			{type="armor", subtype="heavy", name="iron mail armour", autoreq=true, ego_chance=-1000, ego_chance=-1000}
 		},
 		chooseCursedAuraTree = true
 	},
