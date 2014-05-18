@@ -431,7 +431,7 @@ static int map_objects_toscreen(lua_State *L)
 			float dh = h * dm->dh;
 			int dz = moid;
 
-		 	if (m != dm && dm->shader) {
+		 	if (m != dm && allow_shader && dm->shader) {
 				for (z = dm->nb_textures - 1; z > 0; z--)
 				{
 					if (multitexture_active) tglActiveTexture(GL_TEXTURE0+z);
@@ -456,7 +456,7 @@ static int map_objects_toscreen(lua_State *L)
 			glDrawArrays(GL_QUADS, 0, 4);
 
 			if (m != dm) {
-		 		if (m->shader) useShader(m->shader, 0, 0, w, h, 1, 1, 1, a);
+		 		if (allow_shader && m->shader) useShader(m->shader, 0, 0, w, h, 1, 1, 1, a);
 		 		else tglUseProgramObject(0);
 		 	}
 

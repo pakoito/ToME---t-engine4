@@ -272,7 +272,7 @@ function _M:innerDisplay(x, y, nb_keyframes, tx, ty)
 		if self.shadow then item._tex:toScreenFull(x+2, h+2, item.w, item.h, item._tex_w, item._tex_h, 0,0,0, self.shadow) end
 		item._tex:toScreenFull(x, h, item.w, item.h, item._tex_w, item._tex_h)
 
-		for di = 1, #item._dduids do item._dduids[di].e:toScreen(nil, x + item._dduids[di].x, h, item._dduids[di].w, item._dduids[di].w, 1) end
+		for di = 1, #item._dduids do item._dduids[di].e:toScreen(nil, x + item._dduids[di].x, h, item._dduids[di].w, item._dduids[di].w, 1, false, false) end
 
 		self.dlist[i].dh = h - y
 --		print("<<",i,"::",h + ty)
