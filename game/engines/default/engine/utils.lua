@@ -397,7 +397,7 @@ end
 
 -- ordering is a function({k1, v1}, {k2, v2}), it should return true
 -- when left is < right.
-function table.orderedPairs(t, ordering)
+function table.orderedPairs2(t, ordering)
 	if not next(t) then return function() end end
 	t = table.listify(t)
 	if #t > 1 then table.sort(t, ordering) end

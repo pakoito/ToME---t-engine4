@@ -666,7 +666,7 @@ function _M:getTextualDesc(compare_with, use_actor)
 				local combined = table.clone(left)
 				table.merge(combined, right)
 
-				for k, _ in table.orderedPairs(combined, priority_ordering) do
+				for k, _ in table.orderedPairs2(combined, priority_ordering) do
 					l = left[k]
 					r = right[k]
 					message = (l and l[2]) or (r and r[2])
@@ -690,7 +690,7 @@ function _M:getTextualDesc(compare_with, use_actor)
 				local items = get_items(combat)
 				if next(items) then
 					desc:add(header, true)
-					for k, v in table.orderedPairs(items, priority_ordering) do
+					for k, v in table.orderedPairs2(items, priority_ordering) do
 						message = v[2]
 						if type(message) == 'function' then
 							desc:add(message(v[3]), true)

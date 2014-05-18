@@ -17,6 +17,11 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
+ignoreLoaded(true)
+
+-- Wont work here, so fake having loaded them
+loaded["/data/general/npcs/shade.lua"] = true
+
 -- Load all others
 load("/data/general/npcs/all.lua")
 load("/data/general/npcs/bone-giant.lua")
@@ -29,6 +34,7 @@ load("/data/general/npcs/ritch.lua")
 
 -- Load the bosses of all other zones
 local function loadOuter(file)
+--[[
 	local list = loadList(file, function(e)
 		if e.allow_infinite_dungeon and not e.rarity then
 			e.rarity = 25
@@ -44,6 +50,19 @@ local function loadOuter(file)
 			print("========================= Importing boss", e.name)
 		end
 	end
+]]
+	load(file, function(e) 
+		if not e.allow_infinite_dungeon then
+			e.rarity = nil
+		else
+			if not e.rarity then
+				e.rarity = 25
+				e.on_die = nil
+				e.can_talk = nil
+				e.on_acquire_target = nil
+			end
+		end
+	end)
 end
 
 for i, zone in ipairs(fs.list("/data/zones/")) do
