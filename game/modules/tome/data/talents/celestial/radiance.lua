@@ -95,11 +95,17 @@ newTalent{
 	sustain_positive = 10,
 	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 1, 35) end,
 	getDaze = function(self, t) return self:combatTalentLimit(t, 35, 5, 20) end,
+	updateParticle = function(self, t)
+		local p = self:isTalentActive(self.T_SEARING_SIGHT)
+		if not p then return end
+		self:removeParticles(p.particle)
+		p.particle = self:addParticles(Particles.new("circle", 1, {toback=true, oversize=1, a=20, appear=4, speed=-0.2, img="radiance_circle", radius=self:getTalentRange(t)}))
+	end,
 	activate = function(self, t)
 		local daze = nil
 		if self:getTalentLevel(t) >= 4 then daze = t.getDaze(self, t) end
 		return {
-			particle = self:addParticles(Particles.new("circle", 1, {toback=true, oversize=1, a=20, appear=4, speed=-0.2, img="sun_circle", radius=self:getTalentRange(t)})),
+			particle = self:addParticles(Particles.new("circle", 1, {toback=true, oversize=1, a=20, appear=4, speed=-0.2, img="radiance_circle", radius=self:getTalentRange(t)})),
 			dam=t.getDamage(self, t),
 			daze=daze,
 		}

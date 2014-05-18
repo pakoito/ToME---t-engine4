@@ -651,8 +651,10 @@ newEffect{
 	on_gain = function(self, err) return "#Target#'s aura dims.", "+Dim" end,
 	on_lose = function(self, err) return "#Target# shines with renewed light.", "-Dim" end,
 	activate = function(self, eff)
+		self:callTalent(self.T_SEARING_SIGHT, "updateParticle")
 	end,
 	deactivate = function(self, eff)
+		self:callTalent(self.T_SEARING_SIGHT, "updateParticle")
 	end,
 }
 
