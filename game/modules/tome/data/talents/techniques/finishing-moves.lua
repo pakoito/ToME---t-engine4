@@ -129,11 +129,12 @@ newTalent{
 	points = 5,
 	random_ego = "attack",
 	cooldown = function(self, t)
-		return self:combatTalentScale(t, 30, 10)
+		return math.ceil(self:combatTalentLimit(t, 0, 30, 10)) -- Limit > 0
 	end,
 	stamina = 20,
+	tactical = { ATTACKAREA = { weapon = 2 }, CLOSEIN = 1 },
 	range = function(self, t)
-		return (2 + self:getCombo(combo) ) or 1
+		return 2 + self:getCombo(combo)
 	end,
 	radius = function(self, t)
 		return 1
@@ -143,7 +144,7 @@ newTalent{
 	end,
 	getBonusDamage = function(self, t) return (self:getCombo(combo)/10) or 0 end, 
 	requires_target = true,
-	no_npc_use = true, -- I mark this by default if I don't understand how the AI might use something, which is always
+--	no_npc_use = true, -- I mark this by default if I don't understand how the AI might use something, which is always
 	target = function(self, t)
 		return {type="ball", range=self:getTalentRange(t), selffire=false, radius=self:getTalentRadius(t), nolock = true}
 	end,
@@ -182,12 +183,10 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[You spin into a flying leap and deliver a powerful kick dealing %d%% weapon damage to all enemies in a radius of 1 as you land.  The range will increase by 1 per combo point and total damage will increase by 10%% per combo point (max %d%%).  
-			You must have at least 1 CP to use this talent.
-			Using this talent removes your combo points.]]):format(t.getDamage(self, t)*100, t.getDamage(self, t)*100*1.5)	
+		return ([[You spin into a flying leap and deliver a powerful kick dealing %d%% weapon damage to all enemies in a radius of 1 as you land.  The range will increase by 1 per combo point and total damage will increase by 10%% per combo point.
+		Using this talent removes your combo points and you must have at least 1 combo point to use it.]]):format(t.getDamage(self, t)*100)	
 	end,
 }
-
 
 newTalent{
 	name = "Haymaker",

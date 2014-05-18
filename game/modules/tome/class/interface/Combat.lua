@@ -400,7 +400,7 @@ function _M:attackTargetWith(target, weapon, damtype, mult, force_dam)
 	if target:knowTalent(target.T_SKIRMISHER_BUCKLER_EXPERTISE) then
 		local t = target:getTalentFromId(target.T_SKIRMISHER_BUCKLER_EXPERTISE)
 		if t.shouldEvade(target, t) then
-			game.logSeen(target, "#ORCHID#%s deflects the attack with their buckler!#LAST#", target.name:capitalize())
+			game.logSeen(target, "#ORCHID#%s cleverly deflects the attack with %s shield!#LAST#", target.name:capitalize(), string.his_her(target))
 			t.onEvade(target, t, self)
 			repelled = true
 		end

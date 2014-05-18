@@ -22,9 +22,8 @@ newTalent {
 	require = techs_wil_req1,
 	mode = "passive",
 	points = 5,
-
 	getRestoreRate = function(self, t)
-		return t.applyMult(self, t, 1.2 * self:getTalentLevel(t))
+		return t.applyMult(self, t, self:combatTalentScale(t, 1.5, 6, 0.75))
 	end,
 	applyMult = function(self, t, gain)
 		if self:knowTalent(self.T_SKIRMISHER_THE_ETERNAL_WARRIOR) then
@@ -66,10 +65,9 @@ newTalent {
 		end
 
 	end,
-
 	info = function(self, t)
 		local stamina = t.getRestoreRate(self, t)
-		return ([[Any time you do not have an opponent in a square adjacent to you, you gain %0.1f Stamina regen. With the third talent point, you also gain an equal amount of life regen when Breathing Room is active.]])
+		return ([[Any time you do not have an opponent in a square adjacent to you, you gain %0.1f Stamina regeneration. With the third talent point, you also gain an equal amount of life regen when Breathing Room is active.]])
 			:format(stamina)
 	end,
 }
@@ -88,29 +86,23 @@ newTalent {
 	random_ego = "utility",
 	activate = function(self, t)
 		-- Superloads Combat:combatFatigue.
-
 		local eff = {}
 		self:talentTemporaryValue(eff, "global_speed_add", -t.getSlow(self, t))
 		self:talentTemporaryValue(eff, "fatigue", -t.getReduction(self, t))
-		self:talentTemporaryValue(eff, "min_fatigue", t.getMinStamina(self, t))
 		return eff
 	end,
 	deactivate = function(self, t, p) return true end,
 	getSlow = function(self, t)
-		return .175 - self:getTalentLevelRaw(t) * .025
+		return  self:combatTalentLimit(t, 0, 0.15, .05)
 	end,
 	getReduction = function(self, t)
 		return self:combatTalentScale(t, 10, 30)
 	end,
-	getMinStamina = function(self, t)
-		return 10 - self:combatTalentScale(t, 10, 30)
-	end,
 	info = function(self, t)
 		local slow = t.getSlow(self, t) * 100
 		local reduction = t.getReduction(self, t)
-		local min = t.getMinStamina(self, t)
-		return ([[Control your movements to conserve your energy. While Pace Yourself is activated you are globally slowed by %0.1f%%, but reduce your fatigue by %d%%, to a minimum of %d%%.]])
-			:format(slow, reduction, min)
+		return ([[Control your movements to conserve your energy.  While this talent is activated, you are globally slowed by %0.1f%%, and your fatigue is decreased by %d%% (to a minimum of 0%%).]])
+		:format(slow, reduction)
 	end,
 }
 
@@ -121,12 +113,11 @@ newTalent {
 	require = techs_wil_req3,
 	mode = "passive",
 	points = 5,
-
 	getStaminaRate = function(self, t)
-		return t.applyMult(self, t, .3 * self:getTalentLevel(t))
+		return t.applyMult(self, t, self:combatTalentScale(t, 0.3, 1.5, 0.75))
 	end,
 	getLifeRate = function(self, t)
-		return t.applyMult(self, t, 1 * self:getTalentLevel(t))
+		return t.applyMult(self, t, self:combatTalentScale(t, 1, 5, 0.75))
 	end,
 	applyMult = function(self, t, gain)
 		if self:knowTalent(self.T_SKIRMISHER_THE_ETERNAL_WARRIOR) then
@@ -137,7 +128,6 @@ newTalent {
 		end
 	end,
 	callbackOnAct = function(self, t)
-
 		-- Remove the existing regen rate
 		if self.temp_skirmisherDauntlessStamina then
 			self:removeTemporaryValue("stamina_regen", self.temp_skirmisherDauntlessStamina)
@@ -166,7 +156,6 @@ newTalent {
 		end
 
 	end,
-
 	info = function(self, t)
 		local stamina = t.getStaminaRate(self, t)
 		local health = t.getLifeRate(self, t)
@@ -182,12 +171,11 @@ newTalent {
 	require = techs_wil_req4,
 	mode = "passive",
 	points = 5,
-
 	getResist = function(self, t)
-		return .5 * self:getTalentLevel(t)
+		return self:combatTalentScale(t, 0.7, 2.5)
 	end,
 	getResistCap = function(self, t)
-		return .5 * self:getTalentLevel(t)
+		return self:combatTalentLimit(t, 30, 0.7, 2.5)/t.getMax(self, t) -- Limit < 30%
 	end,
 	getDuration = function(self, t)
 		return 3
@@ -202,7 +190,6 @@ newTalent {
 			return 1
 		end
 	end,
-
 	-- call from incStamina whenever stamina is incremented or decremented
 	onIncStamina = function(self, t, delta)
 		if delta < 0 and not self.temp_skirmisherSpentThisTurn then
@@ -217,15 +204,14 @@ newTalent {
 	callbackOnAct = function(self, t)
 		self.temp_skirmisherSpentThisTurn = false
 	end,
-
 	info = function(self, t)
 		local max = t.getMax(self, t)
 		local duration = t.getDuration(self, t)
 		local resist = t.getResist(self, t)
 		local cap = t.getResistCap(self, t)
 		local mult = (t.getMult(self, t, true) - 1) * 100
-		return ([[For each turn you spend stamina, you gain %0.1f%% resist all and %0.1f%% resistances cap for %d turns. The buff stacks up to %d times, and each new application refreshes the duration.
-			Additionally, at the fifth talent point, Breathing Room and Dauntless Challenger are %d%% more effective.]])
+		return ([[For each turn you spend stamina, you gain %0.1f%% resist all and %0.1f%% all resistances cap for %d turns. The buff stacks up to %d times, and each new application refreshes the duration.
+		Additionally, at the fifth talent point, Breathing Room and Dauntless Challenger are %d%% more effective.]])
 			:format(resist, cap, duration, max, mult)
 	end,
 }

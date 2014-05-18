@@ -43,7 +43,7 @@ newTalent {
 		return {type="beam", range=self:getTalentRange(t), talent=t, nolock=true}
 	end,
 	speed_bonus = function(self, t)
-		return 0.5 + self:getTalentLevel(t) * 0.1
+		return self:combatTalentScale(t, 0.6, 1.0, 0.75)
 	end,
 	action = function(self, t)
 		-- Get Landing Point.
@@ -67,7 +67,7 @@ newTalent {
 		local lx, ly, is_corner_blocked = line:step()
 		local launch_target = game.level.map(lx, ly, Map.ACTOR)
 		if not launch_target then
-			game.logPlayer(self, "You must have a target to vault over.")
+			game.logPlayer(self, "You need someone adjacent to vault over.")
 			return
 		end
 
@@ -78,7 +78,8 @@ newTalent {
 			self:setEffect(self.EFF_SKIRMISHER_DIRECTED_SPEED, 3, {
 				 direction = math.atan2(ty - oy, tx - ox),
 				 leniency = math.pi * 0.25, -- 90 degree cone
-				 move_speed_bonus = t.speed_bonus(self, t)
+				 move_speed_bonus = t.speed_bonus(self, t),
+				 compass = game.level.map:compassDirection(tx-ox, ty-oy)
 			})
 		end
 		game:onTickEnd(give_speed)
@@ -86,7 +87,9 @@ newTalent {
 		return true
 	end,
 	info = function(self, t)
-		return ([[Use your opponent as a platform and spring off of them, landing on the target square and temporarily gaining a burst of speed from the momentum, letting you run in the same direction you vaulted in %d%% faster for 3 turns. Buff ends if you change directions or stop moving.
+		return ([[Use an adjacent friend or foe as a springboard, vaulting over them to another tile within range.
+		This maneuver grants you a burst of speed from your momentum, allowing you run %d%% faster (movement speed bonus) in the same direction you vaulted for 3 turns.
+		The increased speed ends if you change directions or stop moving.
 		]]):format(t.speed_bonus(self, t) * 100)
 	end,
 }
@@ -111,9 +114,7 @@ newTalent {
 		return {type="beam", range=self:getTalentRange(t), talent=t}
 	end,
 	combat_physcrit = function(self, t)
-		if self:getTalentLevel(t) >= 3 then
-			return self:combatCrit()
-		end
+		return self:combatTalentScale(t, 2.3, 7.5, 0.75)
 	end,
 	action = function(self, t)
 		local tg = self:getTalentTarget(t)
@@ -139,8 +140,8 @@ newTalent {
 		return true
 	end,
 	info = function(self, t)
-		return ([[Move to target empty square, passing through any enemies in the way.
-		Beginning at rank 3, Cunning Roll doubles your physical critical chance for 1 turn.]])
+		return ([[Move to a spot within range, bounding around, over, or through any enemies in the way.
+		This maneuver can surprise your foes and improves your tactical position, improving your physical critical chance by %d%% for 1 turn.]]):format(t.combat_physcrit(self, t))
 	end
 }
 
@@ -155,7 +156,6 @@ newTalent {
 	sustain_stamina = 10,
 	require = techs_dex_req3,
 	tactical = { BUFF = 2 },
-
 	activate = function(self, t)
 		return {}
 	end,
@@ -163,10 +163,10 @@ newTalent {
 		return true
 	end,
 	getLifeTrigger = function(self, t)
-		return math.max(10, self:combatTalentScale(t, 40, 24))
+		return self:combatTalentLimit(t, 10, 40, 24)
 	end,
 	getReduction = function(self, t)
-		return math.min(60, self:combatTalentScale(t, 10, 30))
+		return self:combatTalentLimit(t, 60, 10, 30)
 	end,
 	-- called by mod/Actor.lua, although it could be a callback one day
 	onHit = function(self, t, damage)
@@ -201,11 +201,12 @@ newTalent {
 		local trigger = t.getLifeTrigger(self, t)
 		local reduce = t.getReduction(self, t)
 		local cost = t.stamina_per_use(self, t) * (1 + self:combatFatigue() * 0.01)
-		return ([[While sustainted, any time you would lose more than %d%% of your life in a single hit, you instead duck out of the way gaining a temporary buff that reduces this damage and all further damage that turn by %d%%.
-			This costs %d Stamina per dodge and will not trigger if you do not have the Stamina or there isn't an adjacent grid (though you will not move).]])
-			:format(trigger, reduce, cost)
+		return ([[While this talent is sustained, you anticipate deadly attacks against you.
+		Any time you would lose more than %d%% of your life in a single hit, you instead duck out of the way and assume a defensive posture.
+		This reduces the triggering damage and all further damage in the same turn by %d%%.
+		You need %0.1f Stamina and an adjacent open tile to perform this feat (though it does not cause you to move).]])
+		:format(trigger, reduce, cost)
 	end,
-
 }
 
 newTalent {
@@ -215,18 +216,16 @@ newTalent {
 	require = techs_dex_req4,
 	mode = "passive",
 	points = 5,
-	--cooldown_bonus = function(self, t) return math.floor(self:getTalentLevel(t)) end,
-	--stamina_bonus = function(self, t) return math.floor(self:getTalentLevel(t) * 2) end,
-	stamina_bonus = function(self, t) return math.floor(self:combatTalentScale(t, 1, 10)) end,
-	cooldown_bonus = function(self, t) return math.floor(self:combatTalentScale(t, 1, 6)) end,
+	stamina_bonus = function(self, t) return self:combatTalentLimit(t, 18, 3, 10) end, --Limit < 18
+	cooldown_bonus = function(self, t) return math.floor(math.max(0, self:combatTalentLimit(t, 10, 1, 5))) end, --Limit < 10
 	speed_buff = function(self, t)
 		local level = self:getTalentLevel(t)
 		if level >= 5 then return {global_speed_add = 0.2, duration = 2} end
 		if level >= 3 then return {global_speed_add = 0.1, duration = 1} end
 	end,
 	info = function(self, t)
-		return ([[Lowers the cooldown of Vault and Tumble by %d, and their stamina costs by %d. At Rank 3 you also gain 10%% global speed for 1 turn after Trained Reactions activates. At rank 5 this speed bonus becomes 20%% and lasts for 2 rounds.]])
-			:format(t.cooldown_bonus(self, t),
-							t.stamina_bonus(self, t))
+		return ([[You gain greater facility with your acrobatic moves, lowering the cooldowns of Vault, Tumble, and Trained Reactions by %d, and their stamina costs by %0.1f.
+		At Rank 3 you also gain 10%% global speed for 1 turn after Trained Reactions activates. At rank 5 this speed bonus improves to 20%% and lasts for 2 turns.]])
+		:format(t.cooldown_bonus(self, t), t.stamina_bonus(self, t))
 	end,
 }

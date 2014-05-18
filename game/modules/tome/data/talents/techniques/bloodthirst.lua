@@ -108,7 +108,7 @@ newTalent{
 	info = function(self, t)
 		return ([[You enter a battle frenzy for %d turns. During that time, you can not use items, healing has no effect, and your health cannot drop below 1.
 		At the end of the frenzy, you regain %d%% of your health per foe slain during the frenzy.
-		While Unstoppable is active, Berserker Rage critical bonus is disabled as you loose the thrill of the risk of death.]]):
+		While Unstoppable is active, Berserker Rage critical bonus is disabled as you lose the thrill of the risk of death.]]):
 		format(t.getDuration(self, t), t.getHealPercent(self,t))
 	end,
 }

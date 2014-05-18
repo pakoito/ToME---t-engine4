@@ -105,14 +105,19 @@ newTalent{
 	cooldown = 30,
 	sustain_stamina = 70,
 	tactical = { BUFF = 2 },
-	no_npc_use = true,
-	do_turn = function(self, t)
+--	no_npc_use = true,
+	--Note: this can result in > 100% resistancs (before cap) at high talent levels to keep up with opposing resistance lowering talents
+	resistCoeff = function(self, t) return self:combatTalentScale(t, 25, 45) end,
+	getCapApproach = function(self, t) return self:combatTalentLimit(t, 1, 0.15, 0.5) end,
+	do_turn = function(self, t) --called by mod.class.Actor:actBase
 		local p = self:isTalentActive(t.id)
 		if p.resid then self:removeTemporaryValue("resists", p.resid) end
 		if p.cresid then self:removeTemporaryValue("resists_cap", p.cresid) end
-		local perc = (1 - (self.life / self.max_life)) * 10 * 5
-		p.resid = self:addTemporaryValue("resists", {all=perc})
-		p.cresid = self:addTemporaryValue("resists_cap", {all=perc/2})
+		--This makes it impossible to get 100% resist all cap from this talent, and most npc's will get no cap increase
+		local resistbonus = (1 - self.life / self.max_life)*t.resistCoeff(self, t)
+		p.resid = self:addTemporaryValue("resists", {all=resistbonus})
+		local capbonus = util.bound((100-(self.resists_cap.all or 100))*t.getCapApproach(self, t), 0, 100)
+		p.cresid = self:addTemporaryValue("resists_cap", {all=capbonus})
 	end,
 	getStaminaDrain = function(self, t)
 		return self:combatTalentLimit(t, 0, -14, -6 ) -- Limit <0 (no stamina regen)
@@ -130,10 +135,14 @@ newTalent{
 	end,
 	info = function(self, t)
 		local drain = t.getStaminaDrain(self, t)
+		local resistC = t.resistCoeff(self, t)
 		return ([[Take a defensive stance to resist the onslaught of your foes.
-		For each 10%% of your health below maximum you are currently at, you gain 5%% all damage resistance and 2.5%% all damage resistance cap.
-		This consumes stamina rapidly (%d stamina/turn).]]):
-		format(drain)
+		While wounded, you gain all damage resistance equal to %d%% of your missing health.
+		(So if you have lost 70%% of your life, you gain %d%% all resistance.)
+		In addition, your all damage resistance cap increases %0.1f%% closer to 100%%.
+		This consumes stamina rapidly (%d stamina/turn).
+		The effects are refreshed at the start of each turn.]]):
+		format(resistC, resistC*0.7, t.getCapApproach(self, t)*100, drain)
 	end,
 }
 

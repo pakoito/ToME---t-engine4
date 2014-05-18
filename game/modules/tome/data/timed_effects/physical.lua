@@ -33,8 +33,8 @@ newEffect{
 	subtype = { acid=true },
 	status = "detrimental",
 	parameters = {pct = 0.3, spell = 0, mind = 0, phys = 0, power_str = ""},
-	on_gain = function(self, err) return "#Target#'s powers is greatly reduced!" end,
-	on_lose = function(self, err) return "#Target# is fully powered again." end,
+	on_gain = function(self, err) return "#Target#'s power is greatly reduced!" end,
+	on_lose = function(self, err) return "#Target# power has recovered." end,
 	on_timeout = function(self, eff)
 	end,
 	activate = function(self, eff)
@@ -2656,8 +2656,8 @@ newEffect {
 		end
 	end,
 	long_desc = function(self, eff)
-		return ([[Target is currently moving with %d%% in a single direction. Stopping or changing directions will remove this effect.]])
-		:format(eff.move_speed_bonus * 100)
+		return ([[Target is currently moving with %d%% additional speed in a single direction (%s). Stopping or changing directions will remove this effect.]])
+		:format(eff.move_speed_bonus * 100, eff.compass or "unknown")
 	end,
 }
 
@@ -2704,7 +2704,7 @@ newEffect {
 	on_gain = function(self, err) return nil, "+Eternal Warrior" end,
 	on_lose = function(self, err) return nil, "-Eternal Warrior" end,
 	long_desc = function(self, eff)
-		return ("The target stands strong, increasing all resistances %0.1f%% and resistance caps by %0.1f%%."):
+		return ("The target stands strong, increasing all resistances by %0.1f%% and resistance caps by %0.1f%%."):
 		format(eff.res, eff.cap)
 	end,
 	activate = function(self, eff)

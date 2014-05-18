@@ -22,8 +22,8 @@ newTalent {
 	points = 5,
 	no_unlearn_last = true,
 	mode = "passive",
-	chance = function(self, t)
-		return util.bound(self:getTalentLevel(t)*5, 0, 40);
+	chance = function(self, t) --Limit < 50%, 5% at TL =1, Cun = 10, 25% at TL=5, Cun=100
+		return self:combatLimit(self:getTalentLevel(t)*10+self:getCun()*0.5, 50, 5, 15, 25, 100)
 	end,
 	-- called by _M:combatArmorHardiness
 	getHardiness = function(self, t)
@@ -48,8 +48,9 @@ newTalent {
 	info = function(self, t)
 		local block = t.chance(self, t)
 		local armor = t.getHardiness(self, t)
-		return ([[Allows shields to be equipped, using cunning instead of strength as a requirement.
-			When you are attacked in melee, you have a %d%% chance to deflect the attack with your shield, completely evading it.]])
+		return ([[Allows shields to be equipped, using Cunning instead of strength as a requirement.
+			When you are attacked in melee, you have a %d%% chance to deflect the attack with your shield, completely evading it.
+			The chance to deflect increases with your Cunning.]])
 			:format(block, armor)
 	end,
 }
@@ -122,7 +123,7 @@ newTalent {
 		-- First attack with shield
 		local speed, hit = self:attackTargetWith(target, combat, nil, t.getShieldMult(self, t))
 		-- At talent levels >= 5, attack twice
-		if self:getTalentLevelRaw(t) >= 5 then
+		if self:getTalentLevel(t) >= 5 then
 			local speed, hit = self:attackTargetWith(target, combat, nil, t.getShieldMult(self, t))
 		end
 
@@ -153,9 +154,8 @@ newTalent {
 		local shieldMult = t.getShieldMult(self, t) * 100
 		local tiles = t.getDist(self, t)
 		local slingMult = t.getSlingMult(self, t) * 100
-		return ([[Bash an enemy in melee range with your shield, doing %d%% damage and knocking back %d squares. You follow with a deadly short-range sling attack, dealing %d%% damage. The shield bash will use Dexterity instead of Strength for the shield's bonus damage.
-			With the fifth talent point, you will strike with your shield twice.]])
-			:format(shieldMult, tiles, slingMult)
+		return ([[Bash an enemy in melee range with your shield (twice for talent level 5 or more), doing %d%% damage and knocking them back %d squares. You may then follow with a deadly short-range sling attack, dealing %d%% damage. The shield bash will use Dexterity instead of Strength for the shield's bonus damage.]])
+		:format(shieldMult, tiles, slingMult)
 	end,
 }
 
@@ -166,8 +166,8 @@ newTalent {
 	require = techs_dex_req3,
 	points = 5,
 	mode = "passive",
-	getChance = function(self, t) return util.bound(self:getTalentLevel(t)*7.5, 0, 50) end,
-	getRange = function(self, t) return util.bound(self:getTalentLevel(t) / 2, 1, 5) end,
+	getChance = function(self, t) return self:combatTalentLimit(t, 100, 7.5, 37.5) end, --limit < 100%
+	getRange = function(self, t) return math.ceil(self:combatTalentScale(t, 0.5, 3, "log")) end,
 	passives = function(self, t, p)
 		self:addTemporaryValue(p, "projectile_evasion", t.getChance(self, t))
 		self:addTemporaryValue(p, "projectile_evasion_spread", t.getRange(self, t))
@@ -243,7 +243,7 @@ newTalent {
 		local mult = t.getMult(self, t) * 100
 		local blocks = t.getBlocks(self, t)
 		--local stamina = t.getStaminaPerShot(self, t)
-		return ([[Any time you block an attack with Buckler Expertise or Buckler Mastery you instantly counterattack with your sling for %d%% damage  This can only occur up to %d times per turn.
+		return ([[Any time you block an attack with Buckler Expertise or Buckler Mastery you instantly counterattack with your sling for %d%% damage  This can only occur up to %d time(s) per turn.
 			]])
 			:format(mult, blocks)
 	end,
