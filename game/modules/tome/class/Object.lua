@@ -467,42 +467,42 @@ function _M:getTextualDesc(compare_with, use_actor)
 		end
 		local count1 = 0
 		for k, v in pairs(tab) do
-			if filter and not filter(k, v) then goto filtered end
-			local count = 0
-			if isinversed then
-				ret:add(("%s"):format((count1 > 0) and " / " or ""), (v[1] or 0) > 0 and {"color","RED"} or {"color","LIGHT_GREEN"}, outformat:format((v[1] or 0)), {"color","LAST"})
-			else
-				ret:add(("%s"):format((count1 > 0) and " / " or ""), (v[1] or 0) < 0 and {"color","RED"} or {"color","LIGHT_GREEN"}, outformat:format((v[1] or 0)), {"color","LAST"})
-			end
-			count1 = count1 + 1
-			if v[1] then
-				add = true
-			end
-			for kk, vv in pairs(v) do
-				if kk > 1 then
-					if count == 0 then
-						ret:add("(")
-					elseif count > 0 then
-						ret:add(" / ")
-					end
-					if vv ~= (v[1] or 0) then
-						if isinversed then
-							ret:add((v[1] or 0) > vv and {"color","RED"} or {"color","LIGHT_GREEN"}, outformat:format((v[1] or 0) - vv), {"color","LAST"})
-						else
-							ret:add((v[1] or 0) < vv and {"color","RED"} or {"color","LIGHT_GREEN"}, outformat:format((v[1] or 0) - vv), {"color","LAST"})
-						end
-					else
-						ret:add("-")
-					end
-					add = true
-					count = count + 1
+			if not filter or filter(k, v) then
+				local count = 0
+				if isinversed then
+					ret:add(("%s"):format((count1 > 0) and " / " or ""), (v[1] or 0) > 0 and {"color","RED"} or {"color","LIGHT_GREEN"}, outformat:format((v[1] or 0)), {"color","LAST"})
+				else
+					ret:add(("%s"):format((count1 > 0) and " / " or ""), (v[1] or 0) < 0 and {"color","RED"} or {"color","LIGHT_GREEN"}, outformat:format((v[1] or 0)), {"color","LAST"})
 				end
+				count1 = count1 + 1
+				if v[1] then
+					add = true
+				end
+				for kk, vv in pairs(v) do
+					if kk > 1 then
+						if count == 0 then
+							ret:add("(")
+						elseif count > 0 then
+							ret:add(" / ")
+						end
+						if vv ~= (v[1] or 0) then
+							if isinversed then
+								ret:add((v[1] or 0) > vv and {"color","RED"} or {"color","LIGHT_GREEN"}, outformat:format((v[1] or 0) - vv), {"color","LAST"})
+							else
+								ret:add((v[1] or 0) < vv and {"color","RED"} or {"color","LIGHT_GREEN"}, outformat:format((v[1] or 0) - vv), {"color","LAST"})
+							end
+						else
+							ret:add("-")
+						end
+						add = true
+						count = count + 1
+					end
+				end
+				if count > 0 then
+					ret:add(")")
+				end
+				ret:add(kfunct(k))
 			end
-			if count > 0 then
-				ret:add(")")
-			end
-			ret:add(kfunct(k))
-			::filtered::
 		end
 
 		if add then
