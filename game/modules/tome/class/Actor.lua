@@ -876,6 +876,13 @@ local sf_powerful = nil
 local sf_friend = nil
 local sf_enemy = nil
 local sf_neutral = nil
+local asf_self = nil
+local asf_danger2 = nil
+local asf_danger1 = nil
+local asf_powerful = nil
+local asf_friend = nil
+local asf_enemy = nil
+local asf_neutral = nil
 local ssf_self = nil
 local ssf_danger2 = nil
 local ssf_danger1 = nil
@@ -883,6 +890,13 @@ local ssf_powerful = nil
 local ssf_friend = nil
 local ssf_enemy = nil
 local ssf_neutral = nil
+local assf_self = nil
+local assf_danger2 = nil
+local assf_danger1 = nil
+local assf_powerful = nil
+local assf_friend = nil
+local assf_enemy = nil
+local assf_neutral = nil
 local ichat = nil
 
 function _M:smallTacticalFrame(map, x, y, w, h, zoom, on_map, tlx, tly)
@@ -915,34 +929,68 @@ function _M:smallTacticalFrame(map, x, y, w, h, zoom, on_map, tlx, tly)
 			core.display.drawQuad(x + sx, y + sy + dy * (1-lp), dx, dy * lp, 235, 0, 0, 255)
 		end
 
-		if not ssf_self then
-			ssf_self = game.level.map.tilesTactic:get(nil, 0,0,0, 0,0,0, "side_"..map.faction_self)
-			ssf_powerful = game.level.map.tilesTactic:get(nil, 0,0,0, 0,0,0, "side_"..map.faction_powerful)
-			ssf_danger2 = game.level.map.tilesTactic:get(nil, 0,0,0, 0,0,0, "side_"..map.faction_danger2)
-			ssf_danger1 = game.level.map.tilesTactic:get(nil, 0,0,0, 0,0,0, "side_"..map.faction_danger1)
-			ssf_friend = game.level.map.tilesTactic:get(nil, 0,0,0, 0,0,0, "side_"..map.faction_friend)
-			ssf_enemy = game.level.map.tilesTactic:get(nil, 0,0,0, 0,0,0, "side_"..map.faction_enemy)
-			ssf_neutral = game.level.map.tilesTactic:get(nil, 0,0,0, 0,0,0, "side_"..map.faction_neutral)
+
+		local b_self
+		local b_powerful
+		local b_danger2
+		local b_danger1
+		local b_friend
+		local b_enemy
+		local b_neutral
+		if config.settings.tome.flagpost_tactical then
+			if not assf_self then
+				assf_self = game.level.map.tilesTactic:get(nil, 0,0,0, 0,0,0, "alt_side_"..map.faction_self)
+				assf_powerful = game.level.map.tilesTactic:get(nil, 0,0,0, 0,0,0, "alt_side_"..map.faction_powerful)
+				assf_danger2 = game.level.map.tilesTactic:get(nil, 0,0,0, 0,0,0, "alt_side_"..map.faction_danger2)
+				assf_danger1 = game.level.map.tilesTactic:get(nil, 0,0,0, 0,0,0, "alt_side_"..map.faction_danger1)
+				assf_friend = game.level.map.tilesTactic:get(nil, 0,0,0, 0,0,0, "alt_side_"..map.faction_friend)
+				assf_enemy = game.level.map.tilesTactic:get(nil, 0,0,0, 0,0,0, "alt_side_"..map.faction_enemy)
+				assf_neutral = game.level.map.tilesTactic:get(nil, 0,0,0, 0,0,0, "alt_side_"..map.faction_neutral)
+			end
+			b_self = assf_self
+			b_powerful = assf_powerful
+			b_danger2 = assf_danger2
+			b_danger1 = assf_danger1
+			b_friend = assf_friend
+			b_enemy = assf_enemy
+			b_neutral = assf_neutral
+		else
+			if not ssf_self then
+				ssf_self = game.level.map.tilesTactic:get(nil, 0,0,0, 0,0,0, "side_"..map.faction_self)
+				ssf_powerful = game.level.map.tilesTactic:get(nil, 0,0,0, 0,0,0, "side_"..map.faction_powerful)
+				ssf_danger2 = game.level.map.tilesTactic:get(nil, 0,0,0, 0,0,0, "side_"..map.faction_danger2)
+				ssf_danger1 = game.level.map.tilesTactic:get(nil, 0,0,0, 0,0,0, "side_"..map.faction_danger1)
+				ssf_friend = game.level.map.tilesTactic:get(nil, 0,0,0, 0,0,0, "side_"..map.faction_friend)
+				ssf_enemy = game.level.map.tilesTactic:get(nil, 0,0,0, 0,0,0, "side_"..map.faction_enemy)
+				ssf_neutral = game.level.map.tilesTactic:get(nil, 0,0,0, 0,0,0, "side_"..map.faction_neutral)
+			end
+			b_self = ssf_self
+			b_powerful = ssf_powerful
+			b_danger2 = ssf_danger2
+			b_danger1 = ssf_danger1
+			b_friend = ssf_friend
+			b_enemy = ssf_enemy
+			b_neutral = ssf_neutral
 		end
 
 		if self.faction then
 			if self == map.actor_player then
-				ssf_self:toScreen(x, y, w, h)
+				b_self:toScreen(x, y, w, h)
 			elseif map:faction_danger_check(self) then
-				if friend >= 0 then ssf_powerful:toScreen(x, y, w, h)
+				if friend >= 0 then b_powerful:toScreen(x, y, w, h)
 				else
 					if map:faction_danger_check(self, true) then
-						ssf_danger2:toScreen(x, y, w, h)
+						b_danger2:toScreen(x, y, w, h)
 					else
-						ssf_danger1:toScreen(x, y, w, h)
+						b_danger1:toScreen(x, y, w, h)
 					end
 				end
 			elseif friend > 0 then
-				ssf_friend:toScreen(x, y, w, h)
+				b_friend:toScreen(x, y, w, h)
 			elseif friend < 0 then
-				ssf_enemy:toScreen(x, y, w, h)
+				b_enemy:toScreen(x, y, w, h)
 			else
-				ssf_neutral:toScreen(x, y, w, h)
+				b_neutral:toScreen(x, y, w, h)
 			end
 		end
 	else
@@ -965,14 +1013,47 @@ function _M:smallTacticalFrame(map, x, y, w, h, zoom, on_map, tlx, tly)
 			core.display.drawQuad(x + sx, y + sy, dx * lp, dy, 235, 0, 0, 255)
 		end
 
-		if not sf_self then
-			sf_self = map.tilesTactic:get(nil, 0,0,0, 0,0,0, "small_"..map.faction_self)
-			sf_powerful = map.tilesTactic:get(nil, 0,0,0, 0,0,0, "small_"..map.faction_powerful)
-			sf_danger2 = map.tilesTactic:get(nil, 0,0,0, 0,0,0, "small_"..map.faction_danger2)
-			sf_danger1 = map.tilesTactic:get(nil, 0,0,0, 0,0,0, "small_"..map.faction_danger1)
-			sf_friend = map.tilesTactic:get(nil, 0,0,0, 0,0,0, "small_"..map.faction_friend)
-			sf_enemy = map.tilesTactic:get(nil, 0,0,0, 0,0,0, "small_"..map.faction_enemy)
-			sf_neutral = map.tilesTactic:get(nil, 0,0,0, 0,0,0, "small_"..map.faction_neutral)
+		local b_self
+		local b_powerful
+		local b_danger2
+		local b_danger1
+		local b_friend
+		local b_enemy
+		local b_neutral
+		if config.settings.tome.flagpost_tactical then
+			if not asf_self then
+				asf_self = map.tilesTactic:get(nil, 0,0,0, 0,0,0, "alt_down_"..map.faction_self)
+				asf_powerful = map.tilesTactic:get(nil, 0,0,0, 0,0,0, "alt_down_"..map.faction_powerful)
+				asf_danger2 = map.tilesTactic:get(nil, 0,0,0, 0,0,0, "alt_down_"..map.faction_danger2)
+				asf_danger1 = map.tilesTactic:get(nil, 0,0,0, 0,0,0, "alt_down_"..map.faction_danger1)
+				asf_friend = map.tilesTactic:get(nil, 0,0,0, 0,0,0, "alt_down_"..map.faction_friend)
+				asf_enemy = map.tilesTactic:get(nil, 0,0,0, 0,0,0, "alt_down_"..map.faction_enemy)
+				asf_neutral = map.tilesTactic:get(nil, 0,0,0, 0,0,0, "alt_down_"..map.faction_neutral)
+			end
+			b_self = asf_self
+			b_powerful = asf_powerful
+			b_danger2 = asf_danger2
+			b_danger1 = asf_danger1
+			b_friend = asf_friend
+			b_enemy = asf_enemy
+			b_neutral = asf_neutral
+		else
+			if not sf_self then
+				sf_self = map.tilesTactic:get(nil, 0,0,0, 0,0,0, "small_"..map.faction_self)
+				sf_powerful = map.tilesTactic:get(nil, 0,0,0, 0,0,0, "small_"..map.faction_powerful)
+				sf_danger2 = map.tilesTactic:get(nil, 0,0,0, 0,0,0, "small_"..map.faction_danger2)
+				sf_danger1 = map.tilesTactic:get(nil, 0,0,0, 0,0,0, "small_"..map.faction_danger1)
+				sf_friend = map.tilesTactic:get(nil, 0,0,0, 0,0,0, "small_"..map.faction_friend)
+				sf_enemy = map.tilesTactic:get(nil, 0,0,0, 0,0,0, "small_"..map.faction_enemy)
+				sf_neutral = map.tilesTactic:get(nil, 0,0,0, 0,0,0, "small_"..map.faction_neutral)
+			end
+			b_self = sf_self
+			b_powerful = sf_powerful
+			b_danger2 = sf_danger2
+			b_danger1 = sf_danger1
+			b_friend = sf_friend
+			b_enemy = sf_enemy
+			b_neutral = sf_neutral
 		end
 
 		if self.faction then
@@ -981,22 +1062,22 @@ function _M:smallTacticalFrame(map, x, y, w, h, zoom, on_map, tlx, tly)
 			else friend = map.actor_player:reactionToward(self) end
 
 			if self == map.actor_player then
-				sf_self:toScreen(x, y, w, h)
+				b_self:toScreen(x, y, w, h)
 			elseif map:faction_danger_check(self) then
-				if friend >= 0 then sf_powerful:toScreen(x, y, w, h)
+				if friend >= 0 then b_powerful:toScreen(x, y, w, h)
 				else
 					if map:faction_danger_check(self, true) then
-						sf_danger2:toScreen(x, y, w, h)
+						b_danger2:toScreen(x, y, w, h)
 					else
-						sf_danger1:toScreen(x, y, w, h)
+						b_danger1:toScreen(x, y, w, h)
 					end
 				end
 			elseif friend > 0 then
-				sf_friend:toScreen(x, y, w, h)
+				b_friend:toScreen(x, y, w, h)
 			elseif friend < 0 then
-				sf_enemy:toScreen(x, y, w, h)
+				b_enemy:toScreen(x, y, w, h)
 			else
-				sf_neutral:toScreen(x, y, w, h)
+				b_neutral:toScreen(x, y, w, h)
 			end
 		end
 	end

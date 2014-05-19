@@ -2141,8 +2141,8 @@ function _M:saveVersion(token)
 		self.__savefile_version_tokens[token] = true
 		return token
 	end
-	return true
---	return self.__savefile_version_tokens[token]
+--	return true
+	return self.__savefile_version_tokens[token]
 end
 
 --- When a save is being made, stop running/resting

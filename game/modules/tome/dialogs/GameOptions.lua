@@ -296,6 +296,15 @@ function _M:generateListUi()
 		end)
 	end,}
 
+	local zone = Textzone.new{width=self.c_desc.w, height=self.c_desc.h, text=string.toTString"Toggles between a normal or flagpost tactical bars.#WHITE#"}
+	list[#list+1] = { zone=zone, name=string.toTString"#GOLD##{bold}#Flagpost tactical bars#WHITE##{normal}#", status=function(item)
+		return tostring(config.settings.tome.flagpost_tactical and "Enabled" or "Disabled")
+	end, fct=function(item)
+		config.settings.tome.flagpost_tactical = not config.settings.tome.flagpost_tactical
+		game:saveSettings("tome.flagpost_tactical", ("tome.flagpost_tactical = %s\n"):format(tostring(config.settings.tome.flagpost_tactical)))
+		self.c_list:drawItem(item)
+	end,}
+
 	local zone = Textzone.new{width=self.c_desc.w, height=self.c_desc.h, text=string.toTString"Toggles between a bottom or side display for tactial healthbars.#WHITE#"}
 	list[#list+1] = { zone=zone, name=string.toTString"#GOLD##{bold}#Healthbars position.#WHITE##{normal}#", status=function(item)
 		return tostring(config.settings.tome.small_frame_side and "Sides" or "Bottom")
