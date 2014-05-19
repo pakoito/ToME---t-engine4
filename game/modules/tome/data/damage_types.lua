@@ -2022,7 +2022,7 @@ newDamageType{
 			end
 		end
 		return ("* #LIGHT_GREEN#%d%%#LAST# chance to #ORCHID#reduce powers#LAST# by %d%%%s")
-			:format(dam, parens)
+			:format(dam, 20, parens)
 	end,
 	projector = function(src, x, y, type, dam)
 		local target = game.level.map(x, y, Map.ACTOR)
