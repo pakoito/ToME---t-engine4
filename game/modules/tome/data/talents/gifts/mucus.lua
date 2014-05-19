@@ -187,7 +187,7 @@ newTalent{
 	-- by MUCUS damage type in mod.data.damage_types.lua
 	spawn = function(self, t)
 		local notok, nb, sumlim = checkMaxSummon(self, true, 1, "is_mucus_ooze")
-		if notok or nb > t.getMax(self, t) or not self:canBe("summon") then return end
+		if notok or nb >= t.getMax(self, t) or not self:canBe("summon") then return end
 
 		local ps = {}
 		for i, e in ipairs(game.level.map.effects) do
@@ -253,7 +253,6 @@ newTalent{
 				end
 			end
 		end
-
 	end,
 	info = function(self, t)
 		return ([[Your mucus is brought to near sentience.
