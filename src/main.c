@@ -1206,7 +1206,7 @@ void handleIdleTransition(int goIdle)
 /**
  * Core entry point.
  */
-int main(int argc, char *argv[])
+int main(int argc, char *argv[], char **envp)
 {
 	core_def = calloc(1, sizeof(core_boot_type));
 	core_def->define = &define_core;
@@ -1215,6 +1215,7 @@ int main(int argc, char *argv[])
 	g_argc = argc;
 	g_argv = argv;
 
+	bool logtofile = FALSE;
 	bool is_zygote = FALSE;
 	bool os_autoflush = FALSE;
 	FILE *logfile = NULL;
@@ -1244,14 +1245,16 @@ int main(int argc, char *argv[])
 		if (!strncmp(arg, "--type=zygote", 13)) is_zygote = TRUE;
 		if (!strncmp(arg, "--type=renderer", 15)) is_zygote = TRUE;
 		if (!strncmp(arg, "--no-sandbox", 12)) is_zygote = TRUE;
+		if (!strncmp(arg, "--logtofile", 11)) logtofile = TRUE;
 	}
 
 #ifdef SELFEXE_WINDOWS
-	if (!is_zygote) {
+	logtofile = TRUE;
+#endif
+	if (!is_zygote && logtofile) {
 		logfile = freopen("te4_log.txt", "w", stdout);
 		if (os_autoflush) setvbuf(logfile, NULL, _IONBF, 2);
 	}
-#endif
 #ifdef SELFEXE_MACOSX
 	if (!is_zygote) {
 		const char *self = get_self_executable(g_argc, g_argv);
@@ -1264,6 +1267,12 @@ int main(int argc, char *argv[])
 	}
 #endif
 
+  char** env;
+  for (env = envp; *env != 0; env++)
+  {
+    char* thisEnv = *env;
+    printf("====ENV ==== %s\n", thisEnv);    
+  }
 	te4_web_load();
 
 	// Initialize display lock for thread safety.

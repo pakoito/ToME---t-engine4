@@ -88,7 +88,9 @@ function _M:init()
 		local c_pub = ButtonImage.new{no_decoration=true, alpha_unfocus=1, file="background/"..game.__mod_info.publisher_logo..".png", fct=function()
 			if game.__mod_info.publisher_url then util.browserOpenUrl(game.__mod_info.publisher_url) end
 		end}
-		self.base_uis[#self.base_uis+1] = {right=0, top=0, absolute=true, ui=c_pub}
+		if game.w - 450 - 250 - c_pub.w - 20 > 0 then
+			table.insert(self.base_uis, 1, {right=0, top=0, absolute=true, ui=c_pub})
+		end
 	end
 
 	self:updateUI()	

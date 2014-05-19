@@ -133,8 +133,8 @@ newTalent{
 		local chance = t.getProcChance(self, t)
 		return ([[Infuse yourself with the raging fury of the Sun, increasing your physical and spell critical chance by %d%%.
 		Each time you crit with a physical attack or a spell you have %d%% chance to gain Sun's Vengeance for 2 turns.
-		While affected by Sun's Vengeance, your Sun Beam will take no time to use and will deal 25%% more damage.
-		If Sun Beam was on cooldown, the remaining turns are reduced by one instead.
+		While affected by Sun's Vengeance, your Sun Ray will take no time to use and will deal 25%% more damage.
+		If Sun Ray was on cooldown, the remaining turns are reduced by one instead.
 		This effect can only happen once per turn.]]):
 		format(crit, chance)
 	end,
