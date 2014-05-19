@@ -1206,7 +1206,7 @@ void handleIdleTransition(int goIdle)
 /**
  * Core entry point.
  */
-int main(int argc, char *argv[], char **envp)
+int main(int argc, char *argv[])
 {
 	core_def = calloc(1, sizeof(core_boot_type));
 	core_def->define = &define_core;
@@ -1267,12 +1267,6 @@ int main(int argc, char *argv[], char **envp)
 	}
 #endif
 
-  char** env;
-  for (env = envp; *env != 0; env++)
-  {
-    char* thisEnv = *env;
-    printf("====ENV ==== %s\n", thisEnv);    
-  }
 	te4_web_load();
 
 	// Initialize display lock for thread safety.
