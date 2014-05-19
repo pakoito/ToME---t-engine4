@@ -27,6 +27,7 @@ prefix = "/data/gfx/"
 base_prefix = "/data/gfx/"
 use_images = true
 force_back_color = nil
+sharp_scaling = nil
 
 tilesets = {}
 tilesets_texs = {}
@@ -119,7 +120,7 @@ function _M:get(char, fr, fg, fb, br, bg, bb, image, alpha, do_outline, allow_ti
 
 		if self.texture then
 			w, h = s:getSize()
-			s, sw, sh = s:glTexture()
+			s, sw, sh = s:glTexture(self.sharp_scaling)
 			sw, sh = w / sw, h / sh
 			if not is_image and do_outline then
 				if type(do_outline) == "boolean" then
