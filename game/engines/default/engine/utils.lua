@@ -466,12 +466,24 @@ end
 
 -- Simply overwrites the value.
 table.rules.overwrite = function(dvalue, svalue, key, dst)
+	if svalue == table.NIL_MERGE then
+		svalue = nil
+	elseif type(svalue) == 'table' and not svalue.__CLASSNAME then
+		svalue = table.clone(svalue, true)
+	end
 	dst[key] = svalue
 	return true
 end
 -- Does the recursion.
 table.rules.recurse = function(dvalue, svalue, key, dst, src, rules, state)
-	if type(dvalue) ~= 'table' or type(svalue) ~= 'table' then return end
+	if type(svalue) ~= 'table' or
+		svalue.__CLASSNAME or
+		(type(dvalue) ~= 'table' and svalue == table.NIL_MERGE)
+	then return end
+	if type(dvalue) ~= 'table' then
+		dvalue = {}
+		dst[key] = dvalue
+	end
 	state = table.clone(state)
 	state.path = table.clone(state.path) or {}
 	table.insert(state.path, key)
@@ -481,12 +493,36 @@ end
 -- Appends indices.
 table.rules.append = function(dvalue, svalue, key, dst, src, rules, state)
 	if type(key) ~= 'number' then return end
+	if type(svalue) == 'table' then
+		if svalue.__CLASSNAME then
+			svalue = svalue:clone()
+		else
+			svalue = table.clone(svalue, true)
+		end
+	end
+	table.insert(dst, svalue)
+	return true
+end
+-- Appends indices if we're on the top level
+table.rules.append_top = function(dvalue, svalue, key, dst, src, rules, state)
+	if state.path and #state.path > 0 then return end
+	if type(key) ~= 'number' then return end
+	if type(svalue) == 'table' then
+		if svalue.__CLASSNAME then
+			svalue = svalue:clone()
+		else
+			svalue = table.clone(svalue, true)
+		end
+	end
 	table.insert(dst, svalue)
 	return true
 end
 -- Adds numbers
 table.rules.add = function(dvalue, svalue, key, dst)
-	if type(dvalue) ~= 'number' or type(svalue) ~= 'number' then return end
+	if type(dvalue) ~= 'number' or
+		type(svalue) ~= 'number' or
+		dst.__no_merge_add
+	then return end
 	dst[key] = dvalue + svalue
 	return true
 end
@@ -497,7 +533,7 @@ and adding number values in addition to other rules.
 --]]
 function table.ruleMergeAppendAdd(dst, src, rules)
 	rules = table.clone(rules)
-	for _, rule in pairs {'append', 'recurse', 'add', 'overwrite'} do
+	for _, rule in pairs {'append_top', 'recurse', 'add', 'overwrite'} do
 		table.insert(rules, table.rules[rule])
 	end
 	table.applyRules(dst, src, rules)
