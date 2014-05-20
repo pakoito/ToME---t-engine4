@@ -492,8 +492,10 @@ function _M:setupDisplayMode(reboot, mode)
 			Map.tiles.no_moddable_tiles = true
 		elseif gfx.tiles == "shockbolt" then
 			Map.tiles.nicer_tiles = true
+			if tw > 64 then Map.tiles.sharp_scaling = true end
 		elseif gfx.tiles == "oldrpg" then
 			Map.tiles.nicer_tiles = true
+			Map.tiles.sharp_scaling = true
 		elseif gfx.tiles == "customtiles" then
 			Map.tiles.no_moddable_tiles = not config.settings.tome.gfx.tiles_custom_moddable
 			Map.tiles.nicer_tiles = config.settings.tome.gfx.tiles_custom_adv
@@ -1860,7 +1862,6 @@ do return end
 				{ "Inventory", function() self:unregisterDialog(menu) self.key:triggerVirtual("SHOW_INVENTORY") end },
 				{ "Character Sheet", function() self:unregisterDialog(menu) self.key:triggerVirtual("SHOW_CHARACTER_SHEET") end },
 				"keybinds",
-				{"Graphic Mode", function() self:unregisterDialog(menu) self:registerDialog(require("mod.dialogs.GraphicMode").new()) end},
 				{"Game Options", function() self:unregisterDialog(menu) self:registerDialog(require("mod.dialogs.GameOptions").new()) end},
 				"video",
 				"sound",

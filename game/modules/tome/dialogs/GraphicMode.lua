@@ -29,7 +29,7 @@ local Map = require "engine.Map"
 
 module(..., package.seeall, class.inherit(Dialog))
 
-local tiles_packs = {
+tiles_packs = {
 	shockbolt = {name= "Modern", order=1},
 	ascii = {name= "ASCII", order=5},
 	ascii_full = {name= "ASCII with background", order=6},

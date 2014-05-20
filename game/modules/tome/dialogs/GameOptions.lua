@@ -24,6 +24,7 @@ local Textzone = require "engine.ui.Textzone"
 local Separator = require "engine.ui.Separator"
 local GetQuantity = require "engine.dialogs.GetQuantity"
 local Tabs = require "engine.ui.Tabs"
+local GraphicMode = require("mod.dialogs.GraphicMode")
 
 module(..., package.seeall, class.inherit(Dialog))
 
@@ -85,6 +86,15 @@ function _M:generateListUi()
 	-- Makes up the list
 	local list = {}
 	local i = 0
+
+	local zone = Textzone.new{width=self.c_desc.w, height=self.c_desc.h, text=string.toTString"Select the graphical mode to display the world.\nDefault is 'Modern'.\nWhen you change it make a new character or it may lok strange."}
+	list[#list+1] = { zone=zone, name=string.toTString"#GOLD##{bold}#Graphic Mode#WHITE##{normal}#", status=function(item)
+		local ts = GraphicMode.tiles_packs[config.settings.tome.gfx.tiles]
+		local size = config.settings.tome.gfx.size or "???x???"
+		return (ts and ts.name or "???").." <"..size..">"
+	end, fct=function(item)
+		game:registerDialog(GraphicMode.new())
+	end,}
 
 	local zone = Textzone.new{width=self.c_desc.w, height=self.c_desc.h, text=string.toTString"Make the movement of creatures and projectiles 'smooth'. When set to 0 movement will be instantaneous.\nThe higher this value the slower the movements will appear.\n\nNote: This does not affect the turn-based idea of the game. You can move again while your character is still moving, and it will correctly update and compute a new animation."}
 	list[#list+1] = { zone=zone, name=string.toTString"#GOLD##{bold}#Smooth creatures movement#WHITE##{normal}#", status=function(item)
@@ -248,7 +258,7 @@ function _M:generateListUi()
 	end,}
 
 	local zone = Textzone.new{width=self.c_desc.w, height=self.c_desc.h, text=string.toTString"If disabled lore popups will only appear the first time you see the lore on your profile.\nIf enabled it will appear the first time you see it with each character.#WHITE#"}
-	list[#list+1] = { zone=zone, name=string.toTString"#GOLD##{bold}#Always show lore popup.#WHITE##{normal}#", status=function(item)
+	list[#list+1] = { zone=zone, name=string.toTString"#GOLD##{bold}#Always show lore popup#WHITE##{normal}#", status=function(item)
 		return tostring(config.settings.tome.lore_popup and "enabled" or "disabled")
 	end, fct=function(item)
 		config.settings.tome.lore_popup = not config.settings.tome.lore_popup
@@ -257,7 +267,7 @@ function _M:generateListUi()
 	end,}
 
 	local zone = Textzone.new{width=self.c_desc.w, height=self.c_desc.h, text=string.toTString"If disabled items with activations will not be auto-added to your hotkeys, you will need to manualty drag them from the inventory screen.#WHITE#"}
-	list[#list+1] = { zone=zone, name=string.toTString"#GOLD##{bold}#Always add objects to hotkeys.#WHITE##{normal}#", status=function(item)
+	list[#list+1] = { zone=zone, name=string.toTString"#GOLD##{bold}#Always add objects to hotkeys#WHITE##{normal}#", status=function(item)
 		return tostring(config.settings.tome.auto_hotkey_object and "enabled" or "disabled")
 	end, fct=function(item)
 		config.settings.tome.auto_hotkey_object = not config.settings.tome.auto_hotkey_object
@@ -272,7 +282,7 @@ function _M:generateListUi()
 - No tactical information at all
 
 #{italic}#You can also change this directly ingame by pressing shift+T.#{normal}##WHITE#]]}
-	list[#list+1] = { zone=zone, name=string.toTString"#GOLD##{bold}#Tactical overlay.#WHITE##{normal}#", status=function(item)
+	list[#list+1] = { zone=zone, name=string.toTString"#GOLD##{bold}#Tactical overlay#WHITE##{normal}#", status=function(item)
 		local vs = "Combined Small"
 		if game.always_target == "old" then
 			local vs = "Combined Big"
@@ -306,7 +316,7 @@ function _M:generateListUi()
 	end,}
 
 	local zone = Textzone.new{width=self.c_desc.w, height=self.c_desc.h, text=string.toTString"Toggles between a bottom or side display for tactial healthbars.#WHITE#"}
-	list[#list+1] = { zone=zone, name=string.toTString"#GOLD##{bold}#Healthbars position.#WHITE##{normal}#", status=function(item)
+	list[#list+1] = { zone=zone, name=string.toTString"#GOLD##{bold}#Healthbars position#WHITE##{normal}#", status=function(item)
 		return tostring(config.settings.tome.small_frame_side and "Sides" or "Bottom")
 	end, fct=function(item)
 		config.settings.tome.small_frame_side = not config.settings.tome.small_frame_side
@@ -315,7 +325,7 @@ function _M:generateListUi()
 	end,}
 
 	local zone = Textzone.new{width=self.c_desc.w, height=self.c_desc.h, text=string.toTString"If disabled you will not get a fullscreen notification of stun/daze effects. Beware.#WHITE#"}
-	list[#list+1] = { zone=zone, name=string.toTString"#GOLD##{bold}#Fullscreen stun/daze notification.#WHITE##{normal}#", status=function(item)
+	list[#list+1] = { zone=zone, name=string.toTString"#GOLD##{bold}#Fullscreen stun/daze notification#WHITE##{normal}#", status=function(item)
 		return tostring(config.settings.tome.fullscreen_stun and "enabled" or "disabled")
 	end, fct=function(item)
 		config.settings.tome.fullscreen_stun = not config.settings.tome.fullscreen_stun
@@ -325,7 +335,7 @@ function _M:generateListUi()
 	end,}
 
 	local zone = Textzone.new{width=self.c_desc.w, height=self.c_desc.h, text=string.toTString"If disabled you will not get a fullscreen notification of confusion effects. Beware.#WHITE#"}
-	list[#list+1] = { zone=zone, name=string.toTString"#GOLD##{bold}#Fullscreen confusion notification.#WHITE##{normal}#", status=function(item)
+	list[#list+1] = { zone=zone, name=string.toTString"#GOLD##{bold}#Fullscreen confusion notification#WHITE##{normal}#", status=function(item)
 		return tostring(config.settings.tome.fullscreen_confusion and "enabled" or "disabled")
 	end, fct=function(item)
 		config.settings.tome.fullscreen_confusion = not config.settings.tome.fullscreen_confusion
