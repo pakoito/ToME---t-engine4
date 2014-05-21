@@ -118,6 +118,10 @@ function _M:run()
 	self.logdisplay:enableShadow(1)
 	self.logdisplay:enableFading(5)
 
+	game.logChat = function(style, ...)
+		if type(style) == "number" then self.logdisplay(...) else self.logdisplay(style, ...) end
+	end
+
 	-- Setup display
 	self:registerDialog(MainMenu.new())
 
@@ -548,7 +552,7 @@ end
 -- Overloads to detect auth
 function _M:handleProfileEvent(evt)
 	evt = engine.GameEnergyBased.handleProfileEvent(self, evt)
-	if evt.e == "Auth" then
+	if evt and evt.e == "Auth" then
 		local d = self.dialogs[#self.dialogs]
 		if d and d.__CLASSNAME == "mod.dialogs.MainMenu" then
 			d:on_recover_focus()

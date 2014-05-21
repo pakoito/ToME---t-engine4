@@ -3272,7 +3272,27 @@ newDamageType{
 			else
 				game.logSeen(target, "%s resists the mind attack!", target.name:capitalize())
 			end
+			
+			if src:hasEffect(src.EFF_TRANSCENDENT_TELEKINESIS) then
+				if target:canBe("blind") then
+					target:setEffect(target.EFF_BLINDED, 4, {apply_power=src:combatMindpower()})
+				end
+			end
 			return dam
 		end
 	end,
 }
+
+newDamageType{
+	name = "static net", type = "STATIC_NET",
+	projector = function(src, x, y, type, dam)
+		local target = game.level.map(x, y, Map.ACTOR)
+		if target and src:reactionToward(target) < 0 then
+			DamageType:get(DamageType.LIGHTNING).projector(src, x, y, DamageType.LIGHTNING, dam.dam)
+			target:setEffect(target.EFF_SLOW, 4, {apply_power=src:combatMindpower(), power=dam.slow/100}, true)
+		elseif target == src then
+			target:setEffect(target.EFF_STATIC_CHARGE, 4, {power=dam.weapon}, true)
+		end
+	end,
+}
+

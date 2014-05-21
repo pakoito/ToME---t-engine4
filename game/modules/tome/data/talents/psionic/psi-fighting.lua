@@ -17,19 +17,10 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-local function cancelAuras(self)
-	local auras = {self.T_CHARGED_AURA, self.T_THERMAL_AURA, self.T_KINETIC_AURA,}
-	for i, t in ipairs(auras) do
-		if self:isTalentActive(t) then
-			self:forceUseTalent(t, {ignore_energy=true})
-		end
-	end
-end
-
 newTalent{
 	name = "Telekinetic Smash",
 	type = {"psionic/psi-fighting", 1},
-	require = psi_wil_req1,
+	require = psi_cun_req1,
 	points = 5,
 	random_ego = "attack",
 	cooldown = 8,
@@ -50,11 +41,11 @@ newTalent{
 		if not x or not y or not target then return nil end
 		if core.fov.distance(self.x, self.y, x, y) > 1 then return nil end
 		self:attr("use_psi_combat", 1)
-		local speed, hit = self:attackTargetWith(target, weapon.combat, nil, self:combatTalentWeaponDamage(t, 1.8, 3))
+		local speed, hit = self:attackTarget(target, nil, self:combatTalentWeaponDamage(t, 0.9, 1.5))
 		if self:getInven(self.INVEN_PSIONIC_FOCUS) then
 			for i, o in ipairs(self:getInven(self.INVEN_PSIONIC_FOCUS)) do
 				if o.combat and not o.archery then
-					self:attackTargetWith(target, o.combat, nil, self:combatTalentWeaponDamage(t, 1.8, 3))
+					self:attackTargetWith(target, o.combat, nil, self:combatTalentWeaponDamage(t, 0.9, 1.5))
 				end
 			end
 		end
@@ -67,16 +58,16 @@ newTalent{
 	info = function(self, t)
 		return ([[Gather your will, and brutally smash the target with your mainhand weapon and then your telekinetically weilded weapon, doing %d%% weapon damage. 
 		If your mainhand weapon hits, you will also stun the target for %d turns.
-		If Conduit is active, it will extend to include your mainhand weapon for this attack. 
-		This attack uses your Willpower and Cunning instead of Strength and Dexterity to determine Accuracy and damage.]]):
-		format(100 * self:combatTalentWeaponDamage(t, 1.8, 3), t.duration(self,t))
+		This attack uses your Willpower and Cunning instead of Strength and Dexterity to determine Accuracy and damage.
+		Any active Aura damage bonusses will extend to your main weapons for this attack.]]):
+		format(100 * self:combatTalentWeaponDamage(t, 0.9, 1.5), t.duration(self,t))
 	end,
 }
 
 newTalent{
 	name = "Augmentation",
 	type = {"psionic/psi-fighting", 2},
-	require = psi_wil_req2,
+	require = psi_cun_req2,
 	points = 5,
 	mode = "sustained",
 	cooldown = 0,
@@ -110,93 +101,63 @@ newTalent{
 }
 
 newTalent{
-	name = "Conduit",
+	name = "Warding Weapon",
 	type = {"psionic/psi-fighting", 3},
-	require = psi_wil_req3, no_sustain_autoreset = true,
-	cooldown = 1,
-	mode = "sustained",
-	sustain_psi = 0,
+	require = psi_cun_req3,
 	points = 5,
-	tactical = { ATTACK = function(self, t)
-		local vals = {}
-		if self:isTalentActive(self.T_KINETIC_AURA) then
-			vals.PHYSICAL = 1
-		end
-		if self:isTalentActive(self.T_THERMAL_AURA) then
-			vals.FIRE = 1
-		end
-		if self:isTalentActive(self.T_CHARGED_AURA) then
-			vals.LIGHTNING = 1
-		end
-		return vals
-	end},
-	getMult = function(self, t) return self:combatTalentScale(t, 1.2, 2) end,
-	activate = function(self, t)
-		local ret = {
-		k_aura_on = self:isTalentActive(self.T_KINETIC_AURA),
-		t_aura_on = self:isTalentActive(self.T_THERMAL_AURA),
-		c_aura_on = self:isTalentActive(self.T_CHARGED_AURA),
-		}
-		local cur_psi = self:getPsi()
-		self:incPsi(-math.huge)
-		--self.sustain_talents[t.id] = {}
-		cancelAuras(self)
-		self:incPsi(cur_psi)
-		return ret
-	end,
-	do_combat = function(self, t, target) -- called by  _M:attackTargetWith in mod.class.interface.Combat.lua
-		local mult = t.getMult(self, t)
-		local auras = self:isTalentActive(t.id)
-		if auras.k_aura_on then
-			local k_aura = self:getTalentFromId(self.T_KINETIC_AURA)
-			local k_dam = mult * k_aura.getAuraStrength(self, k_aura)
-			DamageType:get(DamageType.PHYSICAL).projector(self, target.x, target.y, DamageType.PHYSICAL, k_dam)
-		end
-		if auras.t_aura_on then
-			local t_aura = self:getTalentFromId(self.T_THERMAL_AURA)
-			local t_dam = mult * t_aura.getAuraStrength(self, t_aura)
-			DamageType:get(DamageType.FIRE).projector(self, target.x, target.y, DamageType.FIRE, t_dam)
-		end
-		if auras.c_aura_on then
-			local c_aura = self:getTalentFromId(self.T_CHARGED_AURA)
-			local c_dam = mult * c_aura.getAuraStrength(self, c_aura)
-			DamageType:get(DamageType.LIGHTNING).projector(self, target.x, target.y, DamageType.LIGHTNING, c_dam)
-		end
-	end,
-
-	deactivate = function(self, t)
+	cooldown = 10,
+	psi = 15,
+	no_energy = true,
+	tactical = { BUFF = 2 },
+	action = function(self, t)
+		self:setEffect(self.EFF_WEAPON_WARDING, 1, {})
 		return true
 	end,
 	info = function(self, t)
-		local mult = t.getMult(self, t)
-		return ([[When activated, turns off any active auras and uses your telekinetically wielded weapon as a conduit for the energies that were being channeled through those auras.
-		Any auras used by Conduit will not start to cool down until Conduit has been deactivated. The damage from each aura applied by Conduit is multiplied by %0.2f, and does not drain energy.]]):
-		format(mult)
+		return ([[Focus your telekinetically-wielded weapon to deflect melee attacks for one turn. You fully block the next melee attack used against you and strike the attacker with your telekinetically-wielded weapon for %d%% weapon damage. 
+		At talent level 3 you also disarm the attacker for 3 turns.]]):
+		format(100 * self:combatTalentWeaponDamage(t, 0.75, 1.1))
 	end,
 }
 
 newTalent{
-	name = "Frenzied Psifighting",
+	name = "Impale",
 	type = {"psionic/psi-fighting", 4},
-	require = psi_wil_req4,
-	cooldown = 20,
-	psi = 30,
+	require = psi_cun_req4,
 	points = 5,
-	tactical = { ATTACK = { PHYSICAL = 3 } },
-	getTargNum = function(self,t) -- Called in talent definition for Masterful Telekinetic Archery in psi-archery.lua
-		return math.ceil(self:combatTalentScale(t, 1.2, 2.1, "log"))
+	random_ego = "attack",
+	cooldown = 10,
+	psi = 20,
+	range = 3,
+	requires_target = true,
+	tactical = { ATTACK = { PHYSICAL = 2 } },
+	getDamage = function (self, t)
+		return math.floor(self:combatTalentMindDamage(t, 12, 340))
 	end,
-	duration = function(self,t) return math.floor(self:combatTalentScale(t, 4, 8)) end,
 	action = function(self, t)
-		local targets = 1 + math.ceil(self:getTalentLevel(t)/5)
-		self:setEffect(self.EFF_PSIFRENZY, t.duration(self,t), {power=t.getTargNum(self,t)})
+		local weapon = self:getInven(self.INVEN_PSIONIC_FOCUS) and self:getInven(self.INVEN_PSIONIC_FOCUS)[1]
+		if type(weapon) == "boolean" then weapon = nil end
+		if not weapon or self:attr("disarmed")then
+			game.logPlayer(self, "You cannot do that without a weapon in your telekinetic slot.")
+			return nil
+		end
+		local tg = {type="hit", range=self:getTalentRange(t)}
+		local x, y, target = self:getTarget(tg)
+		if not x or not y or not target then return nil end
+		if core.fov.distance(self.x, self.y, x, y) > 3 then return nil end
+		local speed, hit = self:attackTargetWith(target, weapon.combat, nil, self:combatTalentWeaponDamage(t, 1.5, 2.6))
+		if hit and target:canBe("bleed") then
+			target:setEffect(target.EFF_CUT, 4, {power=t.getDamage(self,t)/4, apply_power=self:combatMindpower()})
+		end
 		return true
 	end,
 	info = function(self, t)
-		local targets = t.getTargNum(self,t)
-		local dur = t.duration(self,t)
-		return ([[Your telekinetically wielded weapon enters a frenzy for %d turns, striking up to %d targets every turn, also increases the radius by %d.]]):
-		format(dur, targets, targets)
+		return ([[Gather your will and thrust your telekinetically-wielded weapon into your target with such force that it impales it dealing %d%% weapon damage, then suddenly rip it out causing your target to bleed for %0.2f physical damage over four turns. 
+		This attack uses your Willpower and Cunning instead of Strength and Dexterity to determine Accuracy and damage.
+		Bleeding damage scales with Mindpower.]]):
+		format(100 * self:combatTalentWeaponDamage(t, 1.5, 2.6), damDesc(self, DamageType.PHYSICAL, t.getDamage(self,t)))
 	end,
 }
+
+
 

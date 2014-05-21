@@ -17,10 +17,11 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
+
 newTalent{
 	name = "Realign",
 	type = {"psionic/finer-energy-manipulations", 1},
-	require = psi_cun_high1,
+	require = psi_cun_req1,
 	points = 5,
 	psi = 30,
 	cooldown = 20,
@@ -34,8 +35,8 @@ newTalent{
 		self:heal(self:mindCrit(t.getHeal(self, t)), self)
 		self:attr("allow_on_heal", -1)
 		
-		-- Go through all temporary effects
 		local effs = {}
+		-- Go through all temporary effects
 		for eff_id, p in pairs(self.tmp) do
 			local e = self.tempeffect_def[eff_id]
 			if e.type == "physical" and e.status == "detrimental" then
@@ -43,10 +44,11 @@ newTalent{
 			end
 		end
 
-		local known = false
+
 		for i = 1, t.numCure(self, t) do
 			if #effs == 0 then break end
 			local eff = rng.tableRemove(effs)
+
 
 			if eff[1] == "effect" then
 				self:removeEffect(eff[2])
@@ -58,8 +60,8 @@ newTalent{
 		end
 		
 		if core.shader.active(4) then
-			self:addParticles(Particles.new("shader_shield_temp", 1, {toback=true , size_factor=1.5, y=-0.3, img="healarcane", life=25}, {type="healing", time_factor=2000, beamsCount=20, noup=2.0, beamColor1={0x8e/255, 0xbb/255, 0x36/255, 1}, beamColor2={0xe7/255, 0xbb/255, 0x36/255, 1}, circleDescendSpeed=4}))
-			self:addParticles(Particles.new("shader_shield_temp", 1, {toback=false, size_factor=1.5, y=-0.3, img="healarcane", life=25}, {type="healing", time_factor=2000, beamsCount=20, noup=1.0, beamColor1={0x8e/255, 0xbb/255, 0x36/255, 1}, beamColor2={0xe7/255, 0xbb/255, 0x36/255, 1}, circleDescendSpeed=4}))
+			self:addParticles(Particles.new("shader_shield_temp", 1, {toback=true , size_factor=1.5, y=-0.3, img="healarcane", life=25}, {type="healing", time_factor=2000, beamsCount=20, noup=2.0, beamColor1={0x8e/255, 0x2f/255, 0xbb/255, 1}, beamColor2={0xe7/255, 0x39/255, 0xde/255, 1}, circleDescendSpeed=4}))
+			self:addParticles(Particles.new("shader_shield_temp", 1, {toback=false, size_factor=1.5, y=-0.3, img="healarcane", life=25}, {type="healing", time_factor=2000, beamsCount=20, noup=1.0, beamColor1={0x8e/255, 0x2f/255, 0xbb/255, 1}, beamColor2={0xe7/255, 0x39/255, 0xde/255, 1}, circleDescendSpeed=4}))
 		end
 		game:playSoundNear(self, "talents/heal")
 		return true
@@ -74,9 +76,9 @@ newTalent{
 }
 
 newTalent{
-	name = "Reshape Weapon",
+	name = "Reshape Weapon/Armour", image = "talents/reshape_weapon.png",
 	type = {"psionic/finer-energy-manipulations", 2},
-	require = psi_cun_high2,
+	require = psi_cun_req2,
 	cooldown = 1,
 	psi = 0,
 	points = 5,
@@ -85,25 +87,60 @@ newTalent{
 	boost = function(self, t)
 		return math.floor(self:combatTalentMindDamage(t, 5, 20))
 	end,
+	arm_boost = function(self, t)
+		return math.floor(self:combatTalentMindDamage(t, 5, 20))
+	end,
+	fat_red = function(self, t)
+		return math.floor(self:combatTalentMindDamage(t, 2, 10)) -- Limit Wil effect < 10%
+	end,
 	action = function(self, t)
-		local d d = self:showInventory("Reshape which weapon?", self:getInven("INVEN"), function(o) return not o.quest and o.type == "weapon" and not o.fully_reshaped end, function(o, item)
+		local d d = self:showInventory("Reshape which weapon?", self:getInven("INVEN"), function(o) return not o.quest and (o.type == "weapon" and o.subtype ~= "mindstar") or (o.type == "armor" and (o.slot == "BODY" or o.slot == "OFFHAND" )) and not o.fully_reshaped end, function(o, item)
 			--o.wielder = o.wielder or {}
-			if (o.old_atk or 0) < t.boost(self, t) then
-				o.combat.atk = (o.combat.atk or 0) - (o.old_atk or 0)
-				o.combat.dam = (o.combat.dam or 0) - (o.old_dam or 0)
-				o.combat.atk = (o.combat.atk or 0) + t.boost(self, t)
-				o.combat.dam = (o.combat.dam or 0) + t.boost(self, t)
-				o.old_atk = t.boost(self, t)
-				o.old_dam = t.boost(self, t)
-				game.logPlayer(self, "You reshape your %s.", o:getName{do_colour=true, no_count=true})
-				o.special = true
-				if not o.been_reshaped then
-					o.name = "reshaped" .. " "..o.name..""
-					o.been_reshaped = true
+			if o.combat then
+				if (o.old_atk or 0) < t.boost(self, t) then
+					o.combat.atk = (o.combat.atk or 0) - (o.old_atk or 0)
+					o.combat.dam = (o.combat.dam or 0) - (o.old_dam or 0)
+					o.combat.atk = (o.combat.atk or 0) + t.boost(self, t)
+					o.combat.dam = (o.combat.dam or 0) + t.boost(self, t)
+					o.old_atk = t.boost(self, t)
+					o.old_dam = t.boost(self, t)
+					game.logPlayer(self, "You reshape your %s.", o:getName{do_colour=true, no_count=true})
+					o.special = true
+					if not o.been_reshaped then
+						o.name = "reshaped" .. " "..o.name..""
+						o.been_reshaped = true
+					end
+					d.used_talent = true
+				else
+					game.logPlayer(self, "You cannot reshape your %s any further.", o:getName{do_colour=true, no_count=true})
 				end
-				d.used_talent = true
 			else
-				game.logPlayer(self, "You cannot reshape your %s any further.", o:getName{do_colour=true, no_count=true})
+				if (o.old_fat or 0) < t.fat_red(self, t) or o.wielder.combat_armor < o.orig_arm + t.arm_boost(self,t) then	-- Allow armor only improvements
+					o.wielder = o.wielder or {}
+					if not o.been_reshaped then
+						o.orig_arm = (o.wielder.combat_armor or 0)
+						o.orig_fat = (o.wielder.fatigue or 0)
+					end
+					o.wielder.combat_armor = o.orig_arm
+					o.wielder.fatigue = o.orig_fat
+					o.wielder.combat_armor = (o.wielder.combat_armor or 0) + t.arm_boost(self, t)
+					o.wielder.fatigue = (o.wielder.fatigue or 0) - t.fat_red(self, t)
+					if o.wielder.fatigue < 0 and not (o.orig_fat < 0) then
+						o.wielder.fatigue = 0
+					elseif o.wielder.fatigue < 0 and o.orig_fat < 0 then
+						o.wielder.fatigue = o.orig_fat
+					end
+					o.old_fat = t.fat_red(self, t)
+					game.logPlayer(self, "You reshape your %s.", o:getName{do_colour=true, no_count=true})
+					if not o.been_reshaped then
+						o.orig_name = o.name
+						o.been_reshaped = true
+					end
+					o.name = "reshaped["..tostring(t.arm_boost(self,t))..","..tostring(o.wielder.fatigue-o.orig_fat).."%] "..o.orig_name..""
+					d.used_talent = true
+				else
+					game.logPlayer(self, "You cannot reshape your %s any further.", o:getName{do_colour=true, no_count=true})
+				end
 			end
 		end)
 		local co = coroutine.running()
@@ -113,74 +150,19 @@ newTalent{
 	end,
 	info = function(self, t)
 		local weapon_boost = t.boost(self, t)
-		return ([[Manipulate forces on the molecular level to realign, rebalance, and hone your weapon. Permanently increases the Accuracy and damage of any weapon by %d.
-		These values scale with your Mindpower.]]):
-		format(weapon_boost)
-	end,
-}
-
-newTalent{
-	name = "Reshape Armour", short_name = "RESHAPE_ARMOR",
-	type = {"psionic/finer-energy-manipulations", 3},
-	require = psi_cun_high3,
-	cooldown = 1,
-	psi = 0,
-	points = 5,
-	no_npc_use = true,
-	no_unlearn_last = true,
-	arm_boost = function(self, t)
-		return math.max(0, math.floor(self:combatTalentMindDamage(t, 5, 40)))
-	end,
-	fat_red = function(self, t)
-		return math.floor(self:combatTalentMindDamage(t, 2, 10)) -- Limit Wil effect < 10%
-	end,
-	action = function(self, t)
-		local d d = self:showInventory("Reshape which piece of armour?", self:getInven("INVEN"), function(o) return not o.quest and o.type == "armor" and not o.fully_reshaped end, function(o, item)
-			if (o.old_fat or 0) < t.fat_red(self, t) or o.wielder.combat_armor < o.orig_arm + t.arm_boost(self,t) then	-- Allow armor only improvements
-				o.wielder = o.wielder or {}
-				if not o.been_reshaped then
-					o.orig_arm = (o.wielder.combat_armor or 0)
-					o.orig_fat = (o.wielder.fatigue or 0)
-				end
-				o.wielder.combat_armor = o.orig_arm
-				o.wielder.fatigue = o.orig_fat
-				o.wielder.combat_armor = (o.wielder.combat_armor or 0) + t.arm_boost(self, t)
-				o.wielder.fatigue = (o.wielder.fatigue or 0) - t.fat_red(self, t)
-				if o.wielder.fatigue < 0 and not (o.orig_fat < 0) then
-					o.wielder.fatigue = 0
-				elseif o.wielder.fatigue < 0 and o.orig_fat < 0 then
-					o.wielder.fatigue = o.orig_fat
-				end
-				o.old_fat = t.fat_red(self, t)
-				game.logPlayer(self, "You reshape your %s.", o:getName{do_colour=true, no_count=true})
-				if not o.been_reshaped then
-					o.orig_name = o.name
-					o.been_reshaped = true
-				end
-				o.name = "reshaped["..tostring(t.arm_boost(self,t))..","..tostring(o.wielder.fatigue-o.orig_fat).."%] "..o.orig_name..""
-				d.used_talent = true
-			else
-				game.logPlayer(self, "You cannot reshape your %s any further.", o:getName{do_colour=true, no_count=true})
-			end
-		end)
-		local co = coroutine.running()
-		d.unload = function(self) coroutine.resume(co, self.used_talent) end
-		if not coroutine.yield() then return nil end
-		return true
-	end,
-	info = function(self, t)
 		local arm = t.arm_boost(self, t)
 		local fat = t.fat_red(self, t)
-		return ([[Manipulate forces on the molecular level to realign, rebalance, and reinforce a piece of armour. Permanently increases the armour rating of any piece of Armour by %d, and permanently reduces the fatigue rating of any piece of armour by %d.
-		These values scale with your Willpower.]]):
-		format(arm, fat)
+		return ([[Manipulate forces on the molecular level to realign, rebalance, and hone your weapon or armour. Mindstars object to being adjusted however, prefering a natural state.
+		Permanently increases the Accuracy and damage of any weapon by %d. Permanently increases the armour rating of any piece of Armour by %d, and permanently reduces the fatigue rating of any piece of armour by %d.
+		These values scale with your Mindpower.]]):
+		format(weapon_boost, arm, fat)
 	end,
 }
 
 newTalent{
 	name = "Matter is Energy",
-	type = {"psionic/finer-energy-manipulations", 4},
-	require = psi_cun_high4,
+	type = {"psionic/finer-energy-manipulations", 3},
+	require = psi_cun_req3,
 	cooldown = 50,
 	psi = 0,
 	points = 5,
@@ -222,7 +204,7 @@ newTalent{
 				GEM_CITRINE = "Citrine",
 				GEM_AGATE = "Agate",
 			}
-			self:setEffect(self.EFF_CRYSTAL_BUFF, 10, {name=gem_names[gem.define_as], gem=gem.define_as})
+			self:setEffect(self.EFF_CRYSTAL_BUFF, dur, {name=gem_names[gem.define_as], gem=gem.define_as})
 		end)
 		local co = coroutine.running()
 		d.unload = function(self) coroutine.resume(co, self.used_talent) end
@@ -239,27 +221,30 @@ newTalent{
 }
 
 newTalent{
-	name = "Perfect Control",
-	type = {"psionic/finer-energy-manipulations", 1},
-	require = psi_cun_high1,
-	cooldown = 50,
-	psi = 15,
+	name = "Resonant Focus",
+	type = {"psionic/finer-energy-manipulations", 4},
+	require = psi_cun_req4,
+	mode = "passive",
 	points = 5,
-	hide = true,
-	tactical = { BUFF = 2 },
-	getBoost = function(self, t)
-		return self:combatScale(self:getTalentLevel(t)*self:combatStatTalentIntervalDamage(t, "combatMindpower", 1, 9), 15, 0, 49, 34)
-	end,
-	getDuration = function(self, t) return math.floor(self:combatTalentLimit(t, 50, 6, 10)) end, -- Limit < 50
-	action = function(self, t)
-		self:setEffect(self.EFF_CONTROL, t.getDuration(self, t), {power= t.getBoost(self, t)})
-		return true
+	bonus = function(self,t) return self:combatTalentScale(t, 10, 40) end,
+	on_learn = function(self, t)
+		if self:isTalentActive(self.T_BEYOND_THE_FLESH) then
+			if self.__to_recompute_beyond_the_flesh then return end
+			self.__to_recompute_beyond_the_flesh = true
+			game:onTickEnd(function()
+				self.__to_recompute_beyond_the_flesh = nil
+				local t = self:getTalentFromId(self.T_BEYOND_THE_FLESH)
+				self:forceUseTalent(t.id, {ignore_energy=true, ignore_cd=true, no_talent_fail=true})
+				if t.on_pre_use(self, t) then self:forceUseTalent(t.id, {ignore_energy=true, ignore_cd=true, no_talent_fail=true, talent_reuse=true}) end
+			end)
+		end
 	end,
 	info = function(self, t)
-		local boost = t.getBoost(self, t)
-		local dur = t.getDuration(self, t)
-		return ([[Encase your body in a sheath of thought-quick forces, allowing you to control your body's movements directly without the inefficiency of dealing with crude mechanisms like nerves and muscles.
-		Increases Accuracy by %d and critical strike chance by %0.2f%% for %d turns.]]):
-		format(boost, 0.5*boost, dur)
+		local inc = t.bonus(self,t)
+		return ([[By carefully synchronising your mind to the resonant frequencies of you psionic focus, you strengthen its effects.
+		For conventional weapons, this increases the percentage of your willpower and cunning that is used in place of strength and dexterity, from 80%% to %d%%.
+		For mindstars, this increases the pull chance by +%d%%.
+		For gems, this increases the bonus stats by %d.]]):
+		format(80+inc, inc, math.ceil(inc/5))
 	end,
 }

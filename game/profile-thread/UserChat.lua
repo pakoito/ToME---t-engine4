@@ -26,6 +26,7 @@ function _M:init(client)
 	self.client = client
 	self.channels = {}
 	self.cjoined = {}
+	self.friends = {}
 end
 
 function _M:event(e)
@@ -55,6 +56,14 @@ function _M:event(e)
 		self.channels[e.channel][e.login] = nil
 		cprofile.pushEvent(string.format("e='Chat' se='Part' channel=%q login=%q name=%q donator=%q status=%q", e.channel, e.login, e.name, e.donator, e.status))
 		print("[USERCHAT] channel part", e.login, e.channel)
+	elseif e.e == "FriendJoin" then
+		self.friends[e.login] = e
+		cprofile.pushEvent(string.format("e='Chat' se='FriendJoin' login=%q name=%q donator=%q status=%q silent=%s", e.login, e.name, e.donator, e.status, e.silent and "true" or "false"))
+		print("[USERCHAT] Friend join", e.login)
+	elseif e.e == "FriendPart" then
+		self.friends[e.login] = nil
+		cprofile.pushEvent(string.format("e='Chat' se='FriendPart' login=%q name=%q donator=%q status=%q", e.login, e.name, e.donator, e.status))
+		print("[USERCHAT] Friend part", e.login)
 	end
 end
 
@@ -78,5 +87,14 @@ function _M:reconnect()
 	for chan, _ in pairs(self.cjoined) do
 		print("[ONLINE PROFILE] reconnecting to channel", chan)
 		self.client:orderChatJoin{channel=chan}
+	end
+end
+
+function _M:forwardFriends()
+	-- Give back friends list
+	print("[ONLINE PROFILE] forwarding friends to client")
+	for _, e in pairs(self.friends) do
+		e.silent = true
+		self:event(e)
 	end
 end

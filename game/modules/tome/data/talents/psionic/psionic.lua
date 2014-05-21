@@ -25,16 +25,17 @@ newTalentType{ allow_random=true, is_mind=true, autolearn_mindslayer=true, type=
 newTalentType{ allow_random=true, is_mind=true, autolearn_mindslayer=true, type="psionic/augmented-mobility", generic = true, name = "augmented mobility", min_lev = 10, description = "Use energy to move yourself and others." }
 newTalentType{ allow_random=true, is_mind=true, autolearn_mindslayer=true, type="psionic/voracity", name = "voracity", description = "Pull energy from your surroundings." }
 newTalentType{ allow_random=true, is_mind=true, autolearn_mindslayer=true, type="psionic/finer-energy-manipulations", min_lev = 10, generic = true, name = "finer energy manipulations", description = "Subtle applications of the psionic arts." }
-newTalentType{ allow_random=true, is_mind=true, autolearn_mindslayer=true, type="psionic/mental-discipline", generic = true, name = "mental discipline", description = "Increase mental capacity, endurance, and flexibility." }
-newTalentType{ allow_random=true, is_mind=true, autolearn_mindslayer=true, type="psionic/telekinetic-combat", name = "telekinetic combat", min_lev = 10, description = "Mastery of combat via telekinesis." }
-newTalentType{ allow_random=true, is_mind=true, autolearn_mindslayer=true, type="psionic/force", name = "force", min_lev = 10, description = "Mastery of telekinetic forces." }
+--newTalentType{ allow_random=true, is_mind=true, autolearn_mindslayer=true, type="psionic/mental-discipline", generic = true, name = "mental discipline", description = "Increase mental capacity, endurance, and flexibility." }
 newTalentType{ is_mind=true, type="psionic/other", name = "other", description = "Various psionic talents." }
 
 -- Advanced Talent Trees
-newTalentType{ allow_random=true, is_mind=true, autolearn_mindslayer=true, type="psionic/grip", name = "grip", min_lev = 10, description = "Augment your telekinetic grip." }
-newTalentType{ allow_random=true, is_mind=true, autolearn_mindslayer=true, type="psionic/psi-archery", name = "psi-archery", min_lev = 10, description = "Use your telekinetic powers to wield bows with deadly effectiveness." }
-newTalentType{ allow_random=true, is_mind=true, autolearn_mindslayer=true, type="psionic/greater-psi-fighting", name = "greater psi-fighting", description = "Elevate psi-fighting prowess to epic levels." }
-newTalentType{ allow_random=true, is_mind=true, autolearn_mindslayer=true, type="psionic/brainstorm", name = "brainstorm", description = "Focus your telekinetic powers in ways undreamed of by most mindslayers." }
+--newTalentType{ allow_random=true, is_mind=true, autolearn_mindslayer=true, type="psionic/grip", name = "grip", min_lev = 10, description = "Augment your telekinetic grip." }
+newTalentType{ allow_random=true, is_mind=true, autolearn_mindslayer=true, type="psionic/kinetic-mastery", name = "kinetic mastery", min_lev = 10, description = "Mastery of telekinetic forces." }
+newTalentType{ allow_random=true, is_mind=true, autolearn_mindslayer=true, type="psionic/thermal-mastery", name = "thermal mastery", min_lev = 10, description = "Mastery of pyrokinetic forces." }
+newTalentType{ allow_random=true, is_mind=true, autolearn_mindslayer=true, type="psionic/charged-mastery", name = "charged mastery", min_lev = 10, description = "Mastery of electrokinetic forces." }
+--newTalentType{ allow_random=true, is_mind=true, autolearn_mindslayer=true, type="psionic/psi-archery", name = "psi-archery", min_lev = 10, description = "Use your telekinetic powers to wield bows with deadly effectiveness." }
+--newTalentType{ allow_random=true, is_mind=true, autolearn_mindslayer=true, type="psionic/greater-psi-fighting", name = "greater psi-fighting", description = "Elevate psi-fighting prowess to epic levels." }
+--newTalentType{ allow_random=true, is_mind=true, autolearn_mindslayer=true, type="psionic/brainstorm", name = "brainstorm", description = "Focus your telekinetic powers in ways undreamed of by most mindslayers." }
 
 -- Solipsist Talent Trees
 newTalentType{ allow_random=true, is_mind=true, type="psionic/discharge", name = "discharge", description = "Project feedback on the world around you." }
@@ -161,11 +162,6 @@ function getGemLevel(self)
 			gem_level = tk_item.material_level or 5
 		end
 	end
-	if self:knowTalent(self.T_GREATER_TELEKINETIC_GRASP) and gem_level > 0 then
-		if self:getTalentLevelRaw(self.T_GREATER_TELEKINETIC_GRASP) >= 5 then
-			gem_level = gem_level + 1
-		end
-	end
 	return gem_level
 end
 
@@ -188,17 +184,19 @@ end
 
 load("/data/talents/psionic/absorption.lua")
 load("/data/talents/psionic/finer-energy-manipulations.lua")
-load("/data/talents/psionic/mental-discipline.lua")
+--load("/data/talents/psionic/mental-discipline.lua")
 load("/data/talents/psionic/projection.lua")
 load("/data/talents/psionic/psi-fighting.lua")
 load("/data/talents/psionic/voracity.lua")
 load("/data/talents/psionic/augmented-mobility.lua")
 load("/data/talents/psionic/focus.lua")
 load("/data/talents/psionic/other.lua")
-load("/data/talents/psionic/psi-archery.lua")
-load("/data/talents/psionic/grip.lua")
-load("/data/talents/psionic/telekinetic-combat.lua")
-load("/data/talents/psionic/force.lua")
+
+load("/data/talents/psionic/kinetic-mastery.lua")
+load("/data/talents/psionic/thermal-mastery.lua")
+load("/data/talents/psionic/charged-mastery.lua")
+--load("/data/talents/psionic/psi-archery.lua")
+--load("/data/talents/psionic/grip.lua")
 
 -- Solipsist
 load("/data/talents/psionic/discharge.lua")
@@ -217,4 +215,5 @@ load("/data/talents/psionic/thought-forms.lua")
 
 
 load("/data/talents/psionic/possession.lua")
+
 

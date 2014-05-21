@@ -25,7 +25,7 @@ local nb = 0
 return {
 	generator = function()
 	return {
-		life = 30,
+		life = 60,
 		--size = 30, sizev = 2.1*64*radius/16, sizea = 0,
 		size = 1.7*2.1*64*radius, sizev = 0, sizea = 0,
 
@@ -37,8 +37,8 @@ return {
 		r = 1, rv = 0, ra = 0,
 		g = 1, gv = 0, ga = 0,
 		b = 1, bv = 0, ba = 0,
---		a = 1, av = 0, aa = 0,
-		a = 1, av = 0, aa = -0.004,
+		a = 1, av = 0, aa = 0,
+--		a = 1, av = 0, aa = -0.004,
 	}
 end, },
 function(self)

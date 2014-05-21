@@ -17,13 +17,10 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
+
 -- Note: This is consistent with raw damage but is applied after damage multipliers
 local function getShieldStrength(self, t)
-	local mult = 1
-	if self:knowTalent(self.T_ABSORPTION_MASTERY) then
-		mult = 1 + 0.5 * self:getTalentLevel(self.T_ABSORPTION_MASTERY)
-	end
-	return math.max(0, self:combatScale((1+ self:getWil(8, true))*self:getTalentLevel(t), 10, 2, 50, 50)*mult)
+	return math.max(0, self:combatMindpower())
 end
 
 local function getSpikeStrength(self, t)
@@ -32,47 +29,50 @@ local function getSpikeStrength(self, t)
 end
 
 local function getEfficiency(self, t)
-	return self:combatStatLimit("cun", 1, 0.53, 0.80) -- Limit to <100%
+	return self:combatTalentLimit(t, 100, 50, 70)/100 -- Limit to <100%
 end
 
 local function maxPsiAbsorb(self, t) -- Max psi/turn to prevent runaway psi gains (solipsist randbosses)
-	return 2 + self:combatTalentScale(t, 0.3, 1) + self:callTalent(self.T_SHIELD_DISCIPLINE, "absorbLimit")
+	return 2 + self:combatTalentScale(t, 0.3, 1)
 end
 
 local function shieldMastery(self, t)
-	return 30 - self:callTalent(self.T_SHIELD_DISCIPLINE, "mastery") - 0.4*getGemLevel(self)
+	return 100-self:combatTalentMindDamage(t, 40, 50)
 end
 
 local function kineticElement(self, t, damtype)
-	if damtype == DamageType.PHYSICAL or damtype == DamageType.ACID then return true end
-	if damtype == DamageType.NATURE and self:getTalentLevel(self.T_ABSORPTION_MASTERY) >= 3 then return true end
-	if damtype == DamageType.TEMPORAL and self:getTalentLevel(self.T_ABSORPTION_MASTERY) >= 6 then return true end
+	if damtype == DamageType.PHYSICAL then return true end
+	if damtype == DamageType.ACID and self:getTalentLevel(self.T_KINETIC_SHIELD) >= 2 then return true end
+	if damtype == DamageType.NATURE and self:getTalentLevel(self.T_KINETIC_SHIELD) >= 4 then return true end
+	if damtype == DamageType.TEMPORAL and self:getTalentLevel(self.T_KINETIC_SHIELD) >= 6 then return true end
 	return false
 end
 
 local function thermalElement(self, t, damtype)
-	if damtype == DamageType.FIRE or damtype == DamageType.COLD then return true end
-	if damtype == DamageType.LIGHT and self:getTalentLevel(self.T_ABSORPTION_MASTERY) >= 3 then return true end
-	if damtype == DamageType.ARCANE and self:getTalentLevel(self.T_ABSORPTION_MASTERY) >= 6 then return true end
+	if damtype == DamageType.FIRE then return true end
+	if damtype == DamageType.COLD and self:getTalentLevel(self.T_THERMAL_SHIELD) >= 2 then return true end
+	if damtype == DamageType.LIGHT and self:getTalentLevel(self.T_THERMAL_SHIELD) >= 4 then return true end
+	if damtype == DamageType.ARCANE and self:getTalentLevel(self.T_THERMAL_SHIELD) >= 6 then return true end
 	return false
 end
 
 local function chargedElement(self, t, damtype)
-	if damtype == DamageType.LIGHTNING or damtype == DamageType.BLIGHT then return true end
-	if damtype == DamageType.DARKNESS and self:getTalentLevel(self.T_ABSORPTION_MASTERY) >= 3 then return true end
-	if damtype == DamageType.MIND and self:getTalentLevel(self.T_ABSORPTION_MASTERY) >= 6 then return true end
+	if damtype == DamageType.LIGHTNING then return true end
+	if damtype == DamageType.BLIGHT and self:getTalentLevel(self.T_CHARGED_SHIELD) >= 3 then return true end
+	if damtype == DamageType.DARKNESS and self:getTalentLevel(self.T_CHARGED_SHIELD) >= 3 then return true end
+	if damtype == DamageType.MIND and self:getTalentLevel(self.T_CHARGED_SHIELD) >= 6 then return true end
 	return false
 end
 
 newTalent{
 	name = "Kinetic Shield",
 	type = {"psionic/absorption", 1},
-	require = psi_wil_req1,
+	require = psi_cun_req1,
 	mode = "sustained", no_sustain_autoreset = true,
 	points = 5,
 	sustain_psi = 10,
-	cooldown = function(self, t) return math.ceil(self:combatTalentLimit(t, 5, 14, 10, true)) end, --Limit > 5 Note: Shield Discipline
-	range = 10,
+	cooldown = function(self, t) return math.ceil(self:combatTalentLimit(t, 5, 14, 10, true)) end, --Limit > 5
+	range = 0,
 	no_energy = true,
 	tactical = { DEFEND = 2 },
 	on_pre_use = function(self, t, silent)
@@ -93,16 +93,17 @@ newTalent{
 		local mast = shieldMastery(self, t)
 		local total_dam = dam
 		local absorbable_dam = getEfficiency(self,t)* total_dam
+		if self:hasEffect(self.EFF_TRANSCENDENT_TELEKINESIS) then absorbable_dam = total_dam end
 		local guaranteed_dam = total_dam - absorbable_dam
 		dam = absorbable_dam
 		if not kineticElement(self, t, damtype) then return total_dam end		
 
 		local psigain = 0 
 		if dam <= self.kinetic_shield then
-			psigain = 2 + dam/mast
+			psigain = 1 + dam/mast
 			dam = 0
 		else
-			psigain = 2 + self.kinetic_shield/mast
+			psigain = 1 + self.kinetic_shield/mast
 			dam = dam - self.kinetic_shield
 		end
 		psigain = math.min(maxPsiAbsorb(self, t) - ks.psi_gain, psigain)
@@ -121,6 +122,7 @@ newTalent{
 			particle = self:addParticles(Particles.new("generic_shield", 1, {r=1, g=0, b=0.3, a=0.5}))
 		end
 
+
 		return {
 			am = self:addTemporaryValue("kinetic_shield", s_str),
 			particle = particle,
@@ -133,9 +135,9 @@ newTalent{
 		local spike_str = getSpikeStrength(self, t)
 		self:removeTemporaryValue("kinetic_shield", p.am)
 		if self:attr("save_cleanup") then return true end
-		self:removeEffect(self.EFF_THERMSPIKE_SHIELD)
-		self:removeEffect(self.EFF_CHARGESPIKE_SHIELD)
-		self:setEffect(self.EFF_KINSPIKE_SHIELD, 5, {power=spike_str, psi_gain=p.psi_gain, game_turn=p.game_turn})
+--		self:removeEffect(self.EFF_THERMSPIKE_SHIELD)
+--		self:removeEffect(self.EFF_CHARGESPIKE_SHIELD)
+--		self:setEffect(self.EFF_KINSPIKE_SHIELD, 5, {power=spike_str, psi_gain=p.psi_gain, game_turn=p.game_turn})
 		return true
 	end,
 	--called when damage gets absorbed by kinetic shield spike
@@ -180,27 +182,26 @@ newTalent{
 	end,
 	info = function(self, t)
 		local s_str = getShieldStrength(self, t)
-		local spike_str = getSpikeStrength(self, t)
-		local xs = (kineticElement(self, t, DamageType.NATURE) and ", nature" or "")..(kineticElement(self, t, DamageType.TEMPORAL) and ", temporal" or "")
 		local absorb = 100*getEfficiency(self,t)
-		return ([[Surround yourself with a shield that will absorb %d%% of any physical%s or acidic attack, up to a maximum of %d damage per attack. Deactivating the shield spikes it up to a temporary (five turns) %d point shield (only one shield can spike at once).
-		Every time your shield absorbs damage, you convert some of the attack into energy, gaining two points of Psi, plus an additional point for every %0.1f points of damage absorbed, up to a maximum %0.1f points each turn. Spiked Shields redirect this energy back into the Shield, so no Psi is gained.
-		The percentage your shield absorbs scales with cunning and the maximum amount it can absorb scales with willpower.]]):
-		format(absorb, xs, s_str, spike_str, shieldMastery(self, t), maxPsiAbsorb(self,t))
+		return ([[Surround yourself with a shield that will absorb %d%% of any physical attack, up to a maximum of %d damage per attack.
+		Every time your shield absorbs damage, you convert some of the attack into energy, gaining two points of Psi, plus an additional point for every %0.1f points of damage absorbed, up to a maximum %0.1f points each turn.
+		At talent level 2, you can also absorb acid damage.
+		At talent level 4, you can also absorb nature damage.
+		At talent level 6, you can also absorb temporal damage.
+		The maximum amount of damage your shield can absorb and the efficiency of the psi gain scale with your mindpower.]]):
+		format(absorb, s_str, shieldMastery(self, t), maxPsiAbsorb(self,t))
 	end,
 }
 
-
-
 newTalent{
 	name = "Thermal Shield",
-	type = {"psionic/absorption", 2},
-	require = psi_wil_req2,
+	type = {"psionic/absorption", 1},
+	require = psi_cun_req2,
 	mode = "sustained", no_sustain_autoreset = true,
 	points = 5,
 	sustain_psi = 10,
-	cooldown = function(self, t) return math.ceil(self:combatTalentLimit(t, 5, 14, 10, true)) end, --Limit > 5 Note: Shield Discipline
-	range = 10,
+	cooldown = function(self, t) return math.ceil(self:combatTalentLimit(t, 5, 14, 10, true)) end, --Limit > 5
+	range = 0,
 	no_energy = true,
 	tactical = { DEFEND = 2 },
 	on_pre_use = function(self, t, silent)
@@ -222,16 +223,17 @@ newTalent{
 		local mast = shieldMastery(self, t)
 		local total_dam = dam
 		local absorbable_dam = getEfficiency(self,t)* total_dam
+		if self:hasEffect(self.EFF_TRANSCENDENT_PYROKINESIS) then absorbable_dam = total_dam end
 		local guaranteed_dam = total_dam - absorbable_dam
 		dam = absorbable_dam
 		if not thermalElement(self, t, damtype) then return total_dam end
 		
 		local psigain = 0
 		if dam <= self.thermal_shield then
-			psigain = 2 + dam/mast
+			psigain = 1 + dam/mast
 			dam = 0
 		else
-			psigain = 2 + self.thermal_shield/mast
+			psigain = 1 + self.thermal_shield/mast
 			dam = dam - self.thermal_shield
 		end
 		
@@ -262,9 +264,9 @@ newTalent{
 		local spike_str = getSpikeStrength(self, t)
 		self:removeTemporaryValue("thermal_shield", p.am)
 		if self:attr("save_cleanup") then return true end
-		self:removeEffect(self.EFF_KINSPIKE_SHIELD)
-		self:removeEffect(self.EFF_CHARGESPIKE_SHIELD)
-		self:setEffect(self.EFF_THERMSPIKE_SHIELD, 5, {power=spike_str, psi_gain=p.psi_gain, game_turn=p.game_turn})
+--		self:removeEffect(self.EFF_KINSPIKE_SHIELD)
+--		self:removeEffect(self.EFF_CHARGESPIKE_SHIELD)
+--		self:setEffect(self.EFF_THERMSPIKE_SHIELD, 5, {power=spike_str, psi_gain=p.psi_gain, game_turn=p.game_turn})
 		return true
 	end,
 	--called when damage gets absorbed by thermal shield spike
@@ -307,25 +309,26 @@ newTalent{
 	end,
 	info = function(self, t)
 		local s_str = getShieldStrength(self, t)
-		local spike_str = getSpikeStrength(self, t)
-		local xs = (thermalElement(self, t, DamageType.LIGHT) and ", light" or "")..(thermalElement(self, t, DamageType.ARCANE) and ", arcane" or "")
 		local absorb = 100*getEfficiency(self,t)
-		return ([[Surround yourself with a shield that will absorb %d%% of any fire%s or cold attack, up to a maximum of %d damage per attack. Deactivating the shield spikes it up to a temporary (five turns) %d point shield (only one shield can spike at once).
-		Every time your shield absorbs damage, you convert some of the attack into energy, gaining two points of Psi, plus an additional point for every %0.1f points of damage absorbed, up to a maximum %0.1f points each turn. Spiked Shields redirect this energy back into the Shield, so no Psi is gained.
-		The percentage your shield absorbs scales with cunning and the maximum amount it can absorb scales with willpower.]]):
-		format(absorb, xs, s_str, spike_str, shieldMastery(self, t), maxPsiAbsorb(self,t))
+		return ([[Surround yourself with a shield that will absorb %d%% of any fire attack, up to a maximum of %d damage per attack. 
+		Every time your shield absorbs damage, you convert some of the attack into energy, gaining two points of Psi, plus an additional point for every %0.1f points of damage absorbed, up to a maximum %0.1f points each turn.
+		At talent level 2, you can also absorb cold damage.
+		At talent level 4, you can also absorb light damage.
+		At talent level 6, you can also absorb arcane damage.
+		The maximum amount of damage your shield can absorb and the efficiency of the psi gain scale with your mindpower.]]):
+		format(absorb, s_str, shieldMastery(self, t), maxPsiAbsorb(self,t))
 	end,
 }
 
 newTalent{
 	name = "Charged Shield",
-	type = {"psionic/absorption", 3},
-	require = psi_wil_req3,
+	type = {"psionic/absorption", 1},
+	require = psi_cun_req3,
 	mode = "sustained", no_sustain_autoreset = true,
 	points = 5,
 	sustain_psi = 10,
-	cooldown = function(self, t) return math.ceil(self:combatTalentLimit(t, 5, 14, 10, true)) end, --Limit > 5 Note: Shield Discipline
-	range = 10,
+	cooldown = function(self, t) return math.ceil(self:combatTalentLimit(t, 5, 14, 10, true)) end, --Limit > 5
+	range = 0,
 	no_energy = true,
 	tactical = { DEFEND = 2 },
 	on_pre_use = function(self, t, silent)
@@ -346,16 +349,17 @@ newTalent{
 		local mast = shieldMastery(self, t)
 		local total_dam = dam
 		local absorbable_dam = getEfficiency(self,t)* total_dam
+		if self:hasEffect(self.EFF_TRANSCENDENT_ELECTROKINESIS) then absorbable_dam = total_dam end
 		local guaranteed_dam = total_dam - absorbable_dam
 		dam = absorbable_dam
 		if not chargedElement(self, t, damtype) then return total_dam end
 
 		local psigain = 0
 		if dam <= self.charged_shield then
-			psigain = 2 + dam/mast
+			psigain = 1 + dam/mast
 			dam = 0
 		else
-			psigain = 2 + self.charged_shield/mast
+			psigain = 1 + self.charged_shield/mast
 			dam = dam - self.charged_shield
 		end
 		psigain = math.min(maxPsiAbsorb(self, t) - cs.psi_gain, psigain)
@@ -384,9 +388,9 @@ newTalent{
 		local spike_str = getSpikeStrength(self, t)
 		self:removeTemporaryValue("charged_shield", p.am)
 		if self:attr("save_cleanup") then return true end
-		self:removeEffect(self.EFF_THERMSPIKE_SHIELD)
-		self:removeEffect(self.EFF_KINSPIKE_SHIELD)
-		self:setEffect(self.EFF_CHARGESPIKE_SHIELD, 5, {power=spike_str, psi_gain=p.psi_gain, game_turn=p.game_turn})
+--		self:removeEffect(self.EFF_THERMSPIKE_SHIELD)
+--		self:removeEffect(self.EFF_KINSPIKE_SHIELD)
+--		self:setEffect(self.EFF_CHARGESPIKE_SHIELD, 5, {power=spike_str, psi_gain=p.psi_gain, game_turn=p.game_turn})
 		return true
 	end,
 	--called when damage gets absorbed by charged shield spike
@@ -431,42 +435,67 @@ newTalent{
 	end,
 	info = function(self, t)
 		local s_str = getShieldStrength(self, t)
-		local spike_str = getSpikeStrength(self, t)
-		local xs = (chargedElement(self, t, DamageType.DARKNESS) and ", darkness" or "")..(chargedElement(self, t, DamageType.MIND) and ", mind" or "")
 		local absorb = 100*getEfficiency(self,t)
-		return ([[Surround yourself with a shield that will absorb %d%% of any lightning%s or blight attack, up to a maximum of %d damage per attack. Deactivating the shield spikes it up to a temporary (five turns) %d point shield (only one shield can spike at once).
-		Every time your shield absorbs damage, you convert some of the attack into energy, gaining two points of Psi, plus an additional point for every %0.1f points of damage absorbed, up to a maximum %0.1f points each turn. Spiked Shields redirect this energy back into the Shield, so no Psi is gained.
-		The percentage your shield absorbs scales with cunning and the maximum amount it can absorb scales with willpower.]]):
-		format(absorb, xs, s_str, spike_str, shieldMastery(self, t), maxPsiAbsorb(self,t))
+		return ([[Surround yourself with a shield that will absorb %d%% of any lightning attack, up to a maximum of %d damage per attack.
+		Every time your shield absorbs damage, you convert some of the attack into energy, gaining two points of Psi, plus an additional point for every %0.1f points of damage absorbed, up to a maximum %0.1f points each turn.
+		At talent level 2, you can also absorb blight damage.
+		At talent level 4, you can also absorb darkness damage.
+		At talent level 6, you can also absorb mind damage.
+		The maximum amount of damage your shield can absorb and the efficiency of the psi gain scale with your mindpower.]]):
+		format(absorb, s_str, shieldMastery(self, t), maxPsiAbsorb(self,t))
 	end,
 }
 
 newTalent{
-	name = "Absorption Mastery",
+	name = "Forcefield",
 	type = {"psionic/absorption", 4},
-	require = psi_wil_req4,
-	cooldown = function(self, t) return math.ceil(self:combatTalentLimit(t, 30, 100, 60)) end, --Limit to >30
-	psi = 15,
+	require = psi_cun_req4,
 	points = 5,
+	mode = "sustained",
+	sustain_psi = 30,
+	cooldown = 40,
 	no_energy = true,
-	tactical = { BUFF = 3 },
-	action = function(self, t)
-		if self.talents_cd[self.T_KINETIC_SHIELD] == nil and self.talents_cd[self.T_THERMAL_SHIELD] == nil and self.talents_cd[self.T_CHARGED_SHIELD] == nil then
-			return
-		else
-			self.talents_cd[self.T_KINETIC_SHIELD] = nil
-			self.talents_cd[self.T_THERMAL_SHIELD] = nil
-			self.talents_cd[self.T_CHARGED_SHIELD] = nil
-			return true
-		end
+	tactical = { BUFF = 2, HEAL = 4 },
+	range = 0,
+	radius = 1,
+	getResist = function(self, t) return self:combatTalentLimit(t, 80, 30, 65) end,
+	getCost = function(self, t) return 1.0 - self:combatTalentLimit(t, 1, 0.5, 0.85) end,
+	target = function(self, t)
+		return {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t), selffire=false, talent=t}
 	end,
-
+	activate = function(self, t)
+		local ret = {}
+		if core.shader.active(4) then
+			ret.particle = self:addParticles(Particles.new("shader_shield", 1, {size_factor=1.4, blend=true, img="forcefield"}, {type="shield", shieldIntensity=0.15, color={1,1,1}}))
+		else
+			ret.particle = self:addParticles(Particles.new("damage_shield", 1))
+		end
+		return ret
+	end,
+	deactivate = function(self, t, p)
+		self:removeParticles(p.particle)
+		return true
+	end,
+	callbackOnTakeDamage = function(self, t, src, x, y, damtype, dam, tmp, no_martyr)
+		local ff = self:isTalentActive(t.id)
+		if not ff then return dam end
+		local total_dam = dam
+		local absorbable_dam = t.getResist(self,t) / 100 * total_dam
+		local guaranteed_dam = total_dam - absorbable_dam
+		local psicost = t.getCost(self,t) * absorbable_dam
+		self:incPsi(-psicost)
+		return {dam=guaranteed_dam}
+	end,
+	callbackOnActBase = function(self, t)
+		if self.psi < self.max_psi / 10 then self:forceUseTalent(self.T_FORCEFIELD, {ignore_energy=true}) return end
+		self:incPsi(self.max_psi / -10)
+		
+		local tg = self:getTalentTarget(t)
+		self:project(tg, self.x, self.y, DamageType.MINDKNOCKBACK, 0)
+	end,
 	info = function(self, t)
-		return ([[When activated, brings all shields off cooldown. Additional talent points spent in Absorption Mastery allow it to be used more frequently.
-		At level 3 and 6, your shields gain new elemental absorption:
-		- Kinetic Shield: Nature at level 3, Temporal at level 6
-		- Thermal Shield: Light at level 3, Arcane at level 6
-		- Charged Shield: Darkness at level 3, Mind at level 6
-		Also increases the maximum amount absorbable by your shields by %d%%.]]):format(self:getTalentLevel(t)*5)
+		return ([[Surround yourself with a forcefield, reducing all incoming damage by %d%% and knocking back adjacent enemies each turn. 
+		This talent drains 10%% of your maximum psi each turn, plus an additional %0.2f psi for every point of damage reduced.]]):
+		format(t.getResist(self,t), t.getCost(self,t))
 	end,
 }

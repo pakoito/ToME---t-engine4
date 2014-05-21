@@ -3078,3 +3078,106 @@ newEffect{
 	deactivate = function(self, eff)
 	end,
 }
+
+newEffect{
+	name = "THOUGHTSENSE", image = "talents/track.png",
+	desc = "Thought Sense",
+	long_desc = function(self, eff) return ("Detect nearby thoughts, revealing creature locations in a radius of %d and boosting defense by %d."):format(eff.range, eff.def) end,
+	type = "mental",
+	subtype = { tactic=true },
+	status = "beneficial",
+	parameters = { },
+	on_gain = function(self, eff) return nil, nil end,
+	on_lose = function(self, eff) return nil, nil end,
+	activate = function(self, eff)
+		self:effectTemporaryValue(eff, "detect_range", eff.range)
+		self:effectTemporaryValue(eff, "detect_actor", 1)
+		self:effectTemporaryValue(eff, "combat_def", eff.def)
+		game.level.map.changed = true
+	end,
+	deactivate = function(self, eff)
+	end,
+}
+
+newEffect{
+	name = "STATIC_CHARGE", image = "talents/static_net.png",
+	desc = "Static Charge",
+	long_desc = function(self, eff) return ("You have collected electric charge. Your next hit does %d extra lightning damage.."):format(eff.power) end,
+	type = "mental",
+	subtype = { lightning=true },
+	status = "beneficial",
+	parameters = { },
+	on_gain = function(self, eff) return nil, nil end,
+	on_lose = function(self, eff) return nil, nil end,
+	on_merge = function(self, old_eff, new_eff)
+		new_eff.power = new_eff.power + old_eff.power
+		return new_eff
+	end,
+	activate = function(self, eff)
+	end,
+	deactivate = function(self, eff)
+	end,
+}
+
+newEffect{
+	name = "HEART_STARTED", image = "talents/heartstart.png",
+	desc = "Heart Started",
+	long_desc = function(self, eff) return ("You are keeping your heart pumping with psionic charges, granting you a negative shield of %d."):format(eff.power) end,
+	type = "mental",
+	subtype = { lightning=true },
+	status = "beneficial",
+	parameters = { power=10 },
+	activate = function(self, eff)
+		self:effectTemporaryValue(eff, "die_at", -eff.power)
+	end,
+	deactivate = function(self, eff)	
+	end,
+}
+
+newEffect{
+	name = "TRANSCENDENT_TELEKINESIS", image = "talents/transcendent_telekinesis.png",
+	desc = "Transcendent Telekinesis",
+	long_desc = function(self, eff) return ("Your telekinesis transcends normal limits. +%d physical damage and penetration, and improved kinetic effects."):format(eff.power) end,
+	type = "mental",
+	subtype = { physical=true },
+	status = "beneficial",
+	parameters = { power=10 },
+	activate = function(self, eff)
+		self:effectTemporaryValue(eff, "inc_damage", {[DamageType.PHYSICAL]=eff.power})
+		self:effectTemporaryValue(eff, "resists_pen", {[DamageType.PHYSICAL]=eff.power})
+	end,
+	deactivate = function(self, eff)	
+	end,
+}
+
+newEffect{
+	name = "TRANSCENDENT_PYROKINESIS", image = "talents/transcendent_pyrokinesis.png",
+	desc = "Transcendent Pyrokinesis",
+	long_desc = function(self, eff) return ("Your pyrokinesis transcends normal limits. +%d fire/cold damage and penetration, and improved thermal effects."):format(eff.power) end,
+	type = "mental",
+	subtype = { fire=true, cold=true },
+	status = "beneficial",
+	parameters = { power=10 },
+	activate = function(self, eff)
+		self:effectTemporaryValue(eff, "inc_damage", {[DamageType.FIRE]=eff.power, [DamageType.COLD]=eff.power})
+		self:effectTemporaryValue(eff, "resists_pen", {[DamageType.FIRE]=eff.power, [DamageType.COLD]=eff.power})
+	end,
+	deactivate = function(self, eff)	
+	end,
+}
+
+newEffect{
+	name = "TRANSCENDENT_ELECTROKINESIS", image = "talents/transcendent_electrokinesis.png",
+	desc = "Transcendent Electrokinesis",
+	long_desc = function(self, eff) return ("Your electrokinesis transcends normal limits. +%d lightning damage and penetration, and improved charged effects."):format(eff.power) end,
+	type = "mental",
+	subtype = { lightning=true, mind=true },
+	status = "beneficial",
+	parameters = { power=10 },
+	activate = function(self, eff)
+		self:effectTemporaryValue(eff, "inc_damage", {[DamageType.LIGHTNING]=eff.power})
+		self:effectTemporaryValue(eff, "resists_pen", {[DamageType.LIGHTNING]=eff.power})
+	end,
+	deactivate = function(self, eff)	
+	end,
+}

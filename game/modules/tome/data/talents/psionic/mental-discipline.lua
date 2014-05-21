@@ -43,16 +43,12 @@ newTalent{
 	points = 5,
 	mode = "passive",
 	mastery = function(self,t) return self:combatTalentLimit(t, 20, 3, 10) end, -- Adjustment to damage absorption, Limit to 20
-	cooldownred = function(self,t) return math.floor(self:combatTalentLimit(t, 5, 1, 3)) end,  -- Limit to <5 turns reduction
+	cooldownred = function(self,t) return math.floor(self:combatTalentLimit(t, 16, 4, 10)) end,  -- Limit to <16 turns reduction
 	absorbLimit = function(self,t) return self:combatTalentScale(t, 0.5, 2) end, -- Limit of bonus psi on shield hit per turn
-	passives = function(self, t, p)
-		self:talentTemporaryValue(p, "talent_cd_reduction", {T_KINETIC_SHIELD = t.cooldownred(self, t),
-			T_THERMAL_SHIELD = t.cooldownred(self, t),T_CHARGED_SHIELD = t.cooldownred(self, t)})
-	end,
 	info = function(self, t)
 		local cooldown = t.cooldownred(self,t)
 		local mast = t.mastery(self,t)
-		return ([[Your expertise in the art of energy absorption grows. Shield cooldowns are all reduced by %d turn(s), the amount of damage absorption required to gain a point of energy is reduced by %0.1f, and the maximum energy you can gain from each shield is increased by %0.1f per turn.]]):
+		return ([[Your expertise in the art of energy absorption grows. Shield cooldowns are all reduced by %d turns, the amount of damage absorption required to gain a point of energy is reduced by %0.1f, and the maximum energy you can gain from each shield is increased by %0.1f per turn.]]):
 		format(cooldown, mast, t.absorbLimit(self, t))
 	end,
 }

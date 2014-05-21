@@ -17,6 +17,7 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
+
 newTalent{
 	name = "Kinetic Leech",
 	type = {"psionic/voracity", 1},
@@ -29,11 +30,7 @@ newTalent{
 	tactical = { DEFEND = 1, DISABLE = 2 },
 	direct_hit = true,
 	range = 0,
-	radius = function(self, t)
-		local r = 2
-		local mult = 1 + 0.01*self:callTalent(self.T_REACH, "rangebonus")
-		return math.ceil(r*mult)
-	end,
+	radius = 2,
 	target = function(self, t)
 		return {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t), selffire=false, talent=t}
 	end,
@@ -51,30 +48,41 @@ newTalent{
 		local dam = t.getDam(self, t) * (0.5 + (self:getMaxPsi() - self:getPsi()) / self:getMaxPsi())
 		local slow = t.getSlow(self, t)/100 * (0.5 + (self:getMaxPsi() - self:getPsi()) / self:getMaxPsi())
 		local tg = self:getTalentTarget(t)
+		local trans = self:hasEffect(self.EFF_TRANSCENDENT_TELEKINESIS)
 		self:project(tg, self.x, self.y, function(tx, ty)
 			local act = game.level.map(tx, ty, engine.Map.ACTOR)
 			if act then
 				self:incPsi(en)
 				act:incStamina(-dam)
+				if trans then
+					if act:canBe("sleep") then
+						act:setEffect(act.EFF_SLEEP, 4, {src=self, power=en, insomnia=en, no_ct_effect=true, apply_power=self:combatMindpower()})
+						game.level.map:particleEmitter(act.x, act.y, 1, "generic_charge", {rm=0, rM=0, gm=180, gM=255, bm=180, bM=255, am=35, aM=90})
+					else
+						game.logSeen(self, "%s resists the sleep!", act.name:capitalize())
+					end
+				end
 			end
 			DamageType:get(DamageType.MINDSLOW).projector(self, tx, ty, DamageType.MINDSLOW, slow)
+			
 		end)
 		return true
 	end,
 	info = function(self, t)
 		local range = self:getTalentRadius(t)
 		local slow = t.getSlow(self, t)
-		local dam = damDesc(self, DamageType.PHYSICAL, t.getDam(self, t))
+		local dam = t.getDam(self, t)
 		local en = t.getLeech(self, t)
 		return ([[You suck the kinetic energy out of your surroundings, slowing all targets in a radius of %d by %d%% for four turns and draining %0.2f stamina from them.
 		For each target drained, you gain %d Psi. The Psi gain and damage will improve with your Mindpower.
-		The strength of these effects also scales with your current Psi. Ranging from -50%% at full Psi to +50%% at 0 Psi.]]):format(range, slow, en, dam)
+		The strength of these effects also scales with your current Psi. Ranging from -50%% at full Psi to +50%% at 0 Psi.]]):format(range, slow, dam, en)
 	end,
 }
 
+
 newTalent{
 	name = "Thermal Leech",
-	type = {"psionic/voracity", 2},
+	type = {"psionic/voracity", 1},
 	require = psi_wil_req2,
 	points = 5,
 	cooldown = function(self, t)
@@ -83,11 +91,7 @@ newTalent{
 	psi = 0,
 	tactical = { DEFEND = 2, DISABLE = { stun = 2 } },
 	range = 0,
-	radius = function(self, t)
-		local r = 2
-		local mult = 1 + 0.01*self:callTalent(self.T_REACH, "rangebonus")
-		return math.ceil(r*mult)
-	end,
+	radius = 2,
 	target = function(self, t)
 		return {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t), selffire=false, talent=t}
 	end,
@@ -103,13 +107,18 @@ newTalent{
 		local dam = t.getDam(self, t) * (0.5 + (self:getMaxPsi() - self:getPsi()) / self:getMaxPsi())
 		local dur = t.getDur(self, t) * (0.5 + (self:getMaxPsi() - self:getPsi()) / self:getMaxPsi())
 		local tg = self:getTalentTarget(t)
+		local trans = self:hasEffect(self.EFF_TRANSCENDENT_PYROKINESIS)
 		self:project(tg, self.x, self.y, function(tx, ty)
 			local act = game.level.map(tx, ty, engine.Map.ACTOR)
 			if act then
 				self:incPsi(en)
+				if trans then
+					act:setEffect(act.EFF_WEAKENED, 4, {power=en, apply_power=self:combatMindpower()})
+				end
 			end
-			DamageType:get(DamageType.COLD).projector(self, tx, ty, DamageType.COLD, {power_check=self:combatMindpower(), dam=dam})
+			DamageType:get(DamageType.COLD).projector(self, tx, ty, DamageType.COLD, dam)
 			DamageType:get(DamageType.MINDFREEZE).projector(self, tx, ty, DamageType.MINDFREEZE, dur)
+			
 		end)
 		return true
 	end,
@@ -127,7 +136,7 @@ newTalent{
 
 newTalent{
 	name = "Charge Leech",
-	type = {"psionic/voracity", 3},
+	type = {"psionic/voracity", 1},
 	require = psi_wil_req3,
 	points = 5,
 	psi = 0,
@@ -137,11 +146,7 @@ newTalent{
 	tactical = { DEFEND = 2, ATTACKAREA = { LIGHTNING = 2 }, DISABLE = { stun = 1 } },
 	direct_hit = true,
 	range = 0,
-	radius = function(self, t)
-		local r = 2
-		local mult = 1 + 0.01*self:callTalent(self.T_REACH, "rangebonus")
-		return math.ceil(r*mult)
-	end,
+	radius = 2,
 	target = function(self, t)
 		return {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t), selffire=false, talent=t}
 	end,
@@ -155,12 +160,17 @@ newTalent{
 		local en = t.getLeech(self, t) * (0.5 + (self:getMaxPsi() - self:getPsi()) / self:getMaxPsi())
 		local dam = self:mindCrit(t.getDam(self, t)) * (0.5 + (self:getMaxPsi() - self:getPsi()) / self:getMaxPsi())
 		local tg = self:getTalentTarget(t)
+		local trans = self:hasEffect(self.EFF_TRANSCENDENT_ELECTROKINESIS)
 		self:project(tg, self.x, self.y, function(tx, ty)
 			local act = game.level.map(tx, ty, engine.Map.ACTOR)
 			if act then
 				self:incPsi(en)
+				if trans then
+					DamageType:get(DamageType.CONFUSION).projector(self, tx, ty, DamageType.CONFUSION, {power_check=self:combatMindpower(), dam=en, dur=4})
+				end
 			end
 			DamageType:get(DamageType.LIGHTNING_DAZE).projector(self, tx, ty, DamageType.LIGHTNING_DAZE, {power_check=self:combatMindpower(), dam=dam})
+			
 		end)
 		-- Lightning ball gets a special treatment to make it look neat
 		local sradius = (tg.radius + 0.5) * (engine.Map.tile_w + engine.Map.tile_h) / 2
@@ -185,24 +195,20 @@ newTalent{
 		The strength of these effects also scales with your current Psi. Ranging from -50%% at full Psi to +50%% at 0 Psi.]]):format(range, dam, en)
 	end,
 }
+
 newTalent{
 	name = "Insatiable",
 	type = {"psionic/voracity", 4},
 	mode = "passive",
 	points = 5,
 	require = psi_wil_req4,
-	on_learn = function(self, t)
-		self.max_psi = self.max_psi + 10
-		self.psi_per_kill = (self.psi_per_kill or 0 ) + 1
-		self.psi_on_crit = (self.psi_on_crit or 0 ) + 0.5
-	end,
-	on_unlearn = function(self, t)
-		self.max_psi = self.max_psi - 10
-		self.psi_per_kill = self.psi_per_kill - 1
-		self.psi_on_crit = self.psi_on_crit - 0.5
+	passives = function(self, t, p)
+		self:talentTemporaryValue(p, "max_psi", self:getTalentLevel(t)*10)
+		self:talentTemporaryValue(p, "psi_per_kill", self:getTalentLevel(t))
+		self:talentTemporaryValue(p, "psi_on_crit", self:getTalentLevel(t) * 0.5)
 	end,
 	info = function(self, t)
-		return ([[Increases your maximum energy by %d. You also gain %d Psi on kill and %0.1f Psi per mind critical.]]):format(10 * self:getTalentLevelRaw(t), self:getTalentLevelRaw(t), self:getTalentLevelRaw(t)/2)
+		return ([[Increases your maximum energy by %d. You also gain %d Psi on kill and %0.1f Psi per mind critical.]]):format(10 * self:getTalentLevel(t), self:getTalentLevel(t), self:getTalentLevel(t)/2)
 	end,
 }
 

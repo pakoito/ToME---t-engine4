@@ -45,6 +45,7 @@ function _M:init()
 	self.on_event = {}
 	self.full_log = {}
 	self.last_whispers = {}
+	self.friends = {}
 end
 
 --- Hook up in the current running game
@@ -299,6 +300,32 @@ Again, thank you, and enjoy Eyal!
 			game.logChat("#{italic}##FIREBRICK#%s has left channel %s.#{normal}#", e.login, e.channel)
 		end
 		self:updateChanList()
+	elseif e.se == "FriendJoin" then
+		local color = colors.WHITE
+		if e.status == 'dev' then color = colors.CRIMSON
+		elseif e.status == 'mod' then color = colors.GOLD
+		elseif e.donator == "oneshot" then color = colors.LIGHT_GREEN
+		elseif e.donator == "recurring" then color = colors.ROYAL_BLUE end
+
+		self.friends[e.login] = {name=e.name, donator=e.donator, status=e.status, login=e.login}
+		if not e.silent then
+			self:addMessage("friendjoin", self.cur_channel, e.login, {e.name, color}, "#{italic}##YELLOW_GREEN#has logged in#{normal}#", nil, true)
+			if type(game) == "table" and game.logChat then
+				game.logChat("#{italic}##YELLOW_GREEN#%s has logged in (press space to talk).#{normal}#", e.login, e.channel)
+			end
+		end
+	elseif e.se == "FriendPart" then
+		local color = colors.WHITE
+		if e.status == 'dev' then color = colors.CRIMSON
+		elseif e.status == 'mod' then color = colors.GOLD
+		elseif e.donator == "oneshot" then color = colors.LIGHT_GREEN
+		elseif e.donator == "recurring" then color = colors.ROYAL_BLUE end
+
+		self.friends[e.login] = nil
+		self:addMessage("friendpart", self.cur_channel, e.login, {e.name, color}, "#{italic}##CRIMSON#has logged off#{normal}#", nil, true)
+		if type(game) == "table" and game.logChat then
+			game.logChat("#{italic}##CRIMSON#%s has logged off.#{normal}#", e.login, e.channel)
+		end
 	elseif e.se == "UserInfo" then
 		local info = e.data:unserialize()
 		if not info then return end
@@ -429,6 +456,10 @@ function _M:findChannel(name)
 end
 
 function _M:findUser(name)
+	for login, data in pairs(self.friends) do
+		print("===friendtest", data.name:lower(), name:lower())
+		if data.name:lower() == name:lower() then return data.name end
+	end
 	if not self.channels[self.cur_channel] then return end
 	for login, data in pairs(self.channels[self.cur_channel].users) do
 		if data.name:lower() == name:lower() then return data.name end

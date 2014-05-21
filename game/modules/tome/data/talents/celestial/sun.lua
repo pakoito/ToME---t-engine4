@@ -69,81 +69,10 @@ newTalent{
 	end,
 }
 
--- Core class defense to be compared with Bone Shield, Aegis, Indiscernable Anatomy, etc
--- Moderate offensive scaler
--- The CD reduction effects more abilities on the class than it doesn't
--- Banned from NPCs due to sheer scaling insanity
-newTalent{
-	name = "Suncloak",
-	type = {"celestial/sun", 2},
-	require = divi_req2,
-	points = 5,
-	cooldown = 15, -- 20 was accounting for it buffing itself
-	fixed_cooldown = true,
-	positive = -15,
-	tactical = { BUFF = 2 },
-	direct_hit = true,
-	no_npc_use = true,
-	requires_target = true,
-	range = 10,
-	getCap = function(self, t) return self:combatTalentLimit(t, 30, 90, 70) end,
-	getHaste = function(self, t) return math.min(0.5, self:combatTalentSpellDamage(t, 0.1, 0.4)) end,
-	getCD = function(self, t) return self:combatLimit(self:combatTalentSpellDamage(t, 5, 450), 0.5, .03, 32, .35, 350) end, -- Limit < 50% cooldown reduction
-	action = function(self, t)
-		self:setEffect(self.EFF_SUNCLOAK, 6, {cap=t.getCap(self, t), haste=t.getHaste(self, t), cd=t.getCD(self, t)})
-		game:playSoundNear(self, "talents/flame")
-		return true
-	end,
-	info = function(self, t)
-		return ([[You wrap yourself in a cloak of sunlight that empowers your magic and protects you for 6 turns.
-		While the cloak is active, your spell casting speed is increased by %d%%, your spell cooldowns are reduced by %d%%, and you cannot take more than %d%% of your maximum life from a single blow.
-		The effects will increase with your Spellpower.]]):
-		format(t.getHaste(self, t)*100, t.getCD(self, t)*100, t.getCap(self, t))
-   end,
-}
-
--- Can someone put a really obvious visual on this?
-newTalent{
-	name = "Sun's Vengeance", short_name = "SUN_VENGEANCE",
-	type = {"celestial/sun",3},
-	require = divi_req3,
-	mode = "passive",
-	points = 5,
-	getCrit = function(self, t) return self:combatTalentScale(t, 2, 10, 0.75) end,
-	getProcChance = function(self, t) return self:combatTalentLimit(t, 100, 30, 75) end,
-	passives = function(self, t, p)
-		self:talentTemporaryValue(p, "combat_spellcrit", t.getCrit(self, t))
-		self:talentTemporaryValue(p, "combat_physcrit", t.getCrit(self, t))
-	end,
-	callbackOnCrit = function(self, t, kind, dam, chance)
-		if kind ~= "spell" and kind ~= "physical" then return end
-		if not rng.percent(t.getProcChance(self, t)) then return end
-		if self.turn_procs.sun_vengeance then return end --Note: this will trigger a lot since it get's multiple chances a turn
-		self.turn_procs.sun_vengeance = true
-
-		if self:isTalentCoolingDown(self.T_SUN_BEAM) then
-			self.talents_cd[self.T_SUN_BEAM] = self.talents_cd[self.T_SUN_BEAM] - 1
-			if self.talents_cd[self.T_SUN_BEAM] <= 0 then self.talents_cd[self.T_SUN_BEAM] = nil end
-		else
-			self:setEffect(self.EFF_SUN_VENGEANCE, 2, {})
-		end
-	end,
-	info = function(self, t)
-		local crit = t.getCrit(self, t)
-		local chance = t.getProcChance(self, t)
-		return ([[Infuse yourself with the raging fury of the Sun, increasing your physical and spell critical chance by %d%%.
-		Each time you crit with a physical attack or a spell you have %d%% chance to gain Sun's Vengeance for 2 turns.
-		While affected by Sun's Vengeance, your Sun Ray will take no time to use and will deal 25%% more damage.
-		If Sun Ray was on cooldown, the remaining turns are reduced by one instead.
-		This effect can only happen once per turn.]]):
-		format(crit, chance)
-	end,
-}
-
 newTalent{
 	name = "Path of the Sun",
-	type = {"celestial/sun", 4},
-	require = divi_req4,
+	type = {"celestial/sun", 2},
+	require = divi_req2,
 	points = 5,
 	cooldown = 15,
 	positive = -20,
@@ -180,3 +109,75 @@ newTalent{
 		The damage done will increase with your Spellpower.]]):format(damDesc(self, DamageType.LIGHT, damage / 5), radius)
 	end,
 }
+
+-- Can someone put a really obvious visual on this?
+newTalent{
+	name = "Sun's Vengeance", short_name = "SUN_VENGEANCE",
+	type = {"celestial/sun",2},
+	require = divi_req2,
+	mode = "passive",
+	points = 5,
+	getCrit = function(self, t) return self:combatTalentScale(t, 2, 10, 0.75) end,
+	getProcChance = function(self, t) return self:combatTalentLimit(t, 100, 30, 75) end,
+	passives = function(self, t, p)
+		self:talentTemporaryValue(p, "combat_spellcrit", t.getCrit(self, t))
+		self:talentTemporaryValue(p, "combat_physcrit", t.getCrit(self, t))
+	end,
+	callbackOnCrit = function(self, t, kind, dam, chance)
+		if kind ~= "spell" and kind ~= "physical" then return end
+		if not rng.percent(t.getProcChance(self, t)) then return end
+		if self.turn_procs.sun_vengeance then return end --Note: this will trigger a lot since it get's multiple chances a turn
+		self.turn_procs.sun_vengeance = true
+
+		if self:isTalentCoolingDown(self.T_SUN_BEAM) then
+			self.talents_cd[self.T_SUN_BEAM] = self.talents_cd[self.T_SUN_BEAM] - 1
+			if self.talents_cd[self.T_SUN_BEAM] <= 0 then self.talents_cd[self.T_SUN_BEAM] = nil end
+		else
+			self:setEffect(self.EFF_SUN_VENGEANCE, 2, {})
+		end
+	end,
+	info = function(self, t)
+		local crit = t.getCrit(self, t)
+		local chance = t.getProcChance(self, t)
+		return ([[Infuse yourself with the raging fury of the Sun, increasing your physical and spell critical chance by %d%%.
+		Each time you crit with a physical attack or a spell you have %d%% chance to gain Sun's Vengeance for 2 turns.
+		While affected by Sun's Vengeance, your Sun Ray will take no time to use and will deal 25%% more damage.
+		If Sun Ray was on cooldown, the remaining turns are reduced by one instead.
+		This effect can only happen once per turn.]]):
+		format(crit, chance)
+	end,
+}
+
+-- Core class defense to be compared with Bone Shield, Aegis, Indiscernable Anatomy, etc
+-- Moderate offensive scaler
+-- The CD reduction effects more abilities on the class than it doesn't
+-- Banned from NPCs due to sheer scaling insanity
+newTalent{
+	name = "Suncloak",
+	type = {"celestial/sun", 4},
+	require = divi_req4,
+	points = 5,
+	cooldown = 15, -- 20 was accounting for it buffing itself
+	fixed_cooldown = true,
+	positive = -15,
+	tactical = { BUFF = 2 },
+	direct_hit = true,
+	no_npc_use = true,
+	requires_target = true,
+	range = 10,
+	getCap = function(self, t) return self:combatTalentLimit(t, 30, 90, 70) end,
+	getHaste = function(self, t) return math.min(0.5, self:combatTalentSpellDamage(t, 0.1, 0.4)) end,
+	getCD = function(self, t) return self:combatLimit(self:combatTalentSpellDamage(t, 5, 450), 0.5, .03, 32, .35, 350) end, -- Limit < 50% cooldown reduction
+	action = function(self, t)
+		self:setEffect(self.EFF_SUNCLOAK, 6, {cap=t.getCap(self, t), haste=t.getHaste(self, t), cd=t.getCD(self, t)})
+		game:playSoundNear(self, "talents/flame")
+		return true
+	end,
+	info = function(self, t)
+		return ([[You wrap yourself in a cloak of sunlight that empowers your magic and protects you for 6 turns.
+		While the cloak is active, your spell casting speed is increased by %d%%, your spell cooldowns are reduced by %d%%, and you cannot take more than %d%% of your maximum life from a single blow.
+		The effects will increase with your Spellpower.]]):
+		format(t.getHaste(self, t)*100, t.getCD(self, t)*100, t.getCap(self, t))
+   end,
+}
+

@@ -101,13 +101,14 @@ newTalent{
 		if type(tkweapon) == "boolean" then tkweapon = nil end
 		if not tkweapon or tkweapon.type ~= "weapon" or tkweapon.subtype == "mindstar" then return end
 
+
 		local targnum = 1
-		if self:hasEffect(self.EFF_PSIFRENZY) then targnum = self:callTalent(self.T_FRENZIED_PSIFIGHTING, "getTargNum") end
+		if self:hasEffect(self.EFF_PSIFRENZY) then targnum = self:hasEffect(self.EFF_PSIFRENZY).power end
 		local speed, hit = nil, false
 		local sound, sound_miss = nil, nil
 		--dam = self:getTalentLevel(t)
 		local tgts = {}
-		local grids = core.fov.circle_grids(self.x, self.y, 1, true)
+		local grids = core.fov.circle_grids(self.x, self.y, targnum, true)
 		for x, yy in pairs(grids) do for y, _ in pairs(grids[x]) do
 			local a = game.level.map(x, y, Map.ACTOR)
 			if a and self:reactionToward(a) < 0 then
@@ -126,14 +127,14 @@ newTalent{
 				for i, o in ipairs(self:getInven(self.INVEN_PSIONIC_FOCUS)) do
 					if o.combat and not o.archery then
 						print("[PSI ATTACK] attacking with", o.name)
-						self:attr("use_psi_combat", 1)
+						self.use_psi_combat = true
 						local s, h = self:attackTargetWith(a, o.combat, nil, 1)
-						self:attr("use_psi_combat", -1)
+						self.use_psi_combat = false
 						speed = math.max(speed or 0, s)
 						hit = hit or h
 						if hit and not sound then sound = o.combat.sound
 						elseif not hit and not sound_miss then sound_miss = o.combat.sound_miss end
-						if not o.combat.no_stealth_break then self:breakStealth() end
+						if not o.combat.no_stealth_break then break_stealth = true end
 						self:breakStepUp()
 					end
 				end
@@ -166,6 +167,52 @@ newTalent{
 	end,
 	callbackOnActBase = function(self, t, p)
 		local p = self.sustain_talents[t.id]
+		
+		if self:hasEffect(self.EFF_PSIFRENZY) then
+			if p.mindstar_grab then
+				self:project({type="ball", radius=p.mindstar_grab.range}, self.x, self.y, function(px, py)
+					local a = game.level.map(px, py, Map.ACTOR)
+					if a and self:reactionToward(a) < 0 then
+						local dist = core.fov.distance(self.x, self.y, px, py)
+						if dist > 1 and rng.percent(p.mindstar_grab.chance) then 
+							local tx, ty = util.findFreeGrid(self.x, self.y, 5, true, {[Map.ACTOR]=true})
+							if tx and ty and a:canBe("teleport") then
+								a:move(tx, ty, true)
+							end
+						end
+					end
+				end)
+			elseif self:getInven("PSIONIC_FOCUS")[1] and self:getInven("PSIONIC_FOCUS")[1].type == "gem" then
+				local list = {}
+				local gem = self:getInven("PSIONIC_FOCUS")[1]
+				self:project({type="ball", radius=6}, self.x, self.y, function(px, py)
+					local a = game.level.map(px, py, Map.ACTOR)
+					if a and self:reactionToward(a) < 0 then
+						local dist = core.fov.distance(self.x, self.y, px, py)
+						list[#list+1] = {dist=dist, a=a}
+					end
+				end)
+				if #list <= 0 then return end
+				
+				local elem = {
+					black = {DamageType.ACID, "acid"},
+					blue = {DamageType.LIGHTNING, "lightning_explosion"},
+					green = {DamageType.NATURE, "slime"},
+					red = {DamageType.FIRE, "flame"},
+					violet = {DamageType.ARCANE, "manathrust"},
+					white = {DamageType.COLD, "freeze"},
+					yellow = {DamageType.LIGHT, "light"},
+				}
+				local bolt = elem[gem.subtype]
+				
+				table.sort(list, "dist")
+				local a = list[1].a
+				self:projectile({type="ball", range=6, radius=0, selffire=false, talent=t}, a.x, a.y, bolt[1], self:hasEffect(self.EFF_PSIFRENZY).damage, {type=bolt[2]})
+				
+			end
+			return
+		end
+		
 		if not p.mindstar_grab then return end
 		if not rng.percent(p.mindstar_grab.chance) then return end
 
@@ -197,12 +244,13 @@ newTalent{
 		end
 		return true
 	end,
+
 	activate = function (self, t)
 		local tk = self:getInven("PSIONIC_FOCUS")[1]
 
 		local ret = {}
 		if tk.type == "gem" then
-			local power = (tk.material_level or 1) * 4
+			local power = (tk.material_level or 1) * 4 + math.ceil(self:callTalent(self.T_RESONANT_FOCUS, "bonus") / 5)
 			self:talentTemporaryValue(ret, "inc_stats", {
 				[self.STAT_STR] = power,
 				[self.STAT_DEX] = power,
@@ -213,11 +261,9 @@ newTalent{
 			})
 		elseif tk.subtype == "mindstar" then
 			ret.mindstar_grab = {
-				chance = (tk.material_level or 1) * 7,
+				chance = (tk.material_level or 1) * 5 + 5 + self:callTalent(self.T_RESONANT_FOCUS, "bonus"),
 				range = 2 + (tk.material_level or 1),
 			}
-		else
-			self:talentTemporaryValue(ret, "use_psi_combat", 1)
 		end
 		return ret
 	end,
@@ -226,8 +272,8 @@ newTalent{
 	end,
 	info = function(self, t)
 		local base = [[Allows you to wield a physical melee weapon, a mindstar or a gem telekinetically, gaining a special effect for each.
-		A gem will provide +4 bonus to all primary stats per tier of the gem and increases the range of some attack talents by 1 per tier.
-		A mindstar will randomly try to grab (7% chance and range 2 + 1 per tier of the mindstar) a far away foe and bring it to melee range.
+		A gem will provide +4 bonus to all primary stats per tier of the gem.
+		A mindstar will randomly try to grab (5% chance and range 2, + 1 range and 5% chance per tier of the mindstar) a far away foe and bring it to melee range.
 		A physical melee weapon will act as a semi independant entity, attacking foes nearby each turn while also replacing Strength and Dexterity with Willpower and Cunning for accuracy and damage calculations.
 
 		]]
@@ -243,10 +289,10 @@ newTalent{
 		local speed = 1
 		if o.type == "gem" then
 			local ml = o.material_level or 1
-			base = base..([[The telekinetically-wielded gem grants you +%d stats and +%d range.]]):format(ml * 4, ml)
+			base = base..([[The telekinetically-wielded gem grants you +%d stats.]]):format(ml * 4)
 		elseif o.subtype == "mindstar" then
 			local ml = o.material_level or 1			
-			base = base..([[The telekinetically-wielded mindstar has %d%% chances to grab a foe up to %d range away.]]):format(ml * 7, math.ceil(ml * 1.5))
+			base = base..([[The telekinetically-wielded mindstar has %d%% chances to grab a foe up to %d range away.]]):format(ml * 7, ml + 2)
 		else
 			self:attr("use_psi_combat", 1)
 			atk = self:combatAttack(o.combat)
@@ -266,5 +312,5 @@ newTalent{
 		end
 		return base
 	end,
-}
 
+}

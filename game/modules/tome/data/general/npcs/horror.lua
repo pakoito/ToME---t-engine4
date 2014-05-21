@@ -532,7 +532,7 @@ newEntity{ base = "BASE_NPC_HORROR",
 
 	resolvers.talents{
 		[Talents.T_KNIFE_STORM]={base=3, every=6, max=7},
-		[Talents.T_BIND]={base=1, every=8, max=4},
+		[Talents.T_IMPLODE]={base=1, every=8, max=4},
 		[Talents.T_RAZOR_KNIFE]={base=1, every=6, max=5},
 		[Talents.T_PSIONIC_PULL]={base=1, every=6, max=5},
 		[Talents.T_KINETIC_AURA]={base=1, every=4, max=7},
@@ -950,14 +950,13 @@ newEntity{ base = "BASE_NPC_HORROR",
 	resolvers.talents{
 		--Original Blade Horror talents, beefed up
 		[Talents.T_KNIFE_STORM]={base=5, every=5, max=8},
-		[Talents.T_BIND]={base=2, every=6, max=5},
+		[Talents.T_IMPLODE]={base=2, every=6, max=5},
 		[Talents.T_RAZOR_KNIFE]={base=3, every=4, max=7},
 		[Talents.T_PSIONIC_PULL]={base=5, every=3, max=7},
 		[Talents.T_KINETIC_AURA]={base=4, every=3, max=8},
 		[Talents.T_KINETIC_SHIELD]={base=5, every=2, max=9},
-		[Talents.T_THERMAL_SHIELD]={base=3, every=2, max=9},
-		[Talents.T_CHARGED_SHIELD]={base=3, every=2, max=9},
-		[Talents.T_ABSORPTION_MASTERY]=6,
+		[Talents.T_THERMAL_SHIELD]={base=5, every=2, max=9},
+		[Talents.T_CHARGED_SHIELD]={base=5, every=2, max=9},
 		[Talents.T_KINETIC_LEECH]={base=3, every=3, max=5},
 		--TEMPORAL
 		[Talents.T_STATIC_HISTORY]={base=1, every=4, max=5},

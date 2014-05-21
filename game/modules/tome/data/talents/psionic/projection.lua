@@ -17,11 +17,7 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 local function aura_strength(self, t)
-	local mult = 1
-	if self:knowTalent(self.T_PROJECTION_MASTERY) then
-		mult = 1 + 0.5 * self:getTalentLevel(self.T_PROJECTION_MASTERY)
-	end
-	return self:combatTalentMindDamage(t, 10, 50) * mult
+	return self:combatTalentMindDamage(t, 10, 40)
 end
 
 local function aura_spike_strength(self, t)
@@ -29,7 +25,7 @@ local function aura_spike_strength(self, t)
 end
 
 local function aura_mastery(self, t)
-	return 9 + self:getTalentLevel(t) + self:callTalent(self.T_AURA_DISCIPLINE, "getMastery") + getGemLevel(self)
+	return 9 + self:getTalentLevel(t)
 end
 
 local function aura_range(self, t)
@@ -76,7 +72,7 @@ newTalent{
 	mode = "sustained",
 	sustain_psi = 30,
 	remove_on_zero = true,
-	cooldown = function(self, t) return 5 end,
+	cooldown = 5,
 	tactical = { ATTACKAREA = { PHYSICAL = 2 } },
 	on_pre_use = function(self, t, silent)
 		if self:isTalentActive(self.T_THERMAL_AURA) and self:isTalentActive(self.T_CHARGED_AURA) then
@@ -88,11 +84,7 @@ newTalent{
 	range = aura_range,
 	radius = aura_radius,
 	target = aura_target,
-	getSpikedRange = function(self, t)
-		local r = 6
-		local mult = 1 + 0.01*self:callTalent(self.T_REACH, "rangebonus")
-		return math.floor(r*mult)
-	end,
+	getSpikedRange = function(self, t) return 6 end,
 	getNormalRange = function(self, t)
 		return 0
 	end,
@@ -100,6 +92,7 @@ newTalent{
 		return 0
 	end,
 	getNormalRadius = function(self, t)
+		if self:hasEffect(self.EFF_TRANSCENDENT_TELEKINESIS) then return 2 end
 		return 1
 	end,
 	getSpikedTarget = function(self, t)
@@ -118,13 +111,13 @@ newTalent{
 		end
 	end,
 	getSpikeCost = function(self, t)
-		return t.sustain_psi/2 - 2*getGemLevel(self)
+		return t.sustain_psi*2/3
 	end,
 	getAuraStrength = function(self, t)
 		return aura_strength(self, t)
 	end,
 	getAuraSpikeStrength = function(self, t)
-		return aura_spike_strength(self, t) * 1.5
+		return aura_spike_strength(self, t)
 	end,
 	getKnockback = function(self, t)
 		return 3 + math.floor(self:getTalentLevel(t))
@@ -141,6 +134,10 @@ newTalent{
 			end
 			DamageType:get(DamageType.PHYSICAL).projector(self, tx, ty, DamageType.PHYSICAL, dam)
 		end)
+	end,
+	do_combat = function(self, t, target) -- called by  _M:attackTargetWith in mod.class.interface.Combat.lua
+		local k_dam = t.getAuraStrength(self, t)
+		DamageType:get(DamageType.PHYSICAL).projector(self, target.x, target.y, DamageType.PHYSICAL, k_dam)
 	end,
 	activate = function(self, t)
 		return {}
@@ -173,24 +170,26 @@ newTalent{
 		local spikedam = t.getAuraSpikeStrength(self, t)
 		local mast = aura_mastery(self, t)
 		local spikecost = t.getSpikeCost(self, t)
-		return ([[Fills the air around you with reactive currents of force that do %d physical damage to all who approach. All damage done by the aura will drain one point of energy per %0.2f points of damage dealt.
-		When deactivated, if you have at least %d energy, a massive spike of kinetic energy is released as a range %d beam, smashing targets for up to %d physical damage and sending them flying.  Telekinetically wielding a gem or mindstar will result in improved spike efficiency.
+		return ([[Fills the air around you with reactive currents of force.
+		If you have a gem or mindstar in your psionically wielded slot, this will do %0.2f physical damage to all who approach. 
+		All damage done by the aura will drain one point of energy per %0.2f points of damage dealt.
+		If you have a conventional weapon in your psionically wielded slot, this will add %0.2f physical damage to its hits.
+		When deactivated, if you have at least %d energy, a massive spike of kinetic energy is released as a range %d beam, smashing targets for up to %d physical damage and sending them flying.
 		To turn off an aura without spiking it, deactivate it and target yourself.  The damage will improve with your Mindpower.]]):
-		format(damDesc(self, DamageType.PHYSICAL, dam), mast, spikecost, t.getSpikedRange(self, t),
+		format(damDesc(self, DamageType.PHYSICAL, dam), mast, damDesc(self, DamageType.PHYSICAL, dam), spikecost, t.getSpikedRange(self, t),
 		damDesc(self, DamageType.PHYSICAL, spikedam))
 	end,
 }
 
-
 newTalent{
 	name = "Thermal Aura",
-	type = {"psionic/projection", 2},
+	type = {"psionic/projection", 1},
 	require = psi_wil_req2, no_sustain_autoreset = true,
 	points = 5,
 	mode = "sustained",
 	sustain_psi = 30,
 	remove_on_zero = true,
-	cooldown = function(self, t) return 5 end,
+	cooldown = 5,
 	tactical = { ATTACKAREA = { FIRE = 2 } },
 	on_pre_use = function(self, t, silent)
 		if self:isTalentActive(self.T_KINETIC_AURA) and self:isTalentActive(self.T_CHARGED_AURA) then
@@ -208,12 +207,9 @@ newTalent{
 	getNormalRange = function(self, t)
 		return 0
 	end,
-	getSpikedRadius = function(self, t)
-		local r = 6
-		local mult = 1 + 0.01*self:callTalent(self.T_REACH, "rangebonus")
-		return math.floor(r*mult)
-	end,
+	getSpikedRadius = function(self, t) return 6 end,
 	getNormalRadius = function(self, t)
+		if self:hasEffect(self.EFF_TRANSCENDENT_PYROKINESIS) then return 2 end
 		return 1
 	end,
 	getSpikedTarget = function(self, t)
@@ -235,10 +231,10 @@ newTalent{
 		return aura_strength(self, t)
 	end,
 	getAuraSpikeStrength = function(self, t)
-		return aura_spike_strength(self, t) * 1.5
+		return aura_spike_strength(self, t)
 	end,
 	getSpikeCost = function(self, t)
-		return t.sustain_psi/2 - 2*getGemLevel(self)
+		return t.sustain_psi*2/3
 	end,
 	do_thermalaura = function(self, t)
 		local mast = aura_mastery(self, t)
@@ -252,6 +248,10 @@ newTalent{
 			end
 			DamageType:get(DamageType.FIRE).projector(self, tx, ty, DamageType.FIRE, dam)
 		end)
+	end,
+	do_combat = function(self, t, target) -- called by  _M:attackTargetWith in mod.class.interface.Combat.lua
+		local t_dam = t.getAuraStrength(self, t)
+		DamageType:get(DamageType.FIRE).projector(self, target.x, target.y, DamageType.FIRE, t_dam)
 	end,
 	activate = function(self, t)
 		return {}
@@ -285,23 +285,26 @@ newTalent{
 		local spikedam = t.getAuraSpikeStrength(self, t)
 		local mast = aura_mastery(self, t)
 		local spikecost = t.getSpikeCost(self, t)
-		return ([[Fills the air around you with reactive currents of furnace-like heat that do %d fire damage to all who approach. All damage done by the aura will drain one point of energy per %0.2f points of damage dealt.
-		When deactivated, if you have at least %d energy, a massive spike of thermal energy is released as a conical blast (radius %d) of superheated air. Anybody caught in it will suffer up to %d fire damage over several turns.  Telekinetically wielding a gem or mindstar will result in improved spike efficiency.
+		return ([[Fills the air around you with reactive currents of furnace-like heat.
+		If you have a gem or mindstar in your psionically wielded slot, this will do %0.2f fire damage to all who approach. 
+		All damage done by the aura will drain one point of energy per %0.2f points of damage dealt.
+		If you have a conventional weapon in your psionically wielded slot, this will add %0.2f fire damage to its hits.
+		When deactivated, if you have at least %d energy, a massive spike of thermal energy is released as a conical blast (radius %d) of superheated air. Anybody caught in it will suffer up to %d fire damage over several turns.
 		To turn off an aura without spiking it, deactivate it and target yourself.  The damage will improve with your Mindpower.]]):
-		format(damDesc(self, DamageType.FIREBURN, dam), mast, spikecost, rad,
-		damDesc(self, DamageType.FIREBURN, spikedam))
+		format(damDesc(self, DamageType.FIRE, dam), mast, damDesc(self, DamageType.FIRE, dam), spikecost, rad,
+		damDesc(self, DamageType.FIRE, spikedam))
 	end,
 }
 
 newTalent{
 	name = "Charged Aura",
-	type = {"psionic/projection", 3},
+	type = {"psionic/projection", 1},
 	require = psi_wil_req3, no_sustain_autoreset = true,
 	points = 5,
 	mode = "sustained",
 	sustain_psi = 30,
 	remove_on_zero = true,
-	cooldown = function(self, t) return 5 end,
+	cooldown = 5,
 	tactical = { ATTACKAREA = { LIGHTNING = 2 } },
 	on_pre_use = function(self, t, silent)
 		if self:isTalentActive(self.T_KINETIC_AURA) and self:isTalentActive(self.T_THERMAL_AURA) then
@@ -313,11 +316,7 @@ newTalent{
 	range = aura_range,
 	radius = aura_radius,
 	target = aura_target,
-	getSpikedRange = function(self, t)
-		local r = 6
-		local mult = 1 + 0.01*self:callTalent(self.T_REACH, "rangebonus")
-		return math.floor(r*mult)
-	end,
+	getSpikedRange = function(self, t) return 6 end,
 	getNormalRange = function(self, t)
 		return 0
 	end,
@@ -325,6 +324,7 @@ newTalent{
 		return 10
 	end,
 	getNormalRadius = function(self, t)
+		if self:hasEffect(self.EFF_TRANSCENDENT_ELECTROKINESIS) then return 2 end
 		return 1
 	end,
 	getSpikedTarget = function(self, t)
@@ -343,16 +343,16 @@ newTalent{
 		end
 	end,
 	getSpikeCost = function(self, t)
-		return t.sustain_psi/2 - 2*getGemLevel(self)
+		return t.sustain_psi*2/3
 	end,
 	getAuraStrength = function(self, t)
 		return aura_strength(self, t)
 	end,
 	getAuraSpikeStrength = function(self, t)
-		return aura_spike_strength(self, t) * 1.3
+		return aura_spike_strength(self, t)
 	end,
 	getNumSpikeTargets = function(self, t)
-		return 1 + math.floor(0.5*self:getTalentLevel(t)) + getGemLevel(self)
+		return 1 + math.floor(0.5*self:getTalentLevel(t))
 	end,
 	do_chargedaura = function(self, t)
 		local mast = aura_mastery(self, t)
@@ -366,6 +366,10 @@ newTalent{
 			end
 			DamageType:get(DamageType.LIGHTNING).projector(self, tx, ty, DamageType.LIGHTNING, dam)
 		end)
+	end,
+	do_combat = function(self, t, target) -- called by  _M:attackTargetWith in mod.class.interface.Combat.lua
+		local c_dam = t.getAuraStrength(self, t)
+		DamageType:get(DamageType.LIGHTNING).projector(self, target.x, target.y, DamageType.LIGHTNING, c_dam)
 	end,
 	activate = function(self, t)
 		game:playSoundNear(self, "talents/thunderstorm")
@@ -440,50 +444,42 @@ newTalent{
 		local mast = aura_mastery(self, t)
 		local spikecost = t.getSpikeCost(self, t)
 		local nb = t.getNumSpikeTargets(self, t)
-		return ([[Fills the air around you with crackling energy, doing %d lightning damage to all who stand nearby. All damage done by the aura will drain one point of energy per %0.2f points of damage dealt.
-		When deactivated, if you have at least %d energy, a massive spike of electrical energy jumps between up to %d nearby targets, doing up to %d lightning damage to each with a 50%% chance of dazing them. Telekinetically wielding a gem or mindstar will result in improved spike efficiency.
+		return ([[Fills the air around you with crackling energy.
+		If you have a gem or mindstar in your psionically wielded slot, this will do %0.2f lightning damage to all who approach. 
+		All damage done by the aura will drain one point of energy per %0.2f points of damage dealt.
+		If you have a conventional weapon in your psionically wielded slot, this will add %0.2f lightning damage to its hits.
+		When deactivated, if you have at least %d energy, a massive spike of electrical energy jumps between up to %d nearby targets, doing up to %d lightning damage to each with a 50%% chance of dazing them.
 		To turn off an aura without spiking it, deactivate it and target yourself.]]):
-		format(damDesc(self, DamageType.LIGHTNING, dam), mast, spikecost, nb, damDesc(self, DamageType.LIGHTNING, spikedam))
+		format(damDesc(self, DamageType.LIGHTNING, dam), mast, damDesc(self, DamageType.LIGHTNING, dam), spikecost, nb, damDesc(self, DamageType.LIGHTNING, spikedam))
 	end,
 }
 
 newTalent{
-	name = "Projection Mastery",
+	name = "Frenzied Focus",
 	type = {"psionic/projection", 4},
 	require = psi_wil_req4,
-	cooldown = function(self, t) return math.ceil(self:combatTalentLimit(t, 30, 100, 60)) end, -- Limit to >30
-	psi = 15,
+	cooldown = 20,
+	psi = 30,
 	points = 5,
-	no_energy = true,
-	tactical = { BUFF = 2 },
+	tactical = { ATTACK = { PHYSICAL = 3 } },
+	getTargNum = function(self,t)
+		return math.ceil(self:combatTalentScale(t, 1.2, 2.1, "log"))
+	end,
+	getDamage = function (self, t)
+		return math.floor(self:combatTalentMindDamage(t, 10, 200))
+	end,
+	duration = function(self,t) return math.floor(self:combatTalentScale(t, 4, 8)) end,
 	action = function(self, t)
-		if self.talents_cd[self.T_KINETIC_AURA] == nil and self.talents_cd[self.T_THERMAL_AURA] == nil and self.talents_cd[self.T_CHARGED_AURA] == nil then
-			return
-		else
-			if self:isTalentActive(self.T_CONDUIT) then
-				local auras = self:isTalentActive(self.T_CONDUIT)
-				if not auras.k_aura_on then
-					self.talents_cd[self.T_KINETIC_AURA] = nil
-				end
-				if not auras.t_aura_on then
-					self.talents_cd[self.T_THERMAL_AURA] = nil
-				end
-				if not auras.c_aura_on then
-					self.talents_cd[self.T_CHARGED_AURA] = nil
-				end
-			else
-				self.talents_cd[self.T_KINETIC_AURA] = nil
-				self.talents_cd[self.T_THERMAL_AURA] = nil
-				self.talents_cd[self.T_CHARGED_AURA] = nil
-			end
-			return true
-		end
+		self:setEffect(self.EFF_PSIFRENZY, t.duration(self,t), {power=t.getTargNum(self,t), damage=t.getDamage(self,t)})
+		return true
 	end,
-
 	info = function(self, t)
-		return ([[When activated, brings all auras off cooldown. Additional talent points spent in Projection Mastery allow it to be used more frequently.
-		Also increases the damage done by your Auras by %d%%.]]):format(self:getTalentLevel(t)*5)
+		local targets = t.getTargNum(self,t)
+		local dur = t.duration(self,t)
+		return ([[Overcharge your psionic focus with energy for %d turns, producing a different effect depending on what it is.
+		A telekinetically wielded weapon enters a frenzy, striking up to %d targets every turn, also increases the radius by %d.
+		A mindstar will attempt to suck in all enemies in range.
+		A gem will fire an energy bolt at a random enemy in range 6, each turn for %0.2f damage. The type is determined by the colour of the gem. Damage scales with mindpower.]]):
+		format(dur, targets, targets, t.getDamage(self,t))
 	end,
-
 }
-

@@ -338,26 +338,6 @@ function _M:useEnergy(val)
 
 	-- Do not fire those talents if this is not turn's end
 	if self:enoughEnergy() or game.zone.wilderness then return end
-	if self:isTalentActive(self.T_KINETIC_AURA) then
-		local t = self:getTalentFromId(self.T_KINETIC_AURA)
-		t.do_kineticaura(self, t)
-	end
-	if self:isTalentActive(self.T_THERMAL_AURA) then
-		local t = self:getTalentFromId(self.T_THERMAL_AURA)
-		t.do_thermalaura(self, t)
-	end
-	if self:isTalentActive(self.T_CHARGED_AURA) then
-		local t = self:getTalentFromId(self.T_CHARGED_AURA)
-		t.do_chargedaura(self, t)
-	end
-	if self:isTalentActive(self.T_BEYOND_THE_FLESH) then
-		local t = self:getTalentFromId(self.T_BEYOND_THE_FLESH)
-		t.do_tkautoattack(self, t)
-	end
-	if self:hasEffect(self.EFF_MASTERFUL_TELEKINETIC_ARCHERY) then
-		local t = self:getTalentFromId(self.T_MASTERFUL_TELEKINETIC_ARCHERY)
-		t.do_tkautoshoot(self, t)
-	end
 end
 
 -- Called at the start of a turn before the actor chooses their action, energy is handled, etc
@@ -476,7 +456,7 @@ function _M:actBase()
 
 	if self:knowTalent(self.T_GESTURE_OF_GUARDING) then self:setEffect(self.EFF_GESTURE_OF_GUARDING,1,{}) end
 	if self:knowTalent(self.T_DUAL_WEAPON_DEFENSE) then self:setEffect(self.EFF_DUAL_WEAPON_DEFENSE,1,{}) end
-	if self:knowTalent(self.T_COUNTER_ATTACK) then self:setEffect(self.EFF_COUNTER_ATTACKING,1,{}) end
+	if self:knowTalent(self.T_COUNTER_ATTACK) then self:setEffect(self.EFF_COUNTER_ATTACKING,1,{}) end 
 	if self:knowTalent(self.T_DEFENSIVE_THROW) then self:setEffect(self.EFF_DEFENSIVE_GRAPPLING,1,{}) end
 
 	-- Compute timed effects
@@ -561,6 +541,31 @@ function _M:actBase()
 			t.doForgeStrike(self, t, p)
 		end
 
+		local psiweapon = self:getInven("PSIONIC_FOCUS") and self:getInven("PSIONIC_FOCUS")[1]
+		if (psiweapon and ( not psiweapon.combat or psiweapon.subtype == "mindstar" )) or not psiweapon then
+			if self:isTalentActive(self.T_KINETIC_AURA) then
+				local t = self:getTalentFromId(self.T_KINETIC_AURA)
+				t.do_kineticaura(self, t)
+			end
+			if self:isTalentActive(self.T_THERMAL_AURA) then
+				local t = self:getTalentFromId(self.T_THERMAL_AURA)
+				t.do_thermalaura(self, t)
+			end
+			if self:isTalentActive(self.T_CHARGED_AURA) then
+				local t = self:getTalentFromId(self.T_CHARGED_AURA)
+				t.do_chargedaura(self, t)
+			end
+		end
+			
+		if self:isTalentActive(self.T_BEYOND_THE_FLESH) then
+			local t = self:getTalentFromId(self.T_BEYOND_THE_FLESH)
+			t.do_tkautoattack(self, t)
+		end
+		if self:hasEffect(self.EFF_MASTERFUL_TELEKINETIC_ARCHERY) then
+			local t = self:getTalentFromId(self.T_MASTERFUL_TELEKINETIC_ARCHERY)
+			t.do_tkautoshoot(self, t)
+		end
+		
 		self:triggerHook{"Actor:actBase:Effects"}
 
 		self:fireTalentCheck("callbackOnActBase")
@@ -2512,9 +2517,8 @@ function _M:onTakeHit(value, src, death_note)
 		end
 	end
 
-	-- Second Life
 	if value >= self.life then
-		tal = self:isTalentActive(self.T_SECOND_LIFE)
+		local tal = self:isTalentActive(self.T_SECOND_LIFE)
 		if tal then
 			local sl = self:callTalent(self.T_SECOND_LIFE,"getLife")
 			value = 0
@@ -2524,6 +2528,11 @@ function _M:onTakeHit(value, src, death_note)
 			game:delayedLogDamage(tal, self, -sl, ("#LIGHT_GREEN#%d healing#LAST#"):format(sl), false)
 			self:forceUseTalent(self.T_SECOND_LIFE, {ignore_energy=true})
 			if self.player then world:gainAchievement("AVOID_DEATH", self) end
+		end
+
+		local tal = self:isTalentActive(self.T_HEARTSTART)
+		if tal then
+			self:forceUseTalent(self.T_HEARTSTART, {ignore_energy=true})
 		end
 	end
 

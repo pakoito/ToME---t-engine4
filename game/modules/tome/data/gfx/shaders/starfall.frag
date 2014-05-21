@@ -29,7 +29,8 @@ void main(void)
 	
 	//on-hit wobbling effect
 	float coreTime = 0.3;
-	float outerSphereTime = 0.38;
+	float outerSphereTime = 0.42;
+	float debrisStartTime = 0.38;
 	/*float coreTime = 0.1;
 	float outerSphereTime = 0.9;*/
 
@@ -119,7 +120,7 @@ void main(void)
 		float coreTransperency = pow(1.0 - outerSpherePhase, 2.0);
 		explosionColor = Uberblend(vec4(coreColor.rgb, coreColor.a * coreTransperency), outerSphereColor);
 	}
-	float debrisPhase = clamp((phase - outerSphereTime) / (1.0 - outerSphereTime), 0.0, 1.0);
+	float debrisPhase = clamp((phase - debrisStartTime) / (1.0 - debrisStartTime), 0.0, 1.0);
 	if(debrisPhase > 0)
 	{
 		vec2 debrisTexPos = (clamp(radius + vec2(0.5, 0.5), 0.01, 0.99)) * vec2(0.5, 0.5) + vec2(0.0, 0.5);
@@ -132,7 +133,6 @@ void main(void)
 		explosionColor = Uberblend(debrisColor, explosionColor);
 	}
 	gl_FragColor = explosionColor;
-	gl_FragColor.a *= gl_Color.a;
 }
 
 

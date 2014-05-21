@@ -853,10 +853,17 @@ function _M:instanciate(mod, name, new_game, no_reboot, extra_module_info)
 	if mod.allow_userchat and _G.game.key then
 		profile.chat:setupOnGame()
 		if not config.settings.chat or not config.settings.chat.channels or not config.settings.chat.channels[mod.short_name] then
-			profile.chat:join(mod.short_name)
-			profile.chat:join(mod.short_name.."-spoiler")
-			profile.chat:join("global")
-			profile.chat:selectChannel(mod.short_name)
+			if type(mod.allow_userchat) == "table" then
+				for _, chan in ipairs(mod.allow_userchat) do
+					profile.chat:join(chan)
+				end
+				if mod.allow_userchat[1] then profile.chat:selectChannel(mod.allow_userchat[1]) end
+			else
+				profile.chat:join(mod.short_name)
+				profile.chat:join(mod.short_name.."-spoiler")
+				profile.chat:join("global")
+				profile.chat:selectChannel(mod.short_name)
+			end
 			print("Joining default channels")
 		else
 			local def = false

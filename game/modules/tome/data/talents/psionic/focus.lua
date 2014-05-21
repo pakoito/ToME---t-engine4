@@ -17,11 +17,6 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
---Mindlash: ranged physical rad-0 ball
---Pyrokinesis: LOS burn attack
---Reach: gem-based range improvements
---Channeling: gem-based shield and improvement
-
 newTalent{
 	name = "Mindlash",
 	type = {"psionic/focus", 1},
@@ -30,29 +25,8 @@ newTalent{
 	random_ego = "attack",
 	cooldown = 5,
 	psi = 10,
-	tactical = { ATTACK = function(self, t, target)
-		local val = { PHYSICAL = 2}
-		local gem_level = getGemLevel(self)
-		if gem_level > 0 and not target.dead and self:knowTalent(self.T_CONDUIT) and self:isTalentActive(self.T_CONDUIT) then
-			local c =  self:getTalentFromId(self.T_CONDUIT)
-			local auras = self:isTalentActive(c.id)
-			if auras.k_aura_on then
-				val.PHYSICAL = val.PHYSICAL + 1
-			end
-			if auras.t_aura_on then
-				val.FIRE = 1
-			end
-			if auras.c_aura_on then
-				val.LIGHTNING = 1
-			end
-		end
-		return val
-	end },
-	range = function(self, t)
-		local r = 5
-		local mult = 1 + 0.01*self:callTalent(self.T_REACH, "rangebonus")
-		return math.floor(r*mult)
-	end,
+	tactical = { ATTACK = { PHYSICAL = 2} },
+	range = 4,
 	getDamage = function (self, t)
 		return self:combatTalentMindDamage(t, 12, 340)
 	end,
@@ -64,39 +38,22 @@ newTalent{
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
 		self:project(tg, x, y, DamageType.PHYSICAL, self:mindCrit(rng.avg(0.8*dam, dam)), {type="mindsear"})
-		local _ _, _, _, x, y = self:canProject(tg, x, y)
-		if not tg.dead and self:knowTalent(self.T_CONDUIT) and self:isTalentActive(self.T_CONDUIT) then
-			local c =  self:getTalentFromId(self.T_CONDUIT)
-			--c.do_combat(self, c, tg)
-			local mult = 1 + 0.2*(self:getTalentLevel(c))
-			local auras = self:isTalentActive(c.id)
-			if auras.k_aura_on then
-				local k_aura = self:getTalentFromId(self.T_KINETIC_AURA)
-				local k_dam = mult * k_aura.getAuraStrength(self, k_aura)
-				DamageType:get(DamageType.PHYSICAL).projector(self, x, y, DamageType.PHYSICAL, k_dam)
+		if self:hasEffect(self.EFF_TRANSCENDENT_TELEKINESIS) then
+			local act = game.level.map(x, y, engine.Map.ACTOR)
+			if act:canBe("stun") then
+				act:setEffect(act.EFF_STUNNED, 4, {apply_power=self:combatMindpower()})
 			end
-			if auras.t_aura_on then
-				local t_aura = self:getTalentFromId(self.T_THERMAL_AURA)
-				local t_dam = mult * t_aura.getAuraStrength(self, t_aura)
-				DamageType:get(DamageType.FIRE).projector(self, x, y, DamageType.FIRE, t_dam)
-			end
-			if auras.c_aura_on then
-				local c_aura = self:getTalentFromId(self.T_CHARGED_AURA)
-				local c_dam = mult * c_aura.getAuraStrength(self, c_aura)
-				DamageType:get(DamageType.LIGHTNING).projector(self, x, y, DamageType.LIGHTNING, c_dam)
-			end
-
 		end
-		--game:onTickEnd(function() self:setEffect(self.EFF_MINDLASH, 2, {}) end)
 		return true
 	end,
 	info = function(self, t)
 		local dam = t.getDamage(self, t)
-		return ([[Focus energies on a distant target to lash it with physical force, doing %d damage in addition to any Conduit damage.
+		return ([[Focus energies on a distant target to lash it with physical force, doing %d physical damage.
 		The damage will scale with your Mindpower.]]):
 		format(damDesc(self, DamageType.PHYSICAL, dam))
 	end,
 }
+
 
 newTalent{
 	name = "Pyrokinesis",
@@ -108,11 +65,7 @@ newTalent{
 	psi = 20,
 	tactical = { ATTACK = { FIRE = 2 } },
 	range = 0,
-	radius = function(self, t)
-		local r = 5
-		local mult = 1 + 0.01*self:callTalent(self.T_REACH, "rangebonus")
-		return math.floor(r*mult)
-	end,
+	radius = 5,
 	getDamage = function (self, t)
 		return self:combatTalentMindDamage(t, 50, 480)
 	end,
@@ -122,18 +75,22 @@ newTalent{
 	action = function(self, t)
 		local dam = self:mindCrit(t.getDamage(self, t))
 		local tg = self:getTalentTarget(t)
---		self:project(tg, self.x, self.y, DamageType.FIREBURN, {dur=10, initial=0, dam=dam}, {type="ball_fire", args={radius=1}})
-		self:project(tg, self.x, self.y, DamageType.FIREBURN, {dur=10, initial=0, dam=dam})
+		if self:hasEffect(self.EFF_TRANSCENDENT_PYROKINESIS) then
+			self:project(tg, self.x, self.y, DamageType.FLAMESHOCK, {dur=6, dam=dam})
+		else
+			self:project(tg, self.x, self.y, DamageType.FIREBURN, {dur=6, initial=0, dam=dam})
+		end
 		game.level.map:particleEmitter(self.x, self.y, tg.radius, "ball_fire", {radius=tg.radius})
 		return true
 	end,
 	info = function(self, t)
 		local radius = self:getTalentRadius(t)
 		local dam = t.getDamage(self, t)
-		return ([[Kinetically vibrate the essence of all foes within %d squares, setting them ablaze. Does %d damage over ten turns.]]):
+		return ([[Kinetically vibrate the essence of all foes within %d squares, setting them ablaze. Does %d fire damage over six turns.]]):
 		format(radius, damDesc(self, DamageType.FIREBURN, dam))
 	end,
 }
+
 
 newTalent{
 	name = "Brain Storm",
@@ -142,11 +99,7 @@ newTalent{
 	require = psi_wil_req3,
 	psi = 15,
 	cooldown = 10,
-	range = function(self, t)
-		local r = 2
-		local mult = 1 + 0.01*self:callTalent(self.T_REACH, "rangebonus")
-		return math.floor(r*mult)
-	end,
+	range = 3,
 	radius = 2,
 	tactical = { DISABLE = 2, ATTACKAREA = { LIGHTNING = 2 } },
 	getDamage = function(self, t) return self:combatTalentMindDamage(t, 30, 300) end,
@@ -170,6 +123,7 @@ newTalent{
 			game.level.map:particleEmitter(x, y, tg.radius, "temporal_lightning", {radius=tg.radius, grids=grids, tx=tx-x, ty=ty-y, nb_particles=25, life=8})
 		end
 
+
 		game:playSoundNear(self, "talents/lightning")
 		return true
 	end,
@@ -184,16 +138,36 @@ newTalent{
 }
 
 newTalent{
-	name = "Reach",
+	name = "Iron Will", image = "talents/iron_will.png",
 	type = {"psionic/focus", 4},
 	require = psi_wil_req4,
-	mode = "passive",
 	points = 5,
-	rangebonus = function(self,t) return math.max(0, self:combatTalentScale(t, 20, 80)) end,
+	mode = "passive",
+	stunImmune = function(self, t) return self:combatTalentLimit(t, 1, 0.10, 0.50) end,
+	cureChance = function(self, t) return self:combatTalentLimit(t, 1, 0.10, 0.35) end,
+	passives = function(self, t, p)
+		self:talentTemporaryValue(p, "stun_immune", t.stunImmune(self, t))
+	end,
+	callbackOnActBase = function(self, t)
+		if not rng.chance(t.cureChance(self, t)*100) then return end
+	
+		local effs = {}
+		-- Go through all spell effects
+		for eff_id, p in pairs(self.tmp) do
+			local e = self.tempeffect_def[eff_id]
+			if e.status == "detrimental" and e.type == "mental" then
+				effs[#effs+1] = {"effect", eff_id}
+			end
+		end
+		
+		if #effs > 0 then
+			local eff = rng.tableRemove(effs)
+			self:removeEffect(eff[2])
+			game.logSeen(self, "%s has recovered!", self.name:capitalize())
+		end
+	end,
 	info = function(self, t)
-		local inc = t.rangebonus(self,t)
-		return ([[You can extend your mental reach beyond your natural limits. Increases the range of various abilities by %0.1f%%.]]):
-		format(inc)
+		return ([[Your Iron Will improves stun immunity by %d%% and gives you a %d%% chance of recovering from a random mental effect each turn.]]):
+		format(t.stunImmune(self, t)*100, t.cureChance(self, t)*100)
 	end,
 }
-

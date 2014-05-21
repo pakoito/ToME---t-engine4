@@ -87,8 +87,10 @@ end
 function _M:getTargets()
 	local list = {}
 	for name, _ in pairs(self.chat.channels) do list[#list+1] = {name="Channel: "..name, id=name} end
+	local name_added = {}
+	for login, data in pairs(self.chat.friends) do list[#list+1] = {name="Friend: "..data.name, id=data.name} name_added[data.name] = true end
 	if self.chat.channels[self.chat.cur_channel] then
-		for login, data in pairs(self.chat.channels[self.chat.cur_channel].users) do list[#list+1] = {name="User: "..data.name, id=data.name} end
+		for login, data in pairs(self.chat.channels[self.chat.cur_channel].users) do if not name_added[data.name] then list[#list+1] = {name="User: "..data.name, id=data.name} name_added[data.name] = true end end
 	end
 	return list
 end
@@ -142,11 +144,23 @@ function _M:autoComplete()
 	local text, text_len = self.c_box.text, self.c_box.text:len()
 
 	local matches = {}
-	for k, v in pairs(self.chat.channels[self.chat.cur_channel].users) do
+
+	-- Try friends
+	for k, v in pairs(self.chat.friends) do
 		if k:sub(1, text_len) == text then
 			matches[#matches+1] = k
 		end
 	end
+	
+	-- Try channel users
+	if self.chat.channels and self.chat.cur_channel and self.chat.channels[self.chat.cur_channel] then
+		for k, v in pairs(self.chat.channels[self.chat.cur_channel].users) do
+			if k:sub(1, text_len) == text then
+				matches[#matches+1] = k
+			end
+		end
+	end
+
 	if #matches == 1 then
 		self.c_box:setText(matches[1])
 	elseif #matches > 1 then

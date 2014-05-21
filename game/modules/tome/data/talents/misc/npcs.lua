@@ -2438,3 +2438,65 @@ newTalent{
 		:format(100 * self:combatTalentWeaponDamage(t, 0.8, 1.3), 100 * self:combatTalentWeaponDamage(t, 0.8, 1.3, self:getTalentLevel(self.T_SHIELD_EXPERTISE)))
 	end,
 }
+
+newTalent{
+	name = "Perfect Control",
+	type = {"psionic/other", 1},
+	cooldown = 50,
+	psi = 15,
+	points = 5,
+	tactical = { BUFF = 2 },
+	getBoost = function(self, t)
+		return self:combatScale(self:getTalentLevel(t)*self:combatStatTalentIntervalDamage(t, "combatMindpower", 1, 9), 15, 0, 49, 34)
+	end,
+	getDuration = function(self, t) return math.floor(self:combatTalentLimit(t, 50, 6, 10)) end, -- Limit < 50
+	action = function(self, t)
+		self:setEffect(self.EFF_CONTROL, t.getDuration(self, t), {power= t.getBoost(self, t)})
+		return true
+	end,
+	info = function(self, t)
+		local boost = t.getBoost(self, t)
+		local dur = t.getDuration(self, t)
+		return ([[Encase your body in a sheath of thought-quick forces, allowing you to control your body's movements directly without the inefficiency of dealing with crude mechanisms like nerves and muscles.
+		Increases Accuracy by %d and critical strike chance by %0.2f%% for %d turns.]]):
+		format(boost, 0.5*boost, dur)
+	end,
+}
+
+newTalent{
+	name = "Mindhook",
+	type = {"psionic/other", 1},
+	cooldown = function(self, t) return math.ceil(self:combatTalentLimit(t, 5, 18, 10)) end, -- Limit to >5
+	psi = 20,
+	points = 5,
+	tactical = { CLOSEIN = 2 },
+	range = function(self, t)
+		local r = self:combatTalentLimit(t, 10, 3, 7) -- Limit base range to 10
+		local gem_level = getGemLevel(self)
+		local mult = 1 + 0.005*gem_level*self:callTalent(self.T_REACH, "rangebonus") -- reduced effect of reach
+		return math.floor(r*mult)
+	end,
+	action = function(self, t)
+		local tg = {type="bolt", range=self:getTalentRange(t)}
+		local x, y = self:getTarget(tg)
+		if not x or not y then return nil end
+		local _ _, x, y = self:canProject(tg, x, y)
+		local target = game.level.map(x, y, engine.Map.ACTOR)
+		if not target then
+			game.logPlayer(self, "The target is out of range")
+			return
+		end
+		target:pull(self.x, self.y, tg.range)
+		target:setEffect(target.EFF_DAZED, 1, {})
+		game:playSoundNear(self, "talents/arcane")
+
+		return true
+	end,
+	info = function(self, t)
+		local range = self:getTalentRange(t)
+		return ([[Briefly extend your telekinetic reach to grab an enemy and haul them towards you.
+		Works on enemies up to %d squares away. The cooldown decreases, and the range increases, with additional talent points spent.
+		This talent receives a reduced benefit from the Reach talent.]]):
+		format(range)
+	end,
+}

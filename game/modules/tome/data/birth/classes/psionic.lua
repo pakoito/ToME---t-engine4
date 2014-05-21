@@ -76,24 +76,26 @@ newBirthDescriptor{
 		end,
 	},
 	talents_types = {
+		--Level 0 trees:
 		["psionic/absorption"]={true, 0.3},
 		["psionic/projection"]={true, 0.3},
 		["psionic/psi-fighting"]={true, 0.3},
 		["psionic/focus"]={true, 0.3},
 		["psionic/voracity"]={true, 0.3},
-		["psionic/dream-forge"]={true, 0.3},
-		["psionic/finer-energy-manipulations"]={false, 0.3},
-		["psionic/grip"]={false, 0.3},
 		["psionic/augmented-mobility"]={true, 0.3},
-		["psionic/telekinetic-combat"]={true, 0.3},
-		["psionic/force"]={false, 0.3},
+		["psionic/finer-energy-manipulations"]={true, 0.3},
+		--Level 10 trees:
+		["psionic/kinetic-mastery"]={false, 0.3},
+		["psionic/thermal-mastery"]={false, 0.3},
+		["psionic/charged-mastery"]={false, 0.3},
+		--Miscellaneous trees:
 		["cunning/survival"]={true, 0},
 		["technique/combat-training"]={true, 0},
 	},
 	talents = {
 		[ActorTalents.T_KINETIC_SHIELD] = 1,
 		[ActorTalents.T_KINETIC_AURA] = 1,
-		[ActorTalents.T_KINETIC_LEECH] = 1,
+		[ActorTalents.T_SKATE] = 1,
 		[ActorTalents.T_TELEKINETIC_SMASH] = 1,
 	},
 	copy = {

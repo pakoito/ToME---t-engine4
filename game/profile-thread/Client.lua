@@ -23,7 +23,7 @@ local UserChat = require "profile-thread.UserChat"
 
 module(..., package.seeall, class.make)
 
-local debug = false
+local debug = true
 
 local mport = debug and 2259 or 2257
 local pport = debug and 2260 or 2258
@@ -211,6 +211,7 @@ function _M:step()
 				if code == "101" then
 					local e = data:unserialize()
 					if e and e.e:find("^Chat") then self.chat:event(e)
+					elseif e and e.e:find("^Friend") then self.chat:event(e)
 					elseif e and e.e and self["push"..e.e] then self["push"..e.e](self, e)
 					end
 				end
@@ -270,6 +271,7 @@ function _M:orderLogin(o)
 	if self.auth and self.auth.login == o.l then
 		print("[PROFILE] reusing login", self.auth.name)
 		cprofile.pushEvent(string.format("e='Auth' ok=%q", table.serialize(self.auth)))
+		self.chat:forwardFriends()
 	else
 		self:login()
 	end
