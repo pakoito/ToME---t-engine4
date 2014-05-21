@@ -42,7 +42,7 @@ newTalent{
 		return ([[For %d turns your telekinesis transcends your normal limits, increasing your physical damage and resistance penetration by %d%%.
 		Kinetic Shield, Kinetic Leech, Kinetic Aura and Mindlash will have their cooldowns reset.
 		Kinetic Aura will increase to radius 2, or apply its damage bonus to all your weapons, whichever is applicable.
-		Kinetic Shield will have 100%% damage absorption efficiency.
+		Kinetic Shield will have 100%% damage absorption efficiency and double max.
 		kinetic Leech will put enemies to sleep.
 		Damage bonus and penetration scale with your mindpower.
 		Only one Transcendent talent may be in effect at a time.]]):format(t.getDuration(self, t), t.getPower(self, t))

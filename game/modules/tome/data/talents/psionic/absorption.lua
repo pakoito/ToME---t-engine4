@@ -90,21 +90,22 @@ newTalent{
 			ks.psi_gain = 0
 			ks.game_turn = game.turn
 		end
+		local kinetic_shield = self.kinetic_shield
 		local mast = shieldMastery(self, t)
 		local total_dam = dam
 		local absorbable_dam = getEfficiency(self,t)* total_dam
-		if self:hasEffect(self.EFF_TRANSCENDENT_TELEKINESIS) then absorbable_dam = total_dam end
+		if self:hasEffect(self.EFF_TRANSCENDENT_TELEKINESIS) then absorbable_dam = total_dam kinetic_shield = kinetic_shield * 2 end
 		local guaranteed_dam = total_dam - absorbable_dam
 		dam = absorbable_dam
 		if not kineticElement(self, t, damtype) then return total_dam end		
 
 		local psigain = 0 
-		if dam <= self.kinetic_shield then
+		if dam <= kinetic_shield then
 			psigain = 1 + dam/mast
 			dam = 0
 		else
-			psigain = 1 + self.kinetic_shield/mast
-			dam = dam - self.kinetic_shield
+			psigain = 1 + kinetic_shield/mast
+			dam = dam - kinetic_shield
 		end
 		psigain = math.min(maxPsiAbsorb(self, t) - ks.psi_gain, psigain)
 		ks.psi_gain = ks.psi_gain + psigain
@@ -221,20 +222,21 @@ newTalent{
 			ts.game_turn = game.turn
 		end
 		local mast = shieldMastery(self, t)
+		local thermal_shield = self.thermal_shield
 		local total_dam = dam
 		local absorbable_dam = getEfficiency(self,t)* total_dam
-		if self:hasEffect(self.EFF_TRANSCENDENT_PYROKINESIS) then absorbable_dam = total_dam end
+		if self:hasEffect(self.EFF_TRANSCENDENT_PYROKINESIS) then absorbable_dam = total_dam thermal_shield = thermal_shield * 2 end
 		local guaranteed_dam = total_dam - absorbable_dam
 		dam = absorbable_dam
 		if not thermalElement(self, t, damtype) then return total_dam end
 		
 		local psigain = 0
-		if dam <= self.thermal_shield then
+		if dam <= thermal_shield then
 			psigain = 1 + dam/mast
 			dam = 0
 		else
-			psigain = 1 + self.thermal_shield/mast
-			dam = dam - self.thermal_shield
+			psigain = 1 + thermal_shield/mast
+			dam = dam - thermal_shield
 		end
 		
 		psigain = math.min(maxPsiAbsorb(self, t) - ts.psi_gain, psigain)
@@ -347,20 +349,21 @@ newTalent{
 			cs.game_turn = game.turn
 		end
 		local mast = shieldMastery(self, t)
+		local charged_shield = self.charged_shield
 		local total_dam = dam
 		local absorbable_dam = getEfficiency(self,t)* total_dam
-		if self:hasEffect(self.EFF_TRANSCENDENT_ELECTROKINESIS) then absorbable_dam = total_dam end
+		if self:hasEffect(self.EFF_TRANSCENDENT_ELECTROKINESIS) then absorbable_dam = total_dam charged_shield = charged_shield * 2 end
 		local guaranteed_dam = total_dam - absorbable_dam
 		dam = absorbable_dam
 		if not chargedElement(self, t, damtype) then return total_dam end
 
 		local psigain = 0
-		if dam <= self.charged_shield then
+		if dam <= charged_shield then
 			psigain = 1 + dam/mast
 			dam = 0
 		else
-			psigain = 1 + self.charged_shield/mast
-			dam = dam - self.charged_shield
+			psigain = 1 + charged_shield/mast
+			dam = dam - charged_shield
 		end
 		psigain = math.min(maxPsiAbsorb(self, t) - cs.psi_gain, psigain)
 		cs.psi_gain = cs.psi_gain + psigain

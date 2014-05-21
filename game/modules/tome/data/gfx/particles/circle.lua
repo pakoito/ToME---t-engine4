@@ -50,8 +50,8 @@ return {
 			life = empty_start,
 			size = 1, sizev = 0, sizea = 0,
 
-			x = 0, xv = 0, xa = 0,
-			y = 0, yv = 0, ya = 0,
+			x = (x or 0) * 64, xv = 0, xa = 0,
+			y = (y or 0) * 64, yv = 0, ya = 0,
 			dir = 0, dirv = dirv, dira = 0,
 			vel = 0, velv = 0, vela = 0,
 
@@ -66,8 +66,8 @@ return {
 			life = appear,
 			size = basesize * appear_size, sizev = -basesize * (appear_size - 1) / appear, sizea = 0,
 
-			x = 0, xv = 0, xa = 0,
-			y = 0, yv = 0, ya = 0,
+			x = (x or 0) * 64, xv = 0, xa = 0,
+			y = (y or 0) * 64, yv = 0, ya = 0,
 			dir = 0, dirv = dirv, dira = 0,
 			vel = 0, velv = 0, vela = 0,
 
@@ -82,8 +82,8 @@ return {
 			life = limit_life or 1000,
 			size = grow and 0 or basesize, sizev = grow, sizea = 0,
 
-			x = 0, xv = 0, xa = 0,
-			y = 0, yv = 0, ya = 0,
+			x = (x or 0) * 64, xv = 0, xa = 0,
+			y = (y or 0) * 64, yv = 0, ya = 0,
 			dir = 0, dirv = dirv, dira = 0,
 			vel = 0, velv = 0, vela = 0,
 

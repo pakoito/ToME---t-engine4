@@ -41,7 +41,7 @@ newTalent{
 		return ([[For %d turns your electrokinesis transcends your normal limits, increasing your lightning damage and resistance penetration by %d%%.
 		Charged Shield, Charged Leech, Charged Aura and Brainstorm will have their cooldowns reset.
 		Charged Aura will increase to radius 2, or apply its damage bonus to all your weapons, whichever is applicable.
-		Charged Shield will have 100%% damage absorption efficiency.
+		Charged Shield will have 100%% damage absorption efficiency and double max.
 		Brainstorm will also inflict blindness.
 		Charged Leech will also inflict confusion.
 		Damage bonus and penetration scale with your mindpower.

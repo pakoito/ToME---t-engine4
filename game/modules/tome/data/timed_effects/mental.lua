@@ -1351,8 +1351,8 @@ newEffect{
 	end,
 }
 newEffect{
-	name = "PSIFRENZY", image = "talents/frenzied_psifighting.png",
-	desc = "Frenzied Psi-fighting",
+	name = "PSIFRENZY", image = "talents/frenzied_focus.png",
+	desc = "Frenzied Focus",
 	long_desc = function(self, eff) return ("Causes telekinetically-wielded weapons to hit up to %d targets each turn."):format(eff.power) end,
 	type = "mental",
 	subtype = { telekinesis=true, frenzy=true },
@@ -3080,7 +3080,7 @@ newEffect{
 }
 
 newEffect{
-	name = "THOUGHTSENSE", image = "talents/track.png",
+	name = "THOUGHTSENSE", image = "talents/thought_sense.png",
 	desc = "Thought Sense",
 	long_desc = function(self, eff) return ("Detect nearby thoughts, revealing creature locations in a radius of %d and boosting defense by %d."):format(eff.range, eff.def) end,
 	type = "mental",
@@ -3094,8 +3094,12 @@ newEffect{
 		self:effectTemporaryValue(eff, "detect_actor", 1)
 		self:effectTemporaryValue(eff, "combat_def", eff.def)
 		game.level.map.changed = true
+		if core.shader.active() then
+			local h1x, h1y = self:attachementSpot("head", true) if h1x then eff.particle = self:addParticles(Particles.new("circle", 1, {shader=true, oversize=0.5, a=225, appear=8, speed=0, img="thoughtsense", base_rot=0, radius=0, x=h1x, y=h1y})) end
+		end
 	end,
 	deactivate = function(self, eff)
+		self:removeParticles(eff.particle)
 	end,
 }
 
@@ -3110,12 +3114,18 @@ newEffect{
 	on_gain = function(self, eff) return nil, nil end,
 	on_lose = function(self, eff) return nil, nil end,
 	on_merge = function(self, old_eff, new_eff)
-		new_eff.power = new_eff.power + old_eff.power
-		return new_eff
+		old_eff.power = new_eff.power + old_eff.power
+		return old_eff
 	end,
 	activate = function(self, eff)
+		if core.shader.active() then
+			local h1x, h1y = self:attachementSpot("hand1", true) if h1x then eff.particle1 = self:addParticles(Particles.new("circle", 1, {shader=true, oversize=0.3, a=185, appear=8, speed=0, img="transcend_electro", base_rot=0, radius=0, x=h1x, y=h1y})) end
+			local h2x, h2y = self:attachementSpot("hand2", true) if h2x then eff.particle2 = self:addParticles(Particles.new("circle", 1, {shader=true, oversize=0.3, a=185, appear=8, speed=0, img="transcend_electro", base_rot=0, radius=0, x=h2x, y=h2y})) end
+		end
 	end,
 	deactivate = function(self, eff)
+		if eff.particle1 then self:removeParticles(eff.particle1) end
+		if eff.particle2 then self:removeParticles(eff.particle2) end
 	end,
 }
 
@@ -3145,8 +3155,10 @@ newEffect{
 	activate = function(self, eff)
 		self:effectTemporaryValue(eff, "inc_damage", {[DamageType.PHYSICAL]=eff.power})
 		self:effectTemporaryValue(eff, "resists_pen", {[DamageType.PHYSICAL]=eff.power})
+		eff.particle = self:addParticles(Particles.new("circle", 1, {shader=true, toback=true, oversize=1.4, a=155, appear=8, speed=0, img="transcend_tele", radius=0}))
 	end,
 	deactivate = function(self, eff)	
+		self:removeParticles(eff.particle)
 	end,
 }
 
@@ -3161,8 +3173,10 @@ newEffect{
 	activate = function(self, eff)
 		self:effectTemporaryValue(eff, "inc_damage", {[DamageType.FIRE]=eff.power, [DamageType.COLD]=eff.power})
 		self:effectTemporaryValue(eff, "resists_pen", {[DamageType.FIRE]=eff.power, [DamageType.COLD]=eff.power})
+		eff.particle = self:addParticles(Particles.new("circle", 1, {shader=true, toback=true, oversize=1.4, a=155, appear=8, speed=0, img="transcend_pyro", radius=0}))
 	end,
 	deactivate = function(self, eff)	
+		self:removeParticles(eff.particle)
 	end,
 }
 
@@ -3177,7 +3191,9 @@ newEffect{
 	activate = function(self, eff)
 		self:effectTemporaryValue(eff, "inc_damage", {[DamageType.LIGHTNING]=eff.power})
 		self:effectTemporaryValue(eff, "resists_pen", {[DamageType.LIGHTNING]=eff.power})
+		eff.particle = self:addParticles(Particles.new("circle", 1, {shader=true, toback=true, oversize=1.4, a=155, appear=8, speed=0, img="transcend_electro", radius=0}))
 	end,
 	deactivate = function(self, eff)	
+		self:removeParticles(eff.particle)
 	end,
 }

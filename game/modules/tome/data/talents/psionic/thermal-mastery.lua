@@ -41,7 +41,7 @@ newTalent{
 		return ([[For %d turns your pyrokinesis transcends your normal limits, increasing your fire/cold damage and resistance penetration by %d%%.
 		Thermal Shield, Thermal Leech, Thermal Aura and Pyrokinesis will have their cooldowns reset.
 		Thermal Aura will increase to radius 2, or apply its damage bonus to all your weapons, whichever is applicable.
-		Thermal Shield will have 100%% damage absorption efficiency.
+		Thermal Shield will have 100%% damage absorption efficiency and double max.
 		Pyrokinesis will inflict Flameshock.
 		Thermal Leech will weaken enemy damage by %d%%.
 		Damage bonus and penetration scale with your mindpower.
@@ -150,6 +150,9 @@ newTalent{
 		
 		self:project(tg, x, y, DamageType.COLD, dam1)
 		self:project(tg, x, y, DamageType.FIRE, dam2)
+
+		local _ _, _, _, x, y = self:canProject(tg, x, y)
+		game.level.map:particleEmitter(x, y, tg.radius, "circle", {oversize=1.1, a=255, limit_life=16, grow=true, speed=0, img="fireice_nova", radius=tg.radius})
 		
 		self:incPsi(self:getMaxPsi()/2 - self:getPsi())
 		
@@ -160,8 +163,8 @@ newTalent{
 		local dam = t.getDamage(self, t)
 		local dam1 = dam * (self:getMaxPsi() - self:getPsi()) / self:getMaxPsi()
 		local dam2 = dam * self:getPsi() / self:getMaxPsi()
-		return ([[Placeholder description. :/
-		%0.2f fire damage based on your current psi, %0.2f cold damage based on your max psi minus your current psi, in a radius 3 ball.
+		return ([[You seek balance between fire and cold based on your current psi level.
+		You blast your foes with %0.2f fire damage based on your current psi, %0.2f cold damage based on your max psi minus your current psi, in a radius 3 ball.
 		Sets your current Psi to half your maximum Psi.
 		Damage scales with your mindpower.]]):
 		format(damDesc(self, DamageType.FIRE, dam2), damDesc(self, DamageType.COLD, dam1))
