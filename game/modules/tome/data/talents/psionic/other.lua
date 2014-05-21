@@ -127,9 +127,9 @@ newTalent{
 				for i, o in ipairs(self:getInven(self.INVEN_PSIONIC_FOCUS)) do
 					if o.combat and not o.archery then
 						print("[PSI ATTACK] attacking with", o.name)
-						self.use_psi_combat = true
+						self:attr("use_psi_combat", 1)
 						local s, h = self:attackTargetWith(a, o.combat, nil, 1)
-						self.use_psi_combat = false
+						self:attr("use_psi_combat", -1)
 						speed = math.max(speed or 0, s)
 						hit = hit or h
 						if hit and not sound then sound = o.combat.sound
@@ -264,6 +264,8 @@ newTalent{
 				chance = (tk.material_level or 1) * 5 + 5 + self:callTalent(self.T_RESONANT_FOCUS, "bonus"),
 				range = 2 + (tk.material_level or 1),
 			}
+		else
+			self:talentTemporaryValue(ret, "use_psi_combat", 1)
 		end
 		return ret
 	end,
@@ -274,7 +276,7 @@ newTalent{
 		local base = [[Allows you to wield a physical melee weapon, a mindstar or a gem telekinetically, gaining a special effect for each.
 		A gem will provide +4 bonus to all primary stats per tier of the gem.
 		A mindstar will randomly try to grab (5% chance and range 2, + 1 range and 5% chance per tier of the mindstar) a far away foe and bring it to melee range.
-		A physical melee weapon will act as a semi independant entity, attacking foes nearby each turn while also replacing Strength and Dexterity with Willpower and Cunning for accuracy and damage calculations.
+		A physical melee weapon will act as a semi independant entity, attacking foes nearby each turn while also replacing Strength and Dexterity with Willpower and Cunning for accuracy and damage calculations (for all melee weapons).
 
 		]]
 
