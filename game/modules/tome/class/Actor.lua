@@ -4553,6 +4553,7 @@ local sustainCallbackCheck = {
 	callbackOnHeal = "talents_on_heal",
 	callbackOnWear = "talents_on_wear",
 	callbackOnTakeoff = "talents_on_takeoff",
+	callbackOnTalentPost = "talents_on_talent_post",
 }
 _M.sustainCallbackCheck = sustainCallbackCheck
 
@@ -4769,6 +4770,8 @@ function _M:postUseTalent(ab, ret, silent)
 	if self:triggerHook(hd) then
 		trigger = hd.trigger
 	end
+
+	self:fireTalentCheck("callbackOnTalentPost", ab, ret, silent)
 
 	if trigger and self:hasEffect(self.EFF_BURNING_HEX) and not self:attr("talent_reuse") then
 		local p = self:hasEffect(self.EFF_BURNING_HEX)
