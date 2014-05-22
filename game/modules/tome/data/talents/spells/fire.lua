@@ -140,7 +140,7 @@ newTalent{
 	direct_hit = true,
 	requires_target = true,
 	target = function(self, t)
-		return {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t), selffire=self:spellFriendlyFire(), talent=t, display={particle="bolt_fire", trail="firetrail"}, sound_stop="talents/fireflash"}
+		return {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t), selffire=self:spellFriendlyFire(), talent=t, display={particle="bolt_fire", particle_args={size_factor=1.5}}, sound_stop="talents/fireflash"}
 	end,
 	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 28, 280) end,
 	action = function(self, t)
@@ -148,7 +148,7 @@ newTalent{
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
 		self:projectile(tg, x, y, DamageType.FIRE, self:spellCrit(t.getDamage(self, t)), function(self, tg, x, y, grids)
-			game.level.map:particleEmitter(x, y, tg.radius, "fireflash", {radius=tg.radius, tx=x, ty=y})
+			game.level.map:particleEmitter(x, y, tg.radius, "fireflash", {radius=tg.radius, proj_x=x, proj_y=y, src_x=self.x, src_y=self.y})
 			if self:attr("burning_wake") then
 				game.level.map:addEffect(self,
 					x, y, 4,

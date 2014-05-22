@@ -355,6 +355,21 @@ Again, thank you, and enjoy Eyal!
 	end
 end
 
+function _M:isFriend(login)
+	return self.friends[login]
+end
+
+function _M:addFriend(login, id)
+	core.profile.pushOrder(table.serialize{o="AddFriend", id=id})
+
+--	CRASH ON ADD
+end
+
+function _M:removeFriend(login, id)
+	self.friends[login] = nil
+	core.profile.pushOrder(table.serialize{o="RemoveFriend", id=id})
+end
+
 function _M:join(channel)
 	if not profile.auth then return end
 	core.profile.pushOrder(string.format("o='ChatJoin' channel=%q", channel))

@@ -24,9 +24,11 @@ if core.shader.active(4) then
 use_shader = {type="fireball"}
 base_size = 64
 
+size_factor = size_factor or 1
+
 local dir = 0
 if proj_x and src_x then
-	dir = 180 + math.deg(math.atan2(proj_y-src_y, proj_x-src_x))
+	dir = math.deg(math.atan2(proj_y-src_y, proj_x-src_x))
 end
 
 return {
@@ -34,7 +36,7 @@ return {
 	generator = function()
 	return {
 		life = 1000,
-		size = 80, sizev = 0, sizea = 0,
+		size = size_factor * 80, sizev = 0, sizea = 0,
 
 		x = 0, xv = 0, xa = 0,
 		y = 0, yv = 0, ya = 0,
@@ -50,7 +52,7 @@ end, },
 function(self)
 	self.ps:emit(1)
 end,
-1, "particles_images/fireball"
+1, "particles_images/fireflash"
 
 
 --------------------------------------------------------------------------------------

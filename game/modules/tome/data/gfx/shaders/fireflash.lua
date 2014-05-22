@@ -23,7 +23,10 @@ return {
 	args = {
 		tex = { texture = 0 },
 		projectile_time_factor = time_factor or 2000,
-		explosion_time_factor = explosion_time_factor or 1000,
-		is_exploding = 0,
+		explosion_time_factor = explosion_time_factor or 1200,
+		is_exploding = is_exploding or 1,
+	},
+	resetargs = {
+		tick_start = function() return core.game.getFrameTime() end,
 	},
 }

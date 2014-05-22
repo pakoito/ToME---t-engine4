@@ -589,6 +589,16 @@ function _M:orderPing(o)
 	self.server_latency = lat
 end
 
+function _M:orderAddFriend(o)
+	self:command("FRND", "ADD", o.id)
+	self:read("200")
+end
+
+function _M:orderRemoveFriend(o)
+	self:command("FRND", "DEL", o.id)
+	self:read("200")
+end
+
 function _M:orderFunFactsGrab(o)
 	if self.funfacts then
 		cprofile.pushEvent(string.format("e='FunFacts' data=%q", self.funfacts))

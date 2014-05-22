@@ -21,17 +21,23 @@
 -- Advanced shaders
 --------------------------------------------------------------------------------------
 if core.shader.active(4) then
-use_shader = {type="shockwave"}
+use_shader = {type="fireflash"}
 base_size = 64
 
 local nb = 0
 
+local dir = 0
+if proj_x and src_x then
+	dir = math.deg(math.atan2(proj_y-src_y, proj_x-src_x))
+end
+
 return {
+	system_rotation = dir, system_rotationv = 0,
 	generator = function()
 	return {
-		life = 16,
+		life = 32,
 		--size = 30, sizev = 2.1*64*radius/16, sizea = 0,
-		size = 2.1*64*radius, sizev = 0, sizea = 0,
+		size = 3.5*64*radius, sizev = 0, sizea = 0,
 
 		x = 0, xv = 0, xa = 0,
 		y = 0, yv = 0, ya = 0,
@@ -50,7 +56,7 @@ function(self)
 	end
 	nb = nb + 1
 end,
-1, "particles_images/flamesshockwave"
+1, "particles_images/fireflash"
 
 
 --------------------------------------------------------------------------------------

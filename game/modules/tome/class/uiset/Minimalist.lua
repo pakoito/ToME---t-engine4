@@ -2204,6 +2204,12 @@ function _M:setupMouse(mouse)
 						end))
 					end },
 				}
+				table.print(user)
+				if profile.chat:isFriend(user.login) then
+					table.insert(extra.add_map_action, 3, { name="Remove Friend", fct=function() Dialog:yesnoPopup("Remove Friend", "Really remove "..user.login.." from your friends?", function(ret) if ret then profile.chat:removeFriend(user.login, user.id) end end) end })
+				else
+					table.insert(extra.add_map_action, 3, { name="Add Friend", fct=function() Dialog:yesnoPopup("Add Friend", "Really add "..user.login.." to your friends?", function(ret) if ret then profile.chat:addFriend(user.login, user.id) end end) end })
+				end
 			end
 		end
 		game.tooltip.old_tmx = -100
