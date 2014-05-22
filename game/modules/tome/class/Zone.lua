@@ -35,12 +35,12 @@ _M:addEgoRule("object", function(dvalue, svalue, key, dst, src, rules, state)
 	-- If the special is a single special, wrap it to allow multiple.
 	if dvalue.fct then dvalue = {dvalue} end
 	if svalue.fct then svalue = {svalue} end
-	-- Save changes to the specials.
+	-- Update
 	dst[key] = dvalue
-	src[key] = svalue
-	-- Return false so we can let the normal table merge take care of
-	-- the rest.
-	return false
+	-- Recurse with always append
+	rules = table.clone(rules)
+	table.insert(rules, 1, table.rules.append)
+	return table.rules.recurse(dvalue, svalue, key, dst, src, rules, state)
 end)
 
 --- Called when the zone file is loaded
@@ -64,7 +64,7 @@ function _M:doQuake(rad, x, y, check)
 	local w = game.level.map.w
 	local locs = {}
 	local ms = {}
-	
+
 	core.fov.calc_circle(x, y, game.level.map.w, game.level.map.h, rad,
 		function(_, lx, ly) if not game.level.map:isBound(lx, ly) then return true end end,
 		function(_, tx, ty)

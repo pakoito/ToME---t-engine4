@@ -66,7 +66,7 @@ newEntity{
 		combat_spellpower = resolvers.mbonus_material(3, 2),
 	},
 	resolvers.genericlast(function(e)
-		e.wielder.inc_damage[e.combat.damtype] = e.combat.dam
+		e.wielder.inc_damage[e.combat.element or e.combat.damtype] = e.combat.dam
 		if e.combat.of_breaching then
 			for d, v in pairs(e.wielder.inc_damage) do
 				e.wielder.resists_pen[d] = math.ceil(e.combat.dam/2)
@@ -598,7 +598,7 @@ newEntity{
 		},
 	},
 	resolvers.genericlast(function(e)
-		e.wielder.inc_damage[e.combat.damtype] = e.combat.dam
+		e.wielder.inc_damage[e.combat.element or e.combat.damtype] = e.combat.dam
 		if e.combat.of_breaching then
 			for d, v in pairs(e.wielder.inc_damage) do
 				e.wielder.resists_pen[d] = math.ceil(e.combat.dam/2)

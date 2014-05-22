@@ -143,7 +143,7 @@ newEntity{
 newEntity{
 	power_source = {arcane=true},
 	name = "blighted ", prefix=true, instant_resolve=true,
-	keywords = {blighed=true},
+	keywords = {blighted=true},
 	level_range = {1, 50},
 	rarity = 9,
 	cost = 5,
@@ -677,16 +677,15 @@ newEntity{
 	},
 }
 
--- On use removed so it doesn't conflict with other on_uses (its pretty bad, they're really good)
 newEntity{
 	power_source = {technique=true},
-	name = "archer's ", prefix=true, instant_resolve=true,
+	name = " of archery", suffix=true, instant_resolve=true,
 	keywords = {archer=true},
 	level_range = {30, 50},
 	greater_ego = 1,
 	rarity = 17,
 	cost = 35,
---	resolvers.charmt(Talents.T_STEADY_SHOT, 3, 20),
+	resolvers.charmt(Talents.T_STEADY_SHOT, 3, 20),
 	wielder = {
 		inc_stats = {
 			[Stats.STAT_DEX] = resolvers.mbonus_material(7, 2),

@@ -68,7 +68,10 @@ newEntity{ define_as = "SUPREME_ARCHMAGE_LINANIIL",
 		{type="armor", subtype="cloth", autoreq=true, forbid_power_source={antimagic=true}, tome_drops="boss"},
 	},
 
-	talent_cd_reduction = {all=23},
+	talent_cd_reduction = {
+		all=23,
+		[Talents.T_DRACONIC_BODY] = -20,
+	},
 	resolvers.talents{
 		[Talents.T_AETHER_PERMEATION]=1,
 		[Talents.T_DRACONIC_BODY]=1,

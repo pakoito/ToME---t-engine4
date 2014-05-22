@@ -352,7 +352,16 @@ function _M:die(src, death_note)
 	if self.rank >= 4 and game.state:allowRodRecall() and not self:attr("no_rod_recall") then
 		local rod = game.zone:makeEntityByName(game.level, "object", "ROD_OF_RECALL")
 		if rod then
-			game.zone:addEntity(game.level, rod, "object", self.x, self.y)
+			-- If the player can move to the space the NPC died on, drop in the normal way
+			-- Else make absolutely sure they get the Rod of Recall by moving it to their inventory directly
+			if not game.player:canMove(self.x, self.y) then
+				game.zone:addEntity(game.level, rod, "object")
+				game.player:addObject(game.player:getInven("INVEN"), rod)
+				rod:identify(true)
+			else
+				game.zone:addEntity(game.level, rod, "object", self.x, self.y)
+			end
+
 			game.state:allowRodRecall(false)
 			if self.define_as == "THE_MASTER" then world:gainAchievement("FIRST_BOSS_MASTER", src)
 			elseif self.define_as == "GRAND_CORRUPTOR" then world:gainAchievement("FIRST_BOSS_GRAND_CORRUPTOR", src)

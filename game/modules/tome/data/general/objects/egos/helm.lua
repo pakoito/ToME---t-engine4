@@ -74,7 +74,7 @@ newEntity{
 		combat_mentalresist = resolvers.mbonus_material(10, 5),
 		resists={
 			[DamageType.BLIGHT] = resolvers.mbonus_material(10, 5),
-	},
+		},
 	},
 }
 newEntity{
@@ -104,6 +104,9 @@ newEntity{
 		combat_atk = resolvers.mbonus_material(8, 4),
 		combat_def = resolvers.mbonus_material(8, 4),
 		inc_stats = { [Stats.STAT_CUN] = resolvers.mbonus_material(8, 2) },
+		on_melee_hit = {
+			[DamageType.ITEM_TEMPORAL_ENERGIZE] = resolvers.mbonus_material(10, 10), 
+		},
 	},
 }
 
