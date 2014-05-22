@@ -48,7 +48,7 @@ newTalent{
 		if self:isTalentActive(self.T_ACID_INFUSION) then damtype = DamageType.ACID_BLIND; particle = "ball_acid"
 		elseif self:isTalentActive(self.T_LIGHTNING_INFUSION) then damtype = DamageType.LIGHTNING_DAZE; particle = "ball_lightning_beam"
 		elseif self:isTalentActive(self.T_FROST_INFUSION) then damtype = DamageType.ICE; particle = "ball_ice"
-		elseif self:isTalentActive(self.T_FIRE_INFUSION) then damtype = DamageType.FIREBURN; particle = "ball_fire"
+		elseif self:isTalentActive(self.T_FIRE_INFUSION) then damtype = DamageType.FIREBURN; particle = "fireflash"
 		end
 		inc_dam = inc_dam + (ammo.alchemist_bomb and ammo.alchemist_bomb.power or 0) / 100
 		local dam = self:combatTalentSpellDamage(t, 15, 150, ((ammo.alchemist_power or 0) + self:combatSpellpower()) / 2)

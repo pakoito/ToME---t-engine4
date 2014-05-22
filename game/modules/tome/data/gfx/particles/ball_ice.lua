@@ -17,47 +17,82 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-local nb = 0
-return { generator = function()
-	local radius = radius
-	local sradius = (radius + 0.5) * (engine.Map.tile_w + engine.Map.tile_h) / 2
-	local ad = rng.float(0, 360)
-	local a = math.rad(ad)
-	local r = rng.float(0, sradius / 2)
-	local x = r * math.cos(a)
-	local y = r * math.sin(a)
-	local bx = math.floor(x / engine.Map.tile_w)
-	local by = math.floor(y / engine.Map.tile_h)
-	local static = rng.percent(40)
+base_size = 64
 
-	return {
-		trail = 1,
-		life = 10,
-		size = 3, sizev = 0, sizea = 0,
+local shader = false
+local oversize = 1.1
+local speed = 0
+local a = 1
+local basesize = (shader and 1.75 or 1) * 2 * radius * (engine.Map.tile_w + engine.Map.tile_h) / 2 + engine.Map.tile_w * 1.8 * (oversize or 1)
+local appear = 0
+local appear_size = 3
+local r = 1
+local g = 1
+local b = 1
 
-		x = x, xv = 0, xa = 0,
-		y = y, yv = 0, ya = 0,
-		dir = a, dirv = 0, dira = 0,
-		vel = sradius / 2 / 10, velv = 0, vela = 0,
+local limit_life = 16
+local grow = basesize / limit_life
 
-		r = 0,   rv = 0, ra = 0,
-		g = rng.range(170, 210)/255,   gv = 0, ga = 0,
-		b = rng.range(200, 255)/255,   gv = 0, ga = 0,
-		a = rng.range(230, 225)/255,   av = 0, aa = 0,
-	}
+local nb = empty_start and -1 or 0
+
+return {
+	blend_mode = shader and core.particles.BLEND_SHINY or nil,
+	system_rotation = base_rot or rng.range(0, 360), system_rotationv = speed,
+	generator = function()
+	if nb == -1 then
+		return {
+			trail = 0,
+			life = empty_start,
+			size = 1, sizev = 0, sizea = 0,
+
+			x = (x or 0) * 64, xv = 0, xa = 0,
+			y = (y or 0) * 64, yv = 0, ya = 0,
+			dir = 0, dirv = dirv, dira = 0,
+			vel = 0, velv = 0, vela = 0,
+
+			r = 0, rv = 0, ra = 0,
+			g = 0, gv = 0, ga = 0,
+			b = 0, bv = 0, ba = 0,
+			a = 0, av = 0, aa = 0,
+		}
+	elseif nb == 0 and appear > 0 then
+		return {
+			trail = 0,
+			life = appear,
+			size = basesize * appear_size, sizev = -basesize * (appear_size - 1) / appear, sizea = 0,
+
+			x = (x or 0) * 64, xv = 0, xa = 0,
+			y = (y or 0) * 64, yv = 0, ya = 0,
+			dir = 0, dirv = dirv, dira = 0,
+			vel = 0, velv = 0, vela = 0,
+
+			r = r, rv = 0, ra = 0,
+			g = g, gv = 0, ga = 0,
+			b = b, bv = 0, ba = 0,
+			a = a, av = 0, aa = 0,
+		}
+	else
+		return {
+			trail = 0,
+			life = limit_life or 1000,
+			size = grow and 0 or basesize, sizev = grow, sizea = 0,
+
+			x = (x or 0) * 64, xv = 0, xa = 0,
+			y = (y or 0) * 64, yv = 0, ya = 0,
+			dir = 0, dirv = dirv, dira = 0,
+			vel = 0, velv = 0, vela = 0,
+
+			r = r, rv = 0, ra = 0,
+			g = g, gv = 0, ga = 0,
+			b = b, bv = 0, ba = 0,
+			a = a, av = 0, aa = 0,
+		}
+	end
 end, },
 function(self)
-	if nb < 5 then
-		self.ps:emit(radius*266)
-		nb = nb + 1
-		self.ps:emit(radius*266)
-		nb = nb + 1
-		self.ps:emit(radius*266)
-		nb = nb + 1
-		self.ps:emit(radius*266)
-		nb = nb + 1
-		self.ps:emit(radius*266)
-		nb = nb + 1
+	if ((appear > 0 and nb < 2) or (appear == 0 and nb < 1)) or not limit_life then
+		if self.ps:emit(1) > 0 then
+			nb = nb + 1
+		end
 	end
-end,
-5*radius*266
+end, 1, "particles_images/ice_nova"
