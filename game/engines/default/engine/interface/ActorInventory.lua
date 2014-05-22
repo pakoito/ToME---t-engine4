@@ -513,7 +513,7 @@ end
 -- @param inven the inventory to look into
 -- @param prop the property to look for
 -- @param value the value to look for, can be a function
-function _M:findInInventoryByObject(so)
+function _M:findInInventoryByObject(inven, so)
 	for item, o in ipairs(inven) do
 		if o == so then return o, item end
 	end

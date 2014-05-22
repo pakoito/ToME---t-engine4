@@ -117,6 +117,8 @@ function _M:updateUI()
 	KeyBind:load("chat")
 	self.key:bindKeys() -- Make sure it updates
 	self.key:addBind("USERCHAT_TALK", function() profile.chat:talkBox(nil, true) end)
+
+	self:setFocus(self.c_list)
 end
 
 function _M:uiLogin(uis)
