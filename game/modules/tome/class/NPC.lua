@@ -356,7 +356,7 @@ function _M:die(src, death_note)
 			-- Else make absolutely sure they get the Rod of Recall by moving it to their inventory directly
 			if not game.player:canMove(self.x, self.y) then
 				game.zone:addEntity(game.level, rod, "object")
-				game.player:addObject(game.player:getInven("INVEN"), rod)
+				game:getPlayer(true):addObject(game:getPlayer(true):getInven("INVEN"), rod)
 				rod:identify(true)
 			else
 				game.zone:addEntity(game.level, rod, "object", self.x, self.y)
