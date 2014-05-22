@@ -361,8 +361,6 @@ end
 
 function _M:addFriend(login, id)
 	core.profile.pushOrder(table.serialize{o="AddFriend", id=id})
-
---	CRASH ON ADD
 end
 
 function _M:removeFriend(login, id)
@@ -442,11 +440,11 @@ function _M:achievement(name, huge, first)
 end
 
 --- Request a line to send
-function _M:talkBox(on_end)
+function _M:talkBox(on_end, only_friends)
 	if not profile.auth then return end
 	local Talkbox = require "engine.dialogs.Talkbox"
-	local d = Talkbox.new(self, on_end)
-	game:registerDialog(d)
+	local d = Talkbox.new(self, on_end, only_friends)
+	if not d.nobody then game:registerDialog(d) end
 
 	self:updateChanList()
 end

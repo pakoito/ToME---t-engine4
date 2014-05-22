@@ -27,7 +27,7 @@ local Textzone = require "engine.ui.Textzone"
 
 module(..., package.seeall, class.inherit(Dialog))
 
-function _M:init(chat, on_end)
+function _M:init(chat, on_end, only_friends)
 	chat:getChannelCode("----------------")
 
 	self.on_end = on_end
@@ -35,6 +35,7 @@ function _M:init(chat, on_end)
 	self.min = 2
 	self.max = 300
 	self.absolute = absolute
+	self.only_friends = self.only_friends
 
 	Dialog.init(self, self:getTitle(), 320, 110, nil, nil, nil, nil, false)
 
@@ -46,7 +47,16 @@ function _M:init(chat, on_end)
 	local ok = Button.new{text="Accept", fct=function() self:okclick() end}
 	local cancel = Button.new{text="Cancel", fct=function() self:cancelclick() end}
 
-	local list = self:getTargets()
+	local list = self:getTargets(only_friends)
+	if #list == 0 then self.nobody = true end
+
+	if only_friends and #list > 0 then
+		local type, name = self.chat:getCurrentTarget()
+		if type ~= "whisper" then
+			self.chat:setCurrentTarget(false, list[1].id)
+		end
+	end
+
 	self.c_list_text = Textzone.new{auto_width=true, auto_height=true, text="Target: "}
 	self.c_list = Dropdown.new{width=250, fct=function(item) if not item then return end self:checkTarget(item.id..":") self:setFocus(c_box) end, list=list, nb_items=math.min(#list, 10), scrollbar=true}
 
@@ -84,12 +94,20 @@ function _M:init(chat, on_end)
 	end)
 end
 
-function _M:getTargets()
+function _M:on_register()
+	self:updateTitle(self:getTitle())
+end
+
+function _M:getTargets(only_friends)
 	local list = {}
-	for name, _ in pairs(self.chat.channels) do list[#list+1] = {name="Channel: "..name, id=name} end
+	if not only_friends then
+		for name, _ in pairs(self.chat.channels) do list[#list+1] = {name="Channel: "..name, id=name} end
+	end
+
 	local name_added = {}
 	for login, data in pairs(self.chat.friends) do list[#list+1] = {name="Friend: "..data.name, id=data.name} name_added[data.name] = true end
-	if self.chat.channels[self.chat.cur_channel] then
+
+	if not only_friends and self.chat.channels[self.chat.cur_channel] then
 		for login, data in pairs(self.chat.channels[self.chat.cur_channel].users) do if not name_added[data.name] then list[#list+1] = {name="User: "..data.name, id=data.name} name_added[data.name] = true end end
 	end
 	return list

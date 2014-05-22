@@ -25,6 +25,7 @@ local ButtonImage = require "engine.ui.ButtonImage"
 local Textzone = require "engine.ui.Textzone"
 local Textbox = require "engine.ui.Textbox"
 local Separator = require "engine.ui.Separator"
+local KeyBind = require "engine.KeyBind"
 
 module(..., package.seeall, class.inherit(Dialog))
 
@@ -113,17 +114,9 @@ function _M:updateUI()
 		end
 	end)
 	self.key:addBind("SCREENSHOT", function() game:saveScreenshot() end)
-	self.key:addBind("USERCHAT_TALK", function() print("<<<") profile.chat:talkBox() end)
-	print("==================================")
-	print("==================================")
-	print("==================================")
-	print("==================================")
-	print("==================================")
-	print("==================================")
-	print("==================================")
-	print("==================================")
-	print("==================================")
-	print("==================================<")
+	KeyBind:load("chat")
+	self.key:bindKeys() -- Make sure it updates
+	self.key:addBind("USERCHAT_TALK", function() profile.chat:talkBox(nil, true) end)
 end
 
 function _M:uiLogin(uis)
