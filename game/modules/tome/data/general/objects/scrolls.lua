@@ -366,49 +366,56 @@ newEntity{ base = "BASE_RUNE",
 	level_range = {25, 50},
 	rarity = 16,
 	cost = 20,
-	material_level = 3,
+	material_level = 2,
 
 	inscription_kind = "attack",
 	inscription_data = {
-		cooldown = resolvers.rngrange(15, 25),
+		cooldown = resolvers.rngrange(12, 20),
 		range = resolvers.mbonus_level(5, 4),
-		power = resolvers.mbonus_level(300, 60, function(e, v) return v * 0.1 end),
+		power = resolvers.mbonus_level(200, 60, function(e, v) return v * 0.1 end),
 		use_stat_mod = 1.8,
 	},
 	inscription_talent = "RUNE:_HEAT_BEAM",
 }
 
+-- Very strong debuff, very low damage and scaling
+-- This is mostly aimed at classes that want a decent way to land their stuns more reliably
 newEntity{ base = "BASE_RUNE",
-	name = "frozen spear rune",
-	level_range = {25, 50},
-	rarity = 16,
+	name = "biting gale rune",
+	level_range = {10, 50},
+	rarity = 25,
 	cost = 20,
-	material_level = 3,
+	material_level = 2,
 
 	inscription_kind = "attack",
 	inscription_data = {
-		cooldown = resolvers.rngrange(15, 25),
-		range = resolvers.mbonus_level(5, 4),
-		power = resolvers.mbonus_level(300, 60, function(e, v) return v * 0.1 end),
-		use_stat_mod = 1.8,
+		cooldown = resolvers.rngrange(12, 20),
+		power = resolvers.mbonus_level(100, 30, function(e, v) return v * 0.1 end),
+		apply = resolvers.mbonus_level(5, 20, function(e, v) return v * 0.1 end),
+		radius = 6,
+		use_stat_mod = 1.2,
 	},
-	inscription_talent = "RUNE:_FROZEN_SPEAR",
+	inscription_talent = "RUNE:_BITING_GALE",
 }
 
+-- Weaker debuff, medium damage and scaling
 newEntity{ base = "BASE_RUNE",
 	name = "acid wave rune",
 	level_range = {25, 50},
 	rarity = 16,
 	cost = 20,
-	material_level = 3,
+	material_level = 2,
 
 	inscription_kind = "attack",
 	inscription_data = {
 		cooldown = resolvers.rngrange(15, 25),
-		range = resolvers.mbonus_level(3, 2),
+		radius = 6,
+		range = 0,
 		power = resolvers.mbonus_level(250, 40, function(e, v) return v * 0.1 end),
 		reduce = resolvers.mbonus_level(25, 10),
+		apply = resolvers.mbonus_level(5, 20, function(e, v) return v * 0.1 end),
 		use_stat_mod = 1.8,
+		dur = 5,
 	},
 	inscription_talent = "RUNE:_ACID_WAVE",
 }
@@ -450,6 +457,7 @@ newEntity{ base = "BASE_RUNE",
 -----------------------------------------------------------
 -- Taints
 -----------------------------------------------------------
+
 --[[
 newEntity{ base = "BASE_TAINT",
 	name = "taint of the devourer",
@@ -468,3 +476,22 @@ newEntity{ base = "BASE_TAINT",
 	inscription_talent = "TAINT:_DEVOURER",
 }
 ]]
+
+--[[
+newEntity{ base = "BASE_TAINT",
+	name = "taint of insanity",
+	level_range = {1, 50},
+	rarity = 15,
+	cost = 10,
+	material_level = 1,
+
+	inscription_kind = "defense",
+	inscription_data = {
+		cooldown = resolvers.rngrange(12, 17),
+		effects = resolvers.mbonus_level(3, 2, function(e, v) return v * 0.06 end),
+		heal = resolvers.mbonus_level(70, 40, function(e, v) return v * 0.06 end),
+		use_stat_mod = 0.6,
+	},
+	inscription_talent = "TAINT:_INSANITY",
+}
+--]]

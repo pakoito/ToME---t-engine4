@@ -714,7 +714,7 @@ newInscription{
 }
 
 newInscription{
-	name = "Rune: Frozen Spear",
+	name = "Rune: Biting Gale",
 	type = {"inscriptions/runes", 1},
 	points = 1,
 	is_attack_rune = true,
@@ -730,19 +730,30 @@ newInscription{
 			return nb
 		end },
 	requires_target = true,
-	range = function(self, t)
-		local data = self:getInscriptionData(t.short_name)
-		return data.range
-	end,
+	range = 0,
 	target = function(self, t)
-		return {type="bolt", range=self:getTalentRange(t), talent=t, display={particle="bolt_ice", trail="icetrail"}}
+		return {type="cone", cone_angle=25, radius = 6, range=self:getTalentRange(t), talent=t, display={particle="bolt_ice", trail="icetrail"}}
 	end,
 	action = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
 		local tg = self:getTalentTarget(t)
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
-		self:project(tg, x, y, DamageType.ICE, data.power + data.inc_stat, {type="freeze"})
+
+		local damage = data.power + data.inc_stat -- Cut by ~2/3rds or so
+		local apply = self:rescaleCombatStats((data.apply + data.inc_stat))
+
+	--	local apply = data.apply + data.inc_stat -- Same calculation as Sun Infusion, goes above what PCs can get on power stats pretty easily
+		self:project(tg, x, y, function(tx, ty)
+			local target = game.level.map(tx, ty, Map.ACTOR)
+			if not target or target == self then return end
+			
+			-- Minor damage, apply stun resist reduction, freeze
+			DamageType:get(DamageType.COLD).projector(target, tx, ty, DamageType.COLD, damage)
+			target:setEffect(target.EFF_WET, 5, {apply_power=data.inc_stat})
+			target:setEffect(target.EFF_FROZEN, 2, {hp=damage*1.5, apply_power=apply})
+
+		end, data.power + data.inc_stat, {type="freeze"})
 		self:removeEffectsFilter({status="detrimental", type="mental", ignore_crosstier=true}, 1)
 		game:playSoundNear(self, "talents/ice")
 		attack_rune(self, t.id)
@@ -750,12 +761,16 @@ newInscription{
 	end,
 	info = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
-		return ([[Activate the rune to fire a bolt of ice, doing %0.2f cold damage with a chance to freeze the target.
-		The deep cold also crystalizes your mind, removing one random detrimental mental effect from you.]]):format(damDesc(self, DamageType.COLD, data.power + data.inc_stat))
+		local apply = self:rescaleCombatStats((data.apply + data.inc_stat))
+		return ([[Activate the rune to direct a cone of chilling stormwind doing %0.2f cold damage.
+			The storm will soak enemies hit reducing their resistance to stuns by 50%% then attempt to freeze them for 3 turns with an apply power of %d.
+		The deep cold also crystalizes your mind, removing one random detrimental mental effect from you.]]):
+			format(damDesc(self, DamageType.COLD, data.power + data.inc_stat), apply)
 	end,
 	short_info = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
-		return ([[%d cold damage]]):format(damDesc(self, DamageType.COLD, data.power + data.inc_stat))
+		local apply = self:rescaleCombatStats((data.apply + data.inc_stat))
+		return ([[%d cold damage; %d apply power]]):format(damDesc(self, DamageType.COLD, data.inc_stat), apply)
 	end,
 }
 
@@ -766,38 +781,66 @@ newInscription{
 	is_attack_rune = true,
 	no_energy = true,
 	is_spell = true,
-	tactical = { ATTACKAREA = { ACID = 1 } },
+	tactical = {
+		ATTACKAREA = { ACID = 1 },
+		CURE = function(self, t, target)
+			local nb = 0
+			local data = self:getInscriptionData(t.short_name)
+			for eff_id, p in pairs(self.tmp) do
+				local e = self.tempeffect_def[eff_id]
+				if e.type == "magical" and e.status == "detrimental" then nb = nb + 1 end
+			end
+			return nb
+		end
+	},
 	requires_target = true,
 	direct_hit = true,
 	range = 0,
 	radius = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
-		return data.range
+		return data.radius
 	end,
 	target = function(self, t)
-		return {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t), selffire=false, talent=t}
+		return {type="cone", radius=self:getTalentRadius(t), range = 0, selffire=false, cone_angle=5, talent=t}
 	end,
 	action = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
 		local tg = self:getTalentTarget(t)
-		local pow = data.reduce or 15
-		self:project(tg, self.x, self.y, DamageType.ACID_CORRODE, {dam=data.power + data.inc_stat, dur=data.dur or 3, atk=pow, armor=pow, defense=pow})
-		game.level.map:particleEmitter(self.x, self.y, tg.radius, "ball_acid", {radius=tg.radius})
+		local x, y = self:getTarget(tg)
+		if not x or not y then return nil end
+
+		local apply = self:rescaleCombatStats((data.apply + data.inc_stat))
+
+		self:removeEffectsFilter({status="detrimental", type="magical", ignore_crosstier=true}, 1)
+		self:project(tg, x, y, function(tx, ty)
+
+			local target = game.level.map(tx, ty, Map.ACTOR)
+			if not target or target == self then return end
+			target:setEffect(target.EFF_DISARMED, data.dur, {})
+			
+			DamageType:get(DamageType.ACID).projector(self, tx, ty, DamageType.ACID, data.power + data.inc_stat)
+
+		end)
+
+		game.level.map:particleEmitter(self.x, self.y, tg.radius, "breath_acid", {radius=tg.radius, tx=x-self.x, ty=y-self.y})
 		game:playSoundNear(self, "talents/slime")
 		attack_rune(self, t.id)
 		return true
 	end,
 	info = function(self, t)
-		local data = self:getInscriptionData(t.short_name)
-		local pow = data.reduce or 15
-		return ([[Activate the rune to fire a self-centered acid wave of radius %d, doing %0.2f acid damage.
-		The corrosive acid will also reduce accuracy, defense and armour by %d for %d turns.]]):
-		format(self:getTalentRadius(t), damDesc(self, DamageType.ACID, data.power + data.inc_stat), pow, data.dur or 3)
-	end,
+		  local data = self:getInscriptionData(t.short_name)
+		  local pow = data.apply + data.inc_stat
+		  local apply = self:rescaleCombatStats((data.apply + data.inc_stat))
+		  return ([[Activate the rune to unleash a wave of acid in a cone of radius %d, doing %0.2f acid damage. The corrosive acid will also disarm enemies struck for %d turns with an apply power of %d.
+	  The surge of natural acids will remove one detrimental magical effect from you.]]):
+			 format(self:getTalentRadius(t), damDesc(self, DamageType.ACID, data.power + data.inc_stat), data.dur or 3, apply)
+	   end,
 	short_info = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
-		local pow = data.reduce or 15
-		return ([[%d acid damage; power %d; dur %d]]):format(damDesc(self, DamageType.ACID, data.power + data.inc_stat), pow, data.dur or 3)
+		local pow = data.power
+		local apply = self:rescaleCombatStats((data.apply + data.inc_stat))
+
+		return ([[%d acid damage; dur %d; apply %d]]):format(damDesc(self, DamageType.ACID, data.power + data.inc_stat), data.dur or 3, apply)
 	end,
 }
 
@@ -884,6 +927,53 @@ newInscription{
 		return ([[%d%% regen over %d turns; %d instant mana]]):format(data.mana + data.inc_stat, data.dur, (data.mana + data.inc_stat) / 20)
 	end,
 }
+
+newInscription{
+	name = "Rune: Frozen Spear",
+	type = {"inscriptions/runes", 1},
+	points = 1,
+	is_attack_rune = true,
+	no_energy = true,
+	is_spell = true,
+	tactical = { ATTACK = { COLD = 1 }, DISABLE = { stun = 1 }, CURE = function(self, t, target)
+			local nb = 0
+			local data = self:getInscriptionData(t.short_name)
+			for eff_id, p in pairs(self.tmp) do
+				local e = self.tempeffect_def[eff_id]
+				if e.type == "mental" and e.status == "detrimental" then nb = nb + 1 end
+			end
+			return nb
+		end },
+	requires_target = true,
+	range = function(self, t)
+		local data = self:getInscriptionData(t.short_name)
+		return data.range
+	end,
+	target = function(self, t)
+		return {type="bolt", range=self:getTalentRange(t), talent=t, display={particle="bolt_ice", trail="icetrail"}}
+	end,
+	action = function(self, t)
+		local data = self:getInscriptionData(t.short_name)
+		local tg = self:getTalentTarget(t)
+		local x, y = self:getTarget(tg)
+		if not x or not y then return nil end
+		self:project(tg, x, y, DamageType.ICE, data.power + data.inc_stat, {type="freeze"})
+		self:removeEffectsFilter({status="detrimental", type="mental", ignore_crosstier=true}, 1)
+		game:playSoundNear(self, "talents/ice")
+		attack_rune(self, t.id)
+		return true
+	end,
+	info = function(self, t)
+		local data = self:getInscriptionData(t.short_name)
+		return ([[Activate the rune to fire a bolt of ice, doing %0.2f cold damage with a chance to freeze the target.
+		The deep cold also crystalizes your mind, removing one random detrimental mental effect from you.]]):format(damDesc(self, DamageType.COLD, data.power + data.inc_stat))
+	end,
+	short_info = function(self, t)
+		local data = self:getInscriptionData(t.short_name)
+		return ([[%d cold damage]]):format(damDesc(self, DamageType.COLD, data.power + data.inc_stat))
+	end,
+}
+
 
 -- This is mostly a copy of Time Skip :P
 newInscription{

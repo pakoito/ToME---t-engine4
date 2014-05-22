@@ -113,7 +113,17 @@ function _M:updateUI()
 		end
 	end)
 	self.key:addBind("SCREENSHOT", function() game:saveScreenshot() end)
-	self.key:addBind("USERCHAT_TALK", function() profile.chat:talkBox() end)
+	self.key:addBind("USERCHAT_TALK", function() print("<<<") profile.chat:talkBox() end)
+	print("==================================")
+	print("==================================")
+	print("==================================")
+	print("==================================")
+	print("==================================")
+	print("==================================")
+	print("==================================")
+	print("==================================")
+	print("==================================")
+	print("==================================<")
 end
 
 function _M:uiLogin(uis)

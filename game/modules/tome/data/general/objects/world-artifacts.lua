@@ -4404,6 +4404,8 @@ newEntity{ base = "BASE_GEM", --Thanks SageAcrin and Graziel!
 		talents_types_mastery = {
 			["golem/arcane"] = 0.2,
 		},
+		talent_on_spell = { {chance=10, talent=Talents.T_GOLEM_BEAM, level=2} },
+
 	},
 	imbue_powers = {
 		inc_stats = {[Stats.STAT_MAG] = 5, [Stats.STAT_CON] = 5, },
@@ -4411,8 +4413,10 @@ newEntity{ base = "BASE_GEM", --Thanks SageAcrin and Graziel!
 		talents_types_mastery = {
 			["golem/arcane"] = 0.2,
 		},
+		talent_on_spell = { {chance=10, talent=Talents.T_GOLEM_BEAM, level=2} },
 	},
-	talent_on_spell = { {chance=10, talent=Talents.T_GOLEM_BEAM, level=2} },
+	--special_desc = function(self) return "Casts lasers on spellcast when worn or imbued." end,
+
 }
 
 newEntity{ base = "BASE_MASSIVE_ARMOR", --Thanks SageAcrin!
