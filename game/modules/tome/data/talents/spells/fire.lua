@@ -140,7 +140,7 @@ newTalent{
 	direct_hit = true,
 	requires_target = true,
 	target = function(self, t)
-		return {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t), selffire=self:spellFriendlyFire(), talent=t, display={particle="bolt_fire", particle_args={size_factor=1.5}}, sound_stop="talents/fireflash"}
+		return {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t), selffire=self:spellFriendlyFire(), talent=t, display={particle="bolt_fire", particle_args={size_factor=1.5}, trail="firetrail"}, sound_stop="talents/fireflash"}
 	end,
 	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 28, 280) end,
 	action = function(self, t)

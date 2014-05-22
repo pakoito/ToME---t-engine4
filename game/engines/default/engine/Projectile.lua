@@ -109,7 +109,12 @@ function _M:move(x, y, force)
 		self.travel_particle = nil
 	end
 	if self.trail_particle then
-		local ps = Particles.new(self.trail_particle, 1, nil)
+		local args = {}
+		args.src_x = self.old_x
+		args.src_y = self.old_y
+		args.proj_x = self.project.def.x
+		args.proj_y = self.project.def.y
+		local ps = Particles.new(self.trail_particle, 1, args)
 		ps.x = x
 		ps.y = y
 		game.level.map:addParticleEmitter(ps)
