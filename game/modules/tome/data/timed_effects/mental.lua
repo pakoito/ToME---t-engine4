@@ -3155,10 +3155,12 @@ newEffect{
 	activate = function(self, eff)
 		self:effectTemporaryValue(eff, "inc_damage", {[DamageType.PHYSICAL]=eff.power})
 		self:effectTemporaryValue(eff, "resists_pen", {[DamageType.PHYSICAL]=eff.power})
-		eff.particle = self:addParticles(Particles.new("circle", 1, {shader=true, toback=true, oversize=1.4, a=155, appear=8, speed=0, img="transcend_tele", radius=0}))
+		eff.particle = self:addParticles(Particles.new("circle", 1, {shader=true, toback=true, oversize=1.7, a=155, appear=8, speed=0, img="transcend_tele", radius=0}))
+		self:callTalent(self.T_KINETIC_SHIELD, "adjust_shield_gfx", true)
 	end,
 	deactivate = function(self, eff)	
 		self:removeParticles(eff.particle)
+		self:callTalent(self.T_KINETIC_SHIELD, "adjust_shield_gfx", false)
 	end,
 }
 
@@ -3173,10 +3175,12 @@ newEffect{
 	activate = function(self, eff)
 		self:effectTemporaryValue(eff, "inc_damage", {[DamageType.FIRE]=eff.power, [DamageType.COLD]=eff.power})
 		self:effectTemporaryValue(eff, "resists_pen", {[DamageType.FIRE]=eff.power, [DamageType.COLD]=eff.power})
-		eff.particle = self:addParticles(Particles.new("circle", 1, {shader=true, toback=true, oversize=1.4, a=155, appear=8, speed=0, img="transcend_pyro", radius=0}))
+		eff.particle = self:addParticles(Particles.new("circle", 1, {shader=true, toback=true, oversize=1.7, a=155, appear=8, speed=0, img="transcend_pyro", radius=0}))
+		self:callTalent(self.T_THERMAL_SHIELD, "adjust_shield_gfx", true)
 	end,
 	deactivate = function(self, eff)	
 		self:removeParticles(eff.particle)
+		self:callTalent(self.T_THERMAL_SHIELD, "adjust_shield_gfx", false)
 	end,
 }
 
@@ -3191,9 +3195,11 @@ newEffect{
 	activate = function(self, eff)
 		self:effectTemporaryValue(eff, "inc_damage", {[DamageType.LIGHTNING]=eff.power})
 		self:effectTemporaryValue(eff, "resists_pen", {[DamageType.LIGHTNING]=eff.power})
-		eff.particle = self:addParticles(Particles.new("circle", 1, {shader=true, toback=true, oversize=1.4, a=155, appear=8, speed=0, img="transcend_electro", radius=0}))
+		eff.particle = self:addParticles(Particles.new("circle", 1, {shader=true, toback=true, oversize=1.7, a=155, appear=8, speed=0, img="transcend_electro", radius=0}))
+		self:callTalent(self.T_CHARGED_SHIELD, "adjust_shield_gfx", true)
 	end,
 	deactivate = function(self, eff)	
 		self:removeParticles(eff.particle)
+		self:callTalent(self.T_CHARGED_SHIELD, "adjust_shield_gfx", false)
 	end,
 }

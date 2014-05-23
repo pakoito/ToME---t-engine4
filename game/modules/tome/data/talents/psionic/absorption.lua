@@ -112,24 +112,32 @@ newTalent{
 		self:incPsi(psigain)
 		return dam + guaranteed_dam
 	end,
+	adjust_shield_gfx = function(self, t, v, p)
+		if not p then p = self:isTalentActive(t.id) end
+		if not p then return end
+
+		self:removeParticles(p.particle)
+		if v then
+			if core.shader.active(4) then p.particle = self:addParticles(Particles.new("shader_shield", 1, {size_factor=1.4, img="shield5"}, {type="runicshield", ellipsoidalFactor=1, time_factor=-10000, llpow=1, aadjust=7, bubbleColor={1, 0, 0.3, 0.6}, auraColor={1, 0, 0.3, 1}}))
+			else p.particle = self:addParticles(Particles.new("generic_shield", 1, {r=1, g=0, b=0.3, a=1}))
+			end
+		else
+			if core.shader.active(4) then p.particle = self:addParticles(Particles.new("shader_shield", 1, {size_factor=1.1, img="shield5"}, {type="shield", ellipsoidalFactor=1, time_factor=-10000, llpow=1, aadjust=3, color={1, 0, 0.3}}))
+			else p.particle = self:addParticles(Particles.new("generic_shield", 1, {r=1, g=0, b=0.3, a=0.5}))
+			end
+		end
+	end,
 	activate = function(self, t)
 		game:playSoundNear(self, "talents/heal")
 		local s_str = getShieldStrength(self, t)
 
-		local particle
-		if core.shader.active(4) then
-			particle = self:addParticles(Particles.new("shader_shield", 1, {size_factor=1.1, img="shield5"}, {type="shield", ellipsoidalFactor=1, time_factor=-10000, llpow=1, aadjust=3, color={1, 0, 0.3}}))
-		else
-			particle = self:addParticles(Particles.new("generic_shield", 1, {r=1, g=0, b=0.3, a=0.5}))
-		end
-
-
-		return {
+		local ret = {
 			am = self:addTemporaryValue("kinetic_shield", s_str),
-			particle = particle,
 			game_turn = game.turn,
 			psi_gain = 0,
 		}
+		t.adjust_shield_gfx(self, t, self:hasEffect(self.EFF_TRANSCENDENT_TELEKINESIS), ret)
+		return ret
 	end,
 	deactivate = function(self, t, p)
 		self:removeParticles(p.particle)
@@ -245,21 +253,32 @@ newTalent{
 		
 		return dam + guaranteed_dam
 	end,
+	adjust_shield_gfx = function(self, t, v, p)
+		if not p then p = self:isTalentActive(t.id) end
+		if not p then return end
+
+		self:removeParticles(p.particle)
+		if v then
+			if core.shader.active(4) then p.particle = self:addParticles(Particles.new("shader_shield", 1, {size_factor=1.4, img="shield5"}, {type="runicshield", ellipsoidalFactor=1, time_factor=-10000, llpow=1, aadjust=7, bubbleColor={0.3, 1, 1, 0.6}, auraColor={0.3, 1, 1, 1}}))
+			else p.particle = self:addParticles(Particles.new("generic_shield", 1, {r=0.3, g=1, b=1, a=1}))
+			end
+		else
+			if core.shader.active(4) then p.particle = self:addParticles(Particles.new("shader_shield", 1, {size_factor=1.1, img="shield5"}, {type="shield", ellipsoidalFactor=1, time_factor=-10000, llpow=1, aadjust=3, color={0.3, 1, 1}}))
+			else p.particle = self:addParticles(Particles.new("generic_shield", 1, {r=0.3, g=1, b=1, a=0.5}))
+			end
+		end
+	end,
 	activate = function(self, t)
 		game:playSoundNear(self, "talents/heal")
 		local s_str = getShieldStrength(self, t)
-		local particle
-		if core.shader.active(4) then
-			particle = self:addParticles(Particles.new("shader_shield", 1, {size_factor=1.1, img="shield5"}, {type="shield", ellipsoidalFactor=1, time_factor=-10000, llpow=1, aadjust=3, color={0.3, 1, 1}}))
-		else
-			particle = self:addParticles(Particles.new("generic_shield", 1, {r=0.3, g=1, b=1, a=0.5}))
-		end
-		return {
+
+		local ret = {
 			am = self:addTemporaryValue("thermal_shield", s_str),
-			particle = particle,
 			game_turn = game.turn,
 			psi_gain = 0,
 		}
+		t.adjust_shield_gfx(self, t, self:hasEffect(self.EFF_TRANSCENDENT_PYROKINESIS), ret)
+		return ret
 	end,
 	deactivate = function(self, t, p)
 		self:removeParticles(p.particle)
@@ -370,21 +389,32 @@ newTalent{
 		self:incPsi(psigain)
 		return dam + guaranteed_dam
 	end,
+	adjust_shield_gfx = function(self, t, v, p)
+		if not p then p = self:isTalentActive(t.id) end
+		if not p then return end
+
+		self:removeParticles(p.particle)
+		if v then
+			if core.shader.active(4) then p.particle = self:addParticles(Particles.new("shader_shield", 1, {size_factor=1.4, img="shield5"}, {type="runicshield", ellipsoidalFactor=1, time_factor=-10000, llpow=1, aadjust=7, bubbleColor={0.8, 1, 0.2, 0.6}, auraColor={0.8, 1, 0.2, 1}}))
+			else p.particle = self:addParticles(Particles.new("generic_shield", 1, {r=0.8, g=1, b=0.2, a=1}))
+			end
+		else
+			if core.shader.active(4) then p.particle = self:addParticles(Particles.new("shader_shield", 1, {size_factor=1.1, img="shield5"}, {type="shield", ellipsoidalFactor=1, time_factor=-10000, llpow=1, aadjust=3, color={0.8, 1, 0.2}}))
+			else p.particle = self:addParticles(Particles.new("generic_shield", 1, {r=0.8, g=1, b=0.2, a=0.5}))
+			end
+		end
+	end,
 	activate = function(self, t)
 		game:playSoundNear(self, "talents/heal")
 		local s_str = getShieldStrength(self, t)
-		local particle
-		if core.shader.active(4) then
-			particle = self:addParticles(Particles.new("shader_shield", 1, {size_factor=1.1, img="shield5"}, {type="shield", ellipsoidalFactor=1, time_factor=-10000, llpow=1, aadjust=3, color={0.8, 1, 0.2}}))
-		else
-			particle = self:addParticles(Particles.new("generic_shield", 1, {r=0.8, g=1, b=0.2, a=0.5}))
-		end
-		return {
+
+		local ret = {
 			am = self:addTemporaryValue("charged_shield", s_str),
-			particle = particle,
 			game_turn = game.turn,
 			psi_gain = 0,
 		}
+		t.adjust_shield_gfx(self, t, self:hasEffect(self.EFF_TRANSCENDENT_ELECTROKINESIS), ret)
+		return ret
 	end,
 	deactivate = function(self, t, p)
 		self:removeParticles(p.particle)
