@@ -239,14 +239,13 @@ newTalent{
 		local tkweapon = self:getInven("PSIONIC_FOCUS")[1]
 		if type(tkweapon) == "boolean" then tkweapon = nil end
 		if not tkweapon or (tkweapon.type ~= "weapon" and tkweapon.type ~= "gem") then
---			game.logPlayer(self, "You cannot do that without a telekinetically-wielded melee weapon.")
 			return false
 		end
 		return true
 	end,
-
 	activate = function (self, t)
 		local tk = self:getInven("PSIONIC_FOCUS")[1]
+		if not tk then return false end
 
 		local ret = {}
 		if tk.type == "gem" then
