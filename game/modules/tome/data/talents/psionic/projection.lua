@@ -140,6 +140,7 @@ newTalent{
 		DamageType:get(DamageType.PHYSICAL).projector(self, target.x, target.y, DamageType.PHYSICAL, k_dam)
 	end,
 	activate = function(self, t)
+		self.energy.value = self.energy.value + game.energy_to_act * self:combatMindSpeed()
 		return {}
 	end,
 	deactivate = function(self, t, p)
@@ -175,6 +176,7 @@ newTalent{
 		All damage done by the aura will drain one point of energy per %0.2f points of damage dealt.
 		If you have a conventional weapon in your psionically wielded slot, this will add %0.2f physical damage to its hits.
 		When deactivated, if you have at least %d energy, a massive spike of kinetic energy is released as a range %d beam, smashing targets for up to %d physical damage and sending them flying.
+		#{bold}#Activating the aura takes no turn but de-activating it does.#{normal}#
 		To turn off an aura without spiking it, deactivate it and target yourself.  The damage will improve with your Mindpower.]]):
 		format(damDesc(self, DamageType.PHYSICAL, dam), mast, damDesc(self, DamageType.PHYSICAL, dam), spikecost, t.getSpikedRange(self, t),
 		damDesc(self, DamageType.PHYSICAL, spikedam))
@@ -254,6 +256,7 @@ newTalent{
 		DamageType:get(DamageType.FIRE).projector(self, target.x, target.y, DamageType.FIRE, t_dam)
 	end,
 	activate = function(self, t)
+		self.energy.value = self.energy.value + game.energy_to_act * self:combatMindSpeed()
 		return {}
 	end,
 	deactivate = function(self, t, p)
@@ -290,6 +293,7 @@ newTalent{
 		All damage done by the aura will drain one point of energy per %0.2f points of damage dealt.
 		If you have a conventional weapon in your psionically wielded slot, this will add %0.2f fire damage to its hits.
 		When deactivated, if you have at least %d energy, a massive spike of thermal energy is released as a conical blast (radius %d) of superheated air. Anybody caught in it will suffer up to %d fire damage over several turns.
+		#{bold}#Activating the aura takes no turn but de-activating it does.#{normal}#
 		To turn off an aura without spiking it, deactivate it and target yourself.  The damage will improve with your Mindpower.]]):
 		format(damDesc(self, DamageType.FIRE, dam), mast, damDesc(self, DamageType.FIRE, dam), spikecost, rad,
 		damDesc(self, DamageType.FIRE, spikedam))
@@ -373,6 +377,7 @@ newTalent{
 	end,
 	activate = function(self, t)
 		game:playSoundNear(self, "talents/thunderstorm")
+			self.energy.value = self.energy.value + game.energy_to_act * self:combatMindSpeed()
 		return {}
 	end,
 	deactivate = function(self, t, p)
@@ -449,6 +454,7 @@ newTalent{
 		All damage done by the aura will drain one point of energy per %0.2f points of damage dealt.
 		If you have a conventional weapon in your psionically wielded slot, this will add %0.2f lightning damage to its hits.
 		When deactivated, if you have at least %d energy, a massive spike of electrical energy jumps between up to %d nearby targets, doing up to %d lightning damage to each with a 50%% chance of dazing them.
+		#{bold}#Activating the aura takes no turn but de-activating it does.#{normal}#
 		To turn off an aura without spiking it, deactivate it and target yourself.]]):
 		format(damDesc(self, DamageType.LIGHTNING, dam), mast, damDesc(self, DamageType.LIGHTNING, dam), spikecost, nb, damDesc(self, DamageType.LIGHTNING, spikedam))
 	end,
