@@ -40,7 +40,7 @@ newTalent{
 		self:project(tg, x, y, DamageType.PHYSICAL, self:mindCrit(rng.avg(0.8*dam, dam)), {type="mindsear"})
 		if self:hasEffect(self.EFF_TRANSCENDENT_TELEKINESIS) then
 			local act = game.level.map(x, y, engine.Map.ACTOR)
-			if act:canBe("stun") then
+			if act and act:canBe("stun") then
 				act:setEffect(act.EFF_STUNNED, 4, {apply_power=self:combatMindpower()})
 			end
 		end

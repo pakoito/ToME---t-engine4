@@ -50,7 +50,7 @@ uberTalent{
 		local meteor = function(src, x, y, dam)
 			game.level.map:particleEmitter(x, y, 10, "meteor", {x=x, y=y}).on_remove = function(self)
 				local x, y = self.args.x, self.args.y
-				game.level.map:particleEmitter(x, y, 10, "ball_fire", {radius=2})
+				game.level.map:particleEmitter(x, y, 10, "fireflash", {radius=2})
 				game:playSoundNear(game.player, "talents/fireflash")
 
 				local grids = {}

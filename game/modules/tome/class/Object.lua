@@ -724,6 +724,7 @@ function _M:getTextualDesc(compare_with, use_actor)
 		compare_list(
 			"On weapon hit:",
 			function(combat)
+				if not combat then return {} end
 				local list = {}
 				-- Get complex damage types
 				for dt, amount in pairs(combat.melee_project or combat.ranged_project or {}) do
@@ -741,6 +742,7 @@ function _M:getTextualDesc(compare_with, use_actor)
 		compare_list(
 			"On weapon crit:",
 			function(combat)
+				if not combat then return {} end
 				return get_special_list(combat, 'special_on_crit')
 			end
 		)
@@ -748,6 +750,7 @@ function _M:getTextualDesc(compare_with, use_actor)
 		compare_list(
 			"On weapon kill:",
 			function(combat)
+				if not combat then return {} end
 				return get_special_list(combat, 'special_on_kill')
 			end
 		)
