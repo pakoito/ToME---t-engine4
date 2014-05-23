@@ -181,7 +181,7 @@ newTalent{
 				self:incPsi(psi)
 				psi = psi * 0.8
 				if trans then
-					DamageType:get(DamageType.CONFUSION).projector(self, tx, ty, DamageType.CONFUSION, {power_check=self:combatMindpower(), dam=en, dur=4})
+					DamageType:get(DamageType.CONFUSION).projector(self, tx, ty, DamageType.CONFUSION, {power_check=self.combatMindpower, dam=en, dur=4})
 				end
 			end
 			DamageType:get(DamageType.LIGHTNING_DAZE).projector(self, tx, ty, DamageType.LIGHTNING_DAZE, {power_check=self:combatMindpower(), dam=dam})
