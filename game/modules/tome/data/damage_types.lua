@@ -1075,7 +1075,7 @@ newDamageType{
 		if target then
 			-- Set on fire!
 			if target:canBe("stun") then
-				target:setEffect(target.EFF_BURNING_SHOCK, dam.dur, {src=src, power=dam.dam / dam.dur, apply_power=src:combatSpellpower()})
+				target:setEffect(target.EFF_BURNING_SHOCK, dam.dur, {src=src, power=dam.dam / dam.dur, apply_power=dam.apply_power or src:combatSpellpower()})
 			else
 				game.logSeen(target, "%s resists the searing flame!", target.name:capitalize())
 			end

@@ -76,7 +76,7 @@ newTalent{
 		local dam = self:mindCrit(t.getDamage(self, t))
 		local tg = self:getTalentTarget(t)
 		if self:hasEffect(self.EFF_TRANSCENDENT_PYROKINESIS) then
-			self:project(tg, self.x, self.y, DamageType.FLAMESHOCK, {dur=6, dam=dam})
+			self:project(tg, self.x, self.y, DamageType.FLAMESHOCK, {dur=6, dam=dam, apply_power=self:combatMindpower()})
 		else
 			self:project(tg, self.x, self.y, DamageType.FIREBURN, {dur=6, initial=0, dam=dam})
 		end
