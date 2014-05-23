@@ -1046,17 +1046,19 @@ function _M:getTextualDesc(compare_with, use_actor)
 			desc:add(("Talent master%s: "):format(any_mastery > 1 and "ies" or "y"))
 			for ttn, ttid in pairs(masteries) do
 				local tt = Talents.talents_types_def[ttn]
-				local cat = tt.type:gsub("/.*", "")
-				local name = cat:capitalize().." / "..tt.name:capitalize()
-				local diff = (ttid[2] or 0) - (ttid[1] or 0)
-				if diff ~= 0 then
-					if ttid[1] then
-						desc:add(("%+.2f"):format(ttid[2] or 0), diff < 0 and {"color","RED"} or {"color","LIGHT_GREEN"}, ("(%+.2f) "):format(diff), {"color","LAST"}, ("%s "):format(name))
+				if tt then				
+					local cat = tt.type:gsub("/.*", "")
+					local name = cat:capitalize().." / "..tt.name:capitalize()
+					local diff = (ttid[2] or 0) - (ttid[1] or 0)
+					if diff ~= 0 then
+						if ttid[1] then
+							desc:add(("%+.2f"):format(ttid[2] or 0), diff < 0 and {"color","RED"} or {"color","LIGHT_GREEN"}, ("(%+.2f) "):format(diff), {"color","LAST"}, ("%s "):format(name))
+						else
+							desc:add({"color","LIGHT_GREEN"}, ("%+.2f"):format(ttid[2] or 0),  {"color","LAST"}, (" %s "):format(name))
+						end
 					else
-						desc:add({"color","LIGHT_GREEN"}, ("%+.2f"):format(ttid[2] or 0),  {"color","LAST"}, (" %s "):format(name))
+						desc:add({"color","WHITE"}, ("%+.2f(-) %s "):format(ttid[2] or ttid[1], name), {"color","LAST"})
 					end
-				else
-					desc:add({"color","WHITE"}, ("%+.2f(-) %s "):format(ttid[2] or ttid[1], name), {"color","LAST"})
 				end
 			end
 			desc:add(true)

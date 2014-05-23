@@ -511,7 +511,7 @@ Finally The Scorpion was defeated by the alchemist Nessylia, who went to face th
 		combat_armor = 4,
 		combat_def = 8,
 		disarm_immune = 0.4,
-		talents_types_mastery = { ["psionic/grip"] = 0.2, ["technique/grappling"] = 0.2},
+		talents_types_mastery = { ["technique/grappling"] = 0.2},
 		combat = {
 			dam = 24,
 			apr = 10,
