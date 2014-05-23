@@ -4,6 +4,7 @@ uniform float tick_start;
 uniform float projectile_time_factor;
 uniform float explosion_time_factor;
 uniform float is_exploding;
+uniform float trail_length;
 
 float antialiasingRadius = 0.99; //1.0 is no antialiasing, 0.0 - fully smoothed(looks worse)
 
@@ -66,7 +67,7 @@ vec4 GetCheckboardColor(vec2 pos)
 	return col;
 }
 
-vec4 GetFireBallColor(float currTime, vec2 pos, float freqMult, float stretchMult, float ampMult, float power, float radius1, float radius2, vec2 velocity, float paletteCoord)
+vec4 GetFireBallColor(float currTime, vec2 pos, float trailLength, float freqMult, float stretchMult, float ampMult, float power, float radius1, float radius2, vec2 velocity, float paletteCoord)
 {
 	float pi = 3.141593;
 	vec2 velocityDir = vec2(1.0, 0.0);
@@ -104,6 +105,7 @@ vec4 GetFireBallColor(float currTime, vec2 pos, float freqMult, float stretchMul
 		
 		polarPos.x = dstAng + (polarPos.x - dstAng) * exp(-polarPos.y * 2.0);
 		polarPos.y *= 0.15 + 1.4 * pow(abs(polarPos.x) / pi, 2.0);
+		polarPos = trailLength * polarPos + (1.0 - trailLength) * vec2(ang, dist);
 		//polarPos.y *= exp(-(1.0 - pow(abs(polarPos.x) / pi, 2.0)) * 2.0);
 		
 		//polarPos.x = (1.0 - pow(1.0 - abs(polarPos.x / pi), 1.0)) * pi;
@@ -173,7 +175,7 @@ void main(void)
 
 	float radiusScale = (1.0 - pow(1.0 - innerSpherePhase, 5.0));
 	float innerSphereRadius = 0.3 * radiusScale + projectileRadius * (1.0 - radiusScale);
-	vec4 projectileColor = GetFireBallColor(tick / projectile_time_factor +  0.0 , radius, 6.0, 15.0, 1.0, 2.9, innerSphereRadius, innerSphereRadius + coronaWidth * (1.0 - radiusScale), vec2(1.0, 0.0), 0.75);
+	vec4 projectileColor = GetFireBallColor(tick / projectile_time_factor +  0.0 , radius, trail_length, 6.0, 15.0, 1.0, 2.9, innerSphereRadius, innerSphereRadius + coronaWidth * (1.0 - radiusScale), vec2(1.0, 0.0), 0.75);
 
 	vec4 resultColor;
 	if(phase > 0.0)
@@ -269,7 +271,6 @@ void main(void)
 	}
 
 	gl_FragColor = resultColor;
-	gl_FragColor.a *= gl_Color.a;
 }
 
 

@@ -25,5 +25,6 @@ return {
 		projectile_time_factor = time_factor or 2000,
 		explosion_time_factor = explosion_time_factor or 1000,
 		is_exploding = 0,
+		trail_length = 1.0,
 	},
 }

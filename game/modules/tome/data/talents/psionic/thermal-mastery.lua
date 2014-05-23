@@ -31,10 +31,10 @@ newTalent{
 		self:setEffect(self.EFF_TRANSCENDENT_PYROKINESIS, t.getDuration(self, t), {power=t.getPower(self, t)})
 		self:removeEffect(self.EFF_TRANSCENDENT_TELEKINESIS)
 		self:removeEffect(self.EFF_TRANSCENDENT_ELECTROKINESIS)
-		self.talents_cd[self.T_THERMAL_LEECH] = 0
-		self.talents_cd[self.T_THERMAL_AURA] = 0
-		self.talents_cd[self.T_THERMAL_SHIELD] = 0
-		self.talents_cd[self.T_PYROKINESIS] = 0
+		self:alterTalentCoolingdown(self.T_THERMAL_SHIELD, -1000)
+		self:alterTalentCoolingdown(self.T_THERMAL_AURA, -1000)
+		self:alterTalentCoolingdown(self.T_THERMAL_LEECH, -1000)
+		self:alterTalentCoolingdown(self.T_PYROKINESIS, -1000)
 		return true
 	end,
 	info = function(self, t)

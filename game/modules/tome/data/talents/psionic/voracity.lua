@@ -35,7 +35,7 @@ newTalent{
 		return {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t), selffire=false, talent=t}
 	end,
 	getLeech = function(self, t)
-		return self:combatTalentMindDamage(t, 5, 25)
+		return self:combatTalentScale(t, 10, 27)
 	end,
 	getDam = function(self, t)
 		return self:combatTalentMindDamage(t, 20, 200)
@@ -47,12 +47,14 @@ newTalent{
 		local en = t.getLeech(self, t) * (0.5 + (self:getMaxPsi() - self:getPsi()) / self:getMaxPsi())
 		local dam = t.getDam(self, t) * (0.5 + (self:getMaxPsi() - self:getPsi()) / self:getMaxPsi())
 		local slow = t.getSlow(self, t)/100 * (0.5 + (self:getMaxPsi() - self:getPsi()) / self:getMaxPsi())
+		local psi = en
 		local tg = self:getTalentTarget(t)
 		local trans = self:hasEffect(self.EFF_TRANSCENDENT_TELEKINESIS)
 		self:project(tg, self.x, self.y, function(tx, ty)
 			local act = game.level.map(tx, ty, engine.Map.ACTOR)
 			if act then
-				self:incPsi(en)
+				self:incPsi(psi)
+				psi = psi * .8
 				act:incStamina(-dam)
 				if trans then
 					if act:canBe("sleep") then
@@ -73,9 +75,14 @@ newTalent{
 		local slow = t.getSlow(self, t)
 		local dam = t.getDam(self, t)
 		local en = t.getLeech(self, t)
-		return ([[You suck the kinetic energy out of your surroundings, slowing all targets in a radius of %d by %d%% for four turns and draining %0.2f stamina from them.
-		For each target drained, you gain %d Psi. The Psi gain and damage will improve with your Mindpower.
-		The strength of these effects also scales with your current Psi. Ranging from -50%% at full Psi to +50%% at 0 Psi.]]):format(range, slow, dam, en)
+		local cen = t.getLeech(self, t) * (0.5 + (self:getMaxPsi() - self:getPsi()) / self:getMaxPsi())
+		local cdam = t.getDam(self, t) * (0.5 + (self:getMaxPsi() - self:getPsi()) / self:getMaxPsi())
+		local cslow = t.getSlow(self, t) * (0.5 + (self:getMaxPsi() - self:getPsi()) / self:getMaxPsi())
+		return ([[You suck the kinetic energy out of your surroundings, slowing all targets in a radius of %d by %d%% (now %d%%) for four turns and draining %0.2f (now %0.2f) stamina from them.
+		For each target drained, you gain psi. The first target gives %d (now %d) psi and each additional one reduces the gain by 20%%.
+		The slow effect will improve with your Mindpower.
+		The strength of these effects also scales with your current psi. Ranging from -50%% at full psi to +50%% at 0 psi.]])
+		:format(range, slow, cslow, dam, cdam, en, cen)
 	end,
 }
 
@@ -96,7 +103,7 @@ newTalent{
 		return {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t), selffire=false, talent=t}
 	end,
 	getLeech = function(self, t)
-		return self:combatTalentMindDamage(t, 5, 25)
+		return self:combatTalentScale(t, 10, 27)
 	end,
 	getDam = function(self, t)
 		return self:combatTalentMindDamage(t, 20, 200)
@@ -104,14 +111,16 @@ newTalent{
 	getDur = function(self, t) return math.ceil(self:combatTalentScale(t, 1.3, 3.2)) end, -- Duration
 	action = function(self, t)
 		local en = t.getLeech(self, t) * (0.5 + (self:getMaxPsi() - self:getPsi()) / self:getMaxPsi())
-		local dam = t.getDam(self, t) * (0.5 + (self:getMaxPsi() - self:getPsi()) / self:getMaxPsi())
+		local dam = self:mindCrit(t.getDam(self, t) * (0.5 + (self:getMaxPsi() - self:getPsi()) / self:getMaxPsi()))
 		local dur = t.getDur(self, t) * (0.5 + (self:getMaxPsi() - self:getPsi()) / self:getMaxPsi())
+		local psi = en
 		local tg = self:getTalentTarget(t)
 		local trans = self:hasEffect(self.EFF_TRANSCENDENT_PYROKINESIS)
 		self:project(tg, self.x, self.y, function(tx, ty)
 			local act = game.level.map(tx, ty, engine.Map.ACTOR)
 			if act then
-				self:incPsi(en)
+				self:incPsi(psi)
+				psi = psi * 0.8
 				if trans then
 					act:setEffect(act.EFF_WEAKENED, 4, {power=en, apply_power=self:combatMindpower()})
 				end
@@ -127,10 +136,14 @@ newTalent{
 		local dam = damDesc(self, DamageType.COLD, t.getDam(self, t))
 		local dur = t.getDur(self, t)
 		local en = t.getLeech(self, t)
-		return ([[You leech the heat out of all targets in a radius of %d, freezing them for up to %d turns and doing %0.2f cold damage. 
-		For each target drained, you gain %d Psi. The Psi gain and damage will improve with your Mindpower.
-		The strength of these effects also scales with your current Psi. Ranging from -50%% at full Psi to +50%% at 0 Psi.]]):
-		format(range, dur, dam, en)
+		local cen = t.getLeech(self, t) * (0.5 + (self:getMaxPsi() - self:getPsi()) / self:getMaxPsi())
+		local cdam = damDesc(self, DamageType.COLD, t.getDam(self, t) * (0.5 + (self:getMaxPsi() - self:getPsi()) / self:getMaxPsi()))
+		local cdur = t.getDur(self, t) * (0.5 + (self:getMaxPsi() - self:getPsi()) / self:getMaxPsi())
+		return ([[You leech the heat out of all targets in a radius of %d, freezing them for up to %d (now %d) turns and doing %0.2f (now %0.2f) cold damage. 
+		For each target drained, you gain psi. The first target gives %d (now %d) psi and each additional one reduces the gain by 20%%.
+		The damage will improve with your Mindpower.
+		The strength of these effects also scales with your current psi. Ranging from -50%% at full psi to +50%% at 0 psi.]]):
+		format(range, dur, cdur, dam, cdam, en, cen)
 	end,
 }
 
@@ -151,7 +164,7 @@ newTalent{
 		return {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t), selffire=false, talent=t}
 	end,
 	getLeech = function(self, t)
-		return self:combatTalentMindDamage(t, 5, 25)
+		return self:combatTalentScale(t, 10, 27)
 	end,
 	getDam = function(self, t)
 		return self:combatTalentMindDamage(t, 20, 200)
@@ -160,11 +173,13 @@ newTalent{
 		local en = t.getLeech(self, t) * (0.5 + (self:getMaxPsi() - self:getPsi()) / self:getMaxPsi())
 		local dam = self:mindCrit(t.getDam(self, t)) * (0.5 + (self:getMaxPsi() - self:getPsi()) / self:getMaxPsi())
 		local tg = self:getTalentTarget(t)
+		local psi = en
 		local trans = self:hasEffect(self.EFF_TRANSCENDENT_ELECTROKINESIS)
 		self:project(tg, self.x, self.y, function(tx, ty)
 			local act = game.level.map(tx, ty, engine.Map.ACTOR)
 			if act then
-				self:incPsi(en)
+				self:incPsi(psi)
+				psi = psi * 0.8
 				if trans then
 					DamageType:get(DamageType.CONFUSION).projector(self, tx, ty, DamageType.CONFUSION, {power_check=self:combatMindpower(), dam=en, dur=4})
 				end
@@ -190,9 +205,13 @@ newTalent{
 		local range = self:getTalentRadius(t)
 		local en = t.getLeech(self, t)
 		local dam = damDesc(self, DamageType.LIGHTNING, t.getDam(self, t))
-		return ([[You pull electric potential from all targets around you in a radius of %d, giving them a nasty shock in the process. Deals %d damage lightning, and has a 25%% chance to daze. 
-		For each target drained, you gain %d Psi. The Psi gain and damage will improve with your Mindpower.
-		The strength of these effects also scales with your current Psi. Ranging from -50%% at full Psi to +50%% at 0 Psi.]]):format(range, dam, en)
+		local cen = t.getLeech(self, t) * (0.5 + (self:getMaxPsi() - self:getPsi()) / self:getMaxPsi())
+		local cdam = damDesc(self, DamageType.LIGHTNING, t.getDam(self, t) * (0.5 + (self:getMaxPsi() - self:getPsi()) / self:getMaxPsi()))
+		return ([[You pull electric potential from all targets around you in a radius of %d, giving them a nasty shock in the process. Deals %0.2f (now %0.2f) damage lightning, and has a 25%% chance to daze. 
+		For each target drained, you gain psi. The first target gives %d (now %d) psi and each additional one reduces the gain by 20%%.
+		The damage will improve with your Mindpower.
+		The strength of these effects also scales with your current psi. Ranging from -50%% at full psi to +50%% at 0 psi.]]):
+		format(range, dam, cdam, en, cen)
 	end,
 }
 
@@ -208,7 +227,7 @@ newTalent{
 		self:talentTemporaryValue(p, "psi_on_crit", self:getTalentLevel(t) * 0.5)
 	end,
 	info = function(self, t)
-		return ([[Increases your maximum energy by %d. You also gain %d Psi on kill and %0.1f Psi per mind critical.]]):format(10 * self:getTalentLevel(t), self:getTalentLevel(t), self:getTalentLevel(t)/2)
+		return ([[Increases your maximum energy by %d. You also gain %d psi on kill and %0.1f psi per mind critical.]]):format(10 * self:getTalentLevel(t), self:getTalentLevel(t), self:getTalentLevel(t)/2)
 	end,
 }
 

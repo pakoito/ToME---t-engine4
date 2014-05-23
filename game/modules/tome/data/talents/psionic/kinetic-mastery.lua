@@ -17,7 +17,6 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-
 newTalent{
 	name = "Transcendent Telekinesis",
 	type = {"psionic/kinetic-mastery", 1},
@@ -32,10 +31,10 @@ newTalent{
 		self:setEffect(self.EFF_TRANSCENDENT_TELEKINESIS, t.getDuration(self, t), {power=t.getPower(self, t)})
 		self:removeEffect(self.EFF_TRANSCENDENT_PYROKINESIS)
 		self:removeEffect(self.EFF_TRANSCENDENT_ELECTROKINESIS)
-		self.talents_cd[self.T_KINETIC_LEECH] = 0
-		self.talents_cd[self.T_KINETIC_AURA] = 0
-		self.talents_cd[self.T_KINETIC_SHIELD] = 0
-		self.talents_cd[self.T_MINDLASH] = 0
+		self:alterTalentCoolingdown(self.T_KINETIC_LEECH, -1000)
+		self:alterTalentCoolingdown(self.T_KINETIC_AURA, -1000)
+		self:alterTalentCoolingdown(self.T_KINETIC_SHIELD, -1000)
+		self:alterTalentCoolingdown(self.T_MINDLASH, -1000)
 		return true
 	end,
 	info = function(self, t)
@@ -43,7 +42,7 @@ newTalent{
 		Kinetic Shield, Kinetic Leech, Kinetic Aura and Mindlash will have their cooldowns reset.
 		Kinetic Aura will increase to radius 2, or apply its damage bonus to all your weapons, whichever is applicable.
 		Kinetic Shield will have 100%% damage absorption efficiency and double max.
-		kinetic Leech will put enemies to sleep.
+		Kinetic Leech will put enemies to sleep.
 		Damage bonus and penetration scale with your mindpower.
 		Only one Transcendent talent may be in effect at a time.]]):format(t.getDuration(self, t), t.getPower(self, t))
 	end,
