@@ -113,8 +113,8 @@ newTalent{
 -- Can someone put a really obvious visual on this?
 newTalent{
 	name = "Sun's Vengeance", short_name = "SUN_VENGEANCE",
-	type = {"celestial/sun",2},
-	require = divi_req2,
+	type = {"celestial/sun",3},
+	require = divi_req3,
 	mode = "passive",
 	points = 5,
 	getCrit = function(self, t) return self:combatTalentScale(t, 2, 10, 0.75) end,
