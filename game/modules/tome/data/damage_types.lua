@@ -18,9 +18,6 @@
 -- darkgod@te4.org
 
 -- The basic stuff used to damage a grid
-
-
-
 setDefaultProjector(function(src, x, y, type, dam, tmp, no_martyr)
 	if not game.level.map:isBound(x, y) then return 0 end
 
@@ -73,6 +70,13 @@ setDefaultProjector(function(src, x, y, type, dam, tmp, no_martyr)
 			dam = dam / src.turn_procs.crit_power
 			print("[PROJECTOR] crit power reduce dam", dam)
 			game.logSeen(target, "%s shrugs off the critical damage!", target.name:capitalize())
+		elseif src.turn_procs and src.turn_procs.is_crit and src.turn_procs.shadowstrike_crit and src.x then
+			local d = core.fov.distance(src.x, src.y, x, y)
+			if d > 3 then
+				local reduc = math.scale(d, 3, 10, 0, 1)
+				dam = dam * (src.turn_procs.crit_power - reduc * src.turn_procs.shadowstrike_crit) / src.turn_procs.crit_power
+				print("[PROJECTOR] shadowstrike crit power reduce dam on range", dam, d, reduc, "::", src.turn_procs.crit_power, "=>", src.turn_procs.crit_power - reduc * src.turn_procs.shadowstrike_crit)
+			end
 		end
 
 		local hd = {"DamageProjector:base", src=src, x=x, y=y, type=type, dam=dam, tmp=tmp, no_martyr=no_martyr}

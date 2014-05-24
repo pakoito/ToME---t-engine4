@@ -100,23 +100,12 @@ newTalent{
 	require = cuns_req2,
 	mode = "passive",
 	points = 5,
-	checkWeapon = function(self, t)
-		if self:hasArcheryWeapon() or not self:hasDualWeapon() then
-				print("[SHADOWSTRIKE]", self.name or "", "rejected for weapon type")
- 
-			return false
-		else
-			return true
-		end
-	end,
-
 	getMultiplier = function(self, t) return self:combatTalentScale(t, 1/7, 5/7) end,
 	info = function(self, t)
 		local multiplier = t.getMultiplier(self, t)
-		return ([[When striking from stealth, melee hits are automatically criticals if the target does not notice you just before you land the blow.
-		Shadowstrikes do +%.02f%% damage versus a normal critical hit.
-		These bonuses are guaranteed for spell and mind crits even if the target can see you before it hits.
-		You must be wielding 2 melee weapons for this talent to trigger.]]):
+		return ([[When striking from stealth, the attack is automatically critical if the target does not notice you just before you land it.
+		Shadowstrikes do +%.02f%% damage versus a normal critical hit up to 3 grids away and then disminishes to 0%% at distance 10.
+		These bonuses are guaranteed for spell and mind crits even if the target can see you before it hits.]]):
 		format(multiplier * 100)
 	end,
 }

@@ -1678,9 +1678,10 @@ function _M:physicalCrit(dam, weapon, target, atk, def, add_chance, crit_power_a
 		chance = chance - target:callTalent(target.T_SCOUNDREL,"getCritPenalty")
 	end
 
-	if self:attr("stealth") and self:knowTalent(self.T_SHADOWSTRIKE) and self:callTalent(self.T_SHADOWSTRIKE,"checkWeapon") and not target:canSee(self) then -- bug fix
+	if self:attr("stealth") and self:knowTalent(self.T_SHADOWSTRIKE) and not target:canSee(self) then -- bug fix
 		chance = 100
 		crit_power_add = crit_power_add + self:callTalent(self.T_SHADOWSTRIKE,"getMultiplier")
+		self.turn_procs.shadowstrike_crit = self:callTalent(self.T_SHADOWSTRIKE,"getMultiplier")
 	end
 
 	if self:isAccuracyEffect(weapon, "axe") then
@@ -1724,9 +1725,10 @@ function _M:spellCrit(dam, add_chance, crit_power_add)
 	local crit = false
 
 	-- Unlike physical crits we can't know anything about our target here so we can't check if they can see us
-	if self:attr("stealth") and self:knowTalent(self.T_SHADOWSTRIKE) and self:callTalent(self.T_SHADOWSTRIKE,"checkWeapon")then
+	if self:attr("stealth") and self:knowTalent(self.T_SHADOWSTRIKE) then
 		chance = 100
 		crit_power_add = crit_power_add + self:callTalent(self.T_SHADOWSTRIKE,"getMultiplier")
+		self.turn_procs.shadowstrike_crit = self:callTalent(self.T_SHADOWSTRIKE,"getMultiplier")
 	end
 
 	print("[SPELL CRIT %]", self.turn_procs.auto_spell_crit and 100 or chance)
@@ -1773,9 +1775,10 @@ function _M:mindCrit(dam, add_chance, crit_power_add)
 	local chance = self:combatMindCrit() + (add_chance or 0)
 	local crit = false
 
-	if self:attr("stealth") and self:knowTalent(self.T_SHADOWSTRIKE) and self:callTalent(self.T_SHADOWSTRIKE,"checkWeapon") then -- bug fix
+	if self:attr("stealth") and self:knowTalent(self.T_SHADOWSTRIKE) then
 		chance = 100
 		crit_power_add = crit_power_add + self:callTalent(self.T_SHADOWSTRIKE,"getMultiplier")
+		self.turn_procs.shadowstrike_crit = self:callTalent(self.T_SHADOWSTRIKE,"getMultiplier")
 	end
 
 	print("[MIND CRIT %]", self.turn_procs.auto_mind_crit and 100 or chance)
