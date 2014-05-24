@@ -120,6 +120,7 @@ newTalent{
 	points = 5,
 	mode = "sustained",
 	sustain_psi = 25,
+	cooldown = 10,
 	range = function(self, t) return math.floor(self:combatTalentScale(t, 3, 5, "log")) end, 
 	radius = 10,
 	target = function(self, t)
