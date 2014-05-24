@@ -17,11 +17,6 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-
-
-
-
-
 newTalent{
 	name = "Bind",
 	type = {"psionic/grip", 1},

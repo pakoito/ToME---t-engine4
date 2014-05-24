@@ -3001,14 +3001,15 @@ newEffect{
 
 newEffect{
 	name = "CRYSTAL_BUFF", image = "talents/stone_touch.png",
-	desc = "Crystal Buffing",
-	long_desc = function(self, eff) return ("The power released by the %s lingers."):format(eff.name) end,
+	desc = "Crystal Resonance",
+	--Might consider adding the gem properties to this tooltip
+	long_desc = function(self, eff) return ("The power released by the %s resonates."):format(eff.name) end,
 	type = "mental",
 	subtype = { psionic=true },
 	status = "beneficial",
 	parameters = { },
-	on_gain = function(self, err) return "#Target# glints with a crystaline aura", "+Gem Buff" end,
-	on_lose = function(self, err) return "#Target# is no longer glinting.", "-Gem Buff" end,
+	on_gain = function(self, err) return "#Target# glints with a crystaline aura", "+Crystal Resonance" end,
+	on_lose = function(self, err) return "#Target# is no longer glinting.", "-Crystal Resonance" end,
 	gem_types = {
 		GEM_DIAMOND = function(self, eff) return {self:effectTemporaryValue(eff, "inc_stats", {[Stats.STAT_STR] = 5, [Stats.STAT_DEX] = 5, [Stats.STAT_MAG] = 5, [Stats.STAT_WIL] = 5, [Stats.STAT_CUN] = 5, [Stats.STAT_CON] = 5 }), } end,
 		GEM_PEARL = function(self, eff) return {self:effectTemporaryValue(eff,"resists", { all = 5}), self:effectTemporaryValue(eff,"combat_armour", 5) } end,
@@ -3106,7 +3107,7 @@ newEffect{
 newEffect{
 	name = "STATIC_CHARGE", image = "talents/static_net.png",
 	desc = "Static Charge",
-	long_desc = function(self, eff) return ("You have collected electric charge. Your next hit does %d extra lightning damage.."):format(eff.power) end,
+	long_desc = function(self, eff) return ("You have accumulated an electric charge. Your next melee hit does %d extra lightning damage.."):format(eff.power) end,
 	type = "mental",
 	subtype = { lightning=true },
 	status = "beneficial",
@@ -3132,7 +3133,7 @@ newEffect{
 newEffect{
 	name = "HEART_STARTED", image = "talents/heartstart.png",
 	desc = "Heart Started",
-	long_desc = function(self, eff) return ("You are keeping your heart pumping with psionic charges, granting you a negative shield of %d."):format(eff.power) end,
+	long_desc = function(self, eff) return ("A psionic charge is keeping your heart pumping, allowing you to survive to %+d health."):format(-eff.power) end,
 	type = "mental",
 	subtype = { lightning=true },
 	status = "beneficial",
@@ -3147,14 +3148,14 @@ newEffect{
 newEffect{
 	name = "TRANSCENDENT_TELEKINESIS", image = "talents/transcendent_telekinesis.png",
 	desc = "Transcendent Telekinesis",
-	long_desc = function(self, eff) return ("Your telekinesis transcends normal limits. +%d physical damage and penetration, and improved kinetic effects."):format(eff.power) end,
+	long_desc = function(self, eff) return ("Your telekinesis transcends normal limits. +%d Physical damage and +%d%% Physical damage penetration, and improved kinetic effects."):format(eff.power, eff.penetration) end,
 	type = "mental",
 	subtype = { physical=true },
 	status = "beneficial",
-	parameters = { power=10 },
+	parameters = { power=10, penetration = 0 },
 	activate = function(self, eff)
 		self:effectTemporaryValue(eff, "inc_damage", {[DamageType.PHYSICAL]=eff.power})
-		self:effectTemporaryValue(eff, "resists_pen", {[DamageType.PHYSICAL]=eff.power})
+		self:effectTemporaryValue(eff, "resists_pen", {[DamageType.PHYSICAL]=eff.penetration})
 		eff.particle = self:addParticles(Particles.new("circle", 1, {shader=true, toback=true, oversize=1.7, a=155, appear=8, speed=0, img="transcend_tele", radius=0}))
 		self:callTalent(self.T_KINETIC_SHIELD, "adjust_shield_gfx", true)
 	end,
@@ -3167,14 +3168,14 @@ newEffect{
 newEffect{
 	name = "TRANSCENDENT_PYROKINESIS", image = "talents/transcendent_pyrokinesis.png",
 	desc = "Transcendent Pyrokinesis",
-	long_desc = function(self, eff) return ("Your pyrokinesis transcends normal limits. +%d fire/cold damage and penetration, and improved thermal effects."):format(eff.power) end,
+	long_desc = function(self, eff) return ("Your pyrokinesis transcends normal limits. +%d%% Fire/Cold damage and +%d%% Fire/Cold damage penetration, and improved thermal effects."):format(eff.power, eff.penetration) end,
 	type = "mental",
 	subtype = { fire=true, cold=true },
 	status = "beneficial",
-	parameters = { power=10 },
+	parameters = { power=10, penetration = 0 },
 	activate = function(self, eff)
 		self:effectTemporaryValue(eff, "inc_damage", {[DamageType.FIRE]=eff.power, [DamageType.COLD]=eff.power})
-		self:effectTemporaryValue(eff, "resists_pen", {[DamageType.FIRE]=eff.power, [DamageType.COLD]=eff.power})
+		self:effectTemporaryValue(eff, "resists_pen", {[DamageType.FIRE]=eff.penetration, [DamageType.COLD]=eff.penetration})
 		eff.particle = self:addParticles(Particles.new("circle", 1, {shader=true, toback=true, oversize=1.7, a=155, appear=8, speed=0, img="transcend_pyro", radius=0}))
 		self:callTalent(self.T_THERMAL_SHIELD, "adjust_shield_gfx", true)
 	end,
@@ -3187,14 +3188,14 @@ newEffect{
 newEffect{
 	name = "TRANSCENDENT_ELECTROKINESIS", image = "talents/transcendent_electrokinesis.png",
 	desc = "Transcendent Electrokinesis",
-	long_desc = function(self, eff) return ("Your electrokinesis transcends normal limits. +%d lightning damage and penetration, and improved charged effects."):format(eff.power) end,
+	long_desc = function(self, eff) return ("Your electrokinesis transcends normal limits. +%d%% Lightning damage and +%d%% Lightning damage penetration, and improved charged effects."):format(eff.power, eff.penetration) end,
 	type = "mental",
 	subtype = { lightning=true, mind=true },
 	status = "beneficial",
-	parameters = { power=10 },
+	parameters = { power=10, penetration = 0 },
 	activate = function(self, eff)
 		self:effectTemporaryValue(eff, "inc_damage", {[DamageType.LIGHTNING]=eff.power})
-		self:effectTemporaryValue(eff, "resists_pen", {[DamageType.LIGHTNING]=eff.power})
+		self:effectTemporaryValue(eff, "resists_pen", {[DamageType.LIGHTNING]=eff.penetration})
 		eff.particle = self:addParticles(Particles.new("circle", 1, {shader=true, toback=true, oversize=1.7, a=155, appear=8, speed=0, img="transcend_electro", radius=0}))
 		self:callTalent(self.T_CHARGED_SHIELD, "adjust_shield_gfx", true)
 	end,

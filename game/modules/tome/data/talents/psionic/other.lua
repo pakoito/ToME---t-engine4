@@ -38,7 +38,7 @@ newTalent{
 			if old then
 				self:addObject(inven, old)
 			end
-
+--Note: error with set items -- set_list, on_set_broken, on_set_complete
 			-- Fix the slot_forbid bug
 			if o.slot_forbid then
 				-- Store any original on_takeoff function
@@ -229,7 +229,7 @@ newTalent{
 		table.sort(list, "dist")
 		local a = list[#list].a
 		local tx, ty = util.findFreeGrid(self.x, self.y, 5, true, {[Map.ACTOR]=true})
-		if tx and ty and a:canBe("teleport") then
+		if tx and ty and a:canBe("knockback") then
 			a:move(tx, ty, true)
 			game.logSeen(a, "%s telekinetically grabs %s!", self.name:capitalize(), a.name)
 		end
@@ -274,7 +274,7 @@ newTalent{
 	info = function(self, t)
 		local base = [[Allows you to wield a physical melee weapon, a mindstar or a gem telekinetically, gaining a special effect for each.
 		A gem will provide +4 bonus to all primary stats per tier of the gem.
-		A mindstar will randomly try to grab (5% chance and range 2, + 1 range and 5% chance per tier of the mindstar) a far away foe and bring it to melee range.
+		A mindstar will randomly try to telekinetically grab a far away foe (5% chance and range 2 for a tier 1 mindstar, +1 range and +5% chance for each tier above 1) and pull it into melee range.
 		A physical melee weapon will act as a semi independant entity, attacking foes nearby each turn while also replacing Strength and Dexterity with Willpower and Cunning for accuracy and damage calculations (for all melee weapons).
 
 		]]
@@ -293,7 +293,7 @@ newTalent{
 			base = base..([[The telekinetically-wielded gem grants you +%d stats.]]):format(ml * 4)
 		elseif o.subtype == "mindstar" then
 			local ml = o.material_level or 1			
-			base = base..([[The telekinetically-wielded mindstar has %d%% chances to grab a foe up to %d range away.]]):format(ml * 7, ml + 2)
+			base = base..([[The telekinetically-wielded mindstar has a %d%% chance to grab a foe up to %d range away.]]):format(ml * 7, ml + 2)
 		else
 			self:attr("use_psi_combat", 1)
 			atk = self:combatAttack(o.combat)

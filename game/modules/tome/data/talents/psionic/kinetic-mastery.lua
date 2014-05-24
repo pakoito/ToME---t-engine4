@@ -25,10 +25,11 @@ newTalent{
 	psi = 20,
 	cooldown = 30,
 	tactical = { BUFF = 3 },
-	getPower = function(self, t) return self:combatTalentMindDamage(t, 10, 20) end,
-	getDuration = function(self, t) return math.floor(self:combatTalentScale(t, 5, 10)) end,
+	getPower = function(self, t) return self:combatTalentMindDamage(t, 10, 30) end,
+	getPenetration = function(self, t) return self:combatLimit(self:combatTalentMindDamage(t, 10, 20), 100, 4.2, 4.2, 13.4, 13.4) end, -- Limit < 100%
+	getDuration = function(self, t) return math.floor(self:combatTalentLimit(t, 30, 5, 10)) end, --Limit < 30
 	action = function(self, t)
-		self:setEffect(self.EFF_TRANSCENDENT_TELEKINESIS, t.getDuration(self, t), {power=t.getPower(self, t)})
+		self:setEffect(self.EFF_TRANSCENDENT_TELEKINESIS, t.getDuration(self, t), {power=t.getPower(self, t), penetration = t.getPenetration(self, t)})
 		self:removeEffect(self.EFF_TRANSCENDENT_PYROKINESIS)
 		self:removeEffect(self.EFF_TRANSCENDENT_ELECTROKINESIS)
 		self:alterTalentCoolingdown(self.T_KINETIC_LEECH, -1000)
@@ -38,16 +39,16 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[For %d turns your telekinesis transcends your normal limits, increasing your physical damage and resistance penetration by %d%%.
-		Kinetic Shield, Kinetic Leech, Kinetic Aura and Mindlash will have their cooldowns reset.
-		Kinetic Aura will increase to radius 2, or apply its damage bonus to all your weapons, whichever is applicable.
-		Kinetic Shield will have 100%% damage absorption efficiency and double max.
+		return ([[For %d turns your telekinesis transcends your normal limits, increasing your Physical damage by %d%% and you Physical resistance penetration by %d%%.
+		In addition:
+		The cooldowns of Kinetic Shield, Kinetic Leech, Kinetic Aura and Mindlash are reset.
+		Kinetic Aura will either increase in radius to 2, or apply its damage bonus to all of your weapons, whichever is applicable.
+		Your Kinetic Shield will have 100%% absorption efficiency and will absorb twice the normal amount of damage.
 		Kinetic Leech will put enemies to sleep.
-		Damage bonus and penetration scale with your mindpower.
-		Only one Transcendent talent may be in effect at a time.]]):format(t.getDuration(self, t), t.getPower(self, t))
+		The damage bonus and resistance penetration scale with your Mindpower.
+		Only one Transcendent talent may be in effect at a time.]]):format(t.getDuration(self, t), t.getPower(self, t), t.getPenetration(self, t))
 	end,
 }
-
 
 newTalent{
 	name = "Telekinetic Throw",
@@ -58,10 +59,11 @@ newTalent{
 	cooldown = 30,
 	psi = 40,
 	tactical = { ATTACK = { PHYSICAL = 2 } },
-	range = 4,
+	range = function(self, t) return math.floor(self:combatStatScale("str", 1, 5) + self:combatMindpower()/20) end,
 	getDamage = function (self, t)
 		return math.floor(self:combatTalentMindDamage(t, 10, 300))
 	end,
+	getKBResistPen = function(self, t) return self:combatTalentLimit(t, 100, 25, 45) end,
 	requires_target = true,
 	target = function(self, t) return {type="ball", range=self:getTalentRange(t), radius=2, selffire=false, talent=t} end,
 	action = function(self, t)
@@ -74,8 +76,10 @@ newTalent{
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
 		local dam = self:mindCrit(t.getDamage(self, t))
-		self:project(tg, self.x, self.y, DamageType.SPELLKNOCKBACK, dam/2)
 		
+		if target:canBe("knockback") or rng.percent(t.getKBResistPen(self, t)) then
+			self:project({type="hit", range=tg.range}, target.x, target.y, DamageType.PHYSICAL, dam) --Direct Damage
+			
 		local tx, ty = util.findFreeGrid(x, y, 5, true, {[Map.ACTOR]=true})
 		if tx and ty then
 			local ox, oy = target.x, target.y
@@ -85,23 +89,27 @@ newTalent{
 				target:setMoveAnim(ox, oy, 8, 5)
 			end
 		end
-		
-		self:project({type="hit", range=10}, target.x, target.y, DamageType.PHYSICAL, dam)
+--Note this can hit the original target in the AOE
+		self:project(tg, target.x, target.y, DamageType.SPELLKNOCKBACK, dam/2) --AOE damage
 		if target:canBe("stun") then
 			target:setEffect(target.EFF_STUNNED, 4, {apply_power=self:combatMindpower()})
 		else
 			game.logSeen(target, "%s resists the stun!", target.name:capitalize())
 		end
-		
+		else --If the target resists the knockback, do half damage to it.
+			target:logCombat(self, "#YELLOW##Source# resists #Target#'s throw!")
+			self:project({type="hit", range=tg.range}, target.x, target.y, DamageType.PHYSICAL, dam/2)
+		end
 		return true
 	end,
 	info = function(self, t)
-		local range = self:getTalentRange(self, t)
-		local dam = t.getDamage(self, t)
-		return ([[Use your telekinetic power to enhance your strength, allowing you to pick up your target and throw it anywhere in radius %d. 
-		Upon landing, your target takes %0.2f physical damage and is stunned for 4 turns, and all other creatures within radius 2 of the landing point take %0.2f physical damage and are knocked back. 
-		The damage will improve with your Mindpower.]]):
-		format(range, damDesc(self, DamageType.PHYSICAL, dam), damDesc(self, DamageType.PHYSICAL, dam/2) )
+		local range = self:getTalentRange(t)
+		local dam = damDesc(self, DamageType.PHYSICAL, t.getDamage(self, t))
+		return ([[Use your telekinetic power to enhance your strength, allowing you to pick up an adjacent enemy and hurl it anywhere within radius %d. 
+		Upon landing, your target takes %0.1f Physical damage and is stunned for 4 turns.  All other creatures within radius 2 of the landing point take %0.1f Physical damage and are knocked away from you.
+		This talent ignores %d%% of the knockback resistance of the thrown target, which takes half damage if it resists being thrown.
+		The damage improves with your Mindpower and the range increases with both Mindpower and Strength.]]):
+		format(range, dam, dam/2, t.getKBResistPen(self, t))
 	end,
 }
 
@@ -154,7 +162,7 @@ newTalent{
 	info = function(self, t)
 		local chance, spread = t.getEvasion(self, t)
 		return ([[You learn to devote a portion of your attention to mentally swatting, grabbing, or otherwise deflecting incoming projectiles.
-		All projectiles targeting you have a %d%% chance to instead target a spot up to %d grids nearby.
+		All projectiles targeting you have a %d%% chance to instead target another spot within radius %d.
 		If you choose, you can use your mind to grab all projectiles within radius 10 of you and hurl them toward any location within range %d of you, but this will break your concentration.
 		To do this, deactivate this sustained talent.]]):
 		format(chance, spread, self:getTalentRange(t))
@@ -195,7 +203,7 @@ newTalent{
 	info = function(self, t)
 		local dur = t.getDuration(self, t)
 		local dam = t.getDamage(self, t)
-		return ([[Bind the target mercilessly with constant, bone-shattering pressure, pinning and slowing it by 50%% for %d turns and dealing %d damage each turn.
+		return ([[Bind the target mercilessly with constant, bone-shattering pressure, pinning and slowing it by 50%% for %d turns and dealing %0.1f Physical damage each turn.
 		The duration and damage will improve with your Mindpower.]]):
 		format(dur, damDesc(self, DamageType.PHYSICAL, dam))
 	end,

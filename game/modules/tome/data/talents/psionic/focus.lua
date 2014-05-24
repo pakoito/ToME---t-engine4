@@ -48,12 +48,11 @@ newTalent{
 	end,
 	info = function(self, t)
 		local dam = t.getDamage(self, t)
-		return ([[Focus energies on a distant target to lash it with physical force, doing %d physical damage.
+		return ([[Focus energies on a distant target to lash it with physical force, doing %d Physical damage.
 		The damage will scale with your Mindpower.]]):
 		format(damDesc(self, DamageType.PHYSICAL, dam))
 	end,
 }
-
 
 newTalent{
 	name = "Pyrokinesis",
@@ -86,11 +85,10 @@ newTalent{
 	info = function(self, t)
 		local radius = self:getTalentRadius(t)
 		local dam = t.getDamage(self, t)
-		return ([[Kinetically vibrate the essence of all foes within %d squares, setting them ablaze. Does %d fire damage over six turns.]]):
+		return ([[Telekinetically energize the matter of all foes within %d squares at the molecular level, setting them ablaze. This does %0.1f fire damage over six turns.]]):
 		format(radius, damDesc(self, DamageType.FIREBURN, dam))
 	end,
 }
-
 
 newTalent{
 	name = "Brain Storm",
@@ -129,8 +127,8 @@ newTalent{
 	end,
 	info = function(self, t)
 		local dam = t.getDamage(self, t)
-		return ([[Focus mental electricity into a ball of plasma and hurl it (mentally) at the target.
-		It will explode on impact doing %0.2f lightning damage in a radius of 2.
+		return ([[Mentally focus electricity into a ball of plasma and hurl it at the target.
+		The plasma will explode on impact, dealing %0.1f Lightning damage within radius 2.
 		This talent will apply cross tier Brainlock.
 		The damage will increase with your Mindpower.]]):
 		format(damDesc(self, DamageType.LIGHTNING, dam))
@@ -167,7 +165,7 @@ newTalent{
 		end
 	end,
 	info = function(self, t)
-		return ([[Your Iron Will improves stun immunity by %d%% and gives you a %d%% chance of recovering from a random mental effect each turn.]]):
+		return ([[Your Iron Will improves your stun immunity by %d%% and gives you a %d%% chance of recovering from a random mental effect each turn.]]):
 		format(t.stunImmune(self, t)*100, t.cureChance(self, t)*100)
 	end,
 }

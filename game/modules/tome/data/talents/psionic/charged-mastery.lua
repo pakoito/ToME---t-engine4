@@ -25,10 +25,11 @@ newTalent{
 	psi = 20,
 	cooldown = 30,
 	tactical = { BUFF = 3 },
-	getPower = function(self, t) return self:combatTalentMindDamage(t, 10, 20) end,
-	getDuration = function(self, t) return math.floor(self:combatTalentScale(t, 5, 10)) end,
+	getPower = function(self, t) return self:combatTalentMindDamage(t, 10, 30) end,
+	getPenetration = function(self, t) return self:combatLimit(self:combatTalentMindDamage(t, 10, 20), 100, 4.2, 4.2, 13.4, 13.4) end, -- Limit < 100%
+	getDuration = function(self, t) return math.floor(self:combatTalentLimit(t, 30, 5, 10)) end, --Limit < 30
 	action = function(self, t)
-		self:setEffect(self.EFF_TRANSCENDENT_ELECTROKINESIS, t.getDuration(self, t), {power=t.getPower(self, t)})
+		self:setEffect(self.EFF_TRANSCENDENT_ELECTROKINESIS, t.getDuration(self, t), {power=t.getPower(self, t), penetration = t.getPenetration(self, t)})
 		self:removeEffect(self.EFF_TRANSCENDENT_PYROKINESIS)
 		self:removeEffect(self.EFF_TRANSCENDENT_TELEKINESIS)
 		self:alterTalentCoolingdown(self.T_CHARGED_SHIELD, -1000)
@@ -38,14 +39,15 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[For %d turns your electrokinesis transcends your normal limits, increasing your lightning damage and resistance penetration by %d%%.
-		Charged Shield, Charged Leech, Charged Aura and Brainstorm will have their cooldowns reset.
-		Charged Aura will increase to radius 2, or apply its damage bonus to all your weapons, whichever is applicable.
-		Charged Shield will have 100%% damage absorption efficiency and double max.
+		return ([[For %d turns your electrokinesis transcends your normal limits, increasing your Lightning damage by %d%% and your Lightning resistance penetration by %d%%.
+		In addition:
+		The cooldowns of Charged Shield, Charged Leech, Charged Aura and Brainstorm are reset.
+		Charged Aura will either increase in radius to 2, or apply its damage bonus to all of your weapons, whichever is applicable.
+		Your Charged Shield will have 100%% absorption efficiency and will absorb twice the normal amount of damage.
 		Brainstorm will also inflict blindness.
 		Charged Leech will also inflict confusion.
-		Damage bonus and penetration scale with your mindpower.
-		Only one Transcendent talent may be in effect at a time.]]):format(t.getDuration(self, t), t.getPower(self, t))
+		The damage bonus and resistance penetration scale with your Mindpower.
+		Only one Transcendent talent may be in effect at a time.]]):format(t.getDuration(self, t), t.getPower(self, t), t.getPenetration(self, t))
 	end,
 }
 
@@ -59,14 +61,15 @@ newTalent{
 	tactical = { BUFF = 3 },
 	getDefense = function(self, t) return self:combatTalentMindDamage(t, 20, 40) end,
 	getDuration = function(self, t) return math.floor(self:combatTalentScale(t, 6, 12)) end,
+	radius = function(self, t) return math.floor(self:combatScale(self:getWil(10, true) * self:getTalentLevel(t), 10, 0, 15, 50)) end,
 	action = function(self, t)
-		self:setEffect(self.EFF_THOUGHTSENSE, t.getDuration(self, t), {range=10, def=t.getDefense(self, t)})
+		self:setEffect(self.EFF_THOUGHTSENSE, t.getDuration(self, t), {range=t.radius(self, t), def=t.getDefense(self, t)})
 		return true
 	end,
 	info = function(self, t)
-		return ([[Detect the neural activity of any creatures in a radius of 10 for %d turns.
+		return ([[Detect the mental activity of creatures in a radius of %d for %d turns.
 		This reveals their location and boosts your defense by %d.
-		Duration and defense scale with your mindpower.]]):format(t.getDuration(self, t), t.getDefense(self, t))
+		The duration, defense, and radius scale with your Mindpower.]]):format(t.radius(self, t), t.getDuration(self, t), t.getDefense(self, t))
 	end,
 }
 
@@ -86,9 +89,9 @@ newTalent{
 	target = function(self, t)
 		return {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t)}
 	end,
-	getSlow = function(self, t) return self:combatTalentSpellDamage(t, 5, 50)/100 end,
-	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 20, 100) end,
-	getWeaponDamage = function(self, t) return self:combatTalentSpellDamage(t, 10, 50) end,
+	getSlow = function(self, t) return self:combatLimit(self:combatTalentMindDamage(t, 5, 50), 50, 4, 4, 34, 34) end, -- Limit < 50%
+	getDamage = function(self, t) return self:combatTalentMindDamage(t, 20, 100) end,
+	getWeaponDamage = function(self, t) return self:combatTalentMindDamage(t, 10, 50) end,
 	getDuration = function(self, t) return math.floor(self:combatTalentScale(t, 3, 9)) end,
 	action = function(self, t)
 		local tg = self:getTalentTarget(t)
@@ -111,10 +114,10 @@ newTalent{
 		local damage = t.getDamage(self, t)
 		local duration = t.getDuration(self, t)
 		return ([[Cast a net of static electricity in a radius of 3 for %d turns.
-		Enemies standing in the net will take %0.2f lightning damage and be slowed by %d%%.
-		If you move through the net, static will build up on your weapon and add %0.2f extra lightning damage to your next attack per tile of static you collect.
-		These effect scale with your mindpower.]]):
-		format(duration, damDesc(self, DamageType.LIGHTNING, damage), t.getSlow(self, t)*100, damDesc(self, DamageType.LIGHTNING, t.getWeaponDamage(self, t)))
+		Enemies standing in the net will take %0.1f Lightning damage and be slowed by %d%%.
+		When you move through the net, a static charge will accumulate on your weapon which will add %0.1f additional Lightning damage to your next attack for each turn you spend within its area.
+		These effects scale with your Mindpower.]]):
+		format(duration, damDesc(self, DamageType.LIGHTNING, damage), t.getSlow(self, t), damDesc(self, DamageType.LIGHTNING, t.getWeaponDamage(self, t)))
 	end,
 }
 
@@ -127,7 +130,9 @@ newTalent{
 	sustain_psi = 30,
 	cooldown = 60,
 	tactical = { BUFF = 10},
-	getPower = function(self, t) return 10 + self:combatTalentMindDamage(t, 0, 300) end,
+	getPower = function(self, t) -- Similar to blurred mortality
+		return self:combatTalentMindDamage(t, 0, 300) + self.max_life * self:combatTalentLimit(t, 1, .01, .05)
+	end,
 	getDuration = function(self, t) return math.floor(self:combatTalentScale(t, 1, 5)) end,
 	activate = function(self, t)
 		return {}
@@ -145,8 +150,9 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Store an electric charge for saving your life at a later time. If you go below zero life while this is active, it will deactivate. 
-		When this sustain deactivates, you will be cured of all stun/daze/freeze effects and will be able to survive with up to %d negative health for %d turns.]]):
+		return ([[Store an electric charge for saving your life at a later time.
+		If you are reduced to less than zero life while this is active, it will deactivate, cure you of all stun/daze/freeze effects and allow you to survive with up to %d negative health for %d turns.
+		The negative health limit scales with your Mindpower and maxium life.]]):
 		format(t.getPower(self, t), t.getDuration(self, t))
 	end,
 }

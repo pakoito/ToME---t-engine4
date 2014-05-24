@@ -69,8 +69,8 @@ newTalent{
 	info = function(self, t)
 		local heal = t.getHeal(self, t)
 		local cure = t.numCure(self, t)
-		return ([[Realign and readjust your body with the power of your mind, curing up to %d detrimental physical effects and healing for %d life.
-		The life healed will increase with your Mindpower.]]):
+		return ([[Realign and readjust your body with the power of your mind, curing up to %d detrimental physical effects and healing you for %d life.
+		The life healed increases with your Mindpower.]]):
 		format(cure, heal)
 	end,
 }
@@ -91,10 +91,10 @@ newTalent{
 		return math.floor(self:combatTalentMindDamage(t, 5, 20))
 	end,
 	fat_red = function(self, t)
-		return math.floor(self:combatTalentMindDamage(t, 2, 10)) -- Limit Wil effect < 10%
+		return math.floor(self:combatTalentMindDamage(t, 2, 10))
 	end,
 	action = function(self, t)
-		local d d = self:showInventory("Reshape which weapon?", self:getInven("INVEN"), function(o) return not o.quest and (o.type == "weapon" and o.subtype ~= "mindstar") or (o.type == "armor" and (o.slot == "BODY" or o.slot == "OFFHAND" )) and not o.fully_reshaped end, function(o, item)
+		local d d = self:showInventory("Reshape which weapon or armor?", self:getInven("INVEN"), function(o) return not o.quest and (o.type == "weapon" and o.subtype ~= "mindstar") or (o.type == "armor" and (o.slot == "BODY" or o.slot == "OFFHAND" )) and not o.fully_reshaped end, function(o, item)
 			--o.wielder = o.wielder or {}
 			if o.combat then
 				if (o.old_atk or 0) < t.boost(self, t) then
@@ -152,9 +152,9 @@ newTalent{
 		local weapon_boost = t.boost(self, t)
 		local arm = t.arm_boost(self, t)
 		local fat = t.fat_red(self, t)
-		return ([[Manipulate forces on the molecular level to realign, rebalance, and hone your weapon or armour. Mindstars object to being adjusted however, prefering a natural state.
-		Permanently increases the Accuracy and damage of any weapon by %d. Permanently increases the armour rating of any piece of Armour by %d, and permanently reduces the fatigue rating of any piece of armour by %d.
-		These values scale with your Mindpower.]]):
+		return ([[Manipulate forces on the molecular level to realign, rebalance, and hone a weapon, set of body armor, or a shield.  (Mindstars resist being adjusted because they are already in an ideal natural state.)
+		This permanently increases the Accuracy and damage of any weapon by %d or increases the armour rating of any piece of Armour by %d, while reducing its fatigue rating by %d.
+		The effects increase with your Mindpower and can only be applied (or reapplied) once to any item.]]):
 		format(weapon_boost, arm, fat)
 	end,
 }
@@ -213,9 +213,9 @@ newTalent{
 	end,
 	info = function(self, t)
 		local amt = t.energy_per_turn(self, t)
-		return ([[Matter is energy, as any good Mindslayer knows. Unfortunately, the various bonds and particles involved are just too numerous and complex to make the conversion feasible in most cases. Fortunately, the organized, crystalline structure of gems makes it possible to transform a small percentage of its matter into usable energy.
-		Grants %d energy per turn for between five and thirteen turns, depending on the quality of the gem used.
-		Also the basic effect of the gem lingers on you while this effect lasts.]]):
+		return ([[Matter is energy, as any good Mindslayer knows. Unfortunately, the various bonds and particles involved are just too numerous and complex to make the conversion feasible in most cases. The ordered, crystalline structure of a gem, however, make it possible to transform a small percentage of its matter into usable energy.
+		This talent consumes one gem and grants %d energy per turn for between 5 and 13 turns, depending on the quality of the gem used.
+		This process also creates a resonance field that provides the (imbued) effects of the gem to you while this effect lasts.]]):
 		format(amt)
 	end,
 }
@@ -241,9 +241,9 @@ newTalent{
 	end,
 	info = function(self, t)
 		local inc = t.bonus(self,t)
-		return ([[By carefully synchronising your mind to the resonant frequencies of you psionic focus, you strengthen its effects.
+		return ([[By carefully synchronizing your mind to the resonant frequencies of your psionic focus, you strengthen its effects.
 		For conventional weapons, this increases the percentage of your willpower and cunning that is used in place of strength and dexterity, from 80%% to %d%%.
-		For mindstars, this increases the pull chance by +%d%%.
+		For mindstars, this increases the chance to pull enemies to you by +%d%%.
 		For gems, this increases the bonus stats by %d.]]):
 		format(80+inc, inc, math.ceil(inc/5))
 	end,

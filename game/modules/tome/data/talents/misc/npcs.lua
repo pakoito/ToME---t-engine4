@@ -2458,7 +2458,7 @@ newTalent{
 		local boost = t.getBoost(self, t)
 		local dur = t.getDuration(self, t)
 		return ([[Encase your body in a sheath of thought-quick forces, allowing you to control your body's movements directly without the inefficiency of dealing with crude mechanisms like nerves and muscles.
-		Increases Accuracy by %d and critical strike chance by %0.2f%% for %d turns.]]):
+		Increases Accuracy by %d and critical strike chance by %0.1f%% for %d turns.]]):
 		format(boost, 0.5*boost, dur)
 	end,
 }

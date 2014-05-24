@@ -187,8 +187,8 @@ newTalent{
 	end,
 	info = function(self, t)
 		local range = self:getTalentRange(t)
-		local dam = self:combatTalentMindDamage(t, 20, 600)
-		return ([[You expend massive amounts of energy to launch yourself across %d squares at incredible speed. All enemies in your path will be knocked flying and dealt between %d and %d damage. 
+		local dam = damDesc(self, DamageType.PHYSICAL, self:combatTalentMindDamage(t, 20, 600))
+		return ([[You expend massive amounts of energy to launch yourself across %d squares at incredible speed. All enemies in your path will be knocked flying and dealt between %d and %d Physical damage. 
 		At talent level 5, you can batter through solid walls.]]):
 		format(range, 2*dam/3, dam)
 	end,

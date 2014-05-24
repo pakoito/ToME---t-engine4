@@ -25,10 +25,11 @@ newTalent{
 	psi = 20,
 	cooldown = 30,
 	tactical = { BUFF = 3 },
-	getPower = function(self, t) return self:combatTalentMindDamage(t, 10, 20) end,
-	getDuration = function(self, t) return math.floor(self:combatTalentScale(t, 5, 10)) end,
+	getPower = function(self, t) return self:combatTalentMindDamage(t, 10, 30) end,
+	getPenetration = function(self, t) return self:combatLimit(self:combatTalentMindDamage(t, 10, 20), 100, 4.2, 4.2, 13.4, 13.4) end, -- Limit < 100%
+	getDuration = function(self, t) return math.floor(self:combatTalentLimit(t, 30, 5, 10)) end, --Limit < 30
 	action = function(self, t)
-		self:setEffect(self.EFF_TRANSCENDENT_PYROKINESIS, t.getDuration(self, t), {power=t.getPower(self, t)})
+		self:setEffect(self.EFF_TRANSCENDENT_PYROKINESIS, t.getDuration(self, t), {power=t.getPower(self, t), penetration=t.getPenetration(self, t)})
 		self:removeEffect(self.EFF_TRANSCENDENT_TELEKINESIS)
 		self:removeEffect(self.EFF_TRANSCENDENT_ELECTROKINESIS)
 		self:alterTalentCoolingdown(self.T_THERMAL_SHIELD, -1000)
@@ -38,14 +39,15 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[For %d turns your pyrokinesis transcends your normal limits, increasing your fire/cold damage and resistance penetration by %d%%.
-		Thermal Shield, Thermal Leech, Thermal Aura and Pyrokinesis will have their cooldowns reset.
-		Thermal Aura will increase to radius 2, or apply its damage bonus to all your weapons, whichever is applicable.
-		Thermal Shield will have 100%% damage absorption efficiency and double max.
+		return ([[For %d turns your pyrokinesis transcends your normal limits, increasing your Fire and Cold damage by %d%% and your Fire and Cold resistance penetration by %d%%.
+		In addition:
+		The cooldowns of Thermal Shield, Thermal Leech, Thermal Aura and Pyrokinesis are reset.
+		Thermal Aura will either increase in radius to 2, or apply its damage bonus to all of your weapons, whichever is applicable.
+		Your Thermal Shield will have 100%% absorption efficiency and will absorb twice the normal amount of damage.
 		Pyrokinesis will inflict Flameshock.
-		Thermal Leech will weaken enemy damage by %d%%.
-		Damage bonus and penetration scale with your mindpower.
-		Only one Transcendent talent may be in effect at a time.]]):format(t.getDuration(self, t), t.getPower(self, t), t.getPower(self, t))
+		Thermal Leech will reduce enemy damage by %d%%.
+		The damage bonus and resistance penetration scale with your Mindpower.
+		Only one Transcendent talent may be in effect at a time.]]):format(t.getDuration(self, t), t.getPower(self, t), t.getPenetration(self, t), t.getPower(self, t))
 	end,
 }
 
@@ -79,9 +81,9 @@ newTalent{
 	end,
 	info = function(self, t)
 		local dam = t.getDamage(self, t)
-		return ([[Quickly drain the heat from your target's brain, dealing %0.2f cold damage.
-		Affected creatures will also be brainlocked for 4 turns, puting a random talent on cooldown, and freezing cooldowns.
-		The damage will scale with your Mindpower.]]):
+		return ([[Quickly drain the heat from your target's brain, dealing %0.1f Cold damage.
+		Affected creatures will also be brainlocked for 4 turns, putting a random talent on cooldown, and freezing cooldowns.
+		The damage and chance to brainlock increase with your Mindpower.]]):
 		format(damDesc(self, DamageType.COLD, dam))
 	end,
 }
@@ -121,9 +123,9 @@ newTalent{
 	end,
 	info = function(self, t)
 		local dur = t.getDuration(self, t)
-		return ([[Move heat from a group of enemies feet into their weapons, freezing them to the spot and making them drop their too hot weapons.
+		return ([[Transfer heat from a group of enemies bodies to their weapons, freezing them to the floor while forcing them to drop their too weapons.
 		Attempts to inflict Frozen Feet and Disarmed to target enemies for %d turns.
-		The duration will improve with your Mindpower.]]):
+		The chance to apply the effects and the duration increase with your Mindpower.]]):
 		format(dur)
 	end,
 }
@@ -163,10 +165,10 @@ newTalent{
 		local dam = t.getDamage(self, t)
 		local dam1 = dam * (self:getMaxPsi() - self:getPsi()) / self:getMaxPsi()
 		local dam2 = dam * self:getPsi() / self:getMaxPsi()
-		return ([[You seek balance between fire and cold based on your current psi level.
-		You blast your foes with %0.2f fire damage based on your current psi, %0.2f cold damage based on your max psi minus your current psi, in a radius 3 ball.
-		Sets your current Psi to half your maximum Psi.
-		Damage scales with your mindpower.]]):
+		return ([[You seek balance between fire and cold based on your current Psi level.
+		You blast your foes with %0.1f Fire damage based on your current Psi, %0.1f Cold damage based on your max Psi minus your current Psi, in a radius 3 ball.
+		This sets your current Psi to half of your maximum Psi.
+		The damage scales with your Mindpower.]]):
 		format(damDesc(self, DamageType.FIRE, dam2), damDesc(self, DamageType.COLD, dam1))
 	end,
 }
