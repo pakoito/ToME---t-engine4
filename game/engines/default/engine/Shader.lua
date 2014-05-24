@@ -41,7 +41,11 @@ function _M:cleanup()
 	for name, s in pairs(self.progs) do
 		if s.dieat < time then todel[name] = true end
 	end
-	for name, _ in pairs(todel) do self.progs[name] = nil end
+	for name, _ in pairs(todel) do
+		self.progs[name] = nil
+		self.progsreset[name] = nil
+		print("Deleting temp shader", name)
+	end
 end
 
 --- Make a shader
@@ -152,10 +156,13 @@ function _M:loaded()
 	if _M.progsperm[self.totalname] then
 		-- print("[SHADER] using permcached shader "..self.totalname)
 		self.shad = _M.progsperm[self.totalname]
-	elseif _M.progs[self.totalname] and not _M.progsreset[self.totalname] then
+	elseif _M.progs[self.totalname] then
 		-- print("[SHADER] using cached shader "..self.totalname)
 		self.shad = _M.progs[self.totalname].shad
-		_M.progs[self.totalname].dieat = os.time() + 60
+		_M.progs[self.totalname].dieat = os.time() + 60*4
+		if _M.progsreset[self.totalname] then
+			self.shad = self.shad:clone()
+		end
 	else
 		print("[SHADER] Loading from /data/gfx/shaders/"..self.name..".lua")
 		local f, err = loadfile("/data/gfx/shaders/"..self.name..".lua")
@@ -170,18 +177,17 @@ function _M:loaded()
 			if not core.shader.allow(def.require_kind) then return end
 		end
 
-		if def.resetargs then
-			self.totalname = self:makeTotalName(def.resetargs)
-		end
 		print("[SHADER] Loaded shader with totalname", self.totalname)
 
 		if not _M.progs[self.totalname] then
-			_M.progs[self.totalname] = {shad=self:createProgram(def), dieat=def.resetargs and (os.time() + 3) or (os.time() + 60)}
-			_M.progsreset[self.totalname] = def.resetargs
+			_M.progs[self.totalname] = {shad=self:createProgram(def), dieat=(os.time() + 60*4)}
 		else
-			_M.progs[self.totalname].dieat = def.resetargs and (os.time() + 3) or (os.time() + 60)
+			_M.progs[self.totalname].dieat = (os.time() + 60*4)
 		end
 
+		if def.resetargs then
+			_M.progsreset[self.totalname] = def.resetargs
+		end
 
 		self.shad = _M.progs[self.totalname].shad
 		if self.shad then
@@ -194,8 +200,9 @@ function _M:loaded()
 	end
 
 	if self.shad and _M.progsreset[self.totalname] then
+		self.shad:resetClean()
 		for k, v in pairs(_M.progsreset[self.totalname]) do
-			self:setUniform(k, v(self))
+			self:setResetUniform(k, v(self))
 		end
 	end
 end
@@ -217,6 +224,27 @@ function _M:setUniform(k, v)
 		elseif #v == 4 then
 --			print("[SHADER] setting vec4 param", k, v[1], v[2], v[3], v[4])
 			self.shad:paramNumber4(k, v[1], v[2], v[3], v[4])
+		end
+	end
+end
+
+function _M:setResetUniform(k, v)
+	if type(v) == "number" then
+		print("[SHADER] setting reset param", k, v)
+		self.shad:resetParamNumber(k, v)
+	elseif type(v) == "table" then
+		if v.texture then
+--			print("[SHADER] setting texture param", k, v.texture)
+			self.shad:resetParamTexture(k, v.texture, v.is3d)
+		elseif #v == 2 then
+--			print("[SHADER] setting vec2 param", k, v[1], v[2])
+			self.shad:resetParamNumber2(k, v[1], v[2])
+		elseif #v == 3 then
+--			print("[SHADER] setting vec3 param", k, v[1], v[2], v[3])
+			self.shad:resetParamNumber3(k, v[1], v[2], v[3])
+		elseif #v == 4 then
+--			print("[SHADER] setting vec4 param", k, v[1], v[2], v[3], v[4])
+			self.shad:resetParamNumber4(k, v[1], v[2], v[3], v[4])
 		end
 	end
 end

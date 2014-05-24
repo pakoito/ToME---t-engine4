@@ -52,6 +52,25 @@ void useShader(shader_type *p, int x, int y, int w, int h, float r, float g, flo
 	c[0] = w;
 	c[1] = h;
 	glUniform2fvARB(p->p_texsize, 1, c);
+
+	shader_reset_uniform *ru = p->reset_uniforms;
+	while (ru) {
+		switch (ru->kind) {
+			case UNIFORM_NUMBER:
+				glUniform1fvARB(ru->p, 1, &ru->data.number);
+				break;
+			case UNIFORM_VEC2:
+				glUniform2fvARB(ru->p, 1, ru->data.vec2);
+				break;
+			case UNIFORM_VEC3:
+				glUniform3fvARB(ru->p, 1, ru->data.vec3);
+				break;
+			case UNIFORM_VEC4:
+				glUniform4fvARB(ru->p, 1, ru->data.vec4);
+				break;
+		}
+		ru = ru->next;
+	}
 }
 
 static GLuint loadShader(const char* code, GLuint type)
@@ -96,6 +115,8 @@ static int program_new(lua_State *L)
 	auxiliar_setclass(L, "gl{program}", -1);
 
 	p->shader = glCreateProgramObjectARB();
+	p->reset_uniforms = NULL;
+	p->clone = FALSE;
 
 	printf("New GL Shader program %d\n", p->shader);
 
@@ -106,10 +127,30 @@ static int program_free(lua_State *L)
 {
 	shader_type *p = (shader_type*)lua_touserdata(L, 1);
 
-	glDeleteObjectARB(p->shader);
+	printf("Deleting shader %d (is clone %d)\n", p->shader, p->clone);
+	if (!p->clone) glDeleteObjectARB(p->shader);
+
+	while (p->reset_uniforms) {
+		shader_reset_uniform *ru = p->reset_uniforms;
+		free(ru);
+		p->reset_uniforms = p->reset_uniforms->next;
+	}
 
 	lua_pushnumber(L, 1);
 	return 1;
+}
+
+static int program_remove_resets(lua_State *L)
+{
+	shader_type *p = (shader_type*)lua_touserdata(L, 1);
+
+	while (p->reset_uniforms) {
+		shader_reset_uniform *ru = p->reset_uniforms;
+		free(ru);
+		p->reset_uniforms = p->reset_uniforms->next;
+	}
+
+	return 0;
 }
 
 static int program_attach(lua_State *L)
@@ -130,6 +171,46 @@ static int program_detach(lua_State *L)
 	glDetachObjectARB(p->shader, *s);
 
 	return 0;
+}
+
+static int program_clone(lua_State *L)
+{
+	shader_type *p = (shader_type*)lua_touserdata(L, 1);
+
+	shader_type *np = (shader_type*)lua_newuserdata(L, sizeof(shader_type)); // 2
+	auxiliar_setclass(L, "gl{program}", -1);
+
+	np->clone = TRUE;
+	np->shader = p->shader;
+	np->p_tick = p->p_tick;
+	np->p_color = p->p_color;
+	np->p_mapcoord = p->p_mapcoord;
+	np->p_texsize = p->p_texsize;
+	np->reset_uniforms = NULL;
+
+	lua_getmetatable(L, 1); // 3
+	lua_newtable(L); // 4
+
+	// Iterate old table and copy to new table
+	lua_pushnil(L);
+	while (lua_next(L, 3) != 0) {
+		lua_pushvalue(L, -2);
+		lua_pushvalue(L, -2);
+		lua_rawset(L, 4);
+		lua_pop(L, 1);
+	}
+
+	// Capture a reference to the parent so it is not GC'ed before us
+	lua_pushstring(L, "_parent_clone");
+	lua_pushvalue(L, 1);
+	lua_rawset(L, 4);
+
+	lua_setmetatable(L, 2);
+	lua_pop(L, 1);
+
+	printf("Cloned shader %d\n", p->shader);
+
+	return 1;
 }
 
 static int program_set_uniform_number(lua_State *L)
@@ -193,6 +274,68 @@ static int program_set_uniform_number4(lua_State *L)
 	if (change) tglUseProgramObject(p->shader);
 	glUniform4fvARB(glGetUniformLocationARB(p->shader, var), 1, i);
 	if (change) tglUseProgramObject(0);
+	return 0;
+}
+
+static int program_reset_uniform_number(lua_State *L)
+{
+	shader_type *p = (shader_type*)lua_touserdata(L, 1);
+	const char *var = luaL_checkstring(L, 2);
+	
+	shader_reset_uniform *ru = malloc(sizeof(shader_reset_uniform));
+	ru->next = p->reset_uniforms;
+	p->reset_uniforms = ru;
+	ru->p = glGetUniformLocationARB(p->shader, var);
+	ru->kind = UNIFORM_NUMBER;
+	ru->data.number = luaL_checknumber(L, 3);
+	return 0;
+}
+
+static int program_reset_uniform_number2(lua_State *L)
+{
+	shader_type *p = (shader_type*)lua_touserdata(L, 1);
+	const char *var = luaL_checkstring(L, 2);
+
+	shader_reset_uniform *ru = malloc(sizeof(shader_reset_uniform));
+	ru->next = p->reset_uniforms;
+	p->reset_uniforms = ru;
+	ru->p = glGetUniformLocationARB(p->shader, var);
+	ru->kind = UNIFORM_VEC2;
+	ru->data.vec2[0] = luaL_checknumber(L, 3);
+	ru->data.vec2[1] = luaL_checknumber(L, 4);
+	return 0;
+}
+
+static int program_reset_uniform_number3(lua_State *L)
+{
+	shader_type *p = (shader_type*)lua_touserdata(L, 1);
+	const char *var = luaL_checkstring(L, 2);
+
+	shader_reset_uniform *ru = malloc(sizeof(shader_reset_uniform));
+	ru->next = p->reset_uniforms;
+	p->reset_uniforms = ru;
+	ru->p = glGetUniformLocationARB(p->shader, var);
+	ru->kind = UNIFORM_VEC3;
+	ru->data.vec3[0] = luaL_checknumber(L, 3);
+	ru->data.vec3[1] = luaL_checknumber(L, 4);
+	ru->data.vec3[2] = luaL_checknumber(L, 5);
+	return 0;
+}
+
+static int program_reset_uniform_number4(lua_State *L)
+{
+	shader_type *p = (shader_type*)lua_touserdata(L, 1);
+	const char *var = luaL_checkstring(L, 2);
+
+	shader_reset_uniform *ru = malloc(sizeof(shader_reset_uniform));
+	ru->next = p->reset_uniforms;
+	p->reset_uniforms = ru;
+	ru->p = glGetUniformLocationARB(p->shader, var);
+	ru->kind = UNIFORM_VEC4;
+	ru->data.vec4[0] = luaL_checknumber(L, 3);
+	ru->data.vec4[1] = luaL_checknumber(L, 4);
+	ru->data.vec4[2] = luaL_checknumber(L, 5);
+	ru->data.vec4[3] = luaL_checknumber(L, 6);
 	return 0;
 }
 
@@ -471,6 +614,7 @@ static const struct luaL_Reg shaderlib[] =
 static const struct luaL_Reg program_reg[] =
 {
 	{"__gc", program_free},
+	{"clone", program_clone},
 	{"compile", program_compile},
 	{"attach", program_attach},
 	{"detach", program_detach},
@@ -479,6 +623,11 @@ static const struct luaL_Reg program_reg[] =
 	{"paramNumber3", program_set_uniform_number3},
 	{"paramNumber4", program_set_uniform_number4},
 	{"paramTexture", program_set_uniform_texture},
+	{"resetClean", program_remove_resets},
+	{"resetParamNumber", program_reset_uniform_number},
+	{"resetParamNumber2", program_reset_uniform_number2},
+	{"resetParamNumber3", program_reset_uniform_number3},
+	{"resetParamNumber4", program_reset_uniform_number4},
 	{"use", program_use},
 	{NULL, NULL},
 };

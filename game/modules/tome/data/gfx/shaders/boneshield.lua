@@ -26,10 +26,9 @@ return {
 		side = noup or 0,
 		verticalIntensityAdjust = 0,
 		scrollingSpeed = scrollingSpeed or 0.004,
-		chargesCount = chargesCount or 6,
 	},
 	resetargs = {
-		unused = function() return rng.range(1, 99999) end,
+		chargesCount = function(self) return self.args.chargesCount or 0 end,
 	},
 	clone = true,
 }

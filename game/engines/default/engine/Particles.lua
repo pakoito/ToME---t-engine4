@@ -41,6 +41,7 @@ function _M:save()
 	return class.save(self, {
 		ps = true,
 		gl_texture = true,
+		_shader = true,
 	})
 end
 

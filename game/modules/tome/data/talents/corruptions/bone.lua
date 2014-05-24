@@ -144,7 +144,8 @@ newTalent{
 				p.nb = p.nb + 1
 				if p.adv_gfx then
 					if p.particles[1] and p.particles[1]._shader and p.particles[1]._shader.shad then
-						p.particles[1]._shader:setUniform("chargesCount", util.bound(p.nb, 0, 10))
+						p.particles[1]._shader.shad:resetClean()
+						p.particles[1]._shader:setResetUniform("chargesCount", util.bound(p.nb, 0, 10))
 						p.particles[1].shader.chargesCount = util.bound(p.nb, 0, 10)
 					end
 				else
@@ -160,7 +161,8 @@ newTalent{
 		p.nb = p.nb - 1
 		if p.adv_gfx then
 			if p.particles[1] and p.particles[1]._shader and p.particles[1]._shader.shad then
-				p.particles[1]._shader:setUniform("chargesCount", util.bound(p.nb, 0, 10))
+				p.particles[1]._shader.shad:resetClean()
+				p.particles[1]._shader:setResetUniform("chargesCount", util.bound(p.nb, 0, 10))
 				p.particles[1].shader.chargesCount = util.bound(p.nb, 0, 10)
 			end
 		else
@@ -177,7 +179,10 @@ newTalent{
 		local adv_gfx = core.shader.allow("adv") and true or false
 		local ps = {}
 		if adv_gfx then
-			ps[1] = self:addParticles(Particles.new("shader_ring_rotating", 1, {toback=true, a=0.5, rotation=0, radius=1.5, img="bone_shield"}, {type="boneshield", chargesCount=util.bound(nb, 0, 10)}))
+			ps[1] = self:addParticles(Particles.new("shader_ring_rotating", 1, {toback=true, a=0.5, rotation=0, radius=1.5, img="bone_shield"}, {type="boneshield"}))
+			ps[1]._shader.shad:resetClean()
+			ps[1]._shader:setResetUniform("chargesCount", util.bound(nb, 0, 10))
+			ps[1].shader.chargesCount = util.bound(nb, 0, 10)
 		else
 			for i = 1, nb do ps[#ps+1] = self:addParticles(Particles.new("bone_shield", 1)) end
 		end
