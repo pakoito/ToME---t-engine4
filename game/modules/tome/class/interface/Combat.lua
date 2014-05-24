@@ -747,10 +747,28 @@ function _M:attackTargetWith(target, weapon, damtype, mult, force_dam)
 		target:setEffect(target.EFF_STONE_SKIN, 5, {power=target:attr("auto_stoneskin")})
 	end
 
-	-- Conduit (Psi)
-	if hitted and not target.dead and self:knowTalent(self.T_CONDUIT) and self:isTalentActive(self.T_CONDUIT) and self:attr("use_psi_combat") then
-		local t = self:getTalentFromId(self.T_CONDUIT)
-		t.do_combat(self, t, target)
+	-- Psi Auras
+	local psiweapon = self:getInven("PSIONIC_FOCUS") and self:getInven("PSIONIC_FOCUS")[1]
+	if psiweapon and psiweapon.combat and psiweapon.subtype ~= "mindstar"  then
+		if hitted and not target.dead and self:knowTalent(self.T_KINETIC_AURA) and self:isTalentActive(self.T_KINETIC_AURA) and (self.use_psi_combat or self:hasEffect(EFF_TRANSCENDENT_TELEKINESIS)) then
+			local t = self:getTalentFromId(self.T_KINETIC_AURA)
+			t.do_combat(self, t, target)
+		end
+		if hitted and not target.dead and self:knowTalent(self.T_THERMAL_AURA) and self:isTalentActive(self.T_THERMAL_AURA) and (self.use_psi_combat or self:hasEffect(EFF_TRANSCENDENT_TELEKINESIS)) then
+			local t = self:getTalentFromId(self.T_THERMAL_AURA)
+			t.do_combat(self, t, target)
+		end
+		if hitted and not target.dead and self:knowTalent(self.T_CHARGED_AURA) and self:isTalentActive(self.T_CHARGED_AURA) and (self.use_psi_combat or self:hasEffect(EFF_TRANSCENDENT_TELEKINESIS)) then
+			local t = self:getTalentFromId(self.T_CHARGED_AURA)
+			t.do_combat(self, t, target)
+		end
+	end
+	
+	-- Static dis-Charge
+	if hitted and not target.dead and self:hasEffect(self.EFF_STATIC_CHARGE) then
+		local eff = self:hasEffect(self.EFF_STATIC_CHARGE)
+		DamageType:get(DamageType.LIGHTNING).projector(self, target.x, target.y, DamageType.LIGHTNING, eff.power)
+		self:removeEffect(self.EFF_STATIC_CHARGE)
 	end
 
 	-- Exploit Weakness
@@ -1439,6 +1457,10 @@ function _M:combatDamage(weapon, adddammod)
 		for stat, mod in pairs(adddammod) do
 			totstat = totstat + self:getStat(stat) * mod
 		end
+	end
+
+	if self:attr("use_psi_combat") then
+		totstat = totstat * (0.8 + self:callTalent(self.T_RESONANT_FOCUS, "bonus")/100)
 	end
 
 	if self:knowTalent(self.T_SUPERPOWER) then
