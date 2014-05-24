@@ -230,8 +230,8 @@ for i = 1, 4 do newEntity{ base="FROZEN_SEA", define_as = "FROZEN_SEA"..i, add_m
 local pine_forest_editer = { method="borders", type="cold forest", use_type="name",
 	default8={z=16,  add_mos={{image="terrain/worldmap/WM_snow_pine_8_%02d.png", display_y=-1}}, min=1, max=3},
 	default2={z=6, add_mos={{image="terrain/worldmap/WM_snow_pine_2_%02d.png", display_h=2}}, min=1, max=3},
-	default4={z=16, add_mos={{image="terrain/worldmap/WM_snow_pine_4.png", display_x=-1, display_h=2, display_y=-1}}, min=1, max=1},
-	default6={z=16, add_mos={{image="terrain/worldmap/WM_snow_pine_6.png", display_x=1, display_h=2, display_y=-1}}, min=1, max=1},
+	default4={z=16, add_mos={{image="terrain/worldmap/WM_snow_pine_4_%02d.png", display_x=-1, display_h=2, display_y=-1}}, min=1, max=2},
+	default6={z=16, add_mos={{image="terrain/worldmap/WM_snow_pine_6_%02d.png", display_x=1, display_h=2, display_y=-1}}, min=1, max=2},
 
 	default1={z=6, add_mos={{image="terrain/worldmap/WM_snow_pine_37d_%02d.png", display_y=1, display_x=-1}}, min=1, max=1},
 	default3={z=6, add_mos={{image="terrain/worldmap/WM_snow_pine_19d_%02d.png", display_y=1, display_x=1}}, min=1, max=1},
