@@ -2221,14 +2221,13 @@ newDamageType{
 	end,
 }
 
--- Used by Bathe in Light, symmetric healing+shielding, damage to Undead
+-- Used by Bathe in Light, healing+shielding
 -- Keep an eye on this and Weapon of Light for any infinite stack shield then engage combos
 newDamageType{
 	name = "healing light", type = "HEALING_POWER",
 	projector = function(src, x, y, type, dam)
 		local target = game.level.map(x, y, Map.ACTOR)
-		if target and not target:attr("undead") then
-
+		if target then
 			target:setEffect(target.EFF_EMPOWERED_HEALING, 1, {power=(dam/200)})
 			if dam >= 100 then target:attr("allow_on_heal", 1) end
 			target:heal(dam, src)
@@ -2255,8 +2254,6 @@ newDamageType{
 				else shield.dur_extended = 1 end
 			end
 			if dam >= 100 then target:attr("allow_on_heal", -1) end
-		elseif target then
-			DamageType:get(DamageType.LIGHT).projector(src, x, y, DamageType.LIGHT, dam)
 		end
 	end,
 }
