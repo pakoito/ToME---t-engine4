@@ -59,7 +59,7 @@ newTalent{
 	psi = 30,
 	no_energy = true,
 	getDuration = function(self, t) return math.floor(self:combatLimit(self:combatMindpower(0.1), 10, 4, 0, 6, 6)) end, -- Limit < 10
-	speed = function(self, t) return self:combatTalentScale(t, 0.6, 2.0, 0.75) end,
+	speed = function(self, t) return self:combatTalentScale(t, 0.1, 0.6, 0.75) end,
 	getBoost = function(self, t)
 		return self:combatScale(self:getTalentLevel(t)*self:combatStatTalentIntervalDamage(t, "combatMindpower", 1, 9), 15, 0, 49, 34)
 	end,
@@ -120,23 +120,20 @@ newTalent{
 	type = {"psionic/augmented-mobility", 4},
 	require = psi_wil_req4,
 	points = 5,
-	random_ego = "attack",
-	psi = 60,
-	cooldown = 10,
+	psi = 40,
+	cooldown = 12,
 	tactical = { CLOSEIN = 2, ATTACK = { PHYSICAL = 2 } },
-	range = function(self, t)
-		return self:combatTalentLimit(t, 10, 6, 9) --Limit base range to 10
-	end,
-	--range = function(self, t) return 3+self:getTalentLevel(t)+self:getWil(4) end,
+	range = function(self, t) return self:combatTalentLimit(t, 10, 6, 9) end,
 	direct_hit = true,
 	requires_target = true,
+	getDam = function(self, t) return self:combatTalentMindDamage(t, 20, 180) end,
 	action = function(self, t)
 		if self:getTalentLevelRaw(t) < 5 then
 			local tg = {type="beam", range=self:getTalentRange(t), nolock=true, talent=t}
 			local x, y = self:getTarget(tg)
 			if not x or not y then return nil end
 			if self:hasLOS(x, y) and not game.level.map:checkEntity(x, y, Map.TERRAIN, "block_move") then
-				local dam = self:mindCrit(self:combatTalentMindDamage(t, 20, 600))
+				local dam = self:mindCrit(t.getDam(self, t))
 				self:project(tg, x, y, DamageType.MINDKNOCKBACK, self:mindCrit(rng.avg(2*dam/3, dam, 3)))
 				--local _ _, x, y = self:canProject(tg, x, y)
 				game.level.map:particleEmitter(self.x, self.y, tg.radius, "flamebeam", {tx=x-self.x, ty=y-self.y})
@@ -156,7 +153,7 @@ newTalent{
 			local tg = {type="beam", range=self:getTalentRange(t), nolock=true, talent=t, display={particle="bolt_earth", trail="earthtrail"}}
 			local x, y = self:getTarget(tg)
 			if not x or not y then return nil end
-			local dam = self:mindCrit(self:combatTalentMindDamage(t, 20, 600))
+			local dam = self:mindCrit(t.getDam(self, t))
 
 			for i = 1, self:getTalentRange(t) do
 				self:project(tg, x, y, DamageType.DIG, 1)
@@ -187,7 +184,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		local range = self:getTalentRange(t)
-		local dam = damDesc(self, DamageType.PHYSICAL, self:combatTalentMindDamage(t, 20, 600))
+		local dam = damDesc(self, DamageType.PHYSICAL, t.getDam(self, t))
 		return ([[You expend massive amounts of energy to launch yourself across %d squares at incredible speed. All enemies in your path will be knocked flying and dealt between %d and %d Physical damage. 
 		At talent level 5, you can batter through solid walls.]]):
 		format(range, 2*dam/3, dam)
