@@ -3532,8 +3532,11 @@ function _M:onWear(o, inven_id, bypass_set)
 				local object, index, object_inven_id
 				if conditions.inven_id then
 					object_inven_id = util.getval(conditions.inven_id, o, self, inven_id)
-					object, index = self:findInInventoryBy(
-						self:getInven(object_inven_id), conditions[1], conditions[2])
+					local object_inven = self:getInven(object_inven_id)
+					if object_inven then
+						object, index = self:findInInventoryBy(
+							object_inven, conditions[1], conditions[2])
+					end
 				else
 					object, index, object_inven_id =
 						self:findInAllInventoriesBy(conditions[1], conditions[2])
