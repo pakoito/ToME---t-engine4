@@ -600,6 +600,7 @@ newEffect{
 		end
 	end,
 	activate = function(self, eff)
+		self:removeEffect(self.EFF_PSI_DAMAGE_SHIELD)
 		if self:attr("shield_factor") then eff.power = eff.power * (100 + self:attr("shield_factor")) / 100 end
 		if self:attr("shield_dur") then eff.dur = eff.dur + self:attr("shield_dur") end
 		eff.tmpid = self:addTemporaryValue("damage_shield", eff.power)

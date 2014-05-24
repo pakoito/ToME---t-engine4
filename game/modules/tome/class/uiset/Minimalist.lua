@@ -368,6 +368,7 @@ function _M:activate()
 
 	self.buff_font = core.display.newFont(font_mono, size_mono * 2, true)
 	self.buff_font_small = core.display.newFont(font_mono, size_mono * 1.4, true)
+	self.buff_font_smaller = core.display.newFont(font_mono, size_mono * 1, true)
 
 	self.hotkeys_display_text = HotkeysDisplay.new(nil, self.places.hotkeys.x, self.places.hotkeys.y, self.places.hotkeys.w, self.places.hotkeys.h, nil, font_mono, size_mono)
 	self.hotkeys_display_text:enableShadow(0.6)
@@ -1420,6 +1421,8 @@ end
 
 function _M:displayBuffs(scale, bx, by)
 	local player = game.player
+	local shader = Shader.default.textoutline and Shader.default.textoutline.shad
+
 	if player then
 		if player.changed then
 			for _, d in pairs(self.pbuff) do if not player.sustain_talents[d[1]] then game.mouse:unregisterZone(d[2]) end end
@@ -1435,11 +1438,38 @@ function _M:displayBuffs(scale, bx, by)
 		for tid, act in pairs(player.sustain_talents) do
 			if act then
 				if not self.pbuff[tid] or act.__update_display then
+					local t = player:getTalentFromId(tid)
 					if act.__update_display then game.mouse:unregisterZone("pbuff"..tid) end
 					act.__update_display = false
-					local t = player:getTalentFromId(tid)
 					local displayName = t.name
 					if t.getDisplayName then displayName = t.getDisplayName(player, t, player:isTalentActive(tid)) end
+
+					local overlay = nil
+					if t.iconOverlay then
+						overlay = {}
+						overlay.fct = function(x, y, overlay)
+							local o, fnt = t.iconOverlay(player, t, act)
+							if not overlay.txt or overlay.str ~= o then
+								overlay.str = o
+
+								local font = self[fnt or "buff_font_small"]
+								txt = font:draw(o, 40, colors.WHITE.r, colors.WHITE.g, colors.WHITE.b, true)[1]
+								txt.fw, txt.fh = font:size(o)
+								overlay.txt = txt
+							end
+							local txt = overlay.txt
+							
+							if shader then
+								shader:use(true)
+								shader:uniOutlineSize(1, 1)
+								shader:uniTextSize(txt._tex_w, txt._tex_h)
+							else
+								txt._tex:toScreenFull(x+4+2 + (32 - txt.fw)/2, y+4+2 + (32 - txt.fh)/2, txt.w, txt.h, txt._tex_w, txt._tex_h, 0, 0, 0, 0.7)
+							end
+							txt._tex:toScreenFull(x+4 + (32 - txt.fw)/2, y+4 + (32 - txt.fh)/2, txt.w, txt.h, txt._tex_w, txt._tex_h)
+							if shader then shader:use(false) end
+						end
+					end
 
 					local is_first = is_first
 					local desc_fct = function(button, mx, my, xrel, yrel, bx, by, event)
@@ -1455,6 +1485,7 @@ function _M:displayBuffs(scale, bx, by)
 					self.pbuff[tid] = {tid, "pbuff"..tid, function(x, y)
 						core.display.drawQuad(x+4, y+4, 32, 32, 0, 0, 0, 255)
 						t.display_entity:toScreen(self.hotkeys_display_icons.tiles, x+4, y+4, 32, 32)
+						if overlay then overlay.fct(x, y, overlay) end
 						UI:drawFrame(self.buffs_base, x, y, frames_colors.sustain[1], frames_colors.sustain[2], frames_colors.sustain[3], 1)
 					end, desc_fct}
 				end

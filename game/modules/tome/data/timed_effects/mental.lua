@@ -3204,3 +3204,44 @@ newEffect{
 		self:callTalent(self.T_CHARGED_SHIELD, "adjust_shield_gfx", false)
 	end,
 }
+
+
+newEffect{
+	name = "PSI_DAMAGE_SHIELD", image = "talents/barrier.png",
+	desc = "Psionic Damage Shield",
+	long_desc = function(self, eff) return ("The target is surrounded by a psionic shield, absorbing %d/%d damage before it crumbles."):format(self.damage_shield_absorb, eff.power) end,
+	type = "mental",
+	subtype = { psionic=true, shield=true },
+	status = "beneficial",
+	parameters = { power=100 },
+	on_gain = function(self, err) return "A psionic shield forms around #target#.", "+Shield" end,
+	on_lose = function(self, err) return "The psionic shield around #target# crumbles.", "-Shield" end,
+	damage_feedback = function(self, eff, src, value)
+		if eff.particle and eff.particle._shader and eff.particle._shader.shad and src and src.x and src.y then
+			local r = -rng.float(0.2, 0.4)
+			local a = math.atan2(src.y - self.y, src.x - self.x)
+			eff.particle._shader:setUniform("impact", {math.cos(a) * r, math.sin(a) * r})
+			eff.particle._shader:setUniform("impact_tick", core.game.getTime())
+		end
+	end,
+	activate = function(self, eff)
+		self:removeEffect(self.EFF_DAMAGE_SHIELD)
+		eff.tmpid = self:addTemporaryValue("damage_shield", eff.power)
+		if eff.reflect then eff.refid = self:addTemporaryValue("damage_shield_reflect", eff.reflect) end
+		--- Warning there can be only one time shield active at once for an actor
+		self.damage_shield_absorb = eff.power
+		self.damage_shield_absorb_max = eff.power
+		if core.shader.active(4) then
+			eff.particle = self:addParticles(Particles.new("shader_shield", 1, {size_factor=1.4, img="shield3"}, {type="runicshield", ellipsoidalFactor=1, time_factor=-10000, llpow=1, aadjust=7, bubbleColor=colors.hex1alpha"9fe836a0", auraColor=colors.hex1alpha"36bce8da"}))
+		else
+			eff.particle = self:addParticles(Particles.new("damage_shield", 1))
+		end
+	end,
+	deactivate = function(self, eff)
+		self:removeParticles(eff.particle)
+		self:removeTemporaryValue("damage_shield", eff.tmpid)
+		if eff.refid then self:removeTemporaryValue("damage_shield_reflect", eff.refid) end
+		self.damage_shield_absorb = nil
+		self.damage_shield_absorb_max = nil
+	end,
+}

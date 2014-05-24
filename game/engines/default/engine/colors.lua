@@ -38,6 +38,15 @@ function colors.hex1unpack(hex)
 	return tonumber("0x"..hex:sub(1, 2)), tonumber("0x"..hex:sub(3, 4)), tonumber("0x"..hex:sub(5, 6))
 end
 
+function colors.hex1alpha(hex)
+	local r, g, b, a = tonumber("0x"..hex:sub(1, 2)), tonumber("0x"..hex:sub(3, 4)), tonumber("0x"..hex:sub(5, 6)), tonumber("0x"..hex:sub(7, 8))
+	return {r / 255, g / 255, b / 255, a / 255}
+end
+
+function colors.hex1alphaunpack(hex)
+	return tonumber("0x"..hex:sub(1, 2)), tonumber("0x"..hex:sub(3, 4)), tonumber("0x"..hex:sub(5, 6)), tonumber("0x"..hex:sub(7, 8))
+end
+
 defineColor('BLACK', 0, 0, 0)
 defineColor('WHITE', 0xFF, 0xFF, 0xFF)
 defineColor('SLATE', 0x8C, 0x8C, 0x8C)

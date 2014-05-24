@@ -173,6 +173,13 @@ newTalent{
 			p.particle._shader:setUniform("impact_tick", core.game.getTime())
 		end
 	end,
+	iconOverlay = function(self, t, p)
+		local val = self.disruption_shield_absorb or 0
+		if val <= 0 then return "" end
+		local fnt = "buff_font_small"
+		if val >= 1000 then fnt = "buff_font_smaller" end
+		return tostring(math.ceil(val)), fnt
+	end,
 	activate = function(self, t)
 		local power = t.getManaRatio(self, t)
 		self.disruption_shield_absorb = 0

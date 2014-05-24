@@ -2160,6 +2160,7 @@ function _M:onTakeHit(value, src, death_note)
 		if not self.damage_shield_absorb or self.damage_shield_absorb <= 0 then
 			game.logPlayer(self, "Your shield crumbles under the damage!")
 			self:removeEffect(self.EFF_DAMAGE_SHIELD)
+			self:removeEffect(self.EFF_PSI_DAMAGE_SHIELD)
 		end
 	end
 
