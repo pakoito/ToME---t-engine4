@@ -42,6 +42,8 @@ newTalent{
 		
 		self:project(tg, x, y, function(px, py)
 			DamageType:get(DamageType.PHYSICAL).projector(self, px, py, DamageType.PHYSICAL, dam)
+			local act = game.level.map(px, py, Map.ACTOR)
+			if not act then return end
 			act:setEffect(act.EFF_OFFBALANCE, 2, {apply_power=self:combatMindpower()})
 			if self:hasEffect(self.EFF_TRANSCENDENT_TELEKINESIS) then
 				local act = game.level.map(px, py, engine.Map.ACTOR)
