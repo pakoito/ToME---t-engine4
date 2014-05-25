@@ -197,7 +197,7 @@ newEffect{
 			eff.particle2 = self:addParticles(Particles.new("shader_shield", 1, {toback=false, size_factor=1.5, y=-0.3, img="healarcane"}, {type="healing", time_factor=4000, noup=1.0, circleColor={0,0,0,0}, beamsCount=9}))
 		end
 
-		if self:knowTalent(self.T_ANCESTRAL_LIFE) then
+		if self:knowTalent(self.T_ANCESTRAL_LIFE) and not self:attr("disable_ancestral_life") then
 			local t = self:getTalentFromId(self.T_ANCESTRAL_LIFE)
 			self.energy.value = self.energy.value + (t.getTurn(self, t) * game.energy_to_act / 100)
 		end

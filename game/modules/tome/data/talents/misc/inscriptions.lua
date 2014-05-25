@@ -94,7 +94,9 @@ newInscription{
 	action = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
 		self:attr("allow_on_heal", 1)
+		self:attr("disable_ancestral_life", 1)
 		self:heal(data.heal + data.inc_stat, t)
+		self:attr("disable_ancestral_life", -1)
 		self:attr("allow_on_heal", -1)
 
 		self:removeEffectsFilter(function(e) return e.subtype.wound end, 1)
