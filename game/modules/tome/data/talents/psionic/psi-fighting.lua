@@ -28,7 +28,7 @@ newTalent{
 	range = 1,
 	requires_target = true,
 	tactical = { ATTACK = { PHYSICAL = 2 } },
-	duration = function(self, t) return math.floor(self:combatTalentScale(t, 2, 4, "log")) end,
+	duration = function(self, t) return math.floor(self:combatTalentScale(t, 2, 6, "log")) end,
 	action = function(self, t)
 		local weapon = self:getInven("MAINHAND") and self:getInven("MAINHAND")[1]
 		if type(weapon) == "boolean" then weapon = nil end

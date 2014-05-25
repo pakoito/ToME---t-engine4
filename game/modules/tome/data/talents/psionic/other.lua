@@ -176,7 +176,7 @@ newTalent{
 						local dist = core.fov.distance(self.x, self.y, px, py)
 						if dist > 1 and rng.percent(p.mindstar_grab.chance) then 
 							local tx, ty = util.findFreeGrid(self.x, self.y, 5, true, {[Map.ACTOR]=true})
-							if tx and ty and a:canBe("teleport") then
+							if tx and ty and a:canBe("knockback") then
 								a:move(tx, ty, true)
 							end
 						end
@@ -207,7 +207,7 @@ newTalent{
 				
 				table.sort(list, "dist")
 				local a = list[1].a
-				self:projectile({type="ball", range=6, radius=0, selffire=false, talent=t}, a.x, a.y, bolt[1], self:hasEffect(self.EFF_PSIFRENZY).damage, {type=bolt[2]})
+				self:project({type="ball", range=6, radius=0, selffire=false, talent=t}, a.x, a.y, bolt[1], self:hasEffect(self.EFF_PSIFRENZY).damage, {type=bolt[2]})
 				
 			end
 			return
@@ -293,7 +293,7 @@ newTalent{
 			base = base..([[The telekinetically-wielded gem grants you +%d stats.]]):format(ml * 4)
 		elseif o.subtype == "mindstar" then
 			local ml = o.material_level or 1			
-			base = base..([[The telekinetically-wielded mindstar has a %d%% chance to grab a foe up to %d range away.]]):format(ml * 7, ml + 2)
+			base = base..([[The telekinetically-wielded mindstar has a %d%% chance to grab a foe up to %d range away.]]):format((ml + 1) * 5, ml + 2)
 		else
 			self:attr("use_psi_combat", 1)
 			atk = self:combatAttack(o.combat)

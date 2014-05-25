@@ -33,6 +33,7 @@ newTalent{
 		self:removeEffect(self.EFF_TRANSCENDENT_PYROKINESIS)
 		self:removeEffect(self.EFF_TRANSCENDENT_ELECTROKINESIS)
 		self:alterTalentCoolingdown(self.T_KINETIC_LEECH, -1000)
+		self:alterTalentCoolingdown(self.T_KINETIC_STRIKE, -1000)
 		self:alterTalentCoolingdown(self.T_KINETIC_AURA, -1000)
 		self:alterTalentCoolingdown(self.T_KINETIC_SHIELD, -1000)
 		self:alterTalentCoolingdown(self.T_MINDLASH, -1000)
@@ -44,7 +45,9 @@ newTalent{
 		The cooldowns of Kinetic Shield, Kinetic Leech, Kinetic Aura and Mindlash are reset.
 		Kinetic Aura will either increase in radius to 2, or apply its damage bonus to all of your weapons, whichever is applicable.
 		Your Kinetic Shield will have 100%% absorption efficiency and will absorb twice the normal amount of damage.
+		Mindlash will also inflict stun.
 		Kinetic Leech will put enemies to sleep.
+		Kinetic Strike will hit 2 adjacent enemies in a sweeping attack.
 		The damage bonus and resistance penetration scale with your Mindpower.
 		Only one Transcendent talent may be in effect at a time.]]):format(t.getDuration(self, t), t.getPower(self, t), t.getPenetration(self, t))
 	end,
@@ -56,7 +59,7 @@ newTalent{
 	require = psi_wil_high2,
 	points = 5,
 	random_ego = "attack",
-	cooldown = 30,
+	cooldown = 15,
 	psi = 40,
 	tactical = { ATTACK = { PHYSICAL = 2 } },
 	range = function(self, t) return math.floor(self:combatStatScale("str", 1, 5) + self:combatMindpower()/20) end,
@@ -176,12 +179,12 @@ newTalent{
 	require = psi_wil_high4,
 	points = 5,
 	random_ego = "attack",
-	cooldown = 45,
+	cooldown = 20,
 	psi = 35,
 	tactical = { ATTACK = { PHYSICAL = 2 }, DISABLE = 2 },
 	range = 5,
 	getDuration = function (self, t)
-		return math.floor(self:combatTalentMindDamage(t, 2, 6))
+		return math.ceil(self:combatTalentMindDamage(t, 2, 6))
 	end,
 	getDamage = function (self, t)
 		return math.floor(self:combatTalentMindDamage(t, 66, 132))

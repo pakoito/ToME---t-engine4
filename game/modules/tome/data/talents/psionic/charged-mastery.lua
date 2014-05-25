@@ -33,6 +33,7 @@ newTalent{
 		self:removeEffect(self.EFF_TRANSCENDENT_PYROKINESIS)
 		self:removeEffect(self.EFF_TRANSCENDENT_TELEKINESIS)
 		self:alterTalentCoolingdown(self.T_CHARGED_SHIELD, -1000)
+		self:alterTalentCoolingdown(self.T_CHARGED_STRIKE, -1000)
 		self:alterTalentCoolingdown(self.T_CHARGED_AURA, -1000)
 		self:alterTalentCoolingdown(self.T_CHARGE_LEECH, -1000)
 		self:alterTalentCoolingdown(self.T_BRAIN_STORM, -1000)
@@ -46,6 +47,7 @@ newTalent{
 		Your Charged Shield will have 100%% absorption efficiency and will absorb twice the normal amount of damage.
 		Brainstorm will also inflict blindness.
 		Charged Leech will also inflict confusion.
+		Charged Strike will have its secondary lightning/blind burst chain to up to 3 targets in a radius of 3.
 		The damage bonus and resistance penetration scale with your Mindpower.
 		Only one Transcendent talent may be in effect at a time.]]):format(t.getDuration(self, t), t.getPower(self, t), t.getPenetration(self, t))
 	end,
@@ -83,14 +85,14 @@ newTalent{
 	cooldown = 13,
 	tactical = { ATTACKAREA = { LIGHTNING = 2 } },
 	range = 8,
-	radius = 3,
+	radius = function(self,t) return self:combatTalentScale(t, 2, 5) end,
 	direct_hit = true,
 	requires_target = true,
 	target = function(self, t)
 		return {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t)}
 	end,
 	getSlow = function(self, t) return self:combatLimit(self:combatTalentMindDamage(t, 5, 50), 50, 4, 4, 34, 34) end, -- Limit < 50%
-	getDamage = function(self, t) return self:combatTalentMindDamage(t, 20, 100) end,
+	getDamage = function(self, t) return self:combatTalentMindDamage(t, 20, 130) end,
 	getWeaponDamage = function(self, t) return self:combatTalentMindDamage(t, 10, 50) end,
 	getDuration = function(self, t) return math.floor(self:combatTalentScale(t, 3, 9)) end,
 	action = function(self, t)
@@ -113,11 +115,11 @@ newTalent{
 	info = function(self, t)
 		local damage = t.getDamage(self, t)
 		local duration = t.getDuration(self, t)
-		return ([[Cast a net of static electricity in a radius of 3 for %d turns.
+		return ([[Cast a net of static electricity in a radius of %d for %d turns.
 		Enemies standing in the net will take %0.1f Lightning damage and be slowed by %d%%.
 		When you move through the net, a static charge will accumulate on your weapon which will add %0.1f additional Lightning damage to your next attack for each turn you spend within its area.
 		These effects scale with your Mindpower.]]):
-		format(duration, damDesc(self, DamageType.LIGHTNING, damage), t.getSlow(self, t), damDesc(self, DamageType.LIGHTNING, t.getWeaponDamage(self, t)))
+		format(self:getTalentRadius(t), duration, damDesc(self, DamageType.LIGHTNING, damage), t.getSlow(self, t), damDesc(self, DamageType.LIGHTNING, t.getWeaponDamage(self, t)))
 	end,
 }
 

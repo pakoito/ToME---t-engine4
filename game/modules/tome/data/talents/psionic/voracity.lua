@@ -30,7 +30,7 @@ newTalent{
 	tactical = { DEFEND = 1, DISABLE = 2 },
 	direct_hit = true,
 	range = 0,
-	radius = 2,
+	radius = function(self,t) return self:combatTalentScale(t, 1, 4) end,
 	target = function(self, t)
 		return {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t), selffire=false, talent=t}
 	end,
@@ -98,7 +98,7 @@ newTalent{
 	psi = 0,
 	tactical = { DEFEND = 2, DISABLE = { stun = 2 } },
 	range = 0,
-	radius = 2,
+	radius = function(self,t) return self:combatTalentScale(t, 1, 4) end,
 	target = function(self, t)
 		return {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t), selffire=false, talent=t}
 	end,
@@ -159,7 +159,7 @@ newTalent{
 	tactical = { DEFEND = 2, ATTACKAREA = { LIGHTNING = 2 }, DISABLE = { stun = 1 } },
 	direct_hit = true,
 	range = 0,
-	radius = 2,
+	radius = function(self,t) return self:combatTalentScale(t, 1, 4) end,
 	target = function(self, t)
 		return {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t), selffire=false, talent=t}
 	end,

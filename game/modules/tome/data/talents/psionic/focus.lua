@@ -23,32 +23,40 @@ newTalent{
 	require = psi_wil_req1,
 	points = 5,
 	random_ego = "attack",
-	cooldown = 5,
+	cooldown = 3,
 	psi = 10,
-	tactical = { ATTACK = { PHYSICAL = 2} },
-	range = 4,
+	tactical = { AREAATTACK = { PHYSICAL = 2} },
+	range = function(self,t) return self:combatTalentScale(t, 4, 6) end,
 	getDamage = function (self, t)
-		return self:combatTalentMindDamage(t, 12, 340)
+		return self:combatTalentMindDamage(t, 10, 240)
 	end,
 	requires_target = true,
-	target = function(self, t) return {type="ball", range=self:getTalentRange(t), radius=0, selffire=false, talent=t} end,
+	target = function(self, t)
+		return {type="beam", range=self:getTalentRange(t), talent=t}
+	end,
 	action = function(self, t)
-		local dam = t.getDamage(self, t)
 		local tg = self:getTalentTarget(t)
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
-		self:project(tg, x, y, DamageType.PHYSICAL, self:mindCrit(rng.avg(0.8*dam, dam)), {type="mindsear"})
-		if self:hasEffect(self.EFF_TRANSCENDENT_TELEKINESIS) then
-			local act = game.level.map(x, y, engine.Map.ACTOR)
-			if act and act:canBe("stun") then
-				act:setEffect(act.EFF_STUNNED, 4, {apply_power=self:combatMindpower()})
+		local dam = self:mindCrit(t.getDamage(self, t))
+		
+		self:project(tg, x, y, function(px, py)
+			DamageType:get(DamageType.PHYSICAL).projector(self, px, py, DamageType.PHYSICAL, dam)
+			act:setEffect(act.EFF_OFFBALANCE, 2, {apply_power=self:combatMindpower()})
+			if self:hasEffect(self.EFF_TRANSCENDENT_TELEKINESIS) then
+				local act = game.level.map(px, py, engine.Map.ACTOR)
+				if act and act:canBe("stun") then
+					act:setEffect(act.EFF_STUNNED, 2, {apply_power=self:combatMindpower()})
+				end
 			end
-		end
+		end, {type="mindsear"})
+		game:playSoundNear(self, "talents/spell_generic")
+		
 		return true
 	end,
 	info = function(self, t)
 		local dam = t.getDamage(self, t)
-		return ([[Focus energies on a distant target to lash it with physical force, doing %d Physical damage.
+		return ([[Focus energies into a beam to lash enemies with physical force, doing %d Physical damage and knocking them off balance for 2 turns (-15%% global speed).
 		The damage will scale with your Mindpower.]]):
 		format(damDesc(self, DamageType.PHYSICAL, dam))
 	end,
@@ -64,7 +72,7 @@ newTalent{
 	psi = 20,
 	tactical = { ATTACK = { FIRE = 2 } },
 	range = 0,
-	radius = 5,
+	radius = function(self,t) return self:combatTalentScale(t, 4, 6) end,
 	getDamage = function (self, t)
 		return self:combatTalentMindDamage(t, 50, 480)
 	end,
@@ -97,8 +105,8 @@ newTalent{
 	require = psi_wil_req3,
 	psi = 15,
 	cooldown = 10,
-	range = 3,
-	radius = 2,
+	range = function(self,t) return self:combatTalentScale(t, 3, 5) end,
+	radius = function(self,t) return self:combatTalentScale(t, 2, 3) end,
 	tactical = { DISABLE = 2, ATTACKAREA = { LIGHTNING = 2 } },
 	getDamage = function(self, t) return self:combatTalentMindDamage(t, 30, 300) end,
 	action = function(self, t)		
@@ -121,17 +129,16 @@ newTalent{
 			game.level.map:particleEmitter(x, y, tg.radius, "temporal_lightning", {radius=tg.radius, grids=grids, tx=tx-x, ty=ty-y, nb_particles=25, life=8})
 		end
 
-
 		game:playSoundNear(self, "talents/lightning")
 		return true
 	end,
 	info = function(self, t)
 		local dam = t.getDamage(self, t)
 		return ([[Mentally focus electricity into a ball of plasma and hurl it at the target.
-		The plasma will explode on impact, dealing %0.1f Lightning damage within radius 2.
+		The plasma will explode on impact, dealing %0.1f Lightning damage within radius %d.
 		This talent will apply cross tier Brainlock.
 		The damage will increase with your Mindpower.]]):
-		format(damDesc(self, DamageType.LIGHTNING, dam))
+		format(damDesc(self, DamageType.LIGHTNING, dam), self:getTalentRadius(t))
 	end,
 }
 

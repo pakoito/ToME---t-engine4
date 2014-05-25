@@ -83,6 +83,7 @@ newBirthDescriptor{
 		["psionic/focus"]={true, 0.3},
 		["psionic/voracity"]={true, 0.3},
 		["psionic/augmented-mobility"]={true, 0.3},
+		["psionic/augmented-striking"]={true, 0.3},
 		["psionic/finer-energy-manipulations"]={true, 0.3},
 		--Level 10 trees:
 		["psionic/kinetic-mastery"]={false, 0.3},

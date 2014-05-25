@@ -29,7 +29,7 @@ local function getSpikeStrength(self, t)
 end
 
 local function getEfficiency(self, t)
-	return self:combatTalentLimit(t, 100, 50, 70)/100 -- Limit to <100%
+	return self:combatTalentLimit(t, 100, 20, 70)/100 -- Limit to <100%
 end
 
 local function maxPsiAbsorb(self, t) -- Max psi/turn to prevent runaway psi gains (solipsist randbosses)
@@ -41,26 +41,17 @@ local function shieldMastery(self, t)
 end
 
 local function kineticElement(self, t, damtype)
-	if damtype == DamageType.PHYSICAL then return true end
-	if damtype == DamageType.ACID and self:getTalentLevel(self.T_KINETIC_SHIELD) >= 2 then return true end
-	if damtype == DamageType.NATURE and self:getTalentLevel(self.T_KINETIC_SHIELD) >= 4 then return true end
-	if damtype == DamageType.TEMPORAL and self:getTalentLevel(self.T_KINETIC_SHIELD) >= 6 then return true end
+	if damtype == DamageType.PHYSICAL or damtype == DamageType.ACID or damtype == DamageType.NATURE or damtype == DamageType.TEMPORAL then return true end
 	return false
 end
 
 local function thermalElement(self, t, damtype)
-	if damtype == DamageType.FIRE then return true end
-	if damtype == DamageType.COLD and self:getTalentLevel(self.T_THERMAL_SHIELD) >= 2 then return true end
-	if damtype == DamageType.LIGHT and self:getTalentLevel(self.T_THERMAL_SHIELD) >= 4 then return true end
-	if damtype == DamageType.ARCANE and self:getTalentLevel(self.T_THERMAL_SHIELD) >= 6 then return true end
+	if damtype == DamageType.FIRE or damtype == DamageType.COLD or damtype == DamageType.LIGHT or damtype == DamageType.ARCANE then return true end
 	return false
 end
 
 local function chargedElement(self, t, damtype)
-	if damtype == DamageType.LIGHTNING then return true end
-	if damtype == DamageType.BLIGHT and self:getTalentLevel(self.T_CHARGED_SHIELD) >= 3 then return true end
-	if damtype == DamageType.DARKNESS and self:getTalentLevel(self.T_CHARGED_SHIELD) >= 3 then return true end
-	if damtype == DamageType.MIND and self:getTalentLevel(self.T_CHARGED_SHIELD) >= 6 then return true end
+	if damtype == DamageType.LIGHTNING or damtype == DamageType.BLIGHT or damtype == DamageType.DARKNESS or damtype == DamageType.MIND then return true end
 	return false
 end
 
@@ -231,12 +222,9 @@ newTalent{
 	info = function(self, t)
 		local s_str = getShieldStrength(self, t)
 		local absorb = 100*getEfficiency(self,t)
-		return ([[Surround yourself with a shield that will absorb %d%% of any physical attack, up to a maximum of %d damage per attack.
+		return ([[Surround yourself with a shield that will absorb %d%% of any physical/acid/nature/temporal attack, up to a maximum of %d damage per attack.
 		Every time your shield absorbs damage, you convert some of the attack into energy, gaining two points of Psi, plus an additional point for every %0.1f points of damage absorbed, up to a maximum %0.1f points each turn.
-		At talent level 2, you can also absorb acid damage.
 		At talent level 3, when you de-activate the shield all the absorbed damage in the last 6 turns is released as a full psionic shield (absorbing all damage).
-		At talent level 4, you can also absorb nature damage.
-		At talent level 6, you can also absorb temporal damage.
 		The maximum amount of damage your shield can absorb and the efficiency of the psi gain scale with your mindpower.]]):
 		format(absorb, s_str, shieldMastery(self, t), maxPsiAbsorb(self,t))
 	end,
@@ -377,12 +365,9 @@ newTalent{
 	info = function(self, t)
 		local s_str = getShieldStrength(self, t)
 		local absorb = 100*getEfficiency(self,t)
-		return ([[Surround yourself with a shield that will absorb %d%% of any fire attack, up to a maximum of %d damage per attack. 
+		return ([[Surround yourself with a shield that will absorb %d%% of any fire/cold/light/arcane attack, up to a maximum of %d damage per attack. 
 		Every time your shield absorbs damage, you convert some of the attack into energy, gaining two points of Psi, plus an additional point for every %0.1f points of damage absorbed, up to a maximum %0.1f points each turn.
-		At talent level 2, you can also absorb cold damage.
 		At talent level 3, when you de-activate the shield all the absorbed damage in the last 6 turns is released as a full psionic shield (absorbing all damage).
-		At talent level 4, you can also absorb light damage.
-		At talent level 6, you can also absorb arcane damage.
 		The maximum amount of damage your shield can absorb and the efficiency of the psi gain scale with your mindpower.]]):
 		format(absorb, s_str, shieldMastery(self, t), maxPsiAbsorb(self,t))
 	end,
@@ -522,12 +507,9 @@ newTalent{
 	info = function(self, t)
 		local s_str = getShieldStrength(self, t)
 		local absorb = 100*getEfficiency(self,t)
-		return ([[Surround yourself with a shield that will absorb %d%% of any lightning attack, up to a maximum of %d damage per attack.
+		return ([[Surround yourself with a shield that will absorb %d%% of any lightning/blight/darkness/mind attack, up to a maximum of %d damage per attack.
 		Every time your shield absorbs damage, you convert some of the attack into energy, gaining two points of Psi, plus an additional point for every %0.1f points of damage absorbed, up to a maximum %0.1f points each turn.
-		At talent level 2, you can also absorb blight damage.
 		At talent level 3, when you de-activate the shield all the absorbed damage in the last 6 turns is released as a full psionic shield (absorbing all damage).
-		At talent level 4, you can also absorb darkness damage.
-		At talent level 6, you can also absorb mind damage.
 		The maximum amount of damage your shield can absorb and the efficiency of the psi gain scale with your mindpower.]]):
 		format(absorb, s_str, shieldMastery(self, t), maxPsiAbsorb(self,t))
 	end,
@@ -546,11 +528,11 @@ newTalent{
 	range = 0,
 	radius = 1,
 	getResist = function(self, t) return self:combatTalentLimit(t, 80, 30, 65) end,
-	getCost = function(self, t) return 1.0 - self:combatTalentLimit(t, 1, 0.5, 0.85) end,
 	target = function(self, t)
 		return {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t), selffire=false, talent=t}
 	end,
 	activate = function(self, t)
+		self.forcefield_timer = 1
 		local ret = {}
 		if core.shader.active(4) then
 			ret.particle = self:addParticles(Particles.new("shader_shield", 1, {size_factor=1.4, blend=true, img="forcefield"}, {type="shield", shieldIntensity=0.15, color={1,1,1}}))
@@ -561,6 +543,7 @@ newTalent{
 	end,
 	deactivate = function(self, t, p)
 		self:removeParticles(p.particle)
+		self.forcefield_timer = nil
 		return true
 	end,
 	callbackOnTakeDamage = function(self, t, src, x, y, damtype, dam, tmp, no_martyr)
@@ -569,20 +552,16 @@ newTalent{
 		local total_dam = dam
 		local absorbable_dam = t.getResist(self,t) / 100 * total_dam
 		local guaranteed_dam = total_dam - absorbable_dam
-		local psicost = t.getCost(self,t) * absorbable_dam
-		self:incPsi(-psicost)
 		return {dam=guaranteed_dam}
 	end,
 	callbackOnActBase = function(self, t)
-		if self.psi < self.max_psi / 10 then self:forceUseTalent(self.T_FORCEFIELD, {ignore_energy=true}) return end
-		self:incPsi(self.max_psi / -10)
-		
-		local tg = self:getTalentTarget(t)
-		self:project(tg, self.x, self.y, DamageType.MINDKNOCKBACK, 0)
+		if self.psi < self.max_psi * self.forcefield_timer / 10 then self:forceUseTalent(self.T_FORCEFIELD, {ignore_energy=true}) return end
+		self:incPsi(self.max_psi * self.forcefield_timer / -10)
+		self.forcefield_timer = self.forcefield_timer + 1
 	end,
 	info = function(self, t)
-		return ([[Surround yourself with a forcefield, reducing all incoming damage by %d%% and knocking back adjacent enemies each turn. 
-		This talent drains 10%% of your maximum psi each turn, plus an additional %0.2f psi for every point of damage reduced.]]):
-		format(t.getResist(self,t), t.getCost(self,t))
+		return ([[Surround yourself with a forcefield, reducing all incoming damage by %d%%. 
+		Such a shield is very expensive to maintain, and will drain 10%% of your maximum psi each turn, for each turn you have it maintained. eg. turn 2 it will drain 20%%.]]):
+		format(t.getResist(self,t))
 	end,
 }

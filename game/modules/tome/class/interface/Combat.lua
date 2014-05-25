@@ -849,6 +849,7 @@ function _M:attackTargetWith(target, weapon, damtype, mult, force_dam)
 	-- Resource regen on hit
 	if hitted and self:attr("stamina_regen_on_hit") then self:incStamina(self.stamina_regen_on_hit) end
 	if hitted and self:attr("mana_regen_on_hit") then self:incMana(self.mana_regen_on_hit) end
+	if hitted and self:attr("psi_regen_on_hit") then self:incPsi(self.psi_regen_on_hit) end
 
 	if hitted and not target.dead and target:knowTalent(target.T_STONESHIELD) then
 		local t = target:getTalentFromId(target.T_STONESHIELD)

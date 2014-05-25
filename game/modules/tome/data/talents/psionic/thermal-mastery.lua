@@ -33,6 +33,7 @@ newTalent{
 		self:removeEffect(self.EFF_TRANSCENDENT_TELEKINESIS)
 		self:removeEffect(self.EFF_TRANSCENDENT_ELECTROKINESIS)
 		self:alterTalentCoolingdown(self.T_THERMAL_SHIELD, -1000)
+		self:alterTalentCoolingdown(self.T_THERMAL_STRIKE, -1000)
 		self:alterTalentCoolingdown(self.T_THERMAL_AURA, -1000)
 		self:alterTalentCoolingdown(self.T_THERMAL_LEECH, -1000)
 		self:alterTalentCoolingdown(self.T_PYROKINESIS, -1000)
@@ -46,6 +47,7 @@ newTalent{
 		Your Thermal Shield will have 100%% absorption efficiency and will absorb twice the normal amount of damage.
 		Pyrokinesis will inflict Flameshock.
 		Thermal Leech will reduce enemy damage by %d%%.
+		Thermal Strike will have its secondary cold/freeze explode in radius 1.
 		The damage bonus and resistance penetration scale with your Mindpower.
 		Only one Transcendent talent may be in effect at a time.]]):format(t.getDuration(self, t), t.getPower(self, t), t.getPenetration(self, t), t.getPower(self, t))
 	end,
@@ -57,10 +59,10 @@ newTalent{
 	require = psi_wil_high2, 
 	points = 5,
 	random_ego = "attack",
-	cooldown = 4,
+	cooldown = 8,
 	psi = 20,
 	tactical = { ATTACK = { COLD = 3} },
-	range = 5,
+	range = function(self,t) return self:combatTalentScale(t, 4, 6) end,
 	getDamage = function (self, t)
 		return self:combatTalentMindDamage(t, 12, 340)
 	end,
@@ -98,11 +100,12 @@ newTalent{
 	psi = 35,
 	tactical = { DISABLE = 4 },
 	range = 6,
+	radius = function(self,t) return self:combatTalentScale(t, 2, 4) end,
 	getDuration = function (self, t)
-		return math.floor(self:combatTalentMindDamage(t, 2, 6))
+		return math.floor(self:combatTalentMindDamage(t, 4, 8))
 	end,
 	requires_target = true,
-	target = function(self, t) return {type="ball", range=self:getTalentRange(t), radius=2, selffire=false, talent=t} end,
+	target = function(self, t) return {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t), selffire=false, talent=t} end,
 	action = function(self, t)
 		local dur = t.getDuration(self, t)
 		local tg = self:getTalentTarget(t)
@@ -123,10 +126,11 @@ newTalent{
 	end,
 	info = function(self, t)
 		local dur = t.getDuration(self, t)
-		return ([[Transfer heat from a group of enemies bodies to their weapons, freezing them to the floor while forcing them to drop their too weapons.
+		local rad = self:getTalentRadius(t)
+		return ([[Transfer heat from a group (radius %d) of enemies bodies to their weapons, freezing them to the floor while forcing them to drop their too weapons.
 		Attempts to inflict Frozen Feet and Disarmed to target enemies for %d turns.
 		The chance to apply the effects and the duration increase with your Mindpower.]]):
-		format(dur)
+		format(rad, dur)
 	end,
 }
 
@@ -137,8 +141,8 @@ newTalent{
 	points = 5,
 	psi = 0,
 	cooldown = 10,
-	range = 4,
-	radius = 3,
+	range = function(self,t) return self:combatTalentScale(t, 4, 6) end,
+	radius = function(self,t) return self:combatTalentScale(t, 2, 4) end,
 	tactical = { ATTACKAREA = { FIRE = 2, COLD = 2 } },
 	getDamage = function(self, t) return self:combatTalentMindDamage(t, 30, 300) end,
 	action = function(self, t)
@@ -166,10 +170,10 @@ newTalent{
 		local dam1 = dam * (self:getMaxPsi() - self:getPsi()) / self:getMaxPsi()
 		local dam2 = dam * self:getPsi() / self:getMaxPsi()
 		return ([[You seek balance between fire and cold based on your current Psi level.
-		You blast your foes with %0.1f Fire damage based on your current Psi, %0.1f Cold damage based on your max Psi minus your current Psi, in a radius 3 ball.
+		You blast your foes with %0.1f Fire damage based on your current Psi, %0.1f Cold damage based on your max Psi minus your current Psi, in a radius %d ball.
 		This sets your current Psi to half of your maximum Psi.
 		The damage scales with your Mindpower.]]):
-		format(damDesc(self, DamageType.FIRE, dam2), damDesc(self, DamageType.COLD, dam1))
+		format(damDesc(self, DamageType.FIRE, dam2), damDesc(self, DamageType.COLD, dam1), self:getTalentRadius(t))
 	end,
 }
 

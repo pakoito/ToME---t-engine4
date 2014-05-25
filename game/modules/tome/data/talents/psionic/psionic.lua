@@ -22,9 +22,10 @@ newTalentType{ allow_random=true, is_mind=true, autolearn_mindslayer=true, type=
 newTalentType{ allow_random=true, is_mind=true, autolearn_mindslayer=true, type="psionic/projection", name = "projection", description = "Project energy to damage foes." }
 newTalentType{ allow_random=true, is_mind=true, autolearn_mindslayer=true, type="psionic/psi-fighting", name = "psi-fighting", description = "Wield melee weapons with mentally-manipulated forces." }
 newTalentType{ allow_random=true, is_mind=true, autolearn_mindslayer=true, type="psionic/focus", name = "focus", description = "Use gems to focus your energies." }
-newTalentType{ allow_random=true, is_mind=true, autolearn_mindslayer=true, type="psionic/augmented-mobility", generic = true, name = "augmented mobility", min_lev = 10, description = "Use energy to move yourself and others." }
+newTalentType{ allow_random=true, is_mind=true, autolearn_mindslayer=true, type="psionic/augmented-mobility", generic = true, name = "augmented mobility", description = "Use energy to move yourself and others." }
+newTalentType{ allow_random=true, is_mind=true, autolearn_mindslayer=true, type="psionic/augmented-striking", name = "augmented striking", description = "Augment melee attacks with psionic enegies." }
 newTalentType{ allow_random=true, is_mind=true, autolearn_mindslayer=true, type="psionic/voracity", name = "voracity", description = "Pull energy from your surroundings." }
-newTalentType{ allow_random=true, is_mind=true, autolearn_mindslayer=true, type="psionic/finer-energy-manipulations", min_lev = 10, generic = true, name = "finer energy manipulations", description = "Subtle applications of the psionic arts." }
+newTalentType{ allow_random=true, is_mind=true, autolearn_mindslayer=true, type="psionic/finer-energy-manipulations", generic = true, name = "finer energy manipulations", description = "Subtle applications of the psionic arts." }
 --newTalentType{ allow_random=true, is_mind=true, autolearn_mindslayer=true, type="psionic/mental-discipline", generic = true, name = "mental discipline", description = "Increase mental capacity, endurance, and flexibility." }
 newTalentType{ is_mind=true, type="psionic/other", name = "other", description = "Various psionic talents." }
 
@@ -189,6 +190,7 @@ load("/data/talents/psionic/projection.lua")
 load("/data/talents/psionic/psi-fighting.lua")
 load("/data/talents/psionic/voracity.lua")
 load("/data/talents/psionic/augmented-mobility.lua")
+load("/data/talents/psionic/augmented-striking.lua")
 load("/data/talents/psionic/focus.lua")
 load("/data/talents/psionic/other.lua")
 
