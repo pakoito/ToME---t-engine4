@@ -132,8 +132,8 @@ static int program_free(lua_State *L)
 
 	while (p->reset_uniforms) {
 		shader_reset_uniform *ru = p->reset_uniforms;
-		free(ru);
 		p->reset_uniforms = p->reset_uniforms->next;
+		free(ru);
 	}
 
 	lua_pushnumber(L, 1);
@@ -146,8 +146,8 @@ static int program_remove_resets(lua_State *L)
 
 	while (p->reset_uniforms) {
 		shader_reset_uniform *ru = p->reset_uniforms;
-		free(ru);
 		p->reset_uniforms = p->reset_uniforms->next;
+		free(ru);
 	}
 
 	return 0;
