@@ -770,7 +770,7 @@ newInscription{
 	short_info = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
 		local apply = self:rescaleCombatStats((data.apply + data.inc_stat))
-		return ([[%d cold damage; %d apply power]]):format(damDesc(self, DamageType.COLD, data.inc_stat), apply)
+		return ([[%d cold damage; %d apply power]]):format(damDesc(self, DamageType.COLD, data.power + data.inc_stat), apply)
 	end,
 }
 
