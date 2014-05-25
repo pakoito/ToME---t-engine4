@@ -1282,7 +1282,7 @@ newEffect{
 newEffect{
 	name = "GRAPPLED", image = "talents/grab.png",
 	desc = "Grappled",
-	long_desc = function(self, eff) return ("The target is grappled, unable to move, and limited in its offensive capabilities.\n#RED#Silenced\nPinned\n%s\n%s\n%s"):format("Damage reduced by " .. eff.reduce, "Slowed by " .. eff.slow, "Damage per turn " .. math.ceil(eff.power) ) end,
+	long_desc = function(self, eff) return ("The target is grappled, unable to move, and limited in its offensive capabilities.\n#RED#Silenced\nPinned\n%s\n%s\n%s"):format("Damage reduced by " .. math.ceil(eff.reduce), "Slowed by " .. eff.slow, "Damage per turn " .. math.ceil(eff.power) ) end,
 	type = "physical",
 	subtype = { grapple=true, pin=true },
 	status = "detrimental",
