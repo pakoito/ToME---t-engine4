@@ -673,8 +673,8 @@ function _M:getTextualDesc(compare_with, use_actor)
 					if type(message) == 'function' then
 						desc:add(message(l and l[3], r and r[3] or 0), true)
 					elseif type(message) == 'string' then
-						prefix = '* '
-						color = 'WHITE'
+						local prefix = '* '
+						local color = 'WHITE'
 						if l and not r then
 							color = 'GREEN'
 							prefix = '+ '
@@ -755,7 +755,7 @@ function _M:getTextualDesc(compare_with, use_actor)
 			end
 		)
 
-		found = false
+		local found = false
 		for i, v in ipairs(compare_with or {}) do
 			if v[field] and v[field].no_stealth_break then
 				found = true
