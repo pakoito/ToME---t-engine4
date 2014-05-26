@@ -555,13 +555,13 @@ newTalent{
 		return {dam=guaranteed_dam}
 	end,
 	callbackOnActBase = function(self, t)
-		if self.psi < self.max_psi * self.forcefield_timer / 10 then self:forceUseTalent(self.T_FORCEFIELD, {ignore_energy=true}) return end
-		self:incPsi(self.max_psi * self.forcefield_timer / -10)
+		if self.psi < self.max_psi * self.forcefield_timer / 20 then self:forceUseTalent(self.T_FORCEFIELD, {ignore_energy=true}) return end
+		self:incPsi(self.max_psi * self.forcefield_timer / -20)
 		self.forcefield_timer = self.forcefield_timer + 1
 	end,
 	info = function(self, t)
 		return ([[Surround yourself with a forcefield, reducing all incoming damage by %d%%. 
-		Such a shield is very expensive to maintain, and will drain 10%% of your maximum psi each turn, for each turn you have it maintained. eg. turn 2 it will drain 20%%.]]):
+		Such a shield is very expensive to maintain, and will drain 5%% of your maximum psi each turn, for each turn you have it maintained. eg. turn 2 it will drain 10%%.]]):
 		format(t.getResist(self,t))
 	end,
 }
