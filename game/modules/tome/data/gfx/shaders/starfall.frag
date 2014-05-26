@@ -91,7 +91,7 @@ void main(void)
 
 	float outerSpherePhase = clamp((phase - coreTime) / (outerSphereTime - coreTime), 0.0, 1.0);
 	vec4 outerSphereColor = vec4(0.0, 0.0, 0.0, 0.0);
-	if(outerSpherePhase > 0)
+	if(outerSpherePhase > 0.0)
 	{
 		float outerSphereRadius = innerSphereRadius + (0.5 - innerSphereRadius) * outerSpherePhase;
 		float sinAlpha = radiusLen / outerSphereRadius;
@@ -118,7 +118,7 @@ void main(void)
 		explosionColor = Uberblend(vec4(coreColor.rgb, coreColor.a * coreTransperency), outerSphereColor);
 	}
 	float debrisPhase = clamp((phase - debrisStartTime) / (1.0 - debrisStartTime), 0.0, 1.0);
-	if(debrisPhase > 0)
+	if(debrisPhase > 0.0)
 	{
 		vec2 debrisTexPos = (clamp(radius + vec2(0.5, 0.5), 0.01, 0.99)) * vec2(0.5, 0.5) + vec2(0.0, 0.5);
 		vec4 debrisColor = texture2D(tex, debrisTexPos);
