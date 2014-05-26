@@ -24,7 +24,7 @@ void main(void)
 			sample += texture2D(tex, vec2(gl_TexCoord[0].xy+vec2(float(i)*offset.x, float(j)*offset.y)));
 		}
 	}
-	sample /= float((blursize*2.0) * (blursize*2.0));
+	sample /= (float(blursize)*2.0) * (float(blursize)*2.0));
 
 	float a = 1.0-center.a;
 

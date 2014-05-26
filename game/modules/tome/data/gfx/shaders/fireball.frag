@@ -165,7 +165,7 @@ void main(void)
 
 	float phase = clamp((tick - tick_start) / explosion_time_factor, 0.0, 1.0);
 	if(is_exploding < 0.5)
-		phase = 0;
+		phase = 0.0;
 
 	float innerSpherePhase = clamp(phase / coreEndTime, 0.0, 1.0);
 	//vec3 color = clamp(gl_Color.rgb * (1.0 + pow(innerSpherePhase, 2.0) * 10.0), 0.0, 1.0);
@@ -234,7 +234,7 @@ void main(void)
 
 		float outerSpherePhase = clamp((phase - outerSphereStartTime) / (outerSphereEndTime - outerSphereStartTime), 0.0, 1.0);
 		vec4 outerSphereColor = vec4(0.0, 0.0, 0.0, 0.0);
-		if(outerSpherePhase > 0)
+		if(outerSpherePhase > 0.0)
 		{
 			float outerSphereRadius = innerSphereRadius + (0.5 - innerSphereRadius) * outerSpherePhase;
 			float sinAlpha = radiusLen / outerSphereRadius;
