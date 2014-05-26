@@ -3048,7 +3048,7 @@ newEffect{
 newEffect{
 	name = "WEAPON_WARDING", image = "talents/warding_weapon.png",
 	desc = "Weapon Warding",
-	long_desc = function(self, eff) return ("Block then next melee attack and retaliate."):format() end,
+	long_desc = function(self, eff) return ("Target is using %s telekinetically wielded weapon defensively and will block the next melee attack and retaliate."):format(string.his_her(self)) end,
 	type = "mental",
 	subtype = { tactic=true },
 	status = "beneficial",
@@ -3064,7 +3064,8 @@ newEffect{
 			local t = self:getTalentFromId(self.T_WARDING_WEAPON)
 			for i, o in ipairs(self:getInven(self.INVEN_PSIONIC_FOCUS)) do
 				if o.combat and not o.archery then
-					self:attackTargetWith(target, o.combat, nil, self:combatTalentWeaponDamage(t, 0.75, 1.1))
+					self:logCombat(target, "#CRIMSON##Source# blocks #Target#'s attack and retaliates with %s telekinetically wielded weapon!#LAST#", string.his_her(self))
+					self:attackTargetWith(target, o.combat, nil, t.getWeaponDamage(self, t))
 				end
 			end
 			if self:getTalentLevelRaw(t) >= 3 and target:canBe("disarmed") then
@@ -3172,7 +3173,7 @@ newEffect{
 	type = "mental",
 	subtype = { fire=true, cold=true },
 	status = "beneficial",
-	parameters = { power=10, penetration = 0 },
+	parameters = { power=10, penetration = 0, weaken = 0},
 	activate = function(self, eff)
 		self:effectTemporaryValue(eff, "inc_damage", {[DamageType.FIRE]=eff.power, [DamageType.COLD]=eff.power})
 		self:effectTemporaryValue(eff, "resists_pen", {[DamageType.FIRE]=eff.penetration, [DamageType.COLD]=eff.penetration})
@@ -3204,7 +3205,6 @@ newEffect{
 		self:callTalent(self.T_CHARGED_SHIELD, "adjust_shield_gfx", false)
 	end,
 }
-
 
 newEffect{
 	name = "PSI_DAMAGE_SHIELD", image = "talents/barrier.png",

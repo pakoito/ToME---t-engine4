@@ -1681,8 +1681,8 @@ function _M:physicalCrit(dam, weapon, target, atk, def, add_chance, crit_power_a
 
 	if self:attr("stealth") and self:knowTalent(self.T_SHADOWSTRIKE) and not target:canSee(self) then -- bug fix
 		chance = 100
-		crit_power_add = crit_power_add + self:callTalent(self.T_SHADOWSTRIKE,"getMultiplier")
 		self.turn_procs.shadowstrike_crit = self:callTalent(self.T_SHADOWSTRIKE,"getMultiplier")
+		crit_power_add = crit_power_add + self.turn_procs.shadowstrike_crit 
 	end
 
 	if self:isAccuracyEffect(weapon, "axe") then

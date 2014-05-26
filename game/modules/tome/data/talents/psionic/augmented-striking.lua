@@ -17,7 +17,6 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-
 newTalent{
 	name = "Kinetic Strike",
 	type = {"psionic/augmented-striking", 1},
@@ -71,8 +70,8 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Focus kinetic energy and strike an enemy for %d%% weapon damage as physical.
-		They will then be thrown back by the force of the hit, taking an extra %0.2f physical damage if they hit a wall, where they will be pinned for 4 turns.
-		The knockback damage will scale with your mindpower.]]):
+		They will then be thrown back by the force of the hit, taking an extra %0.1f Physical damage if they hit a wall, where they will be pinned for 4 turns.
+		The knockback damage will scale with your Mindpower.]]):
 		format(100 * self:combatTalentWeaponDamage(t, 0.5, 2.0), damDesc(self, DamageType.PHYSICAL, t.getDam(self, t)))
 	end,
 }
@@ -119,8 +118,8 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Focus thermal energy and strike an enemy for %d%% weapon damage as cold.
-		A burst of cold will then engulf them, doing an extra %0.2f cold damage and also freeze them for 4 turns.
-		The cold burst damage will scale with your mindpower.]]):
+		A burst of cold will then engulf them, doing an extra %0.1f Cold damage and also freeze them for 4 turns.
+		The cold burst damage will scale with your Mindpower.]]):
 		format(100 * self:combatTalentWeaponDamage(t, 0.5, 2.0), damDesc(self, DamageType.COLD, t.getDam(self, t)))
 	end,
 }
@@ -212,8 +211,8 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Focus charged energy and strike an enemy for %d%% weapon damage as lightning.
-		Energy will then discharge from your weapon, doing an extra %0.2f lightning damage and blinding them for 4 turns.
-		The discharge damage will scale with your mindpower.]]):
+		Energy will then discharge from your weapon, doing an extra %0.1f Lightning damage and blinding them for 4 turns.
+		The discharge damage will scale with your Mindpower.]]):
 		format(100 * self:combatTalentWeaponDamage(t, 0.5, 2.0), damDesc(self, DamageType.LIGHTNING, t.getDam(self, t)))
 	end,
 }
@@ -224,11 +223,12 @@ newTalent{
 	mode = "passive",
 	points = 5,
 	require = psi_wil_req4,
+	getPsiRecover = function(self, t) return self:combatTalentScale(t, 1, 3) end,
 	passives = function(self, t, p)
-		self:talentTemporaryValue(p, "psi_regen_on_hit", self:getTalentLevel(t))
+		self:talentTemporaryValue(p, "psi_regen_on_hit", t.getPsiRecover(self, t))
 	end,
 	info = function(self, t)
-		return ([[Siphon excess energy from each weapon hit you land, gaining %d psi per hit.]]):format(self:getTalentLevel(t))
+		return ([[Siphon excess energy from each weapon hit you land, gaining %0.1f psi per hit.]]):format(t.getPsiRecover(self, t))
 	end,
 }
 

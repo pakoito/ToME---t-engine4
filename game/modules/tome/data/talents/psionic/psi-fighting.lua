@@ -28,7 +28,7 @@ newTalent{
 	range = 1,
 	requires_target = true,
 	tactical = { ATTACK = { PHYSICAL = 2 } },
-	duration = function(self, t) return math.floor(self:combatTalentScale(t, 2, 6, "log")) end,
+	duration = function(self, t) return math.floor(self:combatTalentScale(t, 2, 6)) end,
 	action = function(self, t)
 		local weapon = self:getInven("MAINHAND") and self:getInven("MAINHAND")[1]
 		if type(weapon) == "boolean" then weapon = nil end
@@ -41,7 +41,7 @@ newTalent{
 		if not x or not y or not target then return nil end
 		if core.fov.distance(self.x, self.y, x, y) > 1 then return nil end
 		self:attr("use_psi_combat", 1)
-		local speed, hit = self:attackTarget(target, nil, self:combatTalentWeaponDamage(t, 0.9, 1.5))
+		local hit = self:attackTarget(target, nil, self:combatTalentWeaponDamage(t, 0.9, 1.5))
 		if self:getInven(self.INVEN_PSIONIC_FOCUS) then
 			for i, o in ipairs(self:getInven(self.INVEN_PSIONIC_FOCUS)) do
 				if o.combat and not o.archery then
@@ -56,10 +56,10 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Gather your will, and brutally smash the target with your mainhand weapon and then your telekinetically weilded weapon, doing %d%% weapon damage. 
+		return ([[Gather your will, and brutally smash the target with your mainhand weapon and then your telekinetically wielded weapon, doing %d%% weapon damage. 
 		If your mainhand weapon hits, you will also stun the target for %d turns.
 		This attack uses your Willpower and Cunning instead of Strength and Dexterity to determine Accuracy and damage.
-		Any active Aura damage bonusses will extend to your main weapons for this attack.]]):
+		Any active Aura damage bonusses will extend to the weapons used for this attack.]]):
 		format(100 * self:combatTalentWeaponDamage(t, 0.9, 1.5), t.duration(self,t))
 	end,
 }
@@ -109,14 +109,17 @@ newTalent{
 	psi = 15,
 	no_energy = true,
 	tactical = { BUFF = 2 },
+	getWeaponDamage = function(self, t) return self:combatTalentWeaponDamage(t, 0.75, 1.1) end,
 	action = function(self, t)
 		self:setEffect(self.EFF_WEAPON_WARDING, 1, {})
 		return true
 	end,
 	info = function(self, t)
-		return ([[Focus your telekinetically-wielded weapon to deflect melee attacks for one turn. You fully block the next melee attack used against you and strike the attacker with your telekinetically-wielded weapon for %d%% weapon damage. 
-		At talent level 3 you also disarm the attacker for 3 turns.]]):
-		format(100 * self:combatTalentWeaponDamage(t, 0.75, 1.1))
+		return ([[Assume a defensive mental state.
+		For one turn, you will fully block the next melee attack used against you with your telekinetically-wielded weapon and then strike the attacker with it for %d%% weapon damage. 
+		At talent level 3 you will also disarm the attacker for 3 turns.
+		This requires both a mainhand and a telekinetically-wielded weapon.]]):
+		format(100 * t.getWeaponDamage(self, t))
 	end,
 }
 
@@ -131,9 +134,8 @@ newTalent{
 	range = 3,
 	requires_target = true,
 	tactical = { ATTACK = { PHYSICAL = 2 } },
-	getDamage = function (self, t)
-		return math.floor(self:combatTalentMindDamage(t, 12, 340))
-	end,
+	getDamage = function (self, t) return math.floor(self:combatTalentMindDamage(t, 12, 340)) end,
+	getWeaponDamage = function(self, t) return self:combatTalentWeaponDamage(t, 1.5, 2.6) end,
 	action = function(self, t)
 		local weapon = self:getInven(self.INVEN_PSIONIC_FOCUS) and self:getInven(self.INVEN_PSIONIC_FOCUS)[1]
 		if type(weapon) == "boolean" then weapon = nil end
@@ -145,17 +147,18 @@ newTalent{
 		local x, y, target = self:getTarget(tg)
 		if not x or not y or not target then return nil end
 		if core.fov.distance(self.x, self.y, x, y) > 3 then return nil end
-		local speed, hit = self:attackTargetWith(target, weapon.combat, nil, self:combatTalentWeaponDamage(t, 1.5, 2.6))
-		if hit and target:canBe("bleed") then
+		local speed, hit = self:attackTargetWith(target, weapon.combat, nil, t.getWeaponDamage(self, t))
+		if hit and target:canBe("cut") then
 			target:setEffect(target.EFF_CUT, 4, {power=t.getDamage(self,t)/4, apply_power=self:combatMindpower()})
 		end
 		return true
 	end,
 	info = function(self, t)
-		return ([[Gather your will and thrust your telekinetically-wielded weapon into your target with such force that it impales it dealing %d%% weapon damage, then suddenly rip it out causing your target to bleed for %0.2f physical damage over four turns. 
-		This attack uses your Willpower and Cunning instead of Strength and Dexterity to determine Accuracy and damage.
-		Bleeding damage scales with Mindpower.]]):
-		format(100 * self:combatTalentWeaponDamage(t, 1.5, 2.6), damDesc(self, DamageType.PHYSICAL, t.getDamage(self,t)))
+		return ([[Focus your will into a powerful thrust of your telekinetically-wielded weapon to impale your target and then viciously rip it free.
+		This deals %d%% weapon damage and then causes the victim to bleed for %0.1f Physical damage over four turns. 
+		Your Willpower and Cunning are used instead of Strength and Dexterity to determine Accuracy and damage.
+		The bleeding damage increases with your Mindpower.]]):
+		format(100 * t.getWeaponDamage(self, t), damDesc(self, DamageType.PHYSICAL, t.getDamage(self,t)))
 	end,
 }
 

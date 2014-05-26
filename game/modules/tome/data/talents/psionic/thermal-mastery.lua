@@ -26,10 +26,11 @@ newTalent{
 	cooldown = 30,
 	tactical = { BUFF = 3 },
 	getPower = function(self, t) return self:combatTalentMindDamage(t, 10, 30) end,
+	getDamagePenalty = function(self, t) return self:combatTalentLimit(t, 100, 15, 50) end, --Limit < 100%
 	getPenetration = function(self, t) return self:combatLimit(self:combatTalentMindDamage(t, 10, 20), 100, 4.2, 4.2, 13.4, 13.4) end, -- Limit < 100%
 	getDuration = function(self, t) return math.floor(self:combatTalentLimit(t, 30, 5, 10)) end, --Limit < 30
 	action = function(self, t)
-		self:setEffect(self.EFF_TRANSCENDENT_PYROKINESIS, t.getDuration(self, t), {power=t.getPower(self, t), penetration=t.getPenetration(self, t)})
+		self:setEffect(self.EFF_TRANSCENDENT_PYROKINESIS, t.getDuration(self, t), {power=t.getPower(self, t), penetration=t.getPenetration(self, t), weaken=t.getDamagePenalty(self, t)})
 		self:removeEffect(self.EFF_TRANSCENDENT_TELEKINESIS)
 		self:removeEffect(self.EFF_TRANSCENDENT_ELECTROKINESIS)
 		self:alterTalentCoolingdown(self.T_THERMAL_SHIELD, -1000)
@@ -49,7 +50,7 @@ newTalent{
 		Thermal Leech will reduce enemy damage by %d%%.
 		Thermal Strike will have its secondary cold/freeze explode in radius 1.
 		The damage bonus and resistance penetration scale with your Mindpower.
-		Only one Transcendent talent may be in effect at a time.]]):format(t.getDuration(self, t), t.getPower(self, t), t.getPenetration(self, t), t.getPower(self, t))
+		Only one Transcendent talent may be in effect at a time.]]):format(t.getDuration(self, t), t.getPower(self, t), t.getPenetration(self, t), t.getDamagePenalty(self, t))
 	end,
 }
 
@@ -104,21 +105,30 @@ newTalent{
 	getDuration = function (self, t)
 		return math.floor(self:combatTalentMindDamage(t, 4, 8))
 	end,
+	getDamage = function(self, t) return self:combatTalentMindDamage(t, 10, 60) end,
+	getArmor = function(self, t) return self:combatTalentMindDamage(t, 10, 20) end,
 	requires_target = true,
-	target = function(self, t) return {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t), selffire=false, talent=t} end,
+	target = function(self, t) return {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t), selffire=false, talent=t, friendlyfire=false} end,
 	action = function(self, t)
-		local dur = t.getDuration(self, t)
 		local tg = self:getTalentTarget(t)
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
+		local dur = t.getDuration(self, t)
+		local dam = t.getDamage(self, t)
+		local armor = t.getArmor(self, t)
 		self:project(tg, self.x, self.y, function(tx, ty)
 			local act = game.level.map(tx, ty, engine.Map.ACTOR)
 			if act then
-				if target:canBe("pin") and target:canBe("stun") and not target:attr("fly") and not target:attr("levitation") then
-					target:setEffect(target.EFF_FROZEN_FEET, dur, {apply_power=self:combatMindpower()})
+				local cold = DamageType:get("COLD").projector(self, tx, ty, DamageType.COLD, dam)
+				if act:canBe("pin") and act:canBe("stun") and not act:attr("fly") and not act:attr("levitation") then
+					act:setEffect(act.EFF_FROZEN_FEET, dur, {apply_power=self:combatMindpower()})
 				end
-				if target:canBe("disarm") then
-					target:setEffect(target.EFF_DISARMED, dur, {apply_power=self:combatMindpower()})
+				local fire = DamageType:get("FIRE").projector(self, tx, ty, DamageType.FIRE, dam)
+				if act:canBe("disarm") then
+					act:setEffect(act.EFF_DISARMED, dur, {apply_power=self:combatMindpower()})
+				end
+				if cold>0 and fire>0 then
+					act:setEffect(act.EFF_SUNDER_ARMOUR, dur, {power = armor})
 				end
 			end
 		end)
@@ -127,10 +137,12 @@ newTalent{
 	info = function(self, t)
 		local dur = t.getDuration(self, t)
 		local rad = self:getTalentRadius(t)
-		return ([[Transfer heat from a group (radius %d) of enemies bodies to their weapons, freezing them to the floor while forcing them to drop their too weapons.
-		Attempts to inflict Frozen Feet and Disarmed to target enemies for %d turns.
+		local dam = t.getDamage(self, t)
+		return ([[Within radius %d, transfer heat from a group of enemies bodies to their equipment, freezing them to the floor while the excess heat disables their weapons and armor.
+		Those afflicted will be dealt %0.1f Cold and %0.1f Fire damage, and be pinned (Frozen Feet) and disarmed for %d turns.
+		Targets suffering both types of damage will also have have their Armour and saves reduced by %d.
 		The chance to apply the effects and the duration increase with your Mindpower.]]):
-		format(rad, dur)
+		format(rad, damDesc(self, DamageType.COLD, dam), damDesc(self, DamageType.FIRE, dam), dur, t.getArmor(self, t))
 	end,
 }
 

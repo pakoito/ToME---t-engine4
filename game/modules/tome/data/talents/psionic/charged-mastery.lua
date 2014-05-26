@@ -27,9 +27,10 @@ newTalent{
 	tactical = { BUFF = 3 },
 	getPower = function(self, t) return self:combatTalentMindDamage(t, 10, 30) end,
 	getPenetration = function(self, t) return self:combatLimit(self:combatTalentMindDamage(t, 10, 20), 100, 4.2, 4.2, 13.4, 13.4) end, -- Limit < 100%
+	getConfuse = function(self, t) return self:combatTalentLimit(t, 50, 15, 35) end, --Limit < 50%
 	getDuration = function(self, t) return math.floor(self:combatTalentLimit(t, 30, 5, 10)) end, --Limit < 30
 	action = function(self, t)
-		self:setEffect(self.EFF_TRANSCENDENT_ELECTROKINESIS, t.getDuration(self, t), {power=t.getPower(self, t), penetration = t.getPenetration(self, t)})
+		self:setEffect(self.EFF_TRANSCENDENT_ELECTROKINESIS, t.getDuration(self, t), {power=t.getPower(self, t), penetration = t.getPenetration(self, t), confuse=t.getConfuse(self, t)})
 		self:removeEffect(self.EFF_TRANSCENDENT_PYROKINESIS)
 		self:removeEffect(self.EFF_TRANSCENDENT_TELEKINESIS)
 		self:alterTalentCoolingdown(self.T_CHARGED_SHIELD, -1000)
@@ -46,10 +47,10 @@ newTalent{
 		Charged Aura will either increase in radius to 2, or apply its damage bonus to all of your weapons, whichever is applicable.
 		Your Charged Shield will have 100%% absorption efficiency and will absorb twice the normal amount of damage.
 		Brainstorm will also inflict blindness.
-		Charged Leech will also inflict confusion.
+		Charge Leech will also inflict confusion (%d%% effect).
 		Charged Strike will have its secondary lightning/blind burst chain to up to 3 targets in a radius of 3.
 		The damage bonus and resistance penetration scale with your Mindpower.
-		Only one Transcendent talent may be in effect at a time.]]):format(t.getDuration(self, t), t.getPower(self, t), t.getPenetration(self, t))
+		Only one Transcendent talent may be in effect at a time.]]):format(t.getDuration(self, t), t.getPower(self, t), t.getPenetration(self, t), t.getConfuse(self, t))
 	end,
 }
 

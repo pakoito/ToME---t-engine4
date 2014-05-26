@@ -29,6 +29,7 @@ newTalent{
 	require = techs_req1,
 	requires_target = true,
 	getDuration = function(self, t) return math.ceil(self:combatTalentScale(t, 3.2, 5.3)) end,
+	getConfusion = function(self, t) return self:combatStatLimit("dex", 50, 25, 45) end, --Limit < 50%
 	getDamage = function(self, t)
 		local o = self:getInven(self.INVEN_HEAD) and self:getInven(self.INVEN_HEAD)[1]
 
@@ -56,7 +57,7 @@ newTalent{
 
 		if hitted then
 			if target:canBe("confusion") then
-				target:setEffect(target.EFF_CONFUSED, t.getDuration(self, t), {power=30 + self:getDex(70), apply_power=self:combatAttack()})
+				target:setEffect(target.EFF_CONFUSED, t.getDuration(self, t), {power=t.getConfusion(self, t), apply_power=self:combatAttack()})
 			else
 				game.logSeen(target, "%s resists the headblow!", target.name:capitalize())
 			end
@@ -64,16 +65,16 @@ newTalent{
 				world:gainAchievement("HEADBANG", self, target)
 			end
 		end
-
 		return true
 	end,
 	info = function(self, t)
-		local dam = t.getDamage(self, t)
+		local dam = damDesc(self, DamageType.PHYSICAL, t.getDamage(self, t))
 		local duration = t.getDuration(self, t)
-		return ([[You smack your forehead against your enemy's head (or whatever sensitive part you can find), causing %0.2f physical damage. If the attack hits, the target is confused for %d turns.
+		return ([[You smack your forehead against your enemy's head (or whatever sensitive part you can find), causing %0.1f Physical damage.
+		If the attack hits, the target is confused (%d%% effect) for %d turns.
 		Damage done increases with the quality of your headgear, your Strength, and your physical damage bonuses.
 		Confusion power and chance increase with your Dexterity and Accuracy.]]):
-		format(dam, duration)
+		format(dam, t.getConfusion(self, t), duration)
 	end,
 }
 
