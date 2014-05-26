@@ -60,11 +60,11 @@ newTalent{
 	points = 5,
 	random_ego = "attack",
 	cooldown = 15,
-	psi = 40,
+	psi = 20,
 	tactical = { ATTACK = { PHYSICAL = 2 } },
 	range = function(self, t) return math.floor(self:combatStatScale("str", 1, 5) + self:combatMindpower()/20) end,
 	getDamage = function (self, t)
-		return math.floor(self:combatTalentMindDamage(t, 10, 300))
+		return math.floor(self:combatTalentMindDamage(t, 10, 170))
 	end,
 	getKBResistPen = function(self, t) return self:combatTalentLimit(t, 100, 25, 45) end,
 	requires_target = true,
@@ -92,7 +92,6 @@ newTalent{
 				target:setMoveAnim(ox, oy, 8, 5)
 			end
 		end
---Note this can hit the original target in the AOE
 		self:project(tg, target.x, target.y, DamageType.SPELLKNOCKBACK, dam/2) --AOE damage
 		if target:canBe("stun") then
 			target:setEffect(target.EFF_STUNNED, 4, {apply_power=self:combatMindpower()})

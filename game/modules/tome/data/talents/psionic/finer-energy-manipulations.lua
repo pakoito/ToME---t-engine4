@@ -23,10 +23,19 @@ newTalent{
 	type = {"psionic/finer-energy-manipulations", 1},
 	require = psi_cun_req1,
 	points = 5,
-	psi = 30,
-	cooldown = 20,
-	tactical = { HEAL = 2 },
-	getHeal = function(self, t) return 40 + self:combatTalentMindDamage(t, 20, 450) end,
+	psi = 15,
+	cooldown = 15,
+	tactical = { HEAL = 2, CURE = function(self, t, target)
+		local nb = 0
+		for eff_id, p in pairs(self.tmp) do
+			local e = self.tempeffect_def[eff_id]
+			if e.status == "detrimental" and e.type == "physical" then
+				nb = nb + 1
+			end
+		end
+		return nb
+	end },
+	getHeal = function(self, t) return 40 + self:combatTalentMindDamage(t, 20, 290) end,
 	is_heal = true,
 	numCure = function(self, t) return math.floor(self:combatTalentScale(t, 1, 3, "log"))
 	end,

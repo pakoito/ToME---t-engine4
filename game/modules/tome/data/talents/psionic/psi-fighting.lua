@@ -41,7 +41,7 @@ newTalent{
 		if not x or not y or not target then return nil end
 		if core.fov.distance(self.x, self.y, x, y) > 1 then return nil end
 		self:attr("use_psi_combat", 1)
-		local hit = self:attackTarget(target, nil, self:combatTalentWeaponDamage(t, 0.9, 1.5))
+		local hit = self:attackTarget(target, nil, self:combatTalentWeaponDamage(t, 0.9, 1.5), true)
 		if self:getInven(self.INVEN_PSIONIC_FOCUS) then
 			for i, o in ipairs(self:getInven(self.INVEN_PSIONIC_FOCUS)) do
 				if o.combat and not o.archery then
