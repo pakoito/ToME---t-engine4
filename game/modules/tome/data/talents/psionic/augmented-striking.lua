@@ -42,7 +42,7 @@ newTalent{
 		if core.fov.distance(self.x, self.y, x, y) > 1 then return nil end
 		local dam = self:mindCrit(t.getDam(self, t))
 
-		local hit = self:attackTarget(target, DamageType.PHYSICAL, self:combatTalentWeaponDamage(t, 0.5, 2.0))
+		local hit = self:attackTarget(target, DamageType.PHYSICAL, self:combatTalentWeaponDamage(t, 0.5, 2.0), true)
 		if hit then
 			DamageType:get(DamageType.TK_PUSHPIN).projector(self, x, y, DamageType.TK_PUSHPIN, {push=4, dam=dam, dur=4})
 		end
@@ -56,12 +56,12 @@ newTalent{
 
 			local hit
 			if lt then
-				hit = self:attackTarget(lt, DamageType.PHYSICAL, self:combatTalentWeaponDamage(t, 0.5, 2.0))
+				hit = self:attackTarget(lt, DamageType.PHYSICAL, self:combatTalentWeaponDamage(t, 0.5, 2.0), true)
 				if hit then DamageType:get(DamageType.TK_PUSHPIN).projector(self, lx, ly, DamageType.TK_PUSHPIN, {push=4, dam=dam, dur=4}) end
 			end
 
 			if rt then
-				hit = self:attackTarget(rt, DamageType.PHYSICAL, self:combatTalentWeaponDamage(t, 0.5, 2.0))
+				hit = self:attackTarget(rt, DamageType.PHYSICAL, self:combatTalentWeaponDamage(t, 0.5, 2.0), true)
 				if hit then DamageType:get(DamageType.TK_PUSHPIN).projector(self, rx, ry, DamageType.TK_PUSHPIN, {push=4, dam=dam, dur=4}) end
 			end
 		end
@@ -102,7 +102,7 @@ newTalent{
 		if core.fov.distance(self.x, self.y, x, y) > 1 then return nil end
 		local dam = self:mindCrit(t.getDam(self, t))
 
-		local hit = self:attackTarget(target, DamageType.COLD, self:combatTalentWeaponDamage(t, 0.5, 2.0))
+		local hit = self:attackTarget(target, DamageType.COLD, self:combatTalentWeaponDamage(t, 0.5, 2.0), true)
 		if hit then
 			if self:hasEffect(self.EFF_TRANSCENDENT_PYROKINESIS) then
 				local tg = {type="ball", range=1, radius=1, friendlyfire=false}
@@ -149,7 +149,7 @@ newTalent{
 		if core.fov.distance(self.x, self.y, x, y) > 1 then return nil end
 		local dam = self:mindCrit(t.getDam(self, t))
 
-		local hit = self:attackTarget(target, DamageType.LIGHTNING, self:combatTalentWeaponDamage(t, 0.5, 2.0))
+		local hit = self:attackTarget(target, DamageType.LIGHTNING, self:combatTalentWeaponDamage(t, 0.5, 2.0), true)
 		if hit then
 			if self:hasEffect(self.EFF_TRANSCENDENT_ELECTROKINESIS) then
 				tg = {type="bolt", range=self:getTalentRange(t), talent=t}
