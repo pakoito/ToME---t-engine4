@@ -160,7 +160,7 @@ function _M:loaded()
 		-- print("[SHADER] using cached shader "..self.totalname)
 		self.shad = _M.progs[self.totalname].shad
 		_M.progs[self.totalname].dieat = os.time() + 60*4
-		if _M.progsreset[self.totalname] then
+		if _M.progsreset[self.totalname] and self.shad then
 			self.shad = self.shad:clone()
 		end
 	else

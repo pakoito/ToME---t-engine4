@@ -1271,10 +1271,12 @@ function _M:removeParticleEmitters()
 
 	for i = #self.particles_todel, 1, -1 do
 		local e = table.remove(self.particles, self.particles_todel[i])
-		self.z_particles[e.zdepth][e] = nil
+		if e then
+			self.z_particles[e.zdepth][e] = nil
 
-		if e.on_remove then e:on_remove() end
-		e.dead = true
+			if e.on_remove then e:on_remove() end
+			e.dead = true
+		end
 	end
 	self.particles_todel = {}
 end

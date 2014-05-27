@@ -924,32 +924,32 @@ function _M:getTextualDesc(compare_with, use_actor)
 			end)
 		compare_table_fields(w, compare_with, field, "resists", "%+d%%", "Changes resistances: ", function(item)
 				local col = (DamageType.dam_def[item] and DamageType.dam_def[item].text_color or "#WHITE#"):toTString()
-				return col[2], (" %s"):format(item == "all" and "all" or DamageType.dam_def[item].name), {"color","LAST"}
+				return col[2], (" %s"):format(item == "all" and "all" or (DamageType.dam_def[item] and DamageType.dam_def[item].name or "??")), {"color","LAST"}
 			end)
 
 		compare_table_fields(w, compare_with, field, "resists_cap", "%+d%%", "Changes resistances cap: ", function(item)
 				local col = (DamageType.dam_def[item] and DamageType.dam_def[item].text_color or "#WHITE#"):toTString()
-				return col[2], (" %s"):format(item == "all" and "all" or DamageType.dam_def[item].name), {"color","LAST"}
+				return col[2], (" %s"):format(item == "all" and "all" or (DamageType.dam_def[item] and DamageType.dam_def[item].name or "??")), {"color","LAST"}
 			end)
 
 		compare_table_fields(w, compare_with, field, "flat_damage_armor", "%+d", "Reduce damage by fixed amount: ", function(item)
 				local col = (DamageType.dam_def[item] and DamageType.dam_def[item].text_color or "#WHITE#"):toTString()
-				return col[2], (" %s"):format(item == "all" and "all" or DamageType.dam_def[item].name), {"color","LAST"}
+				return col[2], (" %s"):format(item == "all" and "all" or (DamageType.dam_def[item] and DamageType.dam_def[item].name or "??")), {"color","LAST"}
 			end)
 
 		compare_table_fields(w, compare_with, field, "wards", "%+d", "Maximum wards: ", function(item)
 				local col = (DamageType.dam_def[item] and DamageType.dam_def[item].text_color or "#WHITE#"):toTString()
-				return col[2], (" %s"):format(item == "all" and "all" or DamageType.dam_def[item].name), {"color","LAST"}
+				return col[2], (" %s"):format(item == "all" and "all" or (DamageType.dam_def[item] and DamageType.dam_def[item].name or "??")), {"color","LAST"}
 			end)
 
 		compare_table_fields(w, compare_with, field, "resists_pen", "%+d%%", "Changes resistances penetration: ", function(item)
 				local col = (DamageType.dam_def[item] and DamageType.dam_def[item].text_color or "#WHITE#"):toTString()
-				return col[2], (" %s"):format(item == "all" and "all" or DamageType.dam_def[item].name), {"color","LAST"}
+				return col[2], (" %s"):format(item == "all" and "all" or (DamageType.dam_def[item] and DamageType.dam_def[item].name or "??")), {"color","LAST"}
 			end)
 
 		compare_table_fields(w, compare_with, field, "inc_damage", "%+d%%", "Changes damage: ", function(item)
 				local col = (DamageType.dam_def[item] and DamageType.dam_def[item].text_color or "#WHITE#"):toTString()
-				return col[2], (" %s"):format(item == "all" and "all" or DamageType.dam_def[item].name), {"color","LAST"}
+				return col[2], (" %s"):format(item == "all" and "all" or (DamageType.dam_def[item] and DamageType.dam_def[item].name or "??")), {"color","LAST"}
 			end)
 
 		compare_table_fields(w, compare_with, field, "inc_damage_actor_type", "%+d%% ", "Damage against: ", function(item)
@@ -972,7 +972,7 @@ function _M:getTextualDesc(compare_with, use_actor)
 
 		compare_table_fields(w, compare_with, field, "damage_affinity", "%+d%%", "Damage affinity(heal): ", function(item)
 				local col = (DamageType.dam_def[item] and DamageType.dam_def[item].text_color or "#WHITE#"):toTString()
-				return col[2], (" %s"):format(item == "all" and "all" or DamageType.dam_def[item].name), {"color","LAST"}
+				return col[2], (" %s"):format(item == "all" and "all" or (DamageType.dam_def[item] and DamageType.dam_def[item].name or "??")), {"color","LAST"}
 			end)
 
 		compare_fields(w, compare_with, field, "esp_range", "%+d", "Change telepathy range by : ")
