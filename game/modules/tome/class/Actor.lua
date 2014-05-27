@@ -4088,7 +4088,7 @@ function _M:unlearnTalent(t_id, nb, no_unsustain, extra)
 	end
 
 	-- Unsustain ?
-	if not no_unsustain and not self:knowTalent(t_id) and t.mode == "sustained" and self:isTalentActive(t_id) then self:forceUseTalent(t_id, {ignore_energy=true}) end
+	if not no_unsustain and not self:knowTalent(t_id) and t.mode == "sustained" and self:isTalentActive(t_id) then self:forceUseTalent(t_id, {ignore_energy=true, save_cleanup=true}) end
 
 	self:recomputeRegenResources()
 
