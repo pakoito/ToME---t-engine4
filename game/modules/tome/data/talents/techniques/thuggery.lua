@@ -35,7 +35,7 @@ newTalent{
 
 		local add = 0
 		if o then
-			add = 15 + o:getPriceFlags() * 0.6 * math.sqrt(o:getPowerRank() + 1) * (o:attr("metallic") and 1 or 0.5) * (o.skullcracker_mult or 1)
+			add = 15 + o:getPriceFlags() * 0.3 * math.sqrt(o:getPowerRank() + 1) * (o:attr("metallic") and 1 or 0.5) * (o.skullcracker_mult or 1)
 		end
 
 		local totstat = self:getStat("str")
