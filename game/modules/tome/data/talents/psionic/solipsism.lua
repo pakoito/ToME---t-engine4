@@ -189,7 +189,7 @@ newTalent{
 		local saving_throw = self:combatMentalResist() * t.getSavePercentage(self, t)
 		print("[Dismissal] ", self.name:capitalize(), " attempting to ignore ", value, "damage from ", src.name:capitalize(), "using", saving_throw,  "mental save.")
 		if self:checkHit(saving_throw, value) then
-			local dismissed = value * 1/self:mindCrit(2) -- Diminishing returns on high crits
+			local dismissed = value * (1 - (1 / self:mindCrit(2))) -- Diminishing returns on high crits
 			game:delayedLogMessage(self, nil, "Dismissal", "#TAN##Source# mentally dismisses some damage!")
 			game:delayedLogDamage(src, self, 0, ("#TAN#(%d dismissed)#LAST#"):format(dismissed))
 			return value - dismissed
