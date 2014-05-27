@@ -239,6 +239,19 @@ newAI("use_tactical", function(self)
 			end
 		end
 
+		-- Need psi
+		if avail.psi then
+			want.psi = 0
+			local psi = 100 * self.psi / self.max_psi
+			if psi < 20 then want.psi = want.psi + 4
+			elseif psi < 30 then want.psi = want.psi + 3
+			elseif psi < 40 then want.psi = want.psi + 2
+			elseif psi < 60 then want.psi = want.psi + 2
+			elseif psi < 80 then want.psi = want.psi + 1
+			elseif psi < 100 then want.psi = want.psi + 0.5
+			end
+		end
+
 		-- Need to reduce equilibrium
 		if avail.equilibrium then
 			want.equilibrium = 0

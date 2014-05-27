@@ -27,8 +27,9 @@ newTalent{
 	cooldown = function(self, t)
 		return math.max(6, math.ceil(25 - self:getTalentLevelRaw(t)*3))
 	end,
-	tactical = { DEFEND = 1, DISABLE = 2 },
+	tactical = { DISABLE = 2, PSI = 1 },
 	direct_hit = true,
+	requires_target = true,
 	range = 0,
 	radius = function(self,t) return self:combatTalentScale(t, 1, 4) end,
 	target = function(self, t)
@@ -92,7 +93,9 @@ newTalent{
 		return math.max(6, math.ceil(25 - self:getTalentLevelRaw(t)*3))
 	end,
 	psi = 0,
-	tactical = { DEFEND = 2, DISABLE = { stun = 2 } },
+	tactical = { ATTACKAREA = { COLD = 2 }, DISABLE = { stun = 2 }, PSI = 1 },
+	direct_hit = true,
+	requires_target = true,
 	range = 0,
 	radius = function(self,t) return self:combatTalentScale(t, 1, 4) end,
 	target = function(self, t)
@@ -150,8 +153,9 @@ newTalent{
 	cooldown = function(self, t)
 		return math.max(6, math.ceil(25 - self:getTalentLevelRaw(t)*3))
 	end,
-	tactical = { DEFEND = 2, ATTACKAREA = { LIGHTNING = 2 }, DISABLE = { stun = 1 } },
+	tactical = { ATTACKAREA = { LIGHTNING = 2 }, DISABLE = { stun = 1 }, PSI = 1 },
 	direct_hit = true,
+	requires_target = true,
 	range = 0,
 	radius = function(self,t) return self:combatTalentScale(t, 1, 4) end,
 	target = function(self, t)

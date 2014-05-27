@@ -83,13 +83,11 @@ newTalent{
 	getCon = function(self, t) return math.ceil(self:combatTalentScale(t, 1.5, 7.5, 0.75) + self:combatTalentStatDamage(t, "dex", 5, 25)) end,
 
 	passives = function(self, t, tmptable)
-			self:talentTemporaryValue(tmptable, "inc_stats", {[self.STAT_CON] = t.getCon(self, t)})
-			self:talentTemporaryValue(tmptable, "inc_stats", {[self.STAT_STR] = t.getStr(self, t)})	
+		self:talentTemporaryValue(tmptable, "inc_stats", {[self.STAT_CON] = t.getCon(self, t)})
+		self:talentTemporaryValue(tmptable, "inc_stats", {[self.STAT_STR] = t.getStr(self, t)})	
 	end,
 	callbackOnStatChange = function(self, t, stat, v)
-		if self.turn_procs.unified_body then return end
 		if stat == self.STAT_DEX or stat == self.STAT_CUN then
-			self.turn_procs.unified_body = true
 			self:updateTalentPassives(t)
 		end
 	end,
