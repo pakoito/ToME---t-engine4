@@ -157,6 +157,7 @@ newTalent{
 	tactical = { ATTACKAREA = { weapon = 2 }, CLOSEIN = 1 },
 	requires_target = true,
 	getDamage = function(self, t) return self:combatTalentWeaponDamage(t, 1.0, 1.7) + getStrikingStyle(self, dam) end,
+	on_pre_use = function(self, t) return not self:attr("never_move") end,
 	action = function(self, t)
 		local tg = {type="bolt", range=self:getTalentRange(t)}
 		local x, y, target = self:getTarget(tg)
@@ -292,7 +293,7 @@ newTalent{
 	info = function(self, t)
 		local damage = t.getDamage(self, t) * 100
 		return ([[Deliver a devastating axe kick dealing %d%% damage.  If the blow connects your target is brain damaged, causing all talents to fail for %d turns and earning 2 combo points.
-			This effect cannot be saved against, though it can be dodged.]])
+		This effect cannot be saved against, though it can be dodged and checks confusion immunity.]])
 		:format(damage, t.getDuration(self, t))
 	end,
 }

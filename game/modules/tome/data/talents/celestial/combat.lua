@@ -71,6 +71,7 @@ newTalent{
 		local shieldflat = t.getShieldFlat(self, t)
 		return ([[Infuse your weapon with the power of the Sun, adding %0.1f light damage on each melee hit.
 		Additionally, if you have a temporary damage shield active, melee attacks will increase its power by %d.
+		If the same shield is refreshed 20 times it will become unstable and explode, removing it.
 		The damage dealt and shield bonus will increase with your Spellpower.]]):
 		format(damDesc(self, DamageType.LIGHT, damage), shieldflat)
 	end,
