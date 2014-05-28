@@ -26,7 +26,7 @@ newEntity{
 	slot_forbid = "OFFHAND",
 	type = "weapon", subtype="staff",
 	twohanded = true,
-	add_name = " (#COMBAT_DAMTYPE#)",
+	add_name = " (#COMBAT_ELEMENT#)",
 	display = "\\", color=colors.LIGHT_RED, image = resolvers.image_material("staff", "wood"),
 	moddable_tile = resolvers.moddable_tile("staff"),
 	randart_able = "/data/general/objects/random-artifacts/melee.lua",

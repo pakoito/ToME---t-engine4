@@ -182,6 +182,9 @@ function _M:descAttribute(attr)
 	elseif attr == "COMBAT_DAMTYPE" then
 		local c = self.combat
 		return c.dam.."-"..(c.dam*(c.damrange or 1.1)).." power, "..("%d"):format((c.apr or 0)).." apr, "..DamageType:get(c.damtype).name.." damage"
+	elseif attr == "COMBAT_ELEMENT" then
+		local c = self.combat
+		return c.dam.."-"..(c.dam*(c.damrange or 1.1)).." power, "..("%d"):format((c.apr or 0)).." apr, "..DamageType:get(c.element or DamageType.PHYSICAL).name.." element"
 	elseif attr == "SHIELD" then
 		local c = self.special_combat
 		if c and (game.player:knowTalentType("technique/shield-offense") or game.player:knowTalentType("technique/shield-defense") or game.player:attr("show_shield_combat")) then
