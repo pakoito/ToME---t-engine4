@@ -118,6 +118,11 @@ newTalent{
 			game.logPlayer(self, "You must be holding a staff.")
 			return
 		end
+		-- Terrible sanity check to make sure staff.element is defined
+		if not staff.combat.element then
+			staff.combat.element = staff.combat.damtype or engine.DamageType.PHYSICAL
+		end
+
 		local state = {}
 		local Chat = require("engine.Chat")
 		local chat = Chat.new("command-staff", {name="Command Staff"}, self, {version=staff, state=state, co=coroutine.running()})
