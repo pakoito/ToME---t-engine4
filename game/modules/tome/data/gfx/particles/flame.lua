@@ -21,17 +21,17 @@
 -- Advanced shaders
 --------------------------------------------------------------------------------------
 if core.shader.active(4) then
-use_shader = {type="fireboom"}
+use_shader = {type="fireflash"}
 base_size = 64
 
 local nb = 0
 
 return {
-	system_rotation = rng.range(0,359), system_rotationv = 10,
+	system_rotation = rng.range(0,359), system_rotationv = 0,
 	generator = function()
 	return {
 		life = 8,
-		size = 5, sizev = 64/8, sizea = 0,
+		size = 64, sizev = 0, sizea = 0,
 
 		x = 0, xv = 0, xa = 0,
 		y = 0, yv = 0, ya = 0,
@@ -41,7 +41,7 @@ return {
 		r = 1, rv = 0, ra = 0,
 		g = 1, gv = 0, ga = 0,
 		b = 1, bv = 0, ba = 0,
-		a = 0.7, av = 0.03, aa = 0,
+		a = 0.7, av = 0, aa = 0,
 	}
 end, },
 function(self)
@@ -50,7 +50,7 @@ function(self)
 	end
 	nb = nb + 1
 end,
-1, "particles_images/fireball"
+1, "particles_images/fireflash"
 
 --------------------------------------------------------------------------------------
 -- Default
