@@ -1456,11 +1456,11 @@ function _M:getTextualDesc(compare_with, use_actor)
 		local t = self:getTalentFromId("T_"..self.inscription_talent.."_1")
 		if t then
 			local tdesc = use_actor:getTalentFullDescription(t)
-			use_actor.__inscription_data_fake = nil
 			desc:add({"color","YELLOW"}, "When inscribed on your body:", {"color", "LAST"}, true)
 			desc:merge(tdesc)
 			desc:add(true)
 		end
+		use_actor.__inscription_data_fake = nil
 	end
 
 	local talents = {}

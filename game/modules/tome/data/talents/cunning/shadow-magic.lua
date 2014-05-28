@@ -115,6 +115,7 @@ newTalent{
 		if not x or not y then return nil end
 		if core.fov.distance(self.x, self.y, x, y) > tg.range then return nil end
 		local target = game.level.map(x, y, Map.ACTOR)
+		if not target then return nil end
 		if game.level.map.attrs(x, y, "no_teleport") then
 			if not game.level.map.seens(x, y) or not self:hasLOS(x, y) then return nil end
 		else
