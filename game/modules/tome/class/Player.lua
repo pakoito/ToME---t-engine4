@@ -924,7 +924,7 @@ function _M:restCheck()
 		for act, def in pairs(game.party.members) do if game.level:hasEntity(act) and not act.dead then
 			if act.life < act.max_life and act.life_regen > 0 and not act:attr("no_life_regen") then return true end
 		end end
-		if ammo and ammo.combat.shots_left < ammo.combat.capacity and ((self:hasEffect(self.EFF_RELOADING)) or (ammo.combat.ammo_every and ammo.combat.ammo_every > 0)) then return true end
+		if ammo and ammo.combat.shots_left < ammo.combat.capacity then return true end
 
 		if self:fireTalentCheck("callbackOnRest") then return true end
 	else
@@ -1066,11 +1066,6 @@ function _M:runMoved()
 	self:playerFOV()
 	if self.running and self.running.explore then
 		game.level.map:particleEmitter(self.x, self.y, 1, "dust_trail")
-	end
-	-- Autoreload on Auto-explore
-	local ammo = self:hasAmmo()
-	if self.running and self.running.explore and ammo and ammo.combat.shots_left < ammo.combat.capacity and not self:hasEffect(self.EFF_RELOADING) and self:knowTalent(self.T_RELOAD) then
-		self:forceUseTalent(self.T_RELOAD, {ignore_energy=true})
 	end
 end
 

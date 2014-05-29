@@ -354,7 +354,7 @@ function _M:die(src, death_note)
 		if rod then
 			-- If the player can move to the space the NPC died on, drop in the normal way
 			-- Else make absolutely sure they get the Rod of Recall by moving it to their inventory directly
-			if not game.player:canMove(self.x, self.y) then
+			if not game.player:canMove(self.x, self.y, true) then
 				game.zone:addEntity(game.level, rod, "object")
 				game:getPlayer(true):addObject(game:getPlayer(true):getInven("INVEN"), rod)
 				rod:identify(true)
