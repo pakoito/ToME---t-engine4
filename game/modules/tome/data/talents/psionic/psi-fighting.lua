@@ -136,6 +136,7 @@ newTalent{
 	tactical = { ATTACK = { PHYSICAL = 2 } },
 	getDamage = function (self, t) return math.floor(self:combatTalentMindDamage(t, 12, 340)) end,
 	getWeaponDamage = function(self, t) return self:combatTalentWeaponDamage(t, 1.5, 2.6) end,
+	getShatter = function(self, t) return self:combatTalentLimit(t, 100, 10, 85) end,
 	action = function(self, t)
 		local weapon = self:getInven(self.INVEN_PSIONIC_FOCUS) and self:getInven(self.INVEN_PSIONIC_FOCUS)[1]
 		if type(weapon) == "boolean" then weapon = nil end
@@ -150,15 +151,38 @@ newTalent{
 		local speed, hit = self:attackTargetWith(target, weapon.combat, nil, t.getWeaponDamage(self, t))
 		if hit and target:canBe("cut") then
 			target:setEffect(target.EFF_CUT, 4, {power=t.getDamage(self,t)/4, apply_power=self:combatMindpower()})
+
+			if rng.percent(t.getShatter(self, t)) and self:getTalentLevel(t) >= 3 then
+				local effs = {}
+
+				-- Go through all shield effects
+				for eff_id, p in pairs(target.tmp) do
+					local e = target.tempeffect_def[eff_id]
+					if e.status == "beneficial" and e.subtype and e.subtype.shield then
+						effs[#effs+1] = {"effect", eff_id}
+					end
+				end
+
+				for i = 1, 1 do
+					if #effs == 0 then break end
+					local eff = rng.tableRemove(effs)
+
+					if eff[1] == "effect" then
+						game.logSeen(self, "#CRIMSON#%s shatters %s shield!", self.name:capitalize(), target.name)
+						target:removeEffect(eff[2])
+					end
+				end
+			end
 		end
 		return true
 	end,
 	info = function(self, t)
 		return ([[Focus your will into a powerful thrust of your telekinetically-wielded weapon to impale your target and then viciously rip it free.
 		This deals %d%% weapon damage and then causes the victim to bleed for %0.1f Physical damage over four turns. 
+		At level 3 the thrust is so powerful that it has %d%% chance to shatter a temporary damage shield if one exists.
 		Your Willpower and Cunning are used instead of Strength and Dexterity to determine Accuracy and damage.
 		The bleeding damage increases with your Mindpower.]]):
-		format(100 * t.getWeaponDamage(self, t), damDesc(self, DamageType.PHYSICAL, t.getDamage(self,t)))
+		format(100 * t.getWeaponDamage(self, t), damDesc(self, DamageType.PHYSICAL, t.getDamage(self,t)), t.getShatter(self, t))
 	end,
 }
 
