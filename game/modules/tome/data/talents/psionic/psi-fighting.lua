@@ -151,26 +151,26 @@ newTalent{
 		local speed, hit = self:attackTargetWith(target, weapon.combat, nil, t.getWeaponDamage(self, t))
 		if hit and target:canBe("cut") then
 			target:setEffect(target.EFF_CUT, 4, {power=t.getDamage(self,t)/4, apply_power=self:combatMindpower()})
+		end
 
-			if rng.percent(t.getShatter(self, t)) and self:getTalentLevel(t) >= 3 then
-				local effs = {}
+		if hit and rng.percent(t.getShatter(self, t)) and self:getTalentLevel(t) >= 3 then
+			local effs = {}
 
-				-- Go through all shield effects
-				for eff_id, p in pairs(target.tmp) do
-					local e = target.tempeffect_def[eff_id]
-					if e.status == "beneficial" and e.subtype and e.subtype.shield then
-						effs[#effs+1] = {"effect", eff_id}
-					end
+			-- Go through all shield effects
+			for eff_id, p in pairs(target.tmp) do
+				local e = target.tempeffect_def[eff_id]
+				if e.status == "beneficial" and e.subtype and e.subtype.shield then
+					effs[#effs+1] = {"effect", eff_id}
 				end
+			end
 
-				for i = 1, 1 do
-					if #effs == 0 then break end
-					local eff = rng.tableRemove(effs)
+			for i = 1, 1 do
+				if #effs == 0 then break end
+				local eff = rng.tableRemove(effs)
 
-					if eff[1] == "effect" then
-						game.logSeen(self, "#CRIMSON#%s shatters %s shield!", self.name:capitalize(), target.name)
-						target:removeEffect(eff[2])
-					end
+				if eff[1] == "effect" then
+					game.logSeen(self, "#CRIMSON#%s shatters %s shield!", self.name:capitalize(), target.name)
+					target:removeEffect(eff[2])
 				end
 			end
 		end
