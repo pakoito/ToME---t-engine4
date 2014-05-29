@@ -58,10 +58,10 @@ newTalent{
 			end
 		else
 			if oldmucus.duration > 0 then -- Enhance existing mucus
-				oldmucus.duration = oldmucus.duration + 1
+				oldmucus.duration = t.getDur(self, t)
 				oldmucus.dam.bonus_level = oldmucus.dam.bonus_level + 1
 				oldmucus.dam.self_equi = oldmucus.dam.self_equi + 1
-				oldmucus.dam.dam = t.getDamage(self, t) * (1+ self:combatTalentScale(oldmucus.dam.bonus_level, 0.25, 0.7))
+				oldmucus.dam.dam = t.getDamage(self, t) * (1+ self:combatTalentLimit(oldmucus.dam.bonus_level, 1, 0.25, 0.7)) -- Limit < 2x damage
 			end
 		end
 	end,
@@ -79,7 +79,7 @@ newTalent{
 		At talent level 4 or greater, the mucus will expand to a radius 1 area from where it is placed.
 		Your mucus will poison all foes crossing it, dealing %0.1f nature damage every turn for 5 turns (stacking).
 		In addition, each turn, you will restore %0.1f Equilibrium while in your own mucus, and other friendly creatures in your mucus will restore 1 Equilibrium both for you and for themselves.
-		The Poison damage and Equilibrium regeneration increase with Mindpower, and laying down more mucus in the same spot will intensify its effects and extend its duration by 1 turn.]]):
+		The Poison damage and Equilibrium regeneration increase with your Mindpower, and laying down more mucus in the same spot will intensify its effects and refresh its duration.]]):
 		format(dur, dur, damDesc(self, DamageType.NATURE, dam), equi)
 	end,
 }

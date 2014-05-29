@@ -3145,7 +3145,7 @@ newDamageType{
 					src:incEquilibrium(-(dam.equi or 1))
 				end
 			elseif target:canBe("poison") then
-				target:setEffect(target.EFF_POISONED, 5, {src=src, power=dam.dam, apply_power=src:combatMindpower()})
+				target:setEffect(target.EFF_POISONED, 5, {src=src, power=dam.dam, max_power = dam.dam*5, apply_power=src:combatMindpower()})
 			end
 		elseif not target and not src.turn_procs.living_mucus and src:knowTalent(src.T_LIVING_MUCUS) and game.zone and not game.zone.wilderness then
 			src.turn_procs.living_mucus = true
