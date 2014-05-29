@@ -21,7 +21,7 @@
 -- Note: This is consistent with raw damage but is applied after damage multipliers
 local function getShieldStrength(self, t)
 	--return math.max(0, self:combatMindpower())
-	return self:combatTalentMindDamage(t, 10, 120)
+	return self:combatTalentMindDamage(t, 10, 100)
 end
 
 local function getSpikeStrength(self, t)
