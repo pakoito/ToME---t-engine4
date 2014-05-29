@@ -102,7 +102,6 @@ newEntity{ base = "BASE_NPC_YAECH",
 		{type="weapon", subtype="trident", autoreq=true, special_rarity="trident_rarity"},
 	},
 	resolvers.talents{
-		[Talents.T_REACH]={base=3, every=7, max=5},
 		[Talents.T_PYROKINESIS]={base=2, every=7, max=5},
 		[Talents.T_MINDLASH]={base=1, every=7, max=5},
 	},

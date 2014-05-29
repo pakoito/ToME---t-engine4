@@ -2508,10 +2508,6 @@ newTalent{
 	points = 5,
 	rangebonus = function(self,t) return math.max(0, self:combatTalentScale(t, 3, 10)) end,
 	info = function(self, t)
-		local inc = t.rangebonus(self,t)
-		local gtg = self:getTalentLevel(self.T_GREATER_TELEKINETIC_GRASP) >=5 and 1 or 0
-		local add = getGemLevel(self)*t.rangebonus(self, t)
-		return ([[You can extend your mental reach beyond your natural limits using a telekinetically-wielded gemstone or mindstar as a focus. Increases the range of various abilities by %0.1f%% to %0.1f%%, depending on the quality of the gem used as a focus (currently %0.1f%%).]]):
-		format(inc*(1+gtg), inc*(5+gtg), add)
+		return ""
 	end,
 }
