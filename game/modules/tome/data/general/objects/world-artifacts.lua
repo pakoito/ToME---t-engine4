@@ -4949,8 +4949,6 @@ newEntity{ base = "BASE_RING",
 		knockback_immune=1,
 		combat_armor = 5,
 	},
-	max_power = 28, power_regen = 1,
-	use_talent = { id = Talents.T_BIND, level = 2, power = 25 },
 }
 
 newEntity{ base = "BASE_LONGSWORD",
