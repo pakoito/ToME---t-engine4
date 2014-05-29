@@ -103,11 +103,7 @@ newTalent{
 		if not x or not y then return nil end
 		self:project(tg, x, y, DamageType.DISTORTION, {dam=self:mindCrit(t.getDamage(self, t)), knockback=t.getPower(self, t), stun=t.getPower(self, t), distort=DistortionCount(self)})
 		game:playSoundNear(self, "talents/warp")
-		if core.shader.allow("distort") then
-			game.level.map:particleEmitter(self.x, self.y, tg.radius, "gravity_breath", {radius=tg.radius, tx=x-self.x, ty=y-self.y})
-		else
-			game.level.map:particleEmitter(self.x, self.y, tg.radius, "generic_wave", {radius=tg.radius, tx=x-self.x, ty=y-self.y, rm=255, rM=255, gm=180, gM=255, bm=180, bM=255, am=35, aM=90})
-		end
+		game.level.map:particleEmitter(self.x, self.y, tg.radius, "gravity_breath", {radius=tg.radius, tx=x-self.x, ty=y-self.y, allow=core.shader.allow("distort")})
 		return true
 	end,
 	info = function(self, t)
