@@ -2039,7 +2039,7 @@ newEffect{
 			game:delayedLogMessage(self, src, "block_heal", "#CRIMSON##Source# heals from blocking with %s shield!", string.his_her(self))
 		end
 		if eff.properties.ref and src.life then DamageType.defaultProjector(src, src.x, src.y, type, blocked, tmp, true) end
-		if (self:knowTalent(self.T_RIPOSTE) or amt == 0) and src.life then src:setEffect(src.EFF_COUNTERSTRIKE, (1 + dur_inc) * (src.global_speed or 1), {power=eff.power, no_ct_effect=true, src=self, crit_inc=crit_inc, nb=nb}) if eff.properties.sb then if src:canBe("disarm") then src:setEffect(src.EFF_DISARMED, 3, {apply_power=self:combatPhysicalpower()}) else game.logSeen(target, "%s resists the disarming attempt!", src.name:capitalize()) end end end-- specify duration here to avoid stacking for high speed attackers
+		if (self:knowTalent(self.T_RIPOSTE) or amt == 0) and src.life then src:setEffect(src.EFF_COUNTERSTRIKE, (1 + dur_inc) * math.max(1, (src.global_speed or 1)), {power=eff.power, no_ct_effect=true, src=self, crit_inc=crit_inc, nb=nb}) if eff.properties.sb then if src:canBe("disarm") then src:setEffect(src.EFF_DISARMED, 3, {apply_power=self:combatPhysicalpower()}) else game.logSeen(target, "%s resists the disarming attempt!", src.name:capitalize()) end end end-- specify duration here to avoid stacking for high speed attackers
 		return amt
 	end,
 	activate = function(self, eff)
