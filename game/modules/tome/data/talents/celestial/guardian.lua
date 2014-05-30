@@ -152,8 +152,8 @@ newTalent{
 	end,
 	callbackOnRest = function(self, t)
 		-- Resting requires no enemies in view so we can safely clear all stored damage
-		self.retribution_absorb = 0
-		self.retribution_strike = 0
+		-- Clear the stored damage by setting the remaining absorb to the max
+		self.retribution_absorb = self.retribution
 	end,
 	info = function(self, t)
 		local damage = t.getDamage(self, t)
