@@ -115,10 +115,11 @@ newTalent {
 		end
 
 		-- Modify shield combat to use dex.
-		local combat = table.clone(shield.special_combat)
-		combat.dammod.dex = 0
-		combat.dammod.dex = combat.dammod.dex + combat.dammod.str
-		combat.dammod.str = 0
+		local combat = table.clone(shield.special_combat, true)
+		if combat.dammod.str and combat.dammod.str > 0 then
+			combat.dammod.dex = (combat.dammod.dex or 0) + combat.dammod.str
+			combat.dammod.str = nil
+		end
 
 		-- First attack with shield
 		local speed, hit = self:attackTargetWith(target, combat, nil, t.getShieldMult(self, t))
