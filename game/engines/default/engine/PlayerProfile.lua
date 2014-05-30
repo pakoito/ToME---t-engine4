@@ -425,7 +425,7 @@ function _M:waitEvent(name, cb, wait_max)
 	local tries = 0
 	while not stop do
 		if not first then
-			if not self.waiting_event_no_redraw then core.display.forceRedraw() end
+			if not self.waiting_event_no_redraw then pcall(core.display.forceRedraw) end
 			core.game.sleep(50)
 		end
 		local evt = self:popEvent(name)
