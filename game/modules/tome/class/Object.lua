@@ -1228,6 +1228,8 @@ function _M:getTextualDesc(compare_with, use_actor)
 		compare_fields(w, compare_with, field, "max_hate", "%+.2f", "Maximum hate: ")
 		compare_fields(w, compare_with, field, "max_psi", "%+.2f", "Maximum psi: ")
 		compare_fields(w, compare_with, field, "max_vim", "%+.2f", "Maximum vim: ")
+		compare_fields(w, compare_with, field, "max_positive", "%+.2f", "Maximum pos.energy: ")
+		compare_fields(w, compare_with, field, "max_negative", "%+.2f", "Maximum neg.energy: ")
 		compare_fields(w, compare_with, field, "max_air", "%+.2f", "Maximum air capacity: ")
 
 		compare_fields(w, compare_with, field, "combat_spellpower", "%+d", "Spellpower: ")

@@ -44,12 +44,9 @@ newTalent{
 		if not x or not y then return nil end
 		self:project(tg, x, y, DamageType.LIGHT, self:spellCrit(t.getDamage(self, t)), {type="light"})
 
-		if self:getTalentLevel(t) >= 4 then
+		if self:getTalentLevel(t) >= 3 then
 			local _ _, x, y = self:canProject(tg, x, y)
 			self:project({type="ball", x=x, y=y, radius=2, selffire=false}, x, y, DamageType.BLIND, t.getDuration(self, t), {type="light"})
-		else
-			local _ _, x, y = self:canProject(tg, x, y)
-			self:project({type="hit", x=x, y=y, radius=0, selffire=false}, x, y, DamageType.BLIND, t.getDuration(self, t), {type="light"})
 		end
 
 		-- Delay removal of the effect so its still there when no_energy checks
@@ -63,7 +60,7 @@ newTalent{
 	info = function(self, t)
 		local damage = t.getDamage(self, t)
 		return ([[Calls forth a beam of light from the Sun, doing %0.1f Light damage to the target.
-		At level 4 the beam will be so intense it will also blind the target and everyone in a radius 2 around it for %d turns.
+		At level 3 the beam will be so intense it will also blind the target and everyone in a radius 2 around it for %d turns.
 		The damage dealt will increase with your Spellpower.]]):
 		format(damDesc(self, DamageType.LIGHT, damage), t.getDuration(self, t))
 	end,
