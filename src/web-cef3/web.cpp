@@ -620,7 +620,15 @@ void te4_web_inject_key(web_view_type *view, int scancode, int asymb, const char
 		VkCode = VK_TAB;
 	else if (key_code == SDLK_UP)
 		VkCode = VK_UP;
+	else if (unilen == 1 && uni[0] >= '!' && uni[0] <= '@')
+		VkCode = uni[0];
+	else if (unilen == 1 && uni[0] >= '[' && uni[0] <= '`')
+		VkCode = uni[0];
+	else if (unilen == 1 && uni[0] >= '{' && uni[0] <= '~')
+		VkCode = uni[0];
 	else if (unilen == 1 && uni[0] >= 'A' && uni[0] <= 'Z')
+		VkCode = uni[0];
+	else if (unilen == 1 && uni[0] >= 'a' && uni[0] <= 'z')
 		VkCode = uni[0];
 	else if (unilen == 1 && uni[0] >= 'a' && uni[0] <= 'z')
 		VkCode = uni[0];
