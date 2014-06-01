@@ -83,8 +83,13 @@ function _M:ok()
 	if not tonumber(self.c_donate.number) or tonumber(self.c_donate.number) < 5 then return end
 
 	game:unregisterDialog(self)
-	self:simplePopup("Thank you", "Thank you, a paypal page should now open in your browser.")
+
+	local inside = jit and jit.os == "Windows" and core.webview and true or false
+
+	if not inside then self:simplePopup("Thank you", "Thank you, a paypal page should now open in your browser.") end
 
 	local url = ("http://te4.org/ingame-donate/%s/%s/%s/EUR/%s"):format(self.c_donate.number, self.c_recur.checked and "monthly" or "onetime", (profile.auth and profile.auth.drupid) and profile.auth.drupid or "0", self.donation_source)
-	util.browserOpenUrl(url)
+
+	if inside then util.browserOpenUrl(url)
+	else util.browserOpenUrl(url, {webview=true}) end
 end

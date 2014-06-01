@@ -185,7 +185,6 @@ newTalent{
 		if self:isTalentActive(self.T_RAPID_SHOT) then self:forceUseTalent(self.T_RAPID_SHOT, {ignore_energy=true}) end
 		local vals = t.getCombatVals(self, t)
 		return {
-			move = self:addTemporaryValue("never_move", 1),
 			speed = self:addTemporaryValue("combat_physspeed", vals.speed),
 			crit = self:addTemporaryValue("combat_physcrit", vals.crit),
 			atk = self:addTemporaryValue("combat_dam", vals.atk),
@@ -194,7 +193,6 @@ newTalent{
 		}
 	end,
 	deactivate = function(self, t, p)
-		self:removeTemporaryValue("never_move", p.move)
 		self:removeTemporaryValue("combat_physspeed", p.speed)
 		self:removeTemporaryValue("combat_physcrit", p.crit)
 		self:removeTemporaryValue("combat_apr", p.apr)
@@ -204,7 +202,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		local vals = t.getCombatVals(self, t)
-		return ([[You enter a calm, focused stance, increasing your Physical Power (+%d), Accuracy (+%d), Armour penetration (+%d), and critical chance (+%d%%), but reducing your firing speed by %d%% and making you unable to move.
+		return ([[You enter a calm, focused stance, increasing your Physical Power (+%d), Accuracy (+%d), Armour penetration (+%d), and critical chance (+%d%%), but reducing your firing speed by %d%%.
 		The effects will increase with your Dexterity.]]):
 		format(vals.dam, vals.atk, vals.apr, vals.crit, -vals.speed * 100)
 	end,

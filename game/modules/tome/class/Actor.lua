@@ -1828,19 +1828,18 @@ function _M:tooltip(x, y, seen_by)
 		local dur = p.dur + 1
 		if e.status == "detrimental" then
 			if e.type == "physical" then
-				if act then effphysical:add(true, "- ", {"color", "LIGHT_RED"}, (e.decrease > 0) and ("%s(%d)"):format(e.desc,dur) or e.desc, {"color", "WHITE"} ) end
+				effphysical:add(true, "- ", {"color", "LIGHT_RED"}, (e.decrease > 0) and ("%s(%d)"):format(e.desc,dur) or e.desc, {"color", "WHITE"} )
 			elseif e.type == "magical" then
-				if act then effmagical:add(true, "- ", {"color", "DARK_ORCHID"}, (e.decrease > 0) and ("%s(%d)"):format(e.desc,dur) or e.desc, {"color", "WHITE"} ) end
+				effmagical:add(true, "- ", {"color", "DARK_ORCHID"}, (e.decrease > 0) and ("%s(%d)"):format(e.desc,dur) or e.desc, {"color", "WHITE"} )
 			elseif e.type == "mental" then
-				if act then effmental:add(true, "- ", {"color", "YELLOW"}, (e.decrease > 0) and ("%s(%d)"):format(e.desc,dur) or e.desc, {"color", "WHITE"} ) end
+				effmental:add(true, "- ", {"color", "YELLOW"}, (e.decrease > 0) and ("%s(%d)"):format(e.desc,dur) or e.desc, {"color", "WHITE"} )
 			elseif e.type == "other" then
-				if act then effother:add(true, "- ", {"color", "ORCHID"}, (e.decrease > 0) and ("%s(%d)"):format(e.desc,dur) or e.desc, {"color", "WHITE"} ) end
+				effother:add(true, "- ", {"color", "ORCHID"}, (e.decrease > 0) and ("%s(%d)"):format(e.desc,dur) or e.desc, {"color", "WHITE"} )
 			else
-				if act then ts:add(true, "- ", {"color", "LIGHT_RED"}, (e.decrease > 0) and ("%s(%d)"):format(e.desc,dur) or e.desc, {"color", "WHITE"} ) end
-
+				ts:add(true, "- ", {"color", "LIGHT_RED"}, (e.decrease > 0) and ("%s(%d)"):format(e.desc,dur) or e.desc, {"color", "WHITE"} )
 			end		
 		else
-			if act then effbeneficial:add(true, "- ", {"color", "LIGHT_GREEN"}, (e.decrease > 0) and ("%s(%d)"):format(e.desc,dur) or e.desc, {"color", "WHITE"} ) end
+			effbeneficial:add(true, "- ", {"color", "LIGHT_GREEN"}, (e.decrease > 0) and ("%s(%d)"):format(e.desc,dur) or e.desc, {"color", "WHITE"} )
 		end
 	end
 
