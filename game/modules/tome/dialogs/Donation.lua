@@ -84,7 +84,7 @@ function _M:ok()
 
 	game:unregisterDialog(self)
 
-	local inside = jit and jit.os == "Windows" and core.webview and true or false
+	local inside = jit and jit.os ~= "Linux" and core.webview and true or false
 
 	if not inside then self:simplePopup("Thank you", "Thank you, a paypal page should now open in your browser.") end
 
