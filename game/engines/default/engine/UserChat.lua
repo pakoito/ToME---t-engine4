@@ -251,7 +251,7 @@ function _M:event(e)
 
 			local text = ([[#{bold}#Thank you#{normal}# for you donation, your support means a lot for the continued survival of this game.
 
-Your current donation total is #LIGHT_GREEN#%0.2f euro#WHITE# which equals to #ROYAL_BLUE#%d voratun coins to use on te4.org.
+Your current donation total is #LIGHT_GREEN#%0.2f euro#WHITE# which equals to #ROYAL_BLUE#%d voratun coins#WHITE# to use on te4.org.
 Your Item's Vault has #TEAL#%d slots#WHITE#.
 
 Again, thank you, and enjoy Eyal!

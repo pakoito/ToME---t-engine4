@@ -35,12 +35,18 @@ function _M:init()
 		local method, d = util.browserOpenUrl("http://te4.org/addons/tome", {steam=true})
 		if method == "webview" and d then d.unload = function() self:regen() end end
 	end
+	local webdlcload = function()
+		local method, d = util.browserOpenUrl("http://te4.org/tome/dlc", {steam=true})
+		if method == "webview" and d then d.unload = function() self:regen() end end
+	end
 
-	local url1 = Textzone.new{text="You can get new addons at #LIGHT_BLUE##{underline}#http://te4.org/addons/tome#{normal}#", auto_height=true, auto_width=true, fct=webaddonload}
-	local url2 = Textzone.new{text=" ", auto_height=true, auto_width=true, fct=function()end}
+	local url1 = Textzone.new{text="You can get new addons at #LIGHT_BLUE##{underline}#Te4.org Addons#{normal}#", auto_height=true, auto_width=true, fct=webaddonload}
+	local url2 = Textzone.new{text=" and #LIGHT_BLUE##{underline}#Te4.org DLCs#{normal}#", auto_height=true, auto_width=true, fct=webdlcload}
+	local url3 = Textzone.new{text=" ", auto_height=true, auto_width=true, fct=function()end}
 	if core.steam then
-		url1 = Textzone.new{text="You can get new addons at #LIGHT_BLUE##{underline}#Steam Workshop#{normal}#", auto_height=true, auto_width=true, fct=function() util.browserOpenUrl("http://steamcommunity.com/app/"..core.steam.appid().."/workshop/", {webview=true}) end}
-		url2 = Textzone.new{text=" or at #LIGHT_BLUE##{underline}#http://te4.org/addons/tome#{normal}#", auto_height=true, auto_width=true, fct=webaddonload}
+		url1 = Textzone.new{text="You can get new addons on #LIGHT_BLUE##{underline}#Steam Workshop#{normal}#", auto_height=true, auto_width=true, fct=function() util.browserOpenUrl("http://steamcommunity.com/app/"..core.steam.appid().."/workshop/", {webview=true}) end}
+		url2 = Textzone.new{text=", #LIGHT_BLUE##{underline}#Te4.org Addons#{normal}#", auto_height=true, auto_width=true, fct=webaddonload}
+		url3 = Textzone.new{text=" and #LIGHT_BLUE##{underline}#Te4.org DLCs#{normal}#", auto_height=true, auto_width=true, fct=webdlcload}
 	end
 
 	self.c_compat = Checkbox.new{default=false, width=math.floor(self.iw / 3 - 40), title="Show incompatible", on_change=function() self:switch() end}
@@ -72,6 +78,7 @@ function _M:init()
 	self:loadUI{
 		{left=0, top=0, ui=url1},
 		{left=url1, top=0, ui=url2},
+		{left=url2, top=0, ui=url3},
 		{left=0, top=url1.h, ui=self.c_list},
 		{left=self.c_list.w+sep.w, top=url1.h, ui=self.c_adds},
 		{left=0, bottom=0, ui=self.c_compat},
