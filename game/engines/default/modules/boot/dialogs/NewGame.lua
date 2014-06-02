@@ -36,7 +36,7 @@ function _M:init()
 	self.c_switch = Checkbox.new{default=false, width=math.floor(self.iw / 3 - 40), title="Show all versions", on_change=function() self:switch() end}
 	self.c_compat = Checkbox.new{default=false, width=math.floor(self.iw / 3 - 40), title="Show incompatible", on_change=function() self:switch() end}
 
-	local url = Textzone.new{text="You can get new games at #LIGHT_BLUE##{underline}#http://te4.org/games#{normal}#", auto_height=true, auto_width=true, fct=function() util.browserOpenUrl("http://te4.org/games") end}
+	local url = Textzone.new{text="You can get new games at\n#LIGHT_BLUE##{underline}#http://te4.org/games#{normal}#", auto_height=true, auto_width=true, fct=function() util.browserOpenUrl("http://te4.org/games") end}
 
 	self:generateList()
 
@@ -73,7 +73,7 @@ function _M:on_register()
 			not profile.generic or
 			not profile.generic.modules_played or
 			not profile.generic.modules_played.tome or
-			profile.generic.modules_played.tome < 5 * 60 * 60
+			profile.generic.modules_played.tome < 20 * 60 * 60
 		)
 	then
 		game:unregisterDialog(self)
