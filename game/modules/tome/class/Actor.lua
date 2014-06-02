@@ -3485,6 +3485,7 @@ function _M:updateModdableTile()
 	i = self.inven[self.INVEN_HEAD]; if i and i[1] and i[1].moddable_tile then add[#add+1] = {image = base..(i[1].moddable_tile)..".png", auto_tall=1} end
 	i = self.inven[self.INVEN_HANDS]; if i and i[1] and i[1].moddable_tile then add[#add+1] = {image = base..(i[1].moddable_tile)..".png", auto_tall=1} end
 	i = self.inven[self.INVEN_CLOAK]; if i and i[1] and i[1].moddable_tile_hood then add[#add+1] = {image = base..(i[1].moddable_tile):format("hood")..".png", auto_tall=1} end
+	i = self.inven[self.INVEN_QUIVER]; if i and i[1] and i[1].moddable_tile then add[#add+1] = {image = base..(i[1].moddable_tile)..".png", auto_tall=1} end
 	if not self:attr("disarmed") then
 		i = self.inven[self.INVEN_MAINHAND]; if i and i[1] and i[1].moddable_tile then
 			add[#add+1] = {image = base..(i[1].moddable_tile):format("right")..".png", auto_tall=1}
@@ -3499,8 +3500,6 @@ function _M:updateModdableTile()
 			if i[1].moddable_tile_ornament then add[#add+1] = {image = base..(i[1].moddable_tile_ornament):format("left")..".png", auto_tall=1} end
 		end
 	end
-
-	i = self.inven[self.INVEN_QUIVER]; if i and i[1] and i[1].moddable_tile then add[#add+1] = {image = base..(i[1].moddable_tile)..".png", auto_tall=1} end
 
 	self:triggerHook{"Actor:updateModdableTile:front", base=base, add=add}
 
