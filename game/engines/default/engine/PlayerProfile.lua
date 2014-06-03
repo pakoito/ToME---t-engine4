@@ -706,7 +706,19 @@ end
 
 function _M:sendError(what, err)
 	print("[ONLINE PROFILE] sending error")
-	core.profile.pushOrder(table.serialize{o="SendError", login=self.login, what=what, err=err, module=game.__mod_info.short_name, version=game.__mod_info.version_name})
+	local addons = {}
+	for _, a in pairs(game.__mod_info.addons or {}) do
+		addons[#addons+1] = a.version_name or "--"
+	end
+	core.profile.pushOrder(table.serialize{
+		o="SendError",
+		login=self.login,
+		what=what,
+		err=err,
+		module=game.__mod_info.short_name,
+		version=game.__mod_info.version_name,
+		addons=table.concat(addons, ", "),
+	})
 end
 
 function _M:registerNewCharacter(module)
