@@ -6774,9 +6774,11 @@ newEntity{ base = "BASE_MASSIVE_ARMOR",
 		local storepower=self.power
 		local _, _, inven_id = who:findInAllInventoriesByObject(self)
 		who:onTakeoff(self, inven_id, true)
+
+		local DamageType = require "engine.DamageType"
 		
 		self.wielder = {
-			inc_stats = { [Stats.STAT_STR] = math.ceil(10 + boost * dur/5),  [Stats.STAT_CON] = math.ceil(10 + boost * dur/5), },
+			inc_stats = { [who.STAT_STR] = math.ceil(10 + boost * dur/5),  [who.STAT_CON] = math.ceil(10 + boost * dur/5), },
 			combat_armor = math.ceil(30 + boost * dur * 0.4),
 			combat_dam = math.ceil(10 + boost/5 * dur),
 			combat_physresist = math.ceil(15 + boost/5 * dur),
