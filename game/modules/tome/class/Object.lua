@@ -221,7 +221,12 @@ function _M:descAttribute(attr)
 	elseif attr == "INSCRIPTION" then
 		game.player.__inscription_data_fake = self.inscription_data
 		local t = self:getTalentFromId("T_"..self.inscription_talent.."_1")
-		local desc = t.short_info(game.player, t)
+		local desc = "--"
+		if t then
+			local ok
+			ok, desc = pcall(t.short_info, game.player, t)
+			if not ok then desc = "--" end
+		end
 		game.player.__inscription_data_fake = nil
 		return ("%s"):format(desc)
 	end
@@ -1460,10 +1465,12 @@ function _M:getTextualDesc(compare_with, use_actor)
 		use_actor.__inscription_data_fake = self.inscription_data
 		local t = self:getTalentFromId("T_"..self.inscription_talent.."_1")
 		if t then
-			local tdesc = use_actor:getTalentFullDescription(t)
-			desc:add({"color","YELLOW"}, "When inscribed on your body:", {"color", "LAST"}, true)
-			desc:merge(tdesc)
-			desc:add(true)
+			local ok, tdesc = pcall(use_actor.getTalentFullDescription, use_actor, t)
+			if ok and tdesc then
+				desc:add({"color","YELLOW"}, "When inscribed on your body:", {"color", "LAST"}, true)
+				desc:merge(tdesc)
+				desc:add(true)
+			end
 		end
 		use_actor.__inscription_data_fake = nil
 	end

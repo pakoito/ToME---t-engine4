@@ -586,7 +586,7 @@ newEntity{
 			target.talents_cd[t.id] = turns
 			
 			local tg = {type="hit", range=1}
-			who:project(tg, target.x, target.y, engine.DamageType.ARCANE, damage)
+			who:project(tg, target.x, target.y, engine.DamageType.ARCANE, tonumber(util.getval(damage, who, t)) or 0)
 			
 			game.logSeen(target, "%s's %s has been #ORCHID#burned#LAST#!", target.name:capitalize(), t.name)
 		end},

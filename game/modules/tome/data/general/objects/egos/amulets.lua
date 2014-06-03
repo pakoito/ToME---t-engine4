@@ -582,8 +582,8 @@ newEntity{
 
 		e.wielder.talents_types_mastery = {}
 		local v = (10 + rng.mbonus(math.ceil(30 * e.material_level / 5), resolvers.current_level, 50)) / 100
-		e.wielder.talents_types_mastery[tt] = v
-		e.wielder.talents_types_mastery[tt2] = v
+		if tt then e.wielder.talents_types_mastery[tt] = v end
+		if tt2 then e.wielder.talents_types_mastery[tt2] = v end
 		e.cost = e.cost + v * 60
 	end),
 }
