@@ -1273,7 +1273,11 @@ newEffect{
 		local share = cb.value * eff.sharePct
 		
 		-- deal the redirected damage as physical because I don't know how to preserve the damage type in a callback
-		DamageType:get(DamageType.PHYSICAL).projector(self or eff.src, eff.trgt.x, eff.trgt.y, DamageType.PHYSICAL, share)
+		if not self.__grapling_feedback_damage then
+			self.__grapling_feedback_damage = true
+			DamageType:get(DamageType.PHYSICAL).projector(self or eff.src, eff.trgt.x, eff.trgt.y, DamageType.PHYSICAL, share)
+			self.__grapling_feedback_damage = nil
+		end
 		
 		return cb.value - share
 	end,
