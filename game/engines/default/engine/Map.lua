@@ -27,6 +27,11 @@ local DamageType = require "engine.DamageType"
 --- Represents a level map, handles display and various low level map work
 module(..., package.seeall, class.make)
 
+-- Keep a list of currently existing maps
+-- this is a weak table so it doesn't prevents GC
+__map_store = {}
+setmetatable(__map_store, {__mode="k"})
+
 --- The map vertical depth storage
 zdepth = 20
 
@@ -244,9 +249,19 @@ function _M:makeCMap()
 		self._fovcache.path_caches[ps] = core.fov.newCache(self.w, self.h)
 	end
 
+	-- Cunning trick here!
+	-- the callback we give to _map:zCallback is a function that references self
+	-- but self contains _map so it would create a cyclic reference and prevent GC'ing
+	-- thus we store a reference to a weak table and put self into it
+	-- this way when self dies the weak reference dies and does not prevent GC'ing
+	local weak = setmetatable({}, {__mode="v"})
+	weak[1] = self
+
 	for z = 0, self.zdepth - 1 do
 		self._map:zCallback(z, function(z, nb_keyframe, prevfbo)
-			return self:zDisplay(z, nb_keyframe, prevfbo)
+			if weak[1] then
+				return weak[1]:zDisplay(z, nb_keyframe, prevfbo)
+			end
 		end)
 	end
 end
@@ -266,6 +281,7 @@ end
 
 function _M:loaded()
 	self:makeCMap()
+	__map_store[self] = true
 
 	self.path_strings_computed = {}
 	for i, ps in ipairs(self.path_strings) do
