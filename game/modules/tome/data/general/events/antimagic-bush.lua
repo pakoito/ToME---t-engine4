@@ -29,7 +29,7 @@ if engine.Map.tiles.nicer_tiles then
 	g.add_displays = g.add_displays or {}
 	g.add_displays[#g.add_displays+1] = mod.class.Grid.new{image="terrain/antimagic_bush.png", z=5}
 end
-g.nice_tiler = nil
+g:altered()
 game.zone:addEntity(game.level, g, "terrain", x, y)
 
 if core.shader.active(4) then

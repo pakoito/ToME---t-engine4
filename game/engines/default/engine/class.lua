@@ -168,7 +168,12 @@ function _M:clone(t)
 	return n
 end
 
-local function clonerecursfull(clonetable, d, noclonecall)
+local function clonerecursfull(clonetable, d, noclonecall, use_saveinstead)
+	if use_saveinstead and d.__CLASSNAME and d.__SAVEINSTEAD then
+		d = d.__SAVEINSTEAD
+		if clonetable[d] then return d, 1 end
+	end
+
 	local nb = 0
 	local add
 	local n = {}
@@ -178,11 +183,11 @@ local function clonerecursfull(clonetable, d, noclonecall)
 	while k do
 		local nk, ne = k, e
 		if clonetable[k] then nk = clonetable[k]
-		elseif type(k) == "table" then nk, add = clonerecursfull(clonetable, k, noclonecall) nb = nb + add
+		elseif type(k) == "table" then nk, add = clonerecursfull(clonetable, k, noclonecall, use_saveinstead) nb = nb + add
 		end
 
 		if clonetable[e] then ne = clonetable[e]
-		elseif type(e) == "table" and (type(k) ~= "string" or k ~= "__threads") then ne, add = clonerecursfull(clonetable, e, noclonecall) nb = nb + add
+		elseif type(e) == "table" and (type(k) ~= "string" or k ~= "__threads") then ne, add = clonerecursfull(clonetable, e, noclonecall, use_saveinstead) nb = nb + add
 		end
 		n[nk] = ne
 
@@ -198,7 +203,7 @@ end
 -- @return the clone and the number of cloned objects
 function _M:cloneFull(t)
 	local clonetable = {}
-	local n = clonerecursfull(clonetable, self)
+	local n = clonerecursfull(clonetable, self, nil, nil)
 	if t then
 		for k, e in pairs(t) do n[k] = e end
 	end
@@ -211,7 +216,7 @@ end
 -- @return the clone and the number of cloned objects
 function _M:cloneForSave()
 	local clonetable = {}
-	return clonerecursfull(clonetable, self, true)
+	return clonerecursfull(clonetable, self, true, true)
 --	return core.serial.cloneFull(self)
 end
 

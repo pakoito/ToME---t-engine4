@@ -149,7 +149,7 @@ It should automatically create a portal back, but it might not be near your arri
 				if g.change_level then return end
 				g = g:clone()
 				g:removeAllMOs(true)
-				g.nice_tiler = nil
+				g:altered()
 				g.show_tooltip = true
 				g.name = "Exploratory Farportal exit"
 				g.display = '&' g.color_r = colors.VIOLET.r g.color_g = colors.VIOLET.g g.color_b = colors.VIOLET.b

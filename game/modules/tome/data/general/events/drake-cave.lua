@@ -91,7 +91,7 @@ if engine.Map.tiles.nicer_tiles then
 	g.add_displays = g.add_displays or {}
 	g.add_displays[#g.add_displays+1] = mod.class.Grid.new{image="terrain/crystal_ladder_down.png", z=5}
 end
-g.nice_tiler = nil
+g:altered()
 g:initGlow()
 g.dragon_kind = kind
 g.real_change = changer

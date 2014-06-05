@@ -158,6 +158,10 @@ function _M:runReal()
 	self.zone_font = core.display.newFont("/data/font/DroidSans.ttf", 12)
 
 	self.inited = true
+
+	if self.level and self.level.map then
+		self.nicer_tiles:postProcessLevelTilesOnLoad(self.level)
+	end
 end
 
 --- Resize the hotkeys
@@ -251,6 +255,7 @@ function _M:newGame()
 			-- Generate
 			if self.player.__game_difficulty then self:setupDifficulty(self.player.__game_difficulty) end
 			self:setupPermadeath(self.player)
+			--self:changeLevel(1, "test")
 			self:changeLevel(self.player.starting_level or 1, self.player.starting_zone, {force_down=self.player.starting_level_force_down})
 			
 			print("[PLAYER BIRTH] resolve...")
@@ -1575,6 +1580,8 @@ function _M:setupCommands()
 			print("===============")
 		end end,
 		[{"_g","ctrl"}] = function() if config.settings.cheat then
+			game:changeLevel(1, "test")
+do return end
 			collectgarbage("collect")
 			local nb = 0
 			for k, e in pairs(__uids) do nb = nb + 1 end

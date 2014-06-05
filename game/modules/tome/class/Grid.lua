@@ -42,6 +42,13 @@ function _M:initGlow()
 	end
 end
 
+function _M:altered(t)
+	if t then for k, v in pairs(t) do self[k] = v end end
+	self.__SAVEINSTEAD = nil
+	self.__nice_tile_base = nil
+	self.nice_tiler = nil
+end
+
 function _M:block_move(x, y, e, act, couldpass)
 	-- Path strings
 	if not e then e = {}

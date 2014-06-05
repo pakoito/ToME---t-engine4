@@ -30,6 +30,14 @@ function _M:init()
 	self.edits = {}
 end
 
+local function doclone(g, full)
+	local saveinstead = g.__SAVEINSTEAD
+	if full then g = g:cloneFull()
+	else g = g:clone() end
+	g.__SAVEINSTEAD = saveinstead
+	return g
+end
+
 function _M:getTile(name)
 	if not name then return end
 
@@ -46,7 +54,7 @@ function _M:getTile(name)
 		e = self.repo[name]
 	end
 	if e and e.force_clone then
-		e = e:clone()
+		e = doclone(e)
 	end
 	return e
 end
@@ -65,12 +73,33 @@ function _M:edit(i, j, id, e)
 	ee[#ee+1] = {use_id=id, add_displays=e.add_displays, add_mos=e.add_mos, add_mos_shader=e.add_mos_shader, image=e.image, min=e.min, max=e.max, z=e.z, copy_base=e.copy_base}
 end
 
-function _M:handle(level, i, j)
+function _M:handle(level, i, j, use_ntl)
 	local g = level.map(i, j, Map.TERRAIN)
 	if g and Map.tiles.nicer_tiles then
-		if g.nice_tiler then self["niceTile"..g.nice_tiler.method:capitalize()](self, level, i, j, g, g.nice_tiler) end
-		if g.nice_editer then self["editTile"..g.nice_editer.method:capitalize()](self, level, i, j, g, g.nice_editer) end
-		if g.nice_editer2 then self["editTile"..g.nice_editer2.method:capitalize()](self, level, i, j, g, g.nice_editer2) end
+		if g.nice_tiler or g.nice_editer or g.nice_editer2 then
+			if use_ntl and not g.__ntl then return end
+
+			if g.define_as and not g.__SAVEINSTEAD then
+				local cg
+				if self.saveinstead_store then
+					if self.saveinstead_store[g] then
+						cg = self.saveinstead_store[g]
+					else
+						cg = g:cloneFull()
+						cg.__ntl = true
+						self.saveinstead_store[g] = cg
+					end
+				else
+					cg = g:cloneFull()
+					cg.__ntl = true
+				end
+
+				g.__SAVEINSTEAD = cg
+			end
+			if g.nice_tiler then self["niceTile"..g.nice_tiler.method:capitalize()](self, level, i, j, g, g.nice_tiler) end
+			if g.nice_editer then self["editTile"..g.nice_editer.method:capitalize()](self, level, i, j, g, g.nice_editer) end
+			if g.nice_editer2 then self["editTile"..g.nice_editer2.method:capitalize()](self, level, i, j, g, g.nice_editer2) end
+		end
 	end
 end
 
@@ -87,7 +116,9 @@ function _M:replaceAll(level)
 		if og and (og.change_zone or og.change_level) then
 			print("[NICE TILER] *warning* refusing to remove zone/level changer at ", r[1], r[2], og.change_zone, og.change_level)
 		else
-			level.map(r[1], r[2], Map.TERRAIN, overlay(self, level, "replace", r[1], r[2], r[3]))
+			local no = overlay(self, level, "replace", r[1], r[2], r[3])
+			if og.__SAVEINSTEAD then no.__SAVEINSTEAD = og.__SAVEINSTEAD end
+			level.map(r[1], r[2], Map.TERRAIN, no)
 		end
 	end
 	self.repl = {}
@@ -97,13 +128,13 @@ function _M:replaceAll(level)
 		local g = level.map(i, j, Map.TERRAIN)
 		if g.__nice_tile_base then
 			local base = g.__nice_tile_base
-			g = base:clone()
+			g = doclone(base)
 			g:removeAllMOs()
 			g.__nice_tile_base = base
 		else
-			g = g:clone()
+			g = doclone(g)
 			g:removeAllMOs()
-			g.__nice_tile_base = g:clone()
+			g.__nice_tile_base = doclone(g)
 		end
 
 		local id = {g.name or "???"}
@@ -119,7 +150,7 @@ function _M:replaceAll(level)
 		-- Otherwise compute this new combo and store the entity
 		else
 			local cloned = false
-			if not g.force_clone or not self.edit_entity_store then g = g:cloneFull() g.force_clone = true cloned = true end
+			if not g.force_clone or not self.edit_entity_store then g = doclone(g, true) g.force_clone = true cloned = true end
 
 			g:removeAllMOs(true)
 
@@ -178,25 +209,45 @@ function _M:postProcessLevelTiles(level)
 	if not Map.tiles.nicer_tiles then return end
 
 	self.edit_entity_store = {}
+	self.saveinstead_store = {}
 	self.repo = {}
 
 	for i = 0, level.map.w - 1 do for j = 0, level.map.h - 1 do
-		self:handle(level, i, j)
+		self:handle(level, i, j, false)
 	end end
 
 	self:replaceAll(level)
 
 	self.edit_entity_store = nil
+	self.saveinstead_store = nil
+end
+
+function _M:postProcessLevelTilesOnLoad(level)
+	if not Map.tiles.nicer_tiles then return end
+
+	self.edit_entity_store = {}
+	self.saveinstead_store = {}
+	self.repo = {}
+
+	for i = 0, level.map.w - 1 do for j = 0, level.map.h - 1 do
+		self:handle(level, i, j, true)
+	end end
+
+	self:replaceAll(level)
+
+	self.edit_entity_store = nil
+	self.saveinstead_store = nil
 end
 
 function _M:updateAround(level, x, y)
 	if not Map.tiles.nicer_tiles then return end
 
 	self.edit_entity_store = nil
+	self.saveinstead_store = nil
 	self.repo = {}
 
 	for i = x-1, x+1 do for j = y-1, y+1 do
-		self:handle(level, i, j)
+		self:handle(level, i, j, false)
 	end end
 
 	self:replaceAll(level)

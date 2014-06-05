@@ -26,13 +26,12 @@ level.data.on_enter_list.sludgenest = function()
 
 	game.level.data.sludgenest_added = true
 	local g = game.level.map(spot.x, spot.y, engine.Map.TERRAIN):cloneFull()
-	g.__nice_tile_base = nil
 	g.name = "Way into a strange lush forest"
 	g.display='>' g.color_r=100 g.color_g=255 g.color_b=0 g.notice = true
 	g.change_level=1 g.change_zone="sludgenest" g.glow=true
 	g.add_displays = g.add_displays or {}
 	g.add_displays[#g.add_displays+1] = mod.class.Grid.new{image="terrain/jungle/jungle_tree_11.png", display_y=-1, display_h=2, z=16}
-	g.nice_tiler = nil
+	g:altered()
 	g:initGlow()
 	game.zone:addEntity(game.level, g, "terrain", spot.x, spot.y)
 	print("[WORLDMAP] sludgenest at", spot.x, spot.y)

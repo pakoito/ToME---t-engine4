@@ -110,7 +110,7 @@ if engine.Map.tiles.nicer_tiles then
 		{name="naga_portal_smoke", rad=2, args={smoke="particles_images/smoke_dark"}},
 	}}
 end
-g.nice_tiler = nil
+g:altered()
 g.grow = nil g.dig = nil
 g:initGlow()
 g.special = true
