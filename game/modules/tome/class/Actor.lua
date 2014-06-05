@@ -1176,10 +1176,20 @@ end
 function _M:defineDisplayCallback()
 	if not self._mo then return end
 
+	-- Cunning trick here!
+	-- the callback we give to mo:displayCallback is a function that references self
+	-- but self contains mo so it would create a cyclic reference and prevent GC'ing
+	-- thus we store a reference to a weak table and put self into it
+	-- this way when self dies the weak reference dies and does not prevent GC'ing
+	local weak = setmetatable({[1]=self}, {__mode="v"})
+
 	local backps = self:getParticlesList(true)
 	local ps = self:getParticlesList()
 
 	local function tactical(x, y, w, h, zoom, on_map, tlx, tly)
+		local self = weak[1]
+		if not self then return end
+
 		if game.level and game.level.map.view_faction and game.always_target and game.always_target ~= "old" then
 			if on_map then
 				self:smallTacticalFrame(game.level.map, x, y, w, h, zoom, on_map, tlx, tly)
@@ -1200,6 +1210,9 @@ function _M:defineDisplayCallback()
 	end
 
 	local function particles(x, y, w, h, zoom, on_map)
+		local self = weak[1]
+		if not self then return end
+
 		local e
 		local dy = 0
 		if h > w then dy = (h - w) / 2 end
@@ -1213,6 +1226,9 @@ function _M:defineDisplayCallback()
 	end
 
 	local function backparticles(x, y, w, h, zoom, on_map)
+		local self = weak[1]
+		if not self then return end
+
 		local e
 		local dy = 0
 		if h > w then dy = (h - w) / 2 end
@@ -1736,7 +1752,7 @@ function _M:tooltip(x, y, seen_by)
 	for t, v in pairs(self.resists) do
 		if t == "all" then 
 			ts:add({"color", "LIGHT_BLUE"}, tostring(math.floor(v)) .. "%", " ", {"color", "LAST"}, "all, ")
-		elseif math.abs(v) >= 20 then
+		elseif type(t) == "string" and math.abs(v) >= 20 then
 			local res = tostring ( math.floor(self:combatGetResist(t)) ) .. "%"
 			if v > 0 then  
 				ts:add({"color", "LIGHT_GREEN"}, res, " ", {"color", "LAST"}, DamageType:get(t).name, ", ")
