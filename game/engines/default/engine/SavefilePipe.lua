@@ -100,6 +100,7 @@ end
 -- @param class a class name, if different from the default one
 -- @param on_end a function to call when this object is saved; this can be nil
 function _M:push(savename, type, object, class, on_end)
+	core.game.resetLocale()
 	if game.onSavefilePush then game:onSavefilePush(savename, type, object, class) end
 
 	-- Cant save twice the same thing before it finishes

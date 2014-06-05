@@ -24,15 +24,16 @@ return {
 	max_level = 4,
 	decay = {300, 800},
 	actor_adjust_level = function(zone, level, e) return zone.base_level + e:getRankLevelAdjust() + level.level-1 + rng.range(-1,2) end,
-	width = 15, height = 15,
+	width = 5, height = 5,
 --	all_remembered = true,
 	all_lited = true,
 	no_level_connectivity = true,
 	generator =  {
 		map = {
 -- [[
-			class = "engine.generator.map.Static",
-			map = "zones/test",
+			class = "engine.generator.map.Empty",
+			up = "FLOOR",
+			floor = "FLOOR",
 --]]
 --[[
 			class = "engine.generator.map.Building",
@@ -83,14 +84,6 @@ return {
 			nb_trap = {20, 30},
 		},
 ]]
-	},
-	levels =
-	{
-		[1] = {
-			generator = { map = {
-				up = "UP_WILDERNESS",
-			}, },
-		},
 	},
 --[[
 	post_process = function(level)

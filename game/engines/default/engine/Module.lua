@@ -708,6 +708,9 @@ function _M:instanciate(mod, name, new_game, no_reboot, extra_module_info)
 
 	mod.version_name = ("%s-%d.%d.%d"):format(mod.short_name, mod.version[1], mod.version[2], mod.version[3])
 
+	-- Make sure locale is correct
+	core.game.resetLocale()
+
 	-- Turn based by default
 	core.game.setRealtime(0)
 

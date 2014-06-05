@@ -17,5 +17,5 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-load("/data/zones/town-angolwen/npcs.lua", rarity(0))
-load("/data/zones/golem-graveyard/npcs.lua", rarity(0))
+--load("/data/zones/town-angolwen/npcs.lua", rarity(0))
+--load("/data/zones/golem-graveyard/npcs.lua", rarity(0))

@@ -404,6 +404,7 @@ end
 
 --- Save a settings file
 function _M:saveSettings(file, data)
+	core.game.resetLocale()
 	local restore = fs.getWritePath()
 	fs.setWritePath(engine.homepath)
 	local f, msg = fs.open("/settings/"..file..".cfg", "w")

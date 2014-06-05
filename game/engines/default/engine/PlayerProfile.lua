@@ -269,6 +269,7 @@ end
 function _M:saveGenericProfile(name, data, nosync, nowrite)
 	-- Delay when we are currently saving
 	if not profile then return end
+	core.game.resetLocale()
 	if savefile_pipe and savefile_pipe.saving then savefile_pipe:pushGeneric("saveGenericProfile", function() self:saveGenericProfile(name, data, nosync) end) return end
 
 	if not generic_profile_defs[name] then print("[PROFILE] refusing unknown generic data", name) return end
@@ -313,6 +314,7 @@ end
 --- Saves a module profile data
 function _M:saveModuleProfile(name, data, nosync, nowrite)
 	if module == "boot" then return end
+	core.game.resetLocale()
 	if not game or not game.__mod_info.profile_defs then return end
 
 	-- Delay when we are currently saving

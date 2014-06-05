@@ -252,7 +252,7 @@ function _M:newGame()
 			if self.player.__game_difficulty then self:setupDifficulty(self.player.__game_difficulty) end
 			self:setupPermadeath(self.player)
 			self:changeLevel(self.player.starting_level or 1, self.player.starting_zone, {force_down=self.player.starting_level_force_down})
-
+			
 			print("[PLAYER BIRTH] resolve...")
 			self.player:resolve()
 			self.player:resolve(nil, true)
@@ -1575,7 +1575,14 @@ function _M:setupCommands()
 			print("===============")
 		end end,
 		[{"_g","ctrl"}] = function() if config.settings.cheat then
-			game.log("lol")
+			collectgarbage("collect")
+			local nb = 0
+			for k, e in pairs(__uids) do nb = nb + 1 end
+			game.log("NB: " .. nb)
+			for z, _ in pairs(engine.Zone.__zone_store) do
+				game.log("Zone store: " .. z.name)
+			end
+
 do return end
 			local f, err = loadfile("/data/general/events/fearscape-portal.lua")
 			print(f, err)

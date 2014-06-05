@@ -1015,7 +1015,6 @@ void boot_lua(int state, bool rebooting, int argc, char *argv[])
 
 		/***************** Lua Init *****************/
 		L = lua_open();  /* create state */
-		printf("===top %d\n", lua_gettop(L));
 		luaL_openlibs(L);  /* open libraries */
 		luaopen_physfs(L);
 		luaopen_core(L);

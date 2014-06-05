@@ -252,6 +252,14 @@ function _M:setupCommands()
 
 	-- One key handled for normal function
 	self.key:unicodeInput(true)
+	self.key:addCommands{
+		[{"_g","ctrl"}] = function() if config.settings.cheat then
+			collectgarbage("collect")
+			local nb = 0
+			for k, e in pairs(__uids) do nb = nb + 1 end
+			game.log("NB: " .. nb)
+		end end,
+	}
 	self.key:addBinds
 	{
 		-- Movements

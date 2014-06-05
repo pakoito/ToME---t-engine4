@@ -37,6 +37,7 @@
 #include "core_lua.h"
 #include <math.h>
 #include <time.h>
+#include <locale.h>
 
 #ifdef __APPLE__
 #include <libpng/png.h>
@@ -560,6 +561,12 @@ static int lua_get_reboot_message(lua_State *L)
 	return 1;
 }
 
+static int lua_reset_locale(lua_State *L)
+{
+	setlocale(LC_NUMERIC, "C");
+	return 0;
+}
+
 static const struct luaL_Reg gamelib[] =
 {
 	{"setRebootMessage", lua_set_reboot_message},
@@ -573,6 +580,7 @@ static const struct luaL_Reg gamelib[] =
 	{"setRealtime", lua_set_realtime},
 	{"setFPS", lua_set_fps},
 	{"checkError", lua_check_error},
+	{"resetLocale", lua_reset_locale},
 	{NULL, NULL},
 };
 
