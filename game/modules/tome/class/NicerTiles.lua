@@ -30,6 +30,14 @@ function _M:init()
 	self.edits = {}
 end
 
+local function doclone(g, full)
+	local saveinstead = g.__SAVEINSTEAD
+	if full then g = g:cloneFull()
+	else g = g:clone() end
+	g.__SAVEINSTEAD = saveinstead
+	return g
+end
+
 function _M:getTile(name)
 	if not name then return end
 
@@ -46,7 +54,7 @@ function _M:getTile(name)
 		e = self.repo[name]
 	end
 	if e and e.force_clone then
-		e = e:cloneFull()
+		e = doclone(e)
 	end
 	return e
 end
@@ -73,7 +81,8 @@ function _M:handle(level, i, j, use_ntl)
 
 			if g.define_as and not g.__SAVEINSTEAD then
 				local cg
-				if self.saveinstead_store[g] then cg = self.saveinstead_store[g]
+				if self.saveinstead_store[g] then
+					cg = self.saveinstead_store[g]
 				else
 					cg = g:cloneFull()
 					cg.__ntl = true
@@ -114,13 +123,13 @@ function _M:replaceAll(level)
 		local g = level.map(i, j, Map.TERRAIN)
 		if g.__nice_tile_base then
 			local base = g.__nice_tile_base
-			g = base:cloneFull()
+			g = doclone(base)
 			g:removeAllMOs()
 			g.__nice_tile_base = base
 		else
-			g = g:cloneFull()
+			g = doclone(g)
 			g:removeAllMOs()
-			g.__nice_tile_base = g:cloneFull()
+			g.__nice_tile_base = doclone(g)
 		end
 
 		local id = {g.name or "???"}
@@ -136,7 +145,7 @@ function _M:replaceAll(level)
 		-- Otherwise compute this new combo and store the entity
 		else
 			local cloned = false
-			if not g.force_clone or not self.edit_entity_store then g = g:cloneFull() g.force_clone = true cloned = true end
+			if not g.force_clone or not self.edit_entity_store then g = doclone(g, true) g.force_clone = true cloned = true end
 
 			g:removeAllMOs(true)
 

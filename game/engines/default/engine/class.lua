@@ -169,15 +169,15 @@ function _M:clone(t)
 end
 
 local function clonerecursfull(clonetable, d, noclonecall, use_saveinstead)
+	if use_saveinstead and d.__CLASSNAME and d.__SAVEINSTEAD then
+		d = d.__SAVEINSTEAD
+		if clonetable[d] then return d, 1 end
+	end
+
 	local nb = 0
 	local add
 	local n = {}
 	clonetable[d] = n
-
-	if use_saveinstead and d.__CLASSNAME and d.__SAVEINSTEAD then
-		d = d.__SAVEINSTEAD
-		if clonetable[d] then return d, nb + 1 end
-	end
 
 	local k, e = next(d)
 	while k do
