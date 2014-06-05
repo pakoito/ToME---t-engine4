@@ -1971,6 +1971,7 @@ newTalent{
 
 		for i = 1, t.getNb(self, t) do
 			local g = rng.tableRemove(grids)
+			if not g then break end
 			meteor(self, g.x, g.y, t.getDamage(self, t))
 		end
 
