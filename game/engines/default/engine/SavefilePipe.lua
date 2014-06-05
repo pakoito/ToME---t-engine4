@@ -118,7 +118,7 @@ function _M:push(savename, type, object, class, on_end)
 	local Savefile = require(class)
 	local id = Savefile["nameSave"..type:lower():capitalize()](Savefile, object)
 
-	if #self.pipe == 0 then savefile_pipe.current_nb = 0 self:steamCleanup() end
+	if #self.pipe == 0 then savefile_pipe.start_time = os.time() savefile_pipe.current_nb = 0 self:steamCleanup() end
 
 	local clone, nb = object:cloneForSave()
 	self.pipe_types[type] = self.pipe_types[type] or {}
@@ -237,6 +237,10 @@ function _M:doThread()
 		print("[SAVEFILE PIPE] on end", p.name)
 		p.fct()
 		table.remove(self.on_done, 1)
+	end
+
+	if savefile_pipe.start_time then
+		print("[SAVEFILE PIPE] saving took "..(os.time() - savefile_pipe.start_time).." seconds")
 	end
 end
 

@@ -1782,6 +1782,49 @@ function util.loadfilemods(file, env)
 	return prev
 end
 
+--- Find a reference to the given value inside a table and all it contains
+function util.findAllReferences(t, what)
+	local seen = {}
+	local function recurs(t, data)
+		if seen[t] then return end
+		seen[t] = true
+		for k, e in pairs(t) do
+			if type(k) == "table" then
+				local data = table.clone(data)
+				data[#data+1] = "k:"..tostring(k)
+				recurs(k, data)
+			end
+			if type(e) == "table" then
+				local data = table.clone(data)
+				data[#data+1] = "e:"..tostring(k)
+				recurs(e, data)
+			end
+			if type(k) == "function" then
+				local fenv = getfenv(k)
+				local data = table.clone(data)
+				data[#data+1] = "k:fenv:"..tostring(k)
+				recurs(fenv, data)
+			end
+			if type(e) == "function" then
+				local fenv = getfenv(e)
+				local data = table.clone(data)
+				data[#data+1] = "e:fenv:"..tostring(k)
+				recurs(fenv, data)
+			end
+
+			if k == what then
+				print("KEY", table.concat(data, ", "))
+			end
+			if e == what then
+				print("VAL", table.concat(data, ", "))
+			end
+		end
+	end
+
+	local data = {}
+	recurs(t, data)
+end
+
 -- if these functions are ever desired elsewhere, don't be shy to make these accessible beyond utils.lua
 local function deltaCoordsToReal(dx, dy, source_x, source_y)
 	if util.isHex() then

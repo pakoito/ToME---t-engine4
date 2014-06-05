@@ -90,6 +90,13 @@ end
 function _M:defineDisplayCallback()
 	if not self._mo then return end
 
+	-- Cunning trick here!
+	-- the callback we give to mo:displayCallback is a function that references self
+	-- but self contains mo so it would create a cyclic reference and prevent GC'ing
+	-- thus we store a reference to a weak table and put self into it
+	-- this way when self dies the weak reference dies and does not prevent GC'ing
+	local weak = setmetatable({[1]=self}, {__mode="v"})
+
 	local ps = self:getParticlesList()
 
 	local f_self = nil
@@ -104,7 +111,7 @@ function _M:defineDisplayCallback()
 			e = ps[i]
 			e:checkDisplay()
 			if e.ps:isAlive() then e.ps:toScreen(x + w / 2, y + h / 2, true, w / game.level.map.tile_w)
-			else self:removeParticles(e)
+			elseif weak[1] then weak[1]:removeParticles(e)
 			end
 		end
 	end
@@ -112,6 +119,8 @@ function _M:defineDisplayCallback()
 	local function tactical(x, y, w, h)
 		-- Tactical info
 		if game.level and game.level.map.view_faction then
+			local self = weak[1]
+			if not self then return end
 			local map = game.level.map
 
 			if not f_self then

@@ -23,6 +23,11 @@ local Map = require "engine.Map"
 --- Define a level
 module(..., package.seeall, class.make)
 
+-- Keep a list of currently existing maps
+-- this is a weak table so it doesn't prevents GC
+__level_store = {}
+setmetatable(__level_store, {__mode="k"})
+
 --- Initializes the level with a "level" and a map
 function _M:init(level, map)
 	self.level = level
@@ -150,6 +155,8 @@ function _M:save()
 	return class.save(self, {entities_list=true})
 end
 function _M:loaded()
+	__level_store[self] = true
+
 	-- Loading the game has defined new uids for entities, yet we hard referenced the old ones
 	-- So we fix it
 	local nes = {}

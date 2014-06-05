@@ -30,6 +30,10 @@ module(..., package.seeall, class.make)
 
 _no_save_fields = {temp_memory_levels=true, _tmp_data=true}
 
+-- Keep a list of currently existing maps
+-- this is a weak table so it doesn't prevents GC
+__zone_store = {}
+setmetatable(__zone_store, {__mode="k"})
 
 --- List of rules to run through when applying an ego to an entity.
 _M.ego_rules = {}
@@ -93,6 +97,8 @@ end
 --- Loads a zone definition
 -- @param short_name the short name of the zone to load, if should correspond to a directory in your module data/zones/short_name/ with a zone.lua, npcs.lua, grids.lua and objects.lua files inside
 function _M:init(short_name, dynamic)
+	__zone_store[self] = true
+
 	if _M.persist_last_zones and _M.persist_last_zones[short_name] then
 		local zone = _M.persist_last_zones[short_name]
 		forceprint("[ZONE] loading from last persistent", short_name, zone)
@@ -647,6 +653,8 @@ end
 
 --- If we are loaded we need a new uid
 function _M:loaded()
+	__zone_store[self] = true
+
 	if type(self.reload_lists) ~= "boolean" or self.reload_lists then
 		self:loadBaseLists()
 	end

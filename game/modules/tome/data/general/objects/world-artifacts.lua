@@ -1938,8 +1938,8 @@ newEntity{ base = "BASE_ARROW",
 		special_on_crit = {desc="dominate the target", fct=function(combat, who, target)
 			if not target or target == self then return end
 			if target:canBe("instakill") then
-				local check = math.max(src:combatSpellpower(), src:combatMindpower(), src:combatAttack())
-				target:setEffect(target.EFF_DOMINATE_ENTHRALL, 3, {src=who, apply_power=check()})
+				local check = math.max(who:combatSpellpower(), who:combatMindpower(), who:combatAttack())
+				target:setEffect(target.EFF_DOMINATE_ENTHRALL, 3, {src=who, apply_power=check})
 			end
 		end},
 	},

@@ -70,23 +70,19 @@ end
 function _M:defineDisplayCallback()
 	if not self._mo then return end
 
+	-- Cunning trick here!
+	-- the callback we give to mo:displayCallback is a function that references self
+	-- but self contains mo so it would create a cyclic reference and prevent GC'ing
+	-- thus we store a reference to a weak table and put self into it
+	-- this way when self dies the weak reference dies and does not prevent GC'ing
+	local weak = setmetatable({[1]=self}, {__mode="v"})
+
 	local ps = self:getParticlesList()
 
-	local f_self = nil
-	local f_danger = nil
-	local f_powerful = nil
-	local f_friend = nil
-	local f_enemy = nil
-	local f_neutral = nil
-	local sf_self = nil
-	local sf_danger2 = nil
-	local sf_danger1 = nil
-	local sf_powerful = nil
-	local sf_friend = nil
-	local sf_enemy = nil
-	local sf_neutral = nil
-
 	self._mo:displayCallback(function(x, y, w, h, zoom, on_map)
+		local self = weak[1]
+		if not self then return end
+
 		if game.level and game.level.map.view_faction and game.always_target and game.always_target ~= "old" then
 			local map = game.level.map
 			if on_map then
