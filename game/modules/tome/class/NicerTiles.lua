@@ -81,12 +81,17 @@ function _M:handle(level, i, j, use_ntl)
 
 			if g.define_as and not g.__SAVEINSTEAD then
 				local cg
-				if self.saveinstead_store[g] then
-					cg = self.saveinstead_store[g]
+				if self.saveinstead_store then
+					if self.saveinstead_store[g] then
+						cg = self.saveinstead_store[g]
+					else
+						cg = g:cloneFull()
+						cg.__ntl = true
+						self.saveinstead_store[g] = cg
+					end
 				else
 					cg = g:cloneFull()
 					cg.__ntl = true
-					self.saveinstead_store[g] = cg
 				end
 
 				g.__SAVEINSTEAD = cg
