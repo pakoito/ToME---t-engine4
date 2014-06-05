@@ -123,7 +123,7 @@ if tries < 100 then
 		end
 		g.grow = nil g.dig = nil
 		g.special = true
-		g.nice_tiler = nil
+		g:altered()
 		g.block_move = function(self, x, y, who, act, couldpass)
 			if not who or not who.player or not act then return false end
 			if game.level.event_battlefield_entered then return false end

@@ -151,7 +151,7 @@ if engine.Map.tiles.nicer_tiles then
 	g.add_displays[#g.add_displays+1] = mod.class.Grid.new{image="terrain/demon_portal3.png"}
 end
 g.grow = nil g.dig = nil
-g.nice_tiler = nil
+g:altered()
 g:initGlow()
 g.special = true
 g.real_change = changer

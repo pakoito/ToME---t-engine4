@@ -117,13 +117,12 @@ newEntity{
 		if not x then return end
 
 		local g = game.level.map(x, y, engine.Map.TERRAIN):cloneFull()
-		g.__nice_tile_base = nil
 		g.name = "Entrance to some ancient elven ruins"
 		g.display='>' g.color_r=0 g.color_g=255 g.color_b=255 g.notice = true
 		g.change_level=1 g.change_zone="ancient-elven-ruins" g.glow=true
 		g.add_displays = g.add_displays or {}
 		g.add_displays[#g.add_displays+1] = mod.class.Grid.new{image="terrain/dungeon_entrance_closed02.png", z=5}
-		g.nice_tiler = nil
+		g:altered()
 		g:initGlow()
 		game.zone:addEntity(game.level, g, "terrain", x, y)
 		print("[WORLDMAP] Elven ruins at", x, y)
@@ -157,13 +156,12 @@ newEntity{
 		if not x then return end
 
 		local g = game.level.map(x, y, engine.Map.TERRAIN):cloneFull()
-		g.__nice_tile_base = nil
 		g.name = "Entrance to a ruined dungeon"
 		g.display='>' g.color_r=255 g.color_g=0 g.color_b=0 g.notice = true
 		g.change_level=1 g.change_zone="ruined-dungeon" g.glow=true
 		g.add_displays = g.add_displays or {}
 		g.add_displays[#g.add_displays+1] = mod.class.Grid.new{image="terrain/ruin_entrance_closed01.png", z=5}
-		g.nice_tiler = nil
+		g:altered()
 		g:initGlow()
 		game.zone:addEntity(game.level, g, "terrain", x, y)
 		print("[WORLDMAP] Ruined dungeon at", x, y)
@@ -180,13 +178,12 @@ newEntity{
 		if not x then return end
 
 		local g = game.level.map(x, y, engine.Map.TERRAIN):cloneFull()
-		g.__nice_tile_base = nil
 		g.name = "Mark of the Spellblaze"
 		g.display='>' g.color_r=0 g.color_g=200 g.color_b=0 g.notice = true
 		g.change_level=1 g.change_zone="mark-spellblaze" g.glow=true
 		g.add_displays = g.add_displays or {}
 		g.add_displays[#g.add_displays+1] = mod.class.Grid.new{image="terrain/floor_pentagram.png", z=8}
-		g.nice_tiler = nil
+		g:altered()
 		g:initGlow()
 		game.zone:addEntity(game.level, g, "terrain", x, y)
 		print("[WORLDMAP] Mark of the spellblaze at", x, y)
@@ -203,13 +200,12 @@ newEntity{
 		if not x then return end
 
 		local g = game.level.map(x, y, engine.Map.TERRAIN):cloneFull()
-		g.__nice_tile_base = nil
 		g.name = "Golem Graveyard"
 		g.display='>' g.color_r=0 g.color_g=200 g.color_b=0 g.notice = true
 		g.change_level=1 g.change_zone="golem-graveyard" g.glow=true
 		g.add_displays = g.add_displays or {}
 		g.add_displays[#g.add_displays+1] = mod.class.Grid.new{image="npc/alchemist_golem.png", z=5}
-		g.nice_tiler = nil
+		g:altered()
 		g:initGlow()
 		game.zone:addEntity(game.level, g, "terrain", x, y)
 		print("[WORLDMAP] Golem Graveyard at", x, y)
@@ -250,13 +246,12 @@ newEntity{
 		if not x then return end
 
 		local g = game.level.map(x, y, engine.Map.TERRAIN):cloneFull()
-		g.__nice_tile_base = nil
 		g.name = "Hidden compound"
 		g.display='>' g.color_r=200 g.color_g=0 g.color_b=0 g.notice = true
 		g.change_level=1 g.change_zone="ring-of-blood" g.glow=true
 		g.add_displays = g.add_displays or {}
 		g.add_displays[#g.add_displays+1] = mod.class.Grid.new{image="terrain/cave_entrance_closed02.png", z=5}
-		g.nice_tiler = nil
+		g:altered()
 		g:initGlow()
 		game.zone:addEntity(game.level, g, "terrain", x, y)
 		print("[WORLDMAP] Hidden compound at", x, y)
@@ -278,13 +273,12 @@ newEntity{
 		if not x then return end
 
 		local g = game.level.map(x, y, engine.Map.TERRAIN):cloneFull()
-		g.__nice_tile_base = nil
 		g.name = "tranquil meadow"
 		g.display='>' g.color_r=0 g.color_g=255 g.color_b=128 g.notice = true
 		g.change_level=1 g.change_zone="keepsake-meadow" g.glow=true
 		g.add_displays = g.add_displays or {}
 		g.add_displays[#g.add_displays+1] = mod.class.Grid.new{image="terrain/meadow.png", z=5}
-		g.nice_tiler = nil
+		g:altered()
 		g:initGlow()
 		game.zone:addEntity(game.level, g, "terrain", x, y)
 		print("[WORLDMAP] Keepsake: Tranquil Meadow at", x, y)

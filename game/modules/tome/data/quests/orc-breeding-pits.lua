@@ -47,13 +47,12 @@ reveal = function(self)
 	if not spot then return end
 
 	local g = game.level.map(spot.x, spot.y, engine.Map.TERRAIN):cloneFull()
-	g.__nice_tile_base = nil
 	g.name = "Entrance to the orc breeding pit"
 	g.display='>' g.color_r=colors.GREEN.r g.color_g=colors.GREEN.g g.color_b=colors.GREEN.b g.notice = true
 	g.change_level=1 g.change_zone="orc-breeding-pit" g.glow=true
 	g.add_displays = g.add_displays or {}
 	g.add_displays[#g.add_displays+1] = mod.class.Grid.new{image="terrain/ladder_down.png"}
-	g.nice_tiler = nil
+	g:altered()
 	g:initGlow()
 	game.zone:addEntity(game.level, g, "terrain", spot.x, spot.y)
 	return true

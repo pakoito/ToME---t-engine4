@@ -58,7 +58,7 @@ if engine.Map.tiles.nicer_tiles then
 	g.add_displays = g.add_displays or {}
 	g.add_displays[#g.add_displays+1] = mod.class.Grid.new{image="object/chest3.png", z=5}
 end
-g.nice_tiler = nil
+g:altered()
 g.special = true
 g.chest_item = o
 g.chest_guards = ms

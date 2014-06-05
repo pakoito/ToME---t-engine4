@@ -49,7 +49,7 @@ for i, p in ipairs(list) do
 	g.display='&' g.color_r=0 g.color_g=255 g.color_b=255 g.notice = true
 	g.add_displays = g.add_displays or {}
 	g.add_displays[#g.add_displays+1] = mod.class.Grid.new{image="terrain/moonstone_0"..rng.range(1,8)..".png", display_y=-1, display_h=2, z=18}
-	g.nice_tiler = nil
+	g:altered()
 	g.grow = nil g.dig = nil
 	g.special = true
 	g.autoexplore_ignore = true

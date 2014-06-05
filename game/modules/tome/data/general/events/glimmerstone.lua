@@ -32,7 +32,7 @@ if engine.Map.tiles.nicer_tiles then
 	g.add_displays = g.add_displays or {}
 	g.add_displays[#g.add_displays+1] = mod.class.Grid.new{image="terrain/moonstone_05.png", display_w=0.5, display_x=0.25, z=5}
 end
-g.nice_tiler = nil
+g:altered()
 g.canAct = false
 g.act = function(self)
 	local grids = core.fov.circle_grids(x, y, rng.range(1, 2), "block_move")
