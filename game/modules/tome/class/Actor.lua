@@ -259,6 +259,13 @@ function _M:loaded()
 	self:recomputeRegenResources()
 end
 
+function _M:altered(t)
+	if t then for k, v in pairs(t) do self[k] = v end end
+	self.__SAVEINSTEAD = nil
+	self.__nice_tile_base = nil
+	self.nice_tiler = nil
+end
+
 function _M:onEntityMerge(a)
 	-- Remove stats to make new stats work
 	for i, s in ipairs(_M.stats_def) do

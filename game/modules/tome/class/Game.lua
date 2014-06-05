@@ -1580,8 +1580,6 @@ function _M:setupCommands()
 			print("===============")
 		end end,
 		[{"_g","ctrl"}] = function() if config.settings.cheat then
-			game:changeLevel(1, "test")
-do return end
 			collectgarbage("collect")
 			local nb = 0
 			for k, e in pairs(__uids) do nb = nb + 1 end

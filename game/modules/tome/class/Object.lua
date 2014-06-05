@@ -74,6 +74,13 @@ function _M:init(t, no_default)
 	engine.interface.ActorTalents.init(self, t)
 end
 
+function _M:altered(t)
+	if t then for k, v in pairs(t) do self[k] = v end end
+	self.__SAVEINSTEAD = nil
+	self.__nice_tile_base = nil
+	self.nice_tiler = nil
+end
+
 --- Can this object act at all
 -- Most object will want to answer false, only recharging and stuff needs them
 function _M:canAct()

@@ -44,6 +44,13 @@ function _M:init(t, no_default)
 	self.wil = self.wil or 10
 end
 
+function _M:altered(t)
+	if t then for k, v in pairs(t) do self[k] = v end end
+	self.__SAVEINSTEAD = nil
+	self.__nice_tile_base = nil
+	self.nice_tiler = nil
+end
+
 function _M:combatPhysicalpower() return mod.class.interface.Combat:rescaleCombatStats(self.str) end
 function _M:combatSpellpower() return mod.class.interface.Combat:rescaleCombatStats(self.mag) end
 function _M:combatMindpower() return mod.class.interface.Combat:rescaleCombatStats(self.wil) end
