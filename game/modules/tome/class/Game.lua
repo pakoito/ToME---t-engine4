@@ -255,8 +255,8 @@ function _M:newGame()
 			-- Generate
 			if self.player.__game_difficulty then self:setupDifficulty(self.player.__game_difficulty) end
 			self:setupPermadeath(self.player)
-			self:changeLevel(1, "test")
-			-- self:changeLevel(self.player.starting_level or 1, self.player.starting_zone, {force_down=self.player.starting_level_force_down})
+			--self:changeLevel(1, "test")
+			self:changeLevel(self.player.starting_level or 1, self.player.starting_zone, {force_down=self.player.starting_level_force_down})
 			
 			print("[PLAYER BIRTH] resolve...")
 			self.player:resolve()
