@@ -42,6 +42,7 @@ newTalent{
 	points = 5,
 	require = {stat = {str = function(level) return 16 + (level + 2) * (level - 1) end}},
 	ArmorEffect = function(self, t)  -- Becomes more effective with heavier armors
+		if not self:getInven("BODY") then return 0 end
 		local am = self:getInven("BODY")[1] or {}
 --		if am.subtype == "cloth" then return 0.75
 --		elseif am.subtype == "light" then return 1.0

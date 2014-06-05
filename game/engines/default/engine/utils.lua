@@ -1808,7 +1808,11 @@ function util.findAllReferences(t, what)
 			if type(e) == "function" then
 				local fenv = getfenv(e)
 				local data = table.clone(data)
-				data[#data+1] = "e:fenv:"..tostring(k)
+				if fenv.__CLASSNAME then
+					data[#data+1] = "e:fenv["..fenv.__CLASSNAME"]:"..tostring(k)
+				else
+					data[#data+1] = "e:fenv[--]:"..tostring(k)
+				end
 				recurs(fenv, data)
 			end
 

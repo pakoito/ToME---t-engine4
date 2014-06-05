@@ -145,6 +145,7 @@ function _M:getName()
 end
 
 function _M:tooltip(x, y)
+	if not x or not y then return tstring("") end
 	local tstr
 	local dist = nil
 	if game.player.x and game.player.y then dist = tstring{" (range: ", {"font", "italic"}, {"color", "LIGHT_GREEN"}, tostring(core.fov.distance(game.player.x, game.player.y, x, y)), {"color", "LAST"}, {"font", "normal"}, ")"} end
