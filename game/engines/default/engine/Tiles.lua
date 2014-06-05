@@ -121,7 +121,7 @@ function _M:get(char, fr, fg, fb, br, bg, bb, image, alpha, do_outline, allow_ti
 
 		if self.texture then
 			w, h = s:getSize()
-			s, sw, sh = s:glTexture(self.sharp_scaling)
+			s, sw, sh = s:glTexture(self.sharp_scaling, true)
 			sw, sh = w / sw, h / sh
 			if not is_image and do_outline then
 				if type(do_outline) == "boolean" then

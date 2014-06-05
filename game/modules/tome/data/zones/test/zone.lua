@@ -33,7 +33,7 @@ return {
 -- [[
 			class = "engine.generator.map.Empty",
 			up = "FLOOR",
-			floor = "FLOOR",
+			floor = "TREE",
 --]]
 --[[
 			class = "engine.generator.map.Building",

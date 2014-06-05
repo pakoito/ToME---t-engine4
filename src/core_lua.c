@@ -1836,6 +1836,7 @@ static int sdl_surface_to_texture(lua_State *L)
 {
 	SDL_Surface **s = (SDL_Surface**)auxiliar_checkclass(L, "sdl{surface}", 1);
 	bool nearest = lua_toboolean(L, 2);
+	bool norepeat = lua_toboolean(L, 3);
 
 	GLuint *t = (GLuint*)lua_newuserdata(L, sizeof(GLuint));
 	auxiliar_setclass(L, "gl{texture}", -1);
@@ -1844,7 +1845,7 @@ static int sdl_surface_to_texture(lua_State *L)
 	tfglBindTexture(GL_TEXTURE_2D, *t);
 
 	int fw, fh;
-	make_texture_for_surface(*s, &fw, &fh, false);
+	make_texture_for_surface(*s, &fw, &fh, norepeat);
 	if (nearest) glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 	copy_surface_to_texture(*s);
 
