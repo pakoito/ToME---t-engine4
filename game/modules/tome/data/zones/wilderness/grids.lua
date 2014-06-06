@@ -487,7 +487,7 @@ newEntity{
 	type = "wall", subtype = "sand",
 	name = "oasis", image = "terrain/palmtree.png",
 	display = '#', color=colors.LIGHT_GREEN, back_color={r=93,g=79,b=22},
-	add_displays = class:makeTrees("terrain/palmtree_alpha", 8, 5),
+--	add_displays = class:makeTrees("terrain/palmtree_alpha", 8, 5),
 	always_remember = true,
 	can_pass = {pass_tree=1},
 	does_block_move = true,
