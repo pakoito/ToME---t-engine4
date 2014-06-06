@@ -65,7 +65,7 @@ newTalent{
 	-- Check distance in preUseTalent to grey out the talent
 	on_pre_use = function(self, t)
 		local eff = self.sustain_talents[self.T_JUMPGATE]
-		return eff and core.fov.distance(self.x, self.y, eff.jumpgate_x, eff.jumpgate_y) < t.getRange(self, t)
+		return eff and core.fov.distance(self.x, self.y, eff.jumpgate_x, eff.jumpgate_y) <= t.getRange(self, t)
 	end,
 	is_teleport = true,
 	action = function(self, t)
@@ -102,6 +102,19 @@ newTalent{
 	sustain_negative = 20,
 	no_npc_use = true,
 	tactical = { ESCAPE = 2 },
+	iconOverlay = function(self, t, p)
+		if not self.x or not self.y or not p.jumpgate_x or not p.jumpgate_y then return "" end
+		local val = math.floor(core.fov.distance(self.x, self.y, p.jumpgate_x, p.jumpgate_y))
+		local jt = self:getTalentFromId(self.T_JUMPGATE_TELEPORT)
+		local max = jt.getRange(self, jt)
+		local fnt = "buff_font_small"
+		if val >= 1000 then fnt = "buff_font_smaller" end
+		if val <= max then
+			return "#LIGHT_GREEN#"..tostring(math.ceil(val)), fnt
+		else
+			return "#LIGHT_RED#"..tostring(math.ceil(val)), fnt
+		end
+	end,
  	on_learn = function(self, t)
 		if self:getTalentLevel(t) >= 4 and not self:knowTalent(self.T_JUMPGATE_TWO) then
 			self:learnTalent(self.T_JUMPGATE_TWO, nil, nil, {no_unlearn=true})
@@ -304,6 +317,19 @@ newTalent{
 			self:unlearnTalent(self.T_JUMPGATE_TELEPORT_TWO)
 		end
 	end,
+	iconOverlay = function(self, t, p)
+		if not self.x or not self.y or not p.jumpgate2_x or not p.jumpgate2_y then return "" end
+		local val = math.floor(core.fov.distance(self.x, self.y, p.jumpgate2_x, p.jumpgate2_y))
+		local jt = self:getTalentFromId(self.T_JUMPGATE_TELEPORT_TWO)
+		local max = jt.getRange(self, jt)
+		local fnt = "buff_font_small"
+		if val >= 1000 then fnt = "buff_font_smaller" end
+		if val <= max then
+			return "#LIGHT_GREEN#"..tostring(math.ceil(val)), fnt
+		else
+			return "#LIGHT_RED#"..tostring(math.ceil(val)), fnt
+		end
+	end,
 	activate = function(self, t)
 		local oe = game.level.map(self.x, self.y, engine.Map.TERRAIN)
 		if not oe or oe:attr("temporary") then return false end
@@ -350,7 +376,7 @@ newTalent{
 	no_unlearn_last = true,
 	on_pre_use = function(self, t)
 		local eff = self.sustain_talents[self.T_JUMPGATE_TWO]
-		return eff and core.fov.distance(self.x, self.y, eff.jumpgate2_x, eff.jumpgate2_y) < t.getRange(self, t)
+		return eff and core.fov.distance(self.x, self.y, eff.jumpgate2_x, eff.jumpgate2_y) <= t.getRange(self, t)
 	end,
 	action = function(self, t)
 		local eff = self.sustain_talents[self.T_JUMPGATE_TWO]
