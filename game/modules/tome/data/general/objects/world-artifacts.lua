@@ -5153,7 +5153,7 @@ All manner of shady gamblers have since claimed to have worn it at one point or 
 	on_takeoff = function(self)
 		self.worn_by = nil
 	end,
-	special_desc = function(self) return "When you take a hit of more than 20% of your max life a shield is created equal to double the damage taken." end,
+	special_desc = function(self) return "When you take a hit of more than 20% of your max life a shield is created equal to 130% the damage taken." end,
 	act = function(self)
 		self:useEnergy()	
 		if not self.worn_by then return end
@@ -5162,7 +5162,7 @@ All manner of shady gamblers have since claimed to have worn it at one point or 
 		local hp_diff = (self.wearer_hp - self.worn_by.life/self.worn_by.max_life)
 		
 		if hp_diff >= 0.2 and not self.worn_by:hasEffect(self.worn_by.EFF_DAMAGE_SHIELD) then
-			self.worn_by:setEffect(self.worn_by.EFF_DAMAGE_SHIELD, 4, {power = (hp_diff * self.worn_by.max_life)*2})
+			self.worn_by:setEffect(self.worn_by.EFF_DAMAGE_SHIELD, 4, {power = (hp_diff * self.worn_by.max_life)*1.3})
 			game.logPlayer(self.worn_by, "#LIGHT_BLUE#A barrier bursts from the leather jacket!")
 		end		
 		
