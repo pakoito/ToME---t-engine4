@@ -177,6 +177,7 @@ newTalent{
 						self.temporary = self.temporary - 1
 						if self.temporary <= 0 then
 							game.level.map(self.x, self.y, engine.Map.TERRAIN, self.old_feat)
+							game.nicer_tiles:updateAround(game.level, self.x, self.y)
 							game.level:removeEntity(self)
 --							game.level.map:redisplay()
 						end
