@@ -33,6 +33,7 @@ newEntity{ define_as = "STAFF_ABSORPTION",
 	display = "\\", color=colors.VIOLET, image = "object/artifact/staff_absorption.png",
 	encumber = 7,
 	auto_pickup = 1,
+	moddable_tile = resolvers.moddable_tile("staff"),
 	plot = true, quest = true,
 	desc = [[Carved with runes of power, this staff seems to have been made long ago, yet it bears no signs of tarnish.
 Light around it seems to dim and you can feel its tremendous power simply by touching it.]],
