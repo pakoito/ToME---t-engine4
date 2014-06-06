@@ -94,7 +94,7 @@ function checkMaxSummon(self, silent, div, check_attr)
 		for act, def in pairs(game.party.members) do
 			if act.summoner and act.summoner == self and act.wild_gift_summon and (not check_attr or act:attr(check_attr)) then nb = nb + 1 end
 		end
-	else
+	elseif game.level then
 		for _, act in pairs(game.level.entities) do
 			if act.summoner and act.summoner == self and act.wild_gift_summon and (not check_attr or act:attr(check_attr)) then nb = nb + 1 end
 		end
