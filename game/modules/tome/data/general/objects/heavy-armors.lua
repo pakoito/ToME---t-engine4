@@ -36,7 +36,7 @@ newEntity{
 }
 
 newEntity{ base = "BASE_HEAVY_ARMOR",
-	name = "iron mail armour", short_name = "",
+	name = "iron mail armour", short_name = "iron",
 	level_range = {1, 10},
 	require = { stat = { str=14 }, },
 	cost = 20,
