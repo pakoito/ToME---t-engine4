@@ -83,7 +83,7 @@ newAI("use_tactical", function(self)
 			local tg = self:getTalentTarget(t)
 			local default_tg = {type=util.getval(t.direct_hit, self, t) and "hit" or "bolt"}
 			-- Only assume range... some talents may no require LOS, etc
-			local within_range = target_dist and target_dist <= (self:getTalentRange(t) + self:getTalentRadius(t))
+			local within_range = target_dist and target_dist <= ((self:getTalentRange(t) or 0) + (self:getTalentRadius(t) or 0))
 			if t.mode == "activated" and not t.no_npc_use and
 			   not self:isTalentCoolingDown(t) and self:preUseTalent(t, true, true) and
 			   (not self:getTalentRequiresTarget(t) or within_range)
