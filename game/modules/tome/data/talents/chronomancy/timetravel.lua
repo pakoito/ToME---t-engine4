@@ -103,6 +103,7 @@ newTalent{
 				-- return the rifted actor
 				if self.temporary <= 0 then
 					game.level.map(self.target.x, self.target.y, engine.Map.TERRAIN, self.old_feat)
+					game.nicer_tiles:updateAround(game.level, self.target.x, self.target.y)
 					game.level:removeEntity(self)
 					local mx, my = util.findFreeGrid(self.target.x, self.target.y, 20, true, {[engine.Map.ACTOR]=true})
 					local old_levelup = self.target.forceLevelup

@@ -132,6 +132,7 @@ newTalent{
 						game.level.map(self.x, self.y, engine.Map.TERRAIN, self.old_feat)
 						game.level:removeEntity(self)
 						game.level.map:updateMap(self.x, self.y)
+						game.nicer_tiles:updateAround(game.level, self.x, self.y)
 					end
 				end,
 				dig = function(src, x, y, old)

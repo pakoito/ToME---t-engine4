@@ -148,6 +148,7 @@ newTalent{
 	deactivate = function(self, t, p)
 		-- Reset the terrain tile
 		game.level.map(p.jumpgate_x, p.jumpgate_y, engine.Map.TERRAIN, p.jumpgate.old_feat)
+		game.nicer_tiles:updateAround(game.level, p.jumpgate_x, p.jumpgate_y)
 		self:removeParticles(p.particle)
 		return true
 	end,
@@ -351,6 +352,7 @@ newTalent{
 	deactivate = function(self, t, p)
 		-- Reset the terrain tile
 		game.level.map(p.jumpgate2_x, p.jumpgate2_y, engine.Map.TERRAIN, p.jumpgate2.old_feat)
+		game.nicer_tiles:updateAround(game.level, p.jumpgate2_x, p.jumpgate2_y)
 		self:removeParticles(p.particle)
 		return true
 	end,
