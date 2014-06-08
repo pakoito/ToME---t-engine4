@@ -64,7 +64,7 @@ newTalent{
 	points = 5,
 	cooldown = 0,
 	stamina = 16,
-	no_energy = false,
+	no_energy = "fake",
 	tactical = { ATTACK = { weapon = 2 }, CLOSEIN = 0.5 },
 	requires_target = true,
 	getDamage = function(self, t) return self:combatTalentWeaponDamage(t, 0.7, 1.8) end,

@@ -135,7 +135,7 @@ function _M:updateKeys()
 	self.key:addCommands{
 	_TAB = function() self:tabTabs() end,
 	__TEXTINPUT = function(c)
-		if c == 'd' or c == 'D' then
+		if (c == 'd' or c == 'D') and self.actor.player then
 			self:dump()
 		end
 	end,
