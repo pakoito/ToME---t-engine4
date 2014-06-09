@@ -1580,14 +1580,11 @@ function _M:setupCommands()
 			print("===============")
 		end end,
 		[{"_g","ctrl"}] = function() if config.settings.cheat then
-			collectgarbage("collect")
-			local nb = 0
-			for k, e in pairs(__uids) do nb = nb + 1 end
-			game.log("NB: " .. nb)
-			for z, _ in pairs(engine.Zone.__zone_store) do
-				game.log("Zone store: " .. z.name)
+			local o = game.zone:makeEntity(game.level, "object", {random_object=true}, nil, true)
+			if o then
+				o:identify(true)
+				game.zone:addEntity(game.level, o, "object", game.player.x, game.player.y)
 			end
-
 do return end
 			local f, err = loadfile("/data/general/events/fearscape-portal.lua")
 			print(f, err)

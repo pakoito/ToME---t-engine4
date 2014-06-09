@@ -413,8 +413,14 @@ function _M:generateRandart(data)
 			if type(e) == "table" then
 				if e.__resolver and e.__resolver == "randartmax" then
 					dst[k] = (dst[k] or 0) + e.v
-					if dst[k] > e.max * scale then --Adjust maximum values for higher levels
-						dst[k] = math.floor(e.max * scale)
+					if e.max < 0 then
+						if dst[k] < e.max * scale then --Adjust maximum values for higher levels
+							dst[k] = math.floor(e.max * scale)
+						end
+					else
+						if dst[k] > e.max * scale then --Adjust maximum values for higher levels
+							dst[k] = math.floor(e.max * scale)
+						end
 					end
 				else
 					if not dst[k] then dst[k] = {} end
