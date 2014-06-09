@@ -158,6 +158,17 @@ function _M:gainAchievement(id, src, ...)
 	return true
 end
 
+--- Force achievement
+-- Does not broadcast, does not tell, does not check reqs
+function _M:setAchievement(id, src)
+	local a = self.achiev_defs[id]
+	if not a then error("Unknown achievement "..id) return end
+
+	print("[ACHIEVEMENT] forcing ", a.name)
+	self.achieved[id] = {turn=game.turn, who=self:achievementWho(src), when=os.date("%Y-%m-%d %H:%M:%S")}
+	if not config.settings.cheat then profile:saveModuleProfile("achievements", {id=id, turn=game.turn, who=self:achievementWho(src), gained_on=os.date("%Y-%m-%d %H:%M:%S")}) end
+end
+
 --- Show an achievement gain dialog
 function _M:showAchievement(title, a)
 	if not config.settings.cheat then
