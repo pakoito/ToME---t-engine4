@@ -777,6 +777,7 @@ newEntity{ base = "BASE_RING",
 		talents_types_mastery = {
 			["technique/2hweapon-cripple"] = 0.3,
 			["technique/2hweapon-offense"] = 0.3,
+			["technique/2hweapon-assault"] = 0.3,
 			["technique/archery-bow"] = 0.3,
 			["technique/archery-sling"] = 0.3,
 			["technique/archery-training"] = 0.3,
