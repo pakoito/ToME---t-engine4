@@ -23,21 +23,24 @@ newTalent{
 	require = techs_con_req1,
 	mode = "passive",
 	points = 5,
-	getHealPct = function(self, t) return math.min(.4, self:combatTalentScale(t, 0.03, 0.3)) end,
+	getHealValues = function(self, t)  --base, fraction of max life
+		return (self.life_rating or 10) + self:combatTalentStatDamage(t, "con", 2, 20), self:combatTalentLimit(t, 0.5, 0.2, 0.3)
+	end,
 	getWoundReduction = function(self, t) return self:combatTalentLimit(t, 1, 0.17, 0.5) end, -- Limit <100%
 	getDuration = function(self, t) return 8 end,
 	do_vitality_recovery = function(self, t)
-		self:setEffect(self.EFF_RECOVERY, t.getDuration(self, t), {pct = t.getHealPct(self, t) / t.getDuration(self, t)})
+		local baseheal, percent = t.getHealValues(self, t)
+		self:setEffect(self.EFF_RECOVERY, t.getDuration(self, t), {power = baseheal, pct = percent / t.getDuration(self, t)})
 	end,
 	info = function(self, t)
 		local wounds = t.getWoundReduction(self, t) * 100
-		local healpct = t.getHealPct(self, t) * 100
-		local heal = t.getHealPct(self, t) * self.max_life
+		local baseheal, healpct = t.getHealValues(self, t)
 		local duration = t.getDuration(self, t)
+		local totalheal = baseheal + self.max_life*healpct/duration
 		return ([[You recover faster from poisons, diseases and wounds, reducing the duration of all such effects by %d%%.  
-			Additionally, when your life goes below 50%%, you heal for %d%% of your max HP (%d) over %d turns up to a max of 100 per turn.
-			The healing will scale with your Constitution.]]):
-		format(wounds, healpct, heal, duration)
+		Additionally, when your life falls below 50%%, you heal for a base %0.1f health plus %0.1f%% of your maximum life (currently %0.1f total) each turn for %d turns .
+		The base healing scales with your Constitution.]]):
+		format(wounds, baseheal, healpct/duration*100, totalheal, duration)
 	end,
 }
 

@@ -1455,7 +1455,7 @@ newEffect{
 newEffect{
 	name = "Recovery",
 	desc = "Recovery",
-	long_desc = function(self, eff) return ("The target is recovering %d life each turn."):format(math.min(100, eff.pct * self.max_life)) end,
+	long_desc = function(self, eff) return ("The target is recovering %d life each turn."):format(eff.power + eff.pct * self.max_life) end,
 	type = "physical",
 	subtype = { heal=true },
 	status = "beneficial",
@@ -1471,7 +1471,7 @@ newEffect{
 		end
 	end,
 	on_timeout = function(self, eff)
-		local heal = math.min(100, self.max_life * eff.pct)
+		local heal = (eff.power or 0) + self.max_life * eff.pct
 		self:heal(heal, src)
 	end,
 	deactivate = function(self, eff)
