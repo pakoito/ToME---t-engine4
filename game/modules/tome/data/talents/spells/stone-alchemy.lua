@@ -137,9 +137,8 @@ newTalent{
 					o.talent_on_spell = o.talent_on_spell or {}
 					table.append(o.talent_on_spell, gem.talent_on_spell)
 				end
-				o.been_imbued = true
+				o.been_imbued = " <"..gem.name..">"
 				game.logPlayer(self, "You imbue your %s with %s.", o:getName{do_colour=true, no_count=true}, gem:getName{do_colour=true, no_count=true})
-				o.name = o.name .. " ("..gem.name..")"
 				o.special = true
 				d.used_talent = true
 				game:unregisterDialog(d)

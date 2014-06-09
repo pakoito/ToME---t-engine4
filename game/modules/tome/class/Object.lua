@@ -296,6 +296,10 @@ function _M:getName(t)
 	local qty = self:getNumber()
 	local name = self.name
 
+	if not t.no_add_name and (self.been_reshaped or self.been_imbued) then
+		name = (type(self.been_reshaped) == "string" and self.been_reshaped or "") .. name .. (type(self.been_imbued) == "string" and self.been_imbued or "")
+	end
+	
 	if not self:isIdentified() and not t.force_id and self:getUnidentifiedName() then name = self:getUnidentifiedName() end
 
 	-- To extend later

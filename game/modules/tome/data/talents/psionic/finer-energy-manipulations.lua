@@ -103,28 +103,38 @@ newTalent{
 		return math.floor(self:combatTalentMindDamage(t, 2, 10))
 	end,
 	action = function(self, t)
-		local d d = self:showInventory("Reshape which weapon or armor?", self:getInven("INVEN"), function(o) return not o.quest and (o.type == "weapon" and o.subtype ~= "mindstar") or (o.type == "armor" and (o.slot == "BODY" or o.slot == "OFFHAND" )) and not o.fully_reshaped end, function(o, item)
-			--o.wielder = o.wielder or {}
+		local d d = self:showInventory("Reshape which weapon or armor?", self:getInven("INVEN"),
+			function(o)
+				return not o.quest and (o.type == "weapon" and o.subtype ~= "mindstar") or (o.type == "armor" and (o.slot == "BODY" or o.slot == "OFFHAND" )) and not o.fully_reshaped --Exclude fully reshaped?
+			end
+			, function(o, item)
 			if o.combat then
-				if (o.old_atk or 0) < t.boost(self, t) then
-					o.combat.atk = (o.combat.atk or 0) - (o.old_atk or 0)
-					o.combat.dam = (o.combat.dam or 0) - (o.old_dam or 0)
-					o.combat.atk = (o.combat.atk or 0) + t.boost(self, t)
-					o.combat.dam = (o.combat.dam or 0) + t.boost(self, t)
-					o.old_atk = t.boost(self, t)
-					o.old_dam = t.boost(self, t)
+				local atk_boost = t.boost(self, t)
+				local dam_boost = atk_boost
+				if (o.old_atk or 0) < atk_boost or (o.old_dam or 0) < dam_boost then
+					if not o.been_reshaped then
+						o.orig_atk = (o.combat.atk or 0)
+						o.orig_dam = (o.combat.dam or 0)
+					elseif o.been_reshaped == true then --Update items affected by older versions of this talent
+						o.name = o.name:gsub("reshaped ", "", 1)
+						o.orig_atk = o.combat.atk - (o.old_atk or 0)
+						o.orig_dam = o.combat.dam - (o.old_dam or 0)
+					end
+					o.combat.atk = o.orig_atk + atk_boost
+					o.combat.dam = o.orig_dam + dam_boost
+					o.old_atk = atk_boost
+					o.old_dam = dam_boost
 					game.logPlayer(self, "You reshape your %s.", o:getName{do_colour=true, no_count=true})
 					o.special = true
-					if not o.been_reshaped then
-						o.name = "reshaped" .. " "..o.name..""
-						o.been_reshaped = true
-					end
+					o.been_reshaped = "reshaped("..tostring(atk_boost)..","..tostring(dam_boost)..") "
 					d.used_talent = true
 				else
 					game.logPlayer(self, "You cannot reshape your %s any further.", o:getName{do_colour=true, no_count=true})
 				end
 			else
-				if (o.old_fat or 0) < t.fat_red(self, t) or o.wielder.combat_armor < o.orig_arm + t.arm_boost(self,t) then	-- Allow armor only improvements
+				local armour = t.arm_boost(self, t)
+				local fat = t.fat_red(self, t)
+				if (o.old_fat or 0) < fat or o.wielder.combat_armor < (o.orig_arm or 0) + armour then
 					o.wielder = o.wielder or {}
 					if not o.been_reshaped then
 						o.orig_arm = (o.wielder.combat_armor or 0)
@@ -132,20 +142,18 @@ newTalent{
 					end
 					o.wielder.combat_armor = o.orig_arm
 					o.wielder.fatigue = o.orig_fat
-					o.wielder.combat_armor = (o.wielder.combat_armor or 0) + t.arm_boost(self, t)
-					o.wielder.fatigue = (o.wielder.fatigue or 0) - t.fat_red(self, t)
+					o.wielder.combat_armor = (o.wielder.combat_armor or 0) + armour
+					o.wielder.fatigue = (o.wielder.fatigue or 0) - fat
 					if o.wielder.fatigue < 0 and not (o.orig_fat < 0) then
 						o.wielder.fatigue = 0
 					elseif o.wielder.fatigue < 0 and o.orig_fat < 0 then
 						o.wielder.fatigue = o.orig_fat
 					end
-					o.old_fat = t.fat_red(self, t)
+					o.old_fat = fat
 					game.logPlayer(self, "You reshape your %s.", o:getName{do_colour=true, no_count=true})
-					if not o.been_reshaped then
-						o.orig_name = o.name
-						o.been_reshaped = true
-					end
-					o.name = "reshaped["..tostring(t.arm_boost(self,t))..","..tostring(o.wielder.fatigue-o.orig_fat).."%] "..o.orig_name..""
+					o.special = true
+					if o.orig_name then o.name = o.orig_name end --Fix name for items affected by older versions of this talent
+					o.been_reshaped = "reshaped["..tostring(armour)..","..tostring(o.wielder.fatigue-o.orig_fat).."%] "
 					d.used_talent = true
 				else
 					game.logPlayer(self, "You cannot reshape your %s any further.", o:getName{do_colour=true, no_count=true})
