@@ -32,12 +32,14 @@ newEntity{ base = "ALTAR",
 
 		require("engine.ui.Dialog"):yesnoPopup("Heart of the Sandworm Queen", "The altar seems to react to the heart. You feel you could corrupt it here.", function(ret)
 			if ret then return end
-			who:removeObject(inven, item, true)
 			local o = game.zone:makeEntityByName(game.level, "object", "CORRUPTED_SANDQUEEN_HEART", true)
-			o:identify(true)
-			who:addObject(who.INVEN_INVEN, o)
-			who:sortInven(who.INVEN_INVEN)
-			game.log("#GREEN#You put the heart on the altar. The heart shrivels and shakes, vibrating with new corrupt forces.")
+			if o then
+				who:removeObject(inven, item, true)
+				o:identify(true)
+				who:addObject(who.INVEN_INVEN, o)
+				who:sortInven(who.INVEN_INVEN)
+				game.log("#GREEN#You put the heart on the altar. The heart shrivels and shakes, vibrating with new corrupt forces.")
+			end
 		end, "Cancel", "Corrupt", nil, true)
 	end,
 }
