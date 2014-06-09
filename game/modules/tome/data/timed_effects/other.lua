@@ -1945,6 +1945,7 @@ newEffect{
 			game.level.map:redisplay()
 			game.level.map:recreate()
 			game.uiset:setupMinimap(game.level)
+			game.nicer_tiles:postProcessLevelTilesOnLoad(game.level)
 
 			game.logPlayer(game.player, "#LIGHT_BLUE#You are brought back from the Dreamscape!")
 

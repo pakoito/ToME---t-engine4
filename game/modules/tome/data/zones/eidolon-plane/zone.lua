@@ -168,6 +168,7 @@ return {
 
 			game.logPlayer(game.player, "#LIGHT_RED#You are sent back to the material plane!")
 			game.player:updateMainShader()
+			game.nicer_tiles:postProcessLevelTilesOnLoad(game.level)
 			game:onLevelLoadRun()
 		end)
 	end,
