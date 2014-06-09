@@ -149,11 +149,6 @@ local function makeGolem(self)
 		g:learnTalentType("golem/drolem", true)
 	end
 
-	if self.no_points_on_levelup then
-		g.max_level = nil
-		g.no_points_on_levelup = self.no_points_on_levelup
-	end
-
 	return g
 end
 
