@@ -82,6 +82,8 @@ newTalent{
 		if self:canMove(x, y) then
 			self:move(x, y)
 			moved = 1
+		else
+			self:useEnergy(game.energy_to_act)
 		end
 
 		local fx, fy = util.coordAddDir(self.x, self.y, dir)

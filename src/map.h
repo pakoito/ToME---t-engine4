@@ -31,6 +31,7 @@ struct s_map_object {
 	GLfloat *tex_x, *tex_y, *tex_factorx, *tex_factory;
 	bool *textures_is3d;
 	shader_type *shader;
+	int shader_ref;
 	int cur_x, cur_y;
 	float dx, dy, scale;
 	float animdx, animdy;

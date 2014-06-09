@@ -99,6 +99,7 @@ static int map_object_new(lua_State *L)
 	obj->dh = luaL_checknumber(L, 9);
 	obj->scale = luaL_checknumber(L, 10);
 	obj->shader = NULL;
+	obj->shader_ref = LUA_NOREF;
 	obj->tint_r = obj->tint_g = obj->tint_b = 1;
 	for (i = 0; i < nb_textures; i++)
 	{
@@ -117,9 +118,10 @@ static int map_object_free(lua_State *L)
 	map_object *obj = (map_object*)auxiliar_checkclass(L, "core{mapobj}", 1);
 	int i;
 
-	for (i = 0; i < obj->nb_textures; i++)
+	for (i = 0; i < obj->nb_textures; i++) {
 		if (obj->textures_ref[i] != LUA_NOREF)
 			luaL_unref(L, LUA_REGISTRYINDEX, obj->textures_ref[i]);
+	}
 
 	free(obj->textures);
 	free(obj->tex_x);
@@ -139,6 +141,11 @@ static int map_object_free(lua_State *L)
 	{
 		luaL_unref(L, LUA_REGISTRYINDEX, obj->cb_ref);
 		obj->cb_ref = LUA_NOREF;
+	}
+
+	if (obj->shader_ref != LUA_NOREF) {
+		luaL_unref(L, LUA_REGISTRYINDEX, obj->shader_ref);
+		obj->shader_ref = LUA_NOREF;
 	}
 
 	lua_pushnumber(L, 1);
@@ -212,7 +219,11 @@ static int map_object_shader(lua_State *L)
 	if (!lua_isnil(L, 2)) {
 		shader_type *s = (shader_type*)lua_touserdata(L, 2);
 		obj->shader = s;
+		lua_pushvalue(L, 2);
+		obj->shader_ref = luaL_ref(L, LUA_REGISTRYINDEX);
 	} else {
+		luaL_unref(L, LUA_REGISTRYINDEX, obj->shader_ref);
+		obj->shader_ref = LUA_NOREF;
 		obj->shader = NULL;
 	}
 	return 0;
