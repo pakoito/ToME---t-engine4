@@ -132,6 +132,7 @@ newTalent{
 			local tg = {type="beam", range=self:getTalentRange(t), nolock=true, talent=t}
 			local x, y = self:getTarget(tg)
 			if not x or not y then return nil end
+			if core.fov.distance(self.x, self.y, x, y) > tg.range then return nil end
 			if self:hasLOS(x, y) and not game.level.map:checkEntity(x, y, Map.TERRAIN, "block_move") then
 				local dam = self:mindCrit(t.getDam(self, t))
 				self:project(tg, x, y, DamageType.MINDKNOCKBACK, self:mindCrit(rng.avg(2*dam/3, dam, 3)))
@@ -153,6 +154,7 @@ newTalent{
 			local tg = {type="beam", range=self:getTalentRange(t), nolock=true, talent=t, display={particle="bolt_earth", trail="earthtrail"}}
 			local x, y = self:getTarget(tg)
 			if not x or not y then return nil end
+			if core.fov.distance(self.x, self.y, x, y) > tg.range then return nil end
 			local dam = self:mindCrit(t.getDam(self, t))
 
 			for i = 1, self:getTalentRange(t) do
