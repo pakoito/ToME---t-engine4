@@ -2725,7 +2725,7 @@ newDamageType{
 	projector = function(src, x, y, type, dam)
 		if _G.type(dam) == "number" then dam = {dam=dam} end
 		local target = game.level.map(x, y, Map.ACTOR) -- Get the target first to make sure we heal even on kill
-		dam.dam = math.max(0, math.min(target.life, dam.dam))
+		if target then dam.dam = math.max(0, math.min(target.life, dam.dam)) end
 		local realdam = DamageType:get(DamageType.PHYSICAL).projector(src, x, y, DamageType.PHYSICAL, dam.dam)
 		if target and realdam > 0 then
 			local heal = realdam * (dam.healfactor or 1)
