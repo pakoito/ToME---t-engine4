@@ -169,8 +169,8 @@ newTalent {
 	getChance = function(self, t) return self:combatTalentLimit(t, 100, 7.5, 37.5) end, --limit < 100%
 	getRange = function(self, t) return math.ceil(self:combatTalentScale(t, 0.5, 3, "log")) end,
 	passives = function(self, t, p)
-		self:addTemporaryValue(p, "projectile_evasion", t.getChance(self, t))
-		self:addTemporaryValue(p, "projectile_evasion_spread", t.getRange(self, t))
+		self:talentTemporaryValue(p, "projectile_evasion", t.getChance(self, t))
+		self:talentTemporaryValue(p, "projectile_evasion_spread", t.getRange(self, t))
 	end,
 	info = function(self, t)
 		local chance = t.getChance(self, t)
