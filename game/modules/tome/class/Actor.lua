@@ -3666,7 +3666,7 @@ function _M:onWear(o, inven_id, bypass_set)
 	self:fireTalentCheck("callbackOnWear", o, bypass_set)
 
 	self:updateModdableTile()
-	if self == game.player then game:playSound("actions/wear") end
+	if self == game.player and not bypass_set then game:playSound("actions/wear") end
 end
 
 --- Call when an object is taken off
@@ -3757,7 +3757,7 @@ function _M:onTakeoff(o, inven_id, bypass_set)
 	self:fireTalentCheck("callbackOnTakeoff", o, bypass_set)
 
 	self:updateModdableTile()
-	if self == game.player then game:playSound("actions/takeoff") end
+	if self == game.player and not bypass_set then game:playSound("actions/takeoff") end
 end
 
 function _M:checkMindstar(o)

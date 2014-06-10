@@ -6745,10 +6745,11 @@ newEntity{ base = "BASE_MASSIVE_ARMOR",
 	max_power = 25, power_regen = 1,
 	use_power = { name = "drain blood from all units within 5 spaces, causing them to bleed for 120 physical damage over 4 turns. For every unit (up to 10) drained, the armor's stats increase, but decrease over 10 turns until back to normal", power = 25,
 		use = function(self, who)
+			self.blood_charge = 0
 			who:project({type="ball", range=0, radius=5, selffire=false}, who.x, who.y, function(px, py)
 				local target = game.level.map(px, py, engine.Map.ACTOR)
 				if not target then return end
-				self.blood_charge=self.blood_charge + 1
+				self.blood_charge = self.blood_charge + 1
 				target:setEffect(target.EFF_CUT, 4, {power=30, no_ct_effect=true, src = who})
 			end)
 			if self.blood_charge > 10 then self.blood_charge = 10 end
@@ -6762,6 +6763,9 @@ newEntity{ base = "BASE_MASSIVE_ARMOR",
 	end,
 	on_takeoff = function(self, who)
 		self.worn_by = nil
+	end,
+	special_desc = function(self)
+		return ("Blood Charges: " .. (self.blood_charge or 0))
 	end,
 	act = function(self)
 		self:useEnergy()
@@ -6792,6 +6796,7 @@ newEntity{ base = "BASE_MASSIVE_ARMOR",
 		self.power = storepower
 		if self.blood_dur > 0 then
 			self.blood_dur = self.blood_dur - 1
+			if self.blood_dur <= 0 then self.blood_charge = 0 end
 		end
 		return
 	end
