@@ -44,7 +44,11 @@ function _M:mouseMove(tmx, tmy, spotHostiles, astar_check, force_move)
 		self:move(tmx, tmy, true)
 	else
 		-- Just spend a turn
-		if self.x == tmx and self.y == tmy then self:useEnergy() return end
+		if self.x == tmx and self.y == tmy then
+			if self.waitTurn then self:waitTurn()
+			else self:useEnergy() end
+			return
+		end
 
 		-- If hostiles, attack!
 		-- Expand logic for clarity
