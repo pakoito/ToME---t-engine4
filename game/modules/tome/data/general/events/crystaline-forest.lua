@@ -37,12 +37,14 @@ core.fov.calc_circle(clearing.x, clearing.y, level.map.w, level.map.h, math.max(
 		if g.change_level or g:attr("special") then return end
 
 		local ng = nil
-		if g:check("block_move", lx, ly) then ng = list['CRYSTAL_WALL'..rng.range(2,20)]
-		else ng = list['CRYSTAL_FLOOR'..rng.range(1,8)]
+		if g:check("block_move", lx, ly) and g:check("dig") then ng = list['CRYSTAL_WALL'..rng.range(2,20)]
+		elseif not g:check("block_move", lx, ly) then ng = list['CRYSTAL_FLOOR'..rng.range(1,8)]
 		end
-		level.map(lx, ly, engine.Map.TERRAIN, ng:clone())
-		spots[#spots+1] = {x=lx, y=ly}
-		game.nicer_tiles:updateAround(level, lx,ly)
+		if ng then
+			level.map(lx, ly, engine.Map.TERRAIN, ng:clone())
+			spots[#spots+1] = {x=lx, y=ly}
+			game.nicer_tiles:updateAround(level, lx,ly)
+		end
 	end,
 nil)
 for i, spot in ipairs(spots) do game.nicer_tiles:updateAround(level, spot.x, spot.y) end

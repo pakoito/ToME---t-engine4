@@ -1580,7 +1580,7 @@ function _M:setupCommands()
 			print("===============")
 		end end,
 		[{"_g","ctrl"}] = function() if config.settings.cheat then
-			local o = game.zone:makeEntity(game.level, "object", {random_object=true}, nil, true)
+			local o = game.zone:makeEntity(game.level, "object", {subtype="staff", random_object=true}, nil, true)
 			if o then
 				o:identify(true)
 				game.zone:addEntity(game.level, o, "object", game.player.x, game.player.y)
