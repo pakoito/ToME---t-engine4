@@ -100,6 +100,7 @@ function _M:use(item)
 		end)
 	elseif act == "toinven" then
 		self.object.__transmo = false
+		self.actor:checkEncumbrance()
 		self.onuse(self.inven, self.item, self.object, false)
 	elseif act == "untag" then
 		self.object.__tagged = nil
