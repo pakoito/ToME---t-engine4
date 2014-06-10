@@ -240,14 +240,14 @@ function _M:event(e)
 		self.channels[e.channel] = self.channels[e.channel] or {users={}, log={}}
 
 		if data.kind == "donator-update" and data.donated > 0 then
-			if world then
-				if data.donated <= 5 then world:gainAchievement("BRONZE_DONATOR", game:getPlayer(true))
-				elseif data.donated <= 15 then world:gainAchievement("SILVER_DONATOR", game:getPlayer(true))
-				elseif data.donated <= 30 then world:gainAchievement("GOLD_DONATOR", game:getPlayer(true))
-				elseif data.donated <= 60 then world:gainAchievement("STRALITE_DONATOR", game:getPlayer(true))
-				else world:gainAchievement("VORATUN_DONATOR", game:getPlayer(true))
+			if world then pcall(function()
+				if data.donated <= 5 then world:gainAchievement({id="BRONZE_DONATOR", no_difficulties=true}, game:getPlayer(true))
+				elseif data.donated <= 15 then world:gainAchievement({id="SILVER_DONATOR", no_difficulties=true}, game:getPlayer(true))
+				elseif data.donated <= 30 then world:gainAchievement({id="GOLD_DONATOR", no_difficulties=true}, game:getPlayer(true))
+				elseif data.donated <= 60 then world:gainAchievement({id="STRALITE_DONATOR", no_difficulties=true}, game:getPlayer(true))
+				else world:gainAchievement({id="VORATUN_DONATOR", no_difficulties=true}, game:getPlayer(true))
 				end
-			end
+			end) end
 
 			local text = ([[#{bold}#Thank you#{normal}# for you donation, your support means a lot for the continued survival of this game.
 
