@@ -180,7 +180,6 @@ function _M:display()
 				display_entity = o
 				if o and o.use_talent and o.use_talent.id then
 					local t = a:getTalentFromId(o.use_talent.id)
-					table.print(o.use_talent)
 					display_entity = t.display_entity
 				end
 				if o and o.talent_cooldown then
