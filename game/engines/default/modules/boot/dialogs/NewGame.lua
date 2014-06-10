@@ -74,7 +74,8 @@ function _M:on_register()
 			not profile.generic.modules_played or
 			not profile.generic.modules_played.tome or
 			profile.generic.modules_played.tome < 20 * 60 * 60
-		)
+		) and
+		not config.settings.cheat
 	then
 		game:unregisterDialog(self)
 		self.list[1]:fct()

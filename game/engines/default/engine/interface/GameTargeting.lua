@@ -37,7 +37,7 @@ function _M:init()
 	self.target.on_set_target = function(self, how)
 		if self.key ~= self.targetmode_key then return end
 		local dx, dy = game.level.map:moveViewSurround(self.target.x, self.target.y, 1, 1, true)
-		if how == "mouse" then
+		if how == "mouse" and (dx ~= 0 or dy ~= 0) then
 			local cx, cy = core.mouse.get()
 			core.mouse.set(cx - game.level.map.tile_w * dx, cy - game.level.map.tile_h * dy)
 		end
