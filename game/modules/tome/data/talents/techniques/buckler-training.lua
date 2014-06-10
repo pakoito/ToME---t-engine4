@@ -66,7 +66,6 @@ newTalent {
 	stamina = 15,
 	requires_target = true,
 	tactical = { ATTACK = 2, ESCAPE = { knockback = 1 }, DISABLE = { knockback = 1 } },
-	no_energy = "fake",
 	on_pre_use = function(self, t, silent)
 		if not self:hasShield() or not self:hasArcheryWeapon() then
 			if not silent then game.logPlayer(self, "You require a ranged weapon and a shield to use this talent.") end
@@ -142,10 +141,10 @@ newTalent {
 		end
 
 		-- Ranged attack
-		local targets = self:archeryAcquireTargets(nil, {one_shot=true, x=target.x, y=target.y})
+		local targets = self:archeryAcquireTargets(nil, {one_shot=true, x=target.x, y=target.y, no_energy = true})
 		if targets then
 			--game.logSeen(self, "%s follows up with a shot from %s!", self.name:capitalize(), sling:getName())
-			self:archeryShoot(targets, t, nil, {mult=t.getSlingMult(self, t), no_energy = true})
+			self:archeryShoot(targets, t, nil, {mult=t.getSlingMult(self, t)})
 		end
 
 		return true
