@@ -122,7 +122,7 @@ newTalent{
 		return {type="ball", range=self:getTalentRange(t), selffire=false, radius=self:getTalentRadius(t)}
 	end,
 	on_pre_use = function(self, t, silent) if not self:hasTwoHandedWeapon() then if not silent then game.logPlayer(self, "You require a two handed weapon to use this talent.") end return false end return true end,
-	getBleed = function(self, t) return self:combatTalentScale(t, 0.5, 1.5) end,
+	getBleed = function(self, t) return self:combatTalentScale(t, 0.3, 1) end,
 	action = function(self, t)
 		local weapon = self:hasTwoHandedWeapon()
 		if not weapon then
