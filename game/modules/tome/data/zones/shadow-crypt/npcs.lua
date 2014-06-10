@@ -74,7 +74,7 @@ newEntity{ base="BASE_NPC_ORC_RAK_SHOR", define_as = "CULTIST_RAK_SHOR",
 		local p = self.sustain_talents[self.T_BONE_SHIELD]
 
 		-- When the bone shield is taken down, copy the player
-		if (not p or #p.particles <= 0) and not self.copied_player then
+		if (not p or p.nb <= 0) and not self.copied_player then
 			local a = mod.class.NPC.new{}
 			a:replaceWith(game.player:resolveSource():cloneFull())
 			mod.class.NPC.castAs(a)

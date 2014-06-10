@@ -132,7 +132,7 @@ newTalent{
 		local radius = self:getTalentRadius(t)
 		local radius_esp = t.radius_esp(self, t)
 		return ([[Using your connection to Nature, you can see your surrounding area in a radius of %d.
-		Also, while meditating, you are able to detect the presence of creatures around your in a radius of %d.]]):
+		Also, while meditating, you are able to detect the presence of creatures around you in a radius of %d.]]):
 		format(radius, radius_esp)
 	end,
 }
