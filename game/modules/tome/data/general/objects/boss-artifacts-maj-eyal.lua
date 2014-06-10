@@ -51,8 +51,6 @@ It is said the Conclave created this weapon for their warmaster during the dark 
 		damrange = 1.4,
 		melee_project={[DamageType.ICE] = 25}, -- Iceblock HP is based on damage, since were adding iceblock pierce we want this to be less generous
 		special_on_hit = {desc="Create a Winter Storm that gradually expands, dealing cold damage to your enemies each turn and reducing their turn energy by 20%.  Melee attacks will relocate the storm on top of your target and increase its duration.", on_kill=1, fct=function(combat, who, target)
-			 
-
 			local Object = require "mod.class.Object"
 			local Map = require "engine.Map"
 
@@ -80,20 +78,22 @@ It is said the Conclave created this weapon for their warmaster during the dark 
 			-- If the map has no Winter Storm then create one
 			if not self.winterStorm then
 				local stormDam = who:combatStatScale("str", 20, 80, 0.75)
-				 self.winterStorm = game.level.map:addEffect(who,
-				 target.x, target.y, 5,
-				 engine.DamageType.WINTER, {dam=stormDam, x=target.x, y=target.y}, -- Winter is cold damage+energy reduction, enemy only
-				 1,
-				 5, nil,
-				 {type="icestorm", only_one=true, friendlyfire = 0},
-				 function(e)
-				 	 -- Increase the radius by 0.2 each time the effect ticks (1000 energy?)	
-					 if e.radius < 4 then
+				self.winterStorm = game.level.map:addEffect(who,
+					target.x, target.y, 5,
+					engine.DamageType.WINTER, {dam=stormDam, x=target.x, y=target.y}, -- Winter is cold damage+energy reduction, enemy only
+					1,
+					5, nil,
+					{type="icestorm", only_one=true},
+					function(e)
+						 -- Increase the radius by 0.2 each time the effect ticks (1000 energy?)	
+						if e.radius < 4 then
 						e.radius = e.radius + 0.2
-					 end
-					 return true
-				 end,
-			 false)
+						end
+						return true
+					end,
+			 		false,
+			 		false
+			 	)
 
 				self.winterStorm.is_wintertide = true
 			else
