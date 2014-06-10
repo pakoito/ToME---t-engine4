@@ -81,15 +81,15 @@ newBirthDescriptor{
 		[ActorTalents.T_WEAPON_COMBAT] = 1,
 	},
 	copy = {
-		equipment = resolvers.equip{ id=true,
+		equipment = resolvers.equipbirth{ id=true,
 			{type="weapon", subtype="dagger", name="iron dagger", autoreq=true, ego_chance=-1000},
 			{type="weapon", subtype="dagger", name="iron dagger", autoreq=true, ego_chance=-1000},
 			{type="armor", subtype="light", name="rough leather armour", autoreq=true, ego_chance=-1000}
 		},
-		resolvers.inventory{ id=true, inven="QS_MAINHAND",
+		resolvers.inventorybirth{ id=true, inven="QS_MAINHAND",
 			{type="weapon", subtype="sling", name="rough leather sling", autoreq=true, ego_chance=-1000},
 		},
-		resolvers.inventory{ id=true, inven="QS_QUIVER",
+		resolvers.inventorybirth{ id=true, inven="QS_QUIVER",
 			{type="ammo", subtype="shot", name="pouch of iron shots", autoreq=true, ego_chance=-1000},
 		},
 	},
@@ -137,7 +137,7 @@ newBirthDescriptor{
 	},
 	copy = {
 		resolvers.inscription("RUNE:_MANASURGE", {cooldown=25, dur=10, mana=620}),
-		equipment = resolvers.equip{ id=true,
+		equipment = resolvers.equipbirth{ id=true,
 			{type="weapon", subtype="dagger", name="iron dagger", autoreq=true, ego_chance=-1000},
 			{type="weapon", subtype="dagger", name="iron dagger", autoreq=true, ego_chance=-1000},
 			{type="armor", subtype="light", name="rough leather armour", autoreq=true, ego_chance=-1000}
@@ -187,7 +187,7 @@ newBirthDescriptor{
 		[ActorTalents.T_ARMOUR_TRAINING] = 1,
 	},
 	copy = {
-		equipment = resolvers.equip{ id=true,
+		equipment = resolvers.equipbirth{ id=true,
 			{type="weapon", subtype="dagger", name="iron dagger", autoreq=true, ego_chance=-1000},
 			{type="weapon", subtype="dagger", name="iron dagger", autoreq=true, ego_chance=-1000},
 			{type="armor", subtype="light", name="rough leather armour", autoreq=true, ego_chance=-1000},
@@ -238,7 +238,7 @@ newBirthDescriptor{
 		[ActorTalents.T_WEAPON_COMBAT] = 1,
 	},
 	copy = {
-		resolvers.equip{
+		resolvers.equipbirth{
 			id=true,
 			{type="armor", subtype="light", name="rough leather armour", autoreq=true,ego_chance=-1000},
 			{type="weapon", subtype="sling", name="rough leather sling", autoreq=true, ego_chance=-1000},

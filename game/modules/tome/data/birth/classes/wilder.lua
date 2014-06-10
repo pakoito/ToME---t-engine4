@@ -93,7 +93,7 @@ newBirthDescriptor{
 	},
 	copy = {
 		max_life = 90,
-		resolvers.equip{ id=true,
+		resolvers.equipbirth{ id=true,
 			{type="weapon", subtype="mindstar", name="mossy mindstar", autoreq=true, ego_chance=-1000},
 			{type="weapon", subtype="mindstar", name="mossy mindstar", autoreq=true, ego_chance=-1000},
 			{type="armor", subtype="light", name="rough leather armour", autoreq=true, ego_chance=-1000},
@@ -151,7 +151,7 @@ newBirthDescriptor{
 	copy = {
 		drake_touched = 2,
 		max_life = 110,
-		resolvers.equip{ id=true,
+		resolvers.equipbirth{ id=true,
 			{type="weapon", subtype="battleaxe", name="iron battleaxe", autoreq=true, ego_chance=-1000},
 			{type="armor", subtype="light", name="rough leather armour", autoreq=true, ego_chance=-1000}
 		},
@@ -219,7 +219,7 @@ newBirthDescriptor{
 	copy = {
 		forbid_arcane = 2,
 		max_life = 90,
-		resolvers.equip{ id=true,
+		resolvers.equipbirth{ id=true,
 			{type="weapon", subtype="mindstar", name="mossy mindstar", autoreq=true, ego_chance=-1000},
 			{type="weapon", subtype="mindstar", name="mossy mindstar", autoreq=true, ego_chance=-1000},
 			{type="armor", subtype="cloth", name="linen robe", autoreq=true, ego_chance=-1000},

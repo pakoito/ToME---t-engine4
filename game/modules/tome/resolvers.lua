@@ -23,6 +23,12 @@ local Talents = require "engine.interface.ActorTalents"
 function resolvers.equip(t)
 	return {__resolver="equip", __resolve_last=true, t}
 end
+function resolvers.equipbirth(t)
+	for i, filter in ipairs(t) do
+		filter.ignore_material_restriction = true
+	end
+	return {__resolver="equip", __resolve_last=true, t}
+end
 --- Actually resolve the equipment creation
 function resolvers.calc.equip(t, e)
 --	print("Equipment resolver for", e.name)
@@ -84,6 +90,12 @@ end
 
 --- Resolves inventory creation for an actor
 function resolvers.inventory(t)
+	return {__resolver="inventory", __resolve_last=true, t}
+end
+function resolvers.inventorybirth(t)
+	for i, filter in ipairs(t) do
+		filter.ignore_material_restriction = true
+	end
 	return {__resolver="inventory", __resolve_last=true, t}
 end
 --- Actually resolve the inventory creation

@@ -39,8 +39,8 @@ return {
 --	color_shown = {0.8, 1, 0.6, 1},
 --	color_obscure = {0.8*0.6, 1*0.6, 0.6*0.6, 0.6},
 	ambient_music = "Rainy Day.ogg",
-	min_material_level = function() return game.state:isAdvanced() and 3 or 1 end,
-	max_material_level = function() return game.state:isAdvanced() and 4 or 2 end,
+	min_material_level = function() return game.state:isAdvanced() and 3 or 3 end,
+	max_material_level = function() return game.state:isAdvanced() and 4 or 4 end,
 	is_flooded = true,
 	nicer_tiler_overlay = "DungeonWallsGrass",
 	generator =  {

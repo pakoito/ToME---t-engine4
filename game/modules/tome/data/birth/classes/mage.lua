@@ -87,7 +87,7 @@ newBirthDescriptor{
 	},
 	copy = {
 		max_life = 90,
-		resolvers.equip{ id=true,
+		resolvers.equipbirth{ id=true,
 			{type="weapon", subtype="staff", name="elm staff", autoreq=true, ego_chance=-1000},
 			{type="armor", subtype="cloth", name="linen robe", autoreq=true, ego_chance=-1000}
 		},
@@ -212,7 +212,7 @@ newBirthDescriptor{
 		end,
 
 		max_life = 90,
-		resolvers.equip{ id=true,
+		resolvers.equipbirth{ id=true,
 			{type="weapon", subtype="staff", name="elm staff", autoreq=true, ego_chance=-1000},
 			{type="armor", subtype="cloth", name="linen robe", autoreq=true, ego_chance=-1000},
 		},
@@ -278,7 +278,7 @@ newBirthDescriptor{
 	copy = {
 		soul = 1,
 		max_life = 90,
-		resolvers.equip{ id=true,
+		resolvers.equipbirth{ id=true,
 			{type="weapon", subtype="staff", name="elm staff", autoreq=true, ego_chance=-1000},
 --			{type="weapon", subtype="dagger", name="iron dagger", autoreq=true, ego_chance=-1000},
 			{type="armor", subtype="cloth", name="linen robe", autoreq=true, ego_chance=-1000},

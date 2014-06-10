@@ -81,7 +81,7 @@ newBirthDescriptor{
 		[ActorTalents.T_REND] = 1,
 	},
 	copy = {
-		resolvers.equip{ id=true,
+		resolvers.equipbirth{ id=true,
 			{type="weapon", subtype="waraxe", name="iron waraxe", autoreq=true, ego_chance=-1000},
 			{type="weapon", subtype="waraxe", name="iron waraxe", autoreq=true, ego_chance=-1000},
 			{type="armor", subtype="light", name="rough leather armour", autoreq=true, ego_chance=-1000}
@@ -134,7 +134,7 @@ newBirthDescriptor{
 		[ActorTalents.T_PACIFICATION_HEX] = 1,
 	},
 	copy = {
-		resolvers.equip{ id=true,
+		resolvers.equipbirth{ id=true,
 			{type="weapon", subtype="staff", name="elm staff", autoreq=true, ego_chance=-1000},
 			{type="armor", subtype="cloth", name="linen robe", autoreq=true, ego_chance=-1000}
 		},

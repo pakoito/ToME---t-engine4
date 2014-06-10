@@ -91,13 +91,13 @@ newBirthDescriptor{
 	},
 	copy = {
 		max_life = 110,
-		resolvers.equip{ id=true,
-			{type="weapon", subtype="mace", name="iron mace", ignore_material_restriction=true, autoreq=true, ego_chance=-1000},
-			{type="armor", subtype="shield", name="iron shield", ignore_material_restriction=true, autoreq=true, ego_chance=-1000},
-			{type="armor", subtype="heavy", name="iron mail armour", ignore_material_restriction=true, autoreq=true, ego_chance=-1000},
+		resolvers.equipbirth{ id=true,
+			{type="weapon", subtype="mace", name="iron mace", autoreq=true, ego_chance=-1000},
+			{type="armor", subtype="shield", name="iron shield", autoreq=true, ego_chance=-1000},
+			{type="armor", subtype="heavy", name="iron mail armour", autoreq=true, ego_chance=-1000},
 		},
-		resolvers.inventory{ id=true,
-			{type="weapon", subtype="greatsword", name="iron greatsword", ignore_material_restriction=true, autoreq=true, ego_chance= -1000},
+		resolvers.inventorybirth{ id=true,
+			{type="weapon", subtype="greatsword", name="iron greatsword", autoreq=true, ego_chance= -1000},
 		},
 
 	},
@@ -145,9 +145,9 @@ newBirthDescriptor{
 	},
 	copy = {
 		max_life = 90,
-		resolvers.equip{ id=true,
-			{type="weapon", subtype="staff", name="elm staff", ignore_material_restriction=true, autoreq=true, ego_chance=-1000},
-			{type="armor", subtype="cloth", name="linen robe", ignore_material_restriction=true, autoreq=true, ego_chance=-1000}
+		resolvers.equipbirth{ id=true,
+			{type="weapon", subtype="staff", name="elm staff", autoreq=true, ego_chance=-1000},
+			{type="armor", subtype="cloth", name="linen robe", autoreq=true, ego_chance=-1000}
 		},
 	},
 }

@@ -89,7 +89,7 @@ newBirthDescriptor{
 	},
 	copy = {
 		max_life = 110,
-		resolvers.equip{ id=true,
+		resolvers.equipbirth{ id=true,
 			{type="weapon", subtype="battleaxe", name="iron battleaxe", autoreq=true, ego_chance=-1000},
 			{type="armor", subtype="heavy", name="iron mail armour", autoreq=true, ego_chance=-1000, ego_chance=-1000}
 		},
@@ -141,7 +141,7 @@ newBirthDescriptor{
 	},
 	copy = {
 		max_life = 90,
-		resolvers.equip{ id=true,
+		resolvers.equipbirth{ id=true,
 			{type="weapon", subtype="mindstar", name="mossy mindstar", autoreq=true, ego_chance=-1000},
 			{type="weapon", subtype="mindstar", name="mossy mindstar", autoreq=true, ego_chance=-1000},
 			{type="armor", subtype="cloth", name="linen robe", autoreq=true, ego_chance=-1000},

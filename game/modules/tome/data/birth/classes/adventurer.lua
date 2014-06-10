@@ -86,7 +86,7 @@ newBirthDescriptor{
 		unused_talents_types = 7,
 	},
 	copy = {
-		resolvers.inventory{ id=true, transmo=true,
+		resolvers.inventorybirth{ id=true, transmo=true,
 			{type="weapon", subtype="dagger", name="iron dagger", autoreq=true, ego_chance=-1000},
 			{type="weapon", subtype="dagger", name="iron dagger", autoreq=true, ego_chance=-1000},
 			{type="weapon", subtype="longsword", name="iron longsword", ego_chance=-1000, ego_chance=-1000},

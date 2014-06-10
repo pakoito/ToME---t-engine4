@@ -79,7 +79,7 @@ newBirthDescriptor{
 		[ActorTalents.T_ARMOUR_TRAINING] = 1,
 	},
 	copy = {
-		resolvers.equip{ id=true,
+		resolvers.equipbirth{ id=true,
 			{type="weapon", subtype="greatsword", name="iron greatsword", autoreq=true, ego_chance=-1000, ego_chance=-1000},
 			{type="armor", subtype="heavy", name="iron mail armour", autoreq=true, ego_chance=-1000, ego_chance=-1000},
 		},
@@ -127,7 +127,7 @@ newBirthDescriptor{
 		[ActorTalents.T_WEAPONS_MASTERY] = 1,
 	},
 	copy = {
-		resolvers.equip{ id=true,
+		resolvers.equipbirth{ id=true,
 			{type="weapon", subtype="longsword", name="iron longsword", autoreq=true, ego_chance=-1000, ego_chance=-1000},
 			{type="armor", subtype="shield", name="iron shield", autoreq=true, ego_chance=-1000, ego_chance=-1000},
 			{type="armor", subtype="heavy", name="iron mail armour", autoreq=true, ego_chance=-1000, ego_chance=-1000}
@@ -179,15 +179,15 @@ newBirthDescriptor{
 	},
 	copy = {
 		max_life = 110,
-		resolvers.equip{ id=true,
+		resolvers.equipbirth{ id=true,
 			{type="weapon", subtype="longbow", name="elm longbow", autoreq=true, ego_chance=-1000},
 			{type="ammo", subtype="arrow", name="quiver of elm arrows", autoreq=true, ego_chance=-1000},
 			{type="armor", subtype="light", name="rough leather armour", autoreq=true, ego_chance=-1000},
 		},
-		resolvers.inventory{ id=true, inven="QS_MAINHAND",
+		resolvers.inventorybirth{ id=true, inven="QS_MAINHAND",
 			{type="weapon", subtype="sling", name="rough leather sling", autoreq=true, ego_chance=-1000},
 		},
-		resolvers.inventory{ id=true, inven="QS_QUIVER",
+		resolvers.inventorybirth{ id=true, inven="QS_QUIVER",
 			{type="ammo", subtype="shot", name="pouch of iron shots", autoreq=true, ego_chance=-1000},
 		},
 		resolvers.generic(function(e)
@@ -255,7 +255,7 @@ newBirthDescriptor{
 	copy = {
 		max_life = 100,
 --		talent_cd_reduction={[ActorTalents.T_FLAME]=-3, [ActorTalents.T_LIGHTNING]=-3, [ActorTalents.T_EARTHEN_MISSILES]=-3, },
-		resolvers.equip{ id=true,
+		resolvers.equipbirth{ id=true,
 			{type="weapon", subtype="greatsword", name="iron greatsword", autoreq=true, ego_chance=-1000, ego_chance=-1000},
 			{type="armor", subtype="light", name="rough leather armour", autoreq=true, ego_chance=-1000, ego_chance=-1000},
 		},
@@ -309,11 +309,11 @@ newBirthDescriptor{
 		[ActorTalents.T_UNARMED_MASTERY] = 1, -- early game is absolutely stupid without this
 	},
 	copy = {
-		resolvers.equip{ id=true,
+		resolvers.equipbirth{ id=true,
 			{type="armor", subtype="hands", name="iron gauntlets", autoreq=true, ego_chance=-1000, ego_chance=-1000},
 			{type="armor", subtype="light", name="rough leather armour", autoreq=true, ego_chance=-1000, ego_chance=-1000},
 		},
-		resolvers.inventory{ id=true,
+		resolvers.inventorybirth{ id=true,
 			{type="armor", subtype="hands", name="rough leather gloves", ego_chance=-1000, ego_chance=-1000},
 		},
 	},
