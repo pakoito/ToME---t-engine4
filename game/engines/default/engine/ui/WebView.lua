@@ -69,6 +69,7 @@ function _M:generate()
 			Dialog:webPopup(url, w, h)
 		end end,
 		on_loading = function(url, status)
+			self.cur_url = url
 			self.loading = status
 		end,
 		on_crash = function()
