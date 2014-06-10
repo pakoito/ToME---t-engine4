@@ -211,4 +211,6 @@ else -- Crystaline
 		always_remember = true,
 		change_level = 1, change_zone = "lake-nur",
 	}
+
+	load("/data/general/grids/underground.lua")
 end
