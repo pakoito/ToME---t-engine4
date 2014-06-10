@@ -2218,7 +2218,7 @@ end
 function _M:hasLightArmor()
 	if not self:getInven("BODY") then return end
 	local armor = self:getInven("BODY")[1]
-	if not armor or (armor.subtype ~= "cloth" and armor.subtype ~= "light") then
+	if not armor or (armor.subtype ~= "cloth" and armor.subtype ~= "light" and armor.subtype ~= "mummy") then
 		return nil
 	end
 	return armor
