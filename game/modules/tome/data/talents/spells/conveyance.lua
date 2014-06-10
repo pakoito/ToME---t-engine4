@@ -179,7 +179,7 @@ newTalent{
 	type = {"spell/conveyance", 3},
 	require = spells_req3,
 	points = 5,
-	mana = 70,
+	mana = 40,
 	cooldown = 35,
 	tactical = { DEFEND = 2 },
 	range = 8,
