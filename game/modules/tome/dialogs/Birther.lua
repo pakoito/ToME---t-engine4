@@ -1348,6 +1348,7 @@ function _M:selectTile()
 		"npc/undead_ghoul_borfast_the_broken.png",
 		"npc/horror_eldritch_umbral_horror.png",
 		"npc/demon_major_general_of_urh_rok.png",
+		"npc/demon_major_shasshhiy_kaish.png",
 		"npc/undead_vampire_arch_zephyr.png",
 		"npc/undead_ghoul_rotting_titan.png",
 		"npc/humanoid_human_townsfolk_aimless_looking_merchant01_64.png",
