@@ -35,10 +35,10 @@ end
 
 function _M:connected()
 	if self.sock then return true end
-	self.sock = socket.connect("te4.org", mport)
+	self.sock = socket.connect("profiles.te4.org", mport)
 	if not self.sock then return false end
 --	self.sock:settimeout(10)
-	print("[PROFILE] Thread connected to te4.org")
+	print("[PROFILE] Thread connected to profiles.te4.org")
 	self:login()
 	self.chat:reconnect()
 	cprofile.pushEvent("e='Connected'")
@@ -49,10 +49,10 @@ end
 --- Connects the second tcp channel to receive data
 function _M:connectedPull()
 	if self.psock then return true end
-	self.psock = socket.connect("te4.org", pport)
+	self.psock = socket.connect("profiles.te4.org", pport)
 	if not self.psock then return false end
 --	self.psock:settimeout(10)
-	print("[PROFILE] Pull socket connected to te4.org")
+	print("[PROFILE] Pull socket connected to profiles.te4.org")
 	self.psock:send(self.auth.push_id.."\n") -- Identify ourself
 	return true
 end
