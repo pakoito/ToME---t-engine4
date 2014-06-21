@@ -51,4 +51,6 @@ void main(void)
 		float dist = length(gl_TexCoord[0].xy - vec2(0.5)) / 2.0;
 		gl_FragColor = mix(gl_FragColor, solipsism_warning_color, dist);
 	}
+
+//	gl_FragColor.rgb = vec3(gl_FragColor.b, gl_FragColor.g, gl_FragColor.r);
 }

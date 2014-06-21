@@ -753,8 +753,9 @@ newInscription{
 			-- Minor damage, apply stun resist reduction, freeze
 			DamageType:get(DamageType.COLD).projector(target, tx, ty, DamageType.COLD, damage)
 			target:setEffect(target.EFF_WET, 5, {apply_power=data.inc_stat})
-			target:setEffect(target.EFF_FROZEN, 2, {hp=damage*1.5, apply_power=apply})
-
+			if target:canBe("stun") then
+				target:setEffect(target.EFF_FROZEN, 2, {hp=damage*1.5, apply_power=apply})
+			end
 		end, data.power + data.inc_stat, {type="freeze"})
 		self:removeEffectsFilter({status="detrimental", type="mental", ignore_crosstier=true}, 1)
 		game:playSoundNear(self, "talents/ice")
@@ -815,10 +816,12 @@ newInscription{
 
 		self:removeEffectsFilter({status="detrimental", type="magical", ignore_crosstier=true}, 1)
 		self:project(tg, x, y, function(tx, ty)
-
 			local target = game.level.map(tx, ty, Map.ACTOR)
 			if not target or target == self then return end
-			target:setEffect(target.EFF_DISARMED, data.dur, {})
+
+			if target:canBe("disarm") then
+				target:setEffect(target.EFF_DISARMED, data.dur, {})
+			end
 			
 			DamageType:get(DamageType.ACID).projector(self, tx, ty, DamageType.ACID, data.power + data.inc_stat)
 
