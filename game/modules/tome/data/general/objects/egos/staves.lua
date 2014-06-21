@@ -636,8 +636,8 @@ newEntity{
 		combat_dam = resolvers.mbonus_material(10, 5),
 		combat_spellpower = resolvers.mbonus_material(5, 5),
 		combat_physcrit = resolvers.mbonus_material(5, 5),
-		combat_spellcrit = resolvers.mbonus_material(5, 5),
-		combat_critical_power = resolvers.mbonus_material(10, 10),
+		combat_spellcrit = resolvers.mbonus_material(2, 2),
+		combat_critical_power = resolvers.mbonus_material(7, 7),
 	},
 }
 
