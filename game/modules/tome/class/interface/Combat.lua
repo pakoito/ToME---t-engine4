@@ -688,7 +688,9 @@ function _M:attackTargetWith(target, weapon, damtype, mult, force_dam)
 	-- Arcane Destruction
 	if hitted and crit and weapon and self:knowTalent(self.T_ARCANE_DESTRUCTION) then
 		local chance = 100
-		if self:hasDualWeapon() or self:hasShield() then chance = 50 end
+		if self:hasShield() then chance = 75
+		elseif self:hasDualWeapon() then chance = 50 end
+		end
 		if rng.percent(chance) then
 			local typ = rng.table{{DamageType.FIRE,"ball_fire"}, {DamageType.LIGHTNING,"ball_lightning_beam"}, {DamageType.ARCANE,"ball_arcane"}}
 			self:project({type="ball", radius=2, friendlyfire=false}, target.x, target.y, typ[1], self:combatSpellpower() * 2)

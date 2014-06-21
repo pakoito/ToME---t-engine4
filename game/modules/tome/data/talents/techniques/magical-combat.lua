@@ -143,7 +143,9 @@ newTalent{
 		return ([[Raw magical damage channels through the caster's weapon, increasing Physical Power by %d.
 		Each time your crit with a melee blow, you will unleash a radius 2 ball of either fire, lightning or arcane damage, doing %0.2f.
 		The bonus scales with your Spellpower.
-		If you are dual wielding or using a shield this will only occur 50%% of the time.]]):
+		If you are using a shield this will only occur 75%% of the time.
+		If you are dual wielding this will only occur 50%% of the time.
+		]]):
 		format(self:combatSpellpower() * t.getSPMult(self, t), self:combatSpellpower() * 2)
 	end,
 }
