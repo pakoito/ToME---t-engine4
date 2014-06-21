@@ -32,7 +32,9 @@ newTalent{
 		if self.x == target.x and self.y == target.y then return nil end
 
 		local chance = t.getChance(self, t)
-		if self:hasDualWeapon() or self:hasShield() then chance = chance / 2 end
+		if self:hasShield() then chance = chance * 0.75 end
+		elseif self:hasDualWeapon() then chance = chance * 0.5
+		end
 
 		if rng.percent(chance) then
 			local spells = {}
@@ -78,6 +80,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Allows you to use a melee weapon to focus your spells, granting a %d%% chance per melee attack to deliver a Flame, Lightning or Earthen Missiles spell as a free action on the target.
+		When using a shield the chance is reduced by one fourth.
 		When dual wielding or using a shield the chance is halved for each weapon.
 		Delivering the spell this way will not trigger a spell cooldown, but only works if the spell is not cooling down.
 		The chance increases with your Cunning.]]):
