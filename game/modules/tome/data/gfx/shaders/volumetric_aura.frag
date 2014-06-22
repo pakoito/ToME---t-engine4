@@ -20,15 +20,17 @@ vec4 Uberblend(vec4 col0, vec4 col1)
 void main(void)
 {
 	vec2 radius = vec2(0.5, 0.5) - gl_TexCoord[0].xy;
-	float outerScale = 0.95 + sin(tick / 1000.0f) * 0.05;
+	float outerScale = 0.95 + sin(tick / 1000.0) * 0.05;
 	float innerScale = 0.5;
-	float shininess = 10.0;
+	float shininess = 35.0;
+	float density = 20.0;
 
 	vec4 resultColor = vec4(0.0, 0.0, 0.0, 0.0);
-	float density = 50.1;
 
-	float absorb = 1.0;
+	//sampleShine * len - simple
+	//sampleShine * int[0, len](exp(-l*sampleAbsorb*)*dl ) = sampleShine * (1 - exp(-sampleAbsorb * len))/sampleAbsorb
 	vec3 emittedColor = vec3(0.0, 0.0, 0.0);
+	float absorb = 1.0;
 	for(int i = 0; i < samplesCount; i++)
 	{
 		float scale = outerScale - float(i) / float(samplesCount) * (outerScale - innerScale);
@@ -39,14 +41,18 @@ void main(void)
 		float sampleLen = 1.0 / float(samplesCount);
 
 		float layerMult = float(i) / float(samplesCount);
-		float shininessMult = absorb / density * (1.0 - exp(-density * sampleLen));
+		float shininessMult = 0.0;
 
-		emittedColor += sampleColor.rgb * (1.0 - pow(1.0 - sampleColor.a, 1.0)) * shininess * sampleLen * layerMult;//shininessMult;
-		absorb *= exp(-sampleLen * density * sampleColor.a * layerMult);
+		float sampleDensity = density * sampleColor.a * layerMult;
+		shininessMult = absorb * (1.0 - exp(-sampleDensity * sampleLen)) / (sampleDensity + 1e-5);
+		//shininessMult = absorb * sampleLen;
+
+		emittedColor += sampleColor.rgb * (1.0 - pow(1.0 - sampleColor.a, 1.0)) * shininess * layerMult * shininessMult;
+
+		absorb *= exp(-sampleLen * sampleDensity);
 	}
 	float shininessOpacity = 0.0;
 	gl_FragColor = vec4(emittedColor.rgb, 1.0 - absorb + (emittedColor.r + emittedColor.g + emittedColor.b) * shininessOpacity);
-	gl_FragColor.a *= gl_Color.a;
 }
 
 
