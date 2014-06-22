@@ -689,7 +689,7 @@ function _M:attackTargetWith(target, weapon, damtype, mult, force_dam)
 	if hitted and crit and weapon and self:knowTalent(self.T_ARCANE_DESTRUCTION) then
 		local chance = 100
 		if self:hasShield() then chance = 75
-		elseif self:hasDualWeapon() then chance = 50 end
+		elseif self:hasDualWeapon() then chance = 50
 		end
 		if rng.percent(chance) then
 			local typ = rng.table{{DamageType.FIRE,"ball_fire"}, {DamageType.LIGHTNING,"ball_lightning_beam"}, {DamageType.ARCANE,"ball_arcane"}}

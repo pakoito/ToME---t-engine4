@@ -32,7 +32,7 @@ newTalent{
 		if self.x == target.x and self.y == target.y then return nil end
 
 		local chance = t.getChance(self, t)
-		if self:hasShield() then chance = chance * 0.75 end
+		if self:hasShield() then chance = chance * 0.75
 		elseif self:hasDualWeapon() then chance = chance * 0.5
 		end
 
