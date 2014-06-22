@@ -114,6 +114,8 @@ ritual_end = function(self)
 	limmir.name = "Limmir the Master Jeweler"
 	limmir.can_talk = "jewelry-store"
 
+	game.party:removeMember(limmir)
+
 	-- Update water
 	local water = game.zone:makeEntityByName(game.level, "terrain", "DEEP_WATER")
 	for x = 0, game.level.map.w - 1 do for y = 0, game.level.map.h - 1 do

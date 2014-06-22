@@ -758,6 +758,7 @@ function _M:getLevel(game, lev, old_lev, no_close)
 	local new_level = false
 	-- Load persistent level?
 	if type(level_data.persistent) == "string" and level_data.persistent == "zone_temporary" then
+		forceprint("Loading zone temporary level", self.short_name, lev)
 		local popup = Dialog:simpleWaiter("Loading level", "Please wait while loading the level...", nil, 10000)
 		core.display.forceRedraw()
 
@@ -773,6 +774,7 @@ function _M:getLevel(game, lev, old_lev, no_close)
 		end
 		popup:done()
 	elseif type(level_data.persistent) == "string" and level_data.persistent == "zone" and not self.save_per_level then
+		forceprint("Loading zone persistance level", self.short_name, lev)
 		local popup = Dialog:simpleWaiter("Loading level", "Please wait while loading the level...", nil, 10000)
 		core.display.forceRedraw()
 
@@ -788,6 +790,7 @@ function _M:getLevel(game, lev, old_lev, no_close)
 		end
 		popup:done()
 	elseif type(level_data.persistent) == "string" and level_data.persistent == "memory" then
+		forceprint("Loading memory persistance level", self.short_name, lev)
 		local popup = Dialog:simpleWaiter("Loading level", "Please wait while loading the level...", nil, 10000)
 		core.display.forceRedraw()
 
@@ -803,6 +806,7 @@ function _M:getLevel(game, lev, old_lev, no_close)
 		end
 		popup:done()
 	elseif level_data.persistent then
+		forceprint("Loading level persistance level", self.short_name, lev)
 		local popup = Dialog:simpleWaiter("Loading level", "Please wait while loading the level...", nil, 10000)
 		core.display.forceRedraw()
 
@@ -818,6 +822,7 @@ function _M:getLevel(game, lev, old_lev, no_close)
 
 	-- In any cases, make one if none was found
 	if not level then
+		forceprint("Creating level", self.short_name, lev)
 		local popup = Dialog:simpleWaiter("Generating level", "Please wait while generating the level...", nil, 10000)
 		core.display.forceRedraw()
 
