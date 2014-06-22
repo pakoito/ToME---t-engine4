@@ -102,7 +102,7 @@ newTalent{
 		local radius = self:getTalentRadius(t)
 		local damage = t.getDamage(self, t)
 		return ([[A path of sunlight appears in front of you for 5 turns. All foes standing inside take %0.1f Light damage per turn.
-		While standing in the path, your movement takes no time.
+		While standing in the path, your movement takes no time and can not trigger traps.
 		The damage done will increase with your Spellpower.]]):format(damDesc(self, DamageType.LIGHT, damage / 5), radius)
 	end,
 }

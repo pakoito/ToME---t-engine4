@@ -23,6 +23,7 @@ require "engine.interface.ActorProject"
 require "engine.interface.ObjectIdentify"
 require "mod.class.interface.Combat"
 local Faction = require "engine.Faction"
+local DamageType = require "engine.DamageType"
 
 module(..., package.seeall, class.inherit(
 	engine.Trap,
@@ -135,6 +136,9 @@ function _M:canTrigger(x, y, who, no_random)
 			game.logPlayer(who, "You carefully avoid the trap (%s).", self:getName())
 		end
 		return false
+	end
+	if who:attr("walk_sun_path") and game.level then
+		for i, e in ipairs(game.level.map.effects) do if e.damtype == DamageType.SUN_PATH and e.grids[x] and e.grids[x][y] then return false end end
 	end
 	return true
 end
