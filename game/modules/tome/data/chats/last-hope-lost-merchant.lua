@@ -126,8 +126,8 @@ local maker_list = function()
 				if player:attr("forbid_arcane") then -- no magic gear for antimatic characters
 					not_ps = {arcane=true}
 					force_themes = {'antimagic'}
-				else -- no antimagic gear for characters with arcane-powered classes
-					if player:attr("has_arcane_knowledge") then not_ps = {antimagic=true} end
+				else -- no antimagic gear for characters with arcane-powered classes or undeads
+					if player:attr("has_arcane_knowledge") or player:attr("undead") then not_ps = {antimagic=true} end
 				end
 				
 				local o, ok
