@@ -53,6 +53,7 @@ void main(void)
 	}
 	float shininessOpacity = 0.0;
 	gl_FragColor = vec4(emittedColor.rgb, 1.0 - absorb + (emittedColor.r + emittedColor.g + emittedColor.b) * shininessOpacity);
+	gl_FragColor.a *= gl_Color.a;
 }
 
 
