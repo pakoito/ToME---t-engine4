@@ -103,7 +103,7 @@ newTalent{
 		if not x or not y then return nil end
 		self:project(tg, x, y, function(px, py)
 			local m = game.level.map(px, py, Map.ACTOR)
-			if not m or not m.max_life or not m.life then return end
+			if not m or not m.max_life or not m.life or m.on_die then return end
 
 			if game.party and game.party:hasMember(self) then
 				for act, def in pairs(game.party.members) do
