@@ -63,11 +63,11 @@ void main(void)
 	float phase = ang * 1.0; //3 spiral rotations each
 	for(int spiralIndex = 0; spiralIndex < spiralsCount; spiralIndex++)
 	{
-		float spiralPhase = phase + 2.0 * 3.1415 / chargesCount * spiralIndex;
+		float spiralPhase = phase + 2.0 * 3.1415 / chargesCount * float(spiralIndex);
 		intersections[spiralIndex].worldPoint.xy = pos;
 		intersections[spiralIndex].worldPoint.z = sin(spiralPhase);
 		intersections[spiralIndex].localPoint.y = clamp(0.5 + (length(pos) - baseRadius + spiralRadius * cos(spiralPhase) * (intensityAdjust * 0.2 + 1.0)) / spiralWidth, 0.0, 1.0);
-		intersections[spiralIndex].localPoint.x = (ang + spiralIndex * 2.0 * pi / spiralsCount - tick * scrollingSpeed) / (pi * 2.0);
+		intersections[spiralIndex].localPoint.x = (ang + float(spiralIndex) * 2.0 * pi / spiralsCount - tick * scrollingSpeed) / (pi * 2.0);
 	}
 
 	int i, j;
