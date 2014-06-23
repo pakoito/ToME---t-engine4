@@ -144,7 +144,9 @@ newEntity{ base = "BASE_NPC_GHOUL", define_as = "ROTTING_TITAN",
 	
 	disarm_immune=1, --Since disarming him would be, well, DISARMING him.
 
-	on_move = function(self)
+	-- Lets shake the ground!
+	-- But only AFTER we are finished moving, shall we ? :)
+	on_move = function(self) game:onTickEnd(function()
 		if rng.percent(35) then
 			game.logSeen(self, "The ground shakes as %s steps!", self.name:capitalize())
 			local tg = {type="ball", range=0, selffire=false, radius=4, no_restrict=true}
@@ -153,7 +155,7 @@ newEntity{ base = "BASE_NPC_GHOUL", define_as = "ROTTING_TITAN",
 			self:doQuake(tg, self.x, self.y)
 		end
 		self:project({type="ball", range=0, selffire=false, radius=1}, self.x, self.y, engine.DamageType.DIG, 1)
-	end,
+	end) end,
 	knockback_immune=1,
 
 	resolvers.talents{
