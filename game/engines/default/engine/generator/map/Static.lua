@@ -42,11 +42,20 @@ function _M:init(zone, map, level, data)
 	self:loadMap(data.map)
 end
 
+function _M:getMapFile(file)
+	local _, _, addon, rfile = file:find("^([^+]+)%+(.+)$")
+	if addon and rfile then
+		return "/data-"..addon.."/maps/"..rfile..".lua"
+	end
+	return "/data/maps/"..file..".lua"
+end
+
 function _M:loadMap(file)
 	local t = {}
 
-	print("Static generator using file", "/data/maps/"..file..".lua")
-	local f, err = loadfile("/data/maps/"..file..".lua")
+	file = self:getMapFile(file)
+	print("Static generator using file", file)
+	local f, err = loadfile(file)
 	if not f and err then error(err) end
 	local g = {
 		level = self.level,
