@@ -31,6 +31,7 @@ return {
 	all_lited = true,
 	day_night = true,
 	ambient_music = {"For the king and the country!.ogg", "weather/town_large_base.ogg"},
+	allow_respec = "limited",
 
 	min_material_level = 3,
 	max_material_level = 4,

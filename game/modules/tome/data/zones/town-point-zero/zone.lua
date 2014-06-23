@@ -33,6 +33,7 @@ return {
 	ambient_music = {"Virtue lost.ogg", "weather/town_small_base.ogg"},
 	color_shown = {0.7, 0.6, 0.8, 1},
 	color_obscure = {0.7*0.6, 0.6*0.6, 0.8*0.6, 0.6},
+	allow_respec = "limited",
 
 	no_level_connectivity = true,
 

@@ -79,6 +79,8 @@ break_farportal = function(self)
 end
 
 spawn_butler = function(self)
+	game.level.data.allow_respec = "limited"
+
 	local spot = game.level:pickSpot{type="spawn", subtype="butler"}
 	local butler = game.zone:makeEntityByName(game.level, "actor", "BUTLER")
 	game.zone:addEntity(game.level, butler, "actor", spot.x, spot.y)

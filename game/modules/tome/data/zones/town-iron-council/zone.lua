@@ -30,6 +30,7 @@ return {
 	all_remembered = true,
 	all_lited = true,
 	ambient_music = {"Virtue lost.ogg", "weather/town_large_base.ogg"},
+	allow_respec = "limited",
 
 	max_material_level = 2,
 	store_levels_by_restock = { 8, 25, 40 },

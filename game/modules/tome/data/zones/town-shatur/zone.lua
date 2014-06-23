@@ -31,7 +31,7 @@ return {
 	all_lited = true,
 	day_night = true,
 	ambient_music = {"World of Ice.ogg", "weather/town_small_base.ogg"},
-
+	allow_respec = "limited",
 	max_material_level = 2,
 	store_levels_by_restock = { 8, 25, 40 },
 

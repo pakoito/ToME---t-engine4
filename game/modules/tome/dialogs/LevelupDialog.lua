@@ -295,7 +295,13 @@ function _M:isUnlearnable(t, limit)
 	local min = 1
 	if limit then min = math.max(1, #list - (max - 1)) end
 	for i = #list, min, -1 do
-		if list[i] == t.id then return i end
+		if list[i] == t.id then
+			if not game.state.birth.force_town_respec or (game.level and game.level.data and game.level.data.allow_respec == "limited") then
+				return i
+			else
+				return nil, i
+			end
+		end
 	end
 	return nil
 end
@@ -329,7 +335,12 @@ function _M:learnTalent(t_id, v)
 			return
 		end
 		if not self:isUnlearnable(t, true) and self.actor_dup:getTalentLevelRaw(t_id) >= self.actor:getTalentLevelRaw(t_id) then
-			self:simplePopup("Impossible", "You cannot unlearn this talent!")
+			local _, could = self:isUnlearnable(t, true)
+			if could then
+				self:simplePopup("Impossible here", "You could unlearn this talent in a quiet place, like a #{bold}#town#{normal}#.")
+			else
+				self:simplePopup("Impossible", "You cannot unlearn this talent!")
+			end
 			return
 		end
 		self.actor:unlearnTalent(t_id, nil, true, {no_unlearn=true})
@@ -847,11 +858,15 @@ function _M:getTalentDesc(item)
 	else
 		local t = self.actor:getTalentFromId(item.talent)
 
-		if self:isUnlearnable(t, true) then
+		local unlearnable, could_unlearn = self:isUnlearnable(t, true)
+		if unlearnable then
 			local max = tostring(self.actor:lastLearntTalentsMax(t.generic and "generic" or "class"))
 			text:add({"color","LIGHT_BLUE"}, "This talent was recently learnt, you can still unlearn it.", true, "The last ", max, t.generic and " generic" or " class", " talents you learnt are always unlearnable.", {"color","LAST"}, true, true)
 		elseif t.no_unlearn_last then
 			text:add({"color","YELLOW"}, "This talent can alter the world in a permanent way, as such you can never unlearn it once known.", {"color","LAST"}, true, true)
+		elseif could_unlearn then
+			local max = tostring(self.actor:lastLearntTalentsMax(t.generic and "generic" or "class"))
+			text:add({"color","LIGHT_BLUE"}, "This talent was recently learnt, you can still unlearn it if you are in a quiet area like a #{bold}#town#{normal}#.", true, "The last ", max, t.generic and " generic" or " class", " talents you learnt are always unlearnable.", {"color","LAST"}, true, true)
 		end
 
 		local traw = self.actor:getTalentLevelRaw(t.id)

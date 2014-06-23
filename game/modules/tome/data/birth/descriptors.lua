@@ -86,6 +86,9 @@ newBirthDescriptor{
 			if not e.image then e.image = "player/"..e.descriptor.subrace:lower():gsub("[^a-z0-9_]", "_").."_"..e.descriptor.sex:lower():gsub("[^a-z0-9_]", "_")..".png" end
 		end,
 	},
+	game_state = {
+		force_town_respec = 1,
+	}
 }
 
 
