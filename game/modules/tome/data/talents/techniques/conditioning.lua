@@ -23,14 +23,17 @@ newTalent{
 	require = techs_con_req1,
 	mode = "passive",
 	points = 5,
+	cooldown = 15,
 	getHealValues = function(self, t)  --base, fraction of max life
-		return (self.life_rating or 10) + self:combatTalentStatDamage(t, "con", 2, 20), self:combatTalentLimit(t, 0.5, 0.2, 0.3)
+		return (self.life_rating or 10) + self:combatTalentStatDamage(t, "con", 2, 20), self:combatTalentLimit(t, 0.3, 0.07, 0.16)
 	end,
 	getWoundReduction = function(self, t) return self:combatTalentLimit(t, 1, 0.17, 0.5) end, -- Limit <100%
 	getDuration = function(self, t) return 8 end,
 	do_vitality_recovery = function(self, t)
+		if self:isTalentCoolingDown(t) then return end
 		local baseheal, percent = t.getHealValues(self, t)
 		self:setEffect(self.EFF_RECOVERY, t.getDuration(self, t), {power = baseheal, pct = percent / t.getDuration(self, t)})
+		self:startTalentCooldown(t)
 	end,
 	info = function(self, t)
 		local wounds = t.getWoundReduction(self, t) * 100
@@ -38,9 +41,9 @@ newTalent{
 		local duration = t.getDuration(self, t)
 		local totalheal = baseheal + self.max_life*healpct/duration
 		return ([[You recover faster from poisons, diseases and wounds, reducing the duration of all such effects by %d%%.  
-		Additionally, when your life falls below 50%%, you heal for a base %0.1f health plus %0.1f%% of your maximum life (currently %0.1f total) each turn for %d turns .
+		Additionally, when your life falls below 50%%, you heal for a base %0.1f health plus %0.1f%% of your maximum life (currently %0.1f total) each turn for %d turns. This effect can only happen once every %d turns.
 		The base healing scales with your Constitution.]]):
-		format(wounds, baseheal, healpct/duration*100, totalheal, duration)
+		format(wounds, baseheal, healpct/duration*100, totalheal, duration, self:getTalentCooldown(t))
 	end,
 }
 
