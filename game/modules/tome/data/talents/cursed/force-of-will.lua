@@ -308,7 +308,18 @@ newTalent{
 	getKnockback = function(self, t)
 		return 2
 	end,
-	getSecondHitChance = function(self, t) return self:combatTalentScale(self:getTalentLevel(t)-4, 15, 35) end,
+	-- Minimum effects until tLvl > 4
+	getAdjustedTalentLevel = function(self, t)
+		local tLevel = self:getTalentLevel(self, t) - 4
+		-- Do not feed a negative talent level to the scaling functions
+		if tLevel < 0 then
+			tLevel = 0
+		end
+		return tLevel
+	end,
+	getSecondHitChance = function(self, t)
+		return self:combatTalentScale(t.getAdjustedTalentLevel(self, t), 15, 35)
+	end,
 	action = function(self, t)
 		game.logSeen(self, "An unseen force begins to swirl around %s!", self.name)
 		local duration = t.getDuration(self, t)
