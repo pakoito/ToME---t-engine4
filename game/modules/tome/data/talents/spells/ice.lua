@@ -169,7 +169,7 @@ newTalent{
 	tactical = { BUFF = 2 },
 	getColdDamageIncrease = function(self, t) return self:getTalentLevelRaw(t) * 2 end,
 	getResistPenalty = function(self, t) return self:combatTalentLimit(t, 100, 17, 50) end, -- Limit < 100
-	getPierce = function(self, t) return math.max(100, self:getTalentLevelRaw(t) * 20) end, 
+	getPierce = function(self, t) return math.min(100, self:getTalentLevelRaw(t) * 20) end, 
 	activate = function(self, t)
 		game:playSoundNear(self, "talents/ice")
 
