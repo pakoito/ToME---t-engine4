@@ -2592,7 +2592,7 @@ newEffect{
 	name = "SUNCLOAK", image = "talents/suncloak.png",
 	desc = "Suncloak",
 	long_desc = function(self, eff) return ("The target is protected by the sun, increasing their spell casting speed by %d%%, reducing spell cooldowns by %d%%, and preventing damage over %d%% of your maximum life from a single hit."):
-		format(eff.haste*100, eff.haste*100, eff.cap) end,
+		format(eff.haste*100, eff.cd*100, eff.cap) end,
 	type = "magical",
 	subtype = { light=true, },
 	status = "beneficial",
