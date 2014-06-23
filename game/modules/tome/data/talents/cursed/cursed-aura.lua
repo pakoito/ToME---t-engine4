@@ -503,7 +503,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		local duration = t.getDuration(self, t)
-		local attackSpeed = 100/t.getAttackSpeed(self, t)
+		local attackSpeed = t.getAttackSpeed(self, t)*100
 
 		return ([[Instill a part of your living curse into a weapon in your inventory, and toss it nearby. This nearly impervious sentry will attack all nearby enemies for %d turns. When the curse ends, the weapon will drop to the ground. Attack Speed: %d%%]]):format(duration, attackSpeed)
 	end,
