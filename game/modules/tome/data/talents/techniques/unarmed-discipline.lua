@@ -63,14 +63,18 @@ newTalent{
 				for tid, active in pairs(target.sustain_talents) do
 					if active then
 						local talent = target:getTalentFromId(tid)
-						if t.checkType(self, t, talent) then talents[tid] = talent.name end
+						if t.checkType(self, t, talent) then talents[tid] = true end
 					end
 				end
 			end
 		end
 
-		for k, v in pairs(talents) do
-			target:forceUseTalent(k, {ignore_energy=true})
+		local nb = t.getStrikes(self, t)
+		talents = table.keys(talents)
+		while #talents > 0 and nb > 0 do
+			local tid = rng.tableRemove(talents)
+			target:forceUseTalent(tid, {ignore_energy=true})
+			nb = nb - 1
 		end
 
 		self:clearCombo()
