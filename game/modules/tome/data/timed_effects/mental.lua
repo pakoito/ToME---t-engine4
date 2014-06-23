@@ -1780,16 +1780,17 @@ newEffect{
 		eff.dieatid = self:addTemporaryValue("die_at", -self.max_life * eff.dieat)
 	end,
 	deactivate = function(self, eff)
+		self:removeTemporaryValue("global_speed_add", eff.tmpid)
+		self:removeTemporaryValue("combat_physcrit", eff.critid)
+		self:removeTemporaryValue("die_at", eff.dieatid)
+
 		-- check negative life first incase the creature has healing
-		if self.life <= 0 then
+		if self.life <= self.die_at or 0 then
 			local sx, sy = game.level.map:getTileToScreen(self.x, self.y)
 			game.flyers:add(sx, sy, 30, (rng.range(0,2)-1) * 0.5, rng.float(-2.5, -1.5), "Falls dead!", {255,0,255})
 			game.logSeen(self, "%s dies when its frenzy ends!", self.name:capitalize())
 			self:die(self)
 		end
-		self:removeTemporaryValue("global_speed_add", eff.tmpid)
-		self:removeTemporaryValue("combat_physcrit", eff.critid)
-		self:removeTemporaryValue("die_at", eff.dieatid)
 	end,
 }
 
