@@ -820,7 +820,7 @@ newInscription{
 			if not target or target == self then return end
 
 			if target:canBe("disarm") then
-				target:setEffect(target.EFF_DISARMED, data.dur, {})
+				target:setEffect(target.EFF_DISARMED, data.dur, {apply_power=apply})
 			end
 			
 			DamageType:get(DamageType.ACID).projector(self, tx, ty, DamageType.ACID, data.power + data.inc_stat)
