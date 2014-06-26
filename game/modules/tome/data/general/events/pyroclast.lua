@@ -74,8 +74,7 @@ game.zone.on_turn = function()
 	game.level.data.meteor_x, game.level.data.meteor_y = x, y
 	game.level.map:particleEmitter(game.level.data.meteor_x, game.level.data.meteor_y, 10, "meteor").on_remove = function()
 		local x, y = game.level.data.meteor_x, game.level.data.meteor_y
-		game.level.map:particleEmitter(x, y, 10, "ball_fire", {radius=5})
-		if core.shader.allow("distort") then game.level.map:particleEmitter(x, y, 5, "fireflash", {radius=5}) end
+		game.level.map:particleEmitter(x, y, 5, "fireflash", {radius=5})
 		game:playSoundNear(game.player, "talents/fireflash")
 
 		for i = x-2, x+2 do for j = y-2, y+2 do
