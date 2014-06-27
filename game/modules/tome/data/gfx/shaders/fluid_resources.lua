@@ -23,6 +23,7 @@ return {
 	args = {
 		tex = { texture = 0 },
 		mainfbo = { texture = 1 },
+		skybox = { texture = 2 },
 	},
 	clone = false,
 	permanent = true,
