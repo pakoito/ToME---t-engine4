@@ -3054,6 +3054,29 @@ static int gl_fbo_to_png(lua_State *L)
 	return 1;
 }
 
+
+static int fbo_texture_bind(lua_State *L)
+{
+	lua_fbo *fbo = (lua_fbo*)auxiliar_checkclass(L, "gl{fbo}", 1);
+	int i = luaL_checknumber(L, 2);
+
+	if (i > 0)
+	{
+		if (multitexture_active && shaders_active)
+		{
+			tglActiveTexture(GL_TEXTURE0+i);
+			tglBindTexture(GL_TEXTURE_2D, fbo->texture);
+			tglActiveTexture(GL_TEXTURE0);
+		}
+	}
+	else
+	{
+		tglBindTexture(GL_TEXTURE_2D, fbo->texture);
+	}
+
+	return 0;
+}
+
 static const struct luaL_Reg displaylib[] =
 {
 	{"setTextBlended", set_text_aa},
@@ -3150,6 +3173,7 @@ static const struct luaL_Reg gl_fbo_reg[] =
 	{"__gc", gl_free_fbo},
 	{"toScreen", gl_fbo_toscreen},
 	{"postEffects", gl_fbo_posteffects},
+	{"bind", fbo_texture_bind},
 	{"use", gl_fbo_use},
 	{"png", gl_fbo_to_png},
 	{NULL, NULL},
