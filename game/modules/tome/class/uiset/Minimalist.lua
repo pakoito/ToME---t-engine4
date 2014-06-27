@@ -49,7 +49,7 @@ local frames_colors = {
 air_c = {0x92/255, 0xe5, 0xe8}
 air_sha = Shader.new("resources", {require_shader=4, delay_load=true, color=air_c, speed=100, amp=0.8, distort={2,2.5}})
 life_c = {0xc0/255, 0, 0}
-life_sha = Shader.new("resources", {require_shader=4, delay_load=true, color=life_c, speed=1000, distort={1.5,1.5}})
+life_sha = Shader.new("fluid_resources", {require_shader=4, delay_load=true})
 shield_c = {0.5, 0.5, 0.5}
 shield_sha = Shader.new("resources", {require_shader=4, delay_load=true, color=shield_c, speed=5000, a=0.8, distort={0.5,0.5}})
 stam_c = {0xff/255, 0xcc/255, 0x80/255}
@@ -80,6 +80,9 @@ fortress_c = {0x39/255, 0xd5/255, 0x35/255}
 fortress_sha = Shader.new("resources", {require_shader=4, delay_load=true, color=fortress_c, speed=2000, distort={0.4,0.4}})
 save_c = pos_c
 save_sha = pos_sha
+
+skybox = core.display.loadImage("/data/gfx/skyboxes/default.png"):glTexture()
+fluid_life = {core.display.loadImage("/data/gfx/ui/resources/fluid_equilibrium.png"):glTexture()}
 
 sshat = {core.display.loadImage("/data/gfx/ui/resources/shadow.png"):glTexture()}
 bshat = {core.display.loadImage("/data/gfx/ui/resources/back.png"):glTexture()}
@@ -666,7 +669,12 @@ function _M:displayResources(scale, bx, by, a)
 		bshat[1]:toScreenFull(x, y, bshat[6], bshat[7], bshat[2], bshat[3], 1, 1, 1, a)
 		if life_sha.shad then life_sha:setUniform("a", a) life_sha.shad:use(true) end
 		local p = math.min(1, math.max(0, player.life / player.max_life))
-		shat[1]:toScreenPrecise(x+49, y+10, shat[6] * p, shat[7], 0, p * 1/shat[4], 0, 1/shat[5], life_c[1], life_c[2], life_c[3], a)
+		
+		game.fbo2:bind(1)
+		skybox:bind(2)
+		fluid_life[1]:toScreenPrecise(x+49, y+10, shat[6] * p, shat[7], 0, p * 1/shat[4], 0, 1/shat[5], 1, 1, 1, a)
+		--fluid_life[1]:toScreenPrecise(x+49, y+10, fluid_life[6] * p, fluid_life[7], 0, p * 1/fluid_life[4], 0, 1/fluid_life[5], life_c[1], life_c[2], life_c[3], a)
+
 		if life_sha.shad then life_sha.shad:use(false) end
 
 		local life_regen = player.life_regen * util.bound((player.healing_factor or 1), 0, 2.5)
