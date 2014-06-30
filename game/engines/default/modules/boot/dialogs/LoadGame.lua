@@ -175,7 +175,7 @@ end
 function _M:playSave()
 	if not self.save_sel then return end
 
-	if engine.version_compare(self.save_sel.module_version, {1, 2, 0}) == "lower" then
+	if self.save_sel.module == "tome" and engine.version_compare(self.save_sel.module_version, {1, 2, 0}) == "lower" then
 		Dialog:yesnoLongPopup("Incompatible savefile", [[Due to huge changes in 1.2.0 all previous savefiles will not work with it.
 This savefile requires a game version lower than 1.2.0 and thus can not be loaded.
 
