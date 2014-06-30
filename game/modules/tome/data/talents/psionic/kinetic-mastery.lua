@@ -160,7 +160,7 @@ newTalent{
 	type = {"psionic/kinetic-mastery", 3},
 	require = psi_wil_high3, 
 	points = 5,
-	mode = "sustained",
+	mode = "sustained", no_sustain_autoreset = true,
 	sustain_psi = 25,
 	cooldown = 10,
 	range = function(self, t) return math.floor(self:combatTalentScale(t, 3, 5, "log")) end, 
@@ -179,7 +179,8 @@ newTalent{
 	deactivate = function(self, t, p)
 		self:removeTemporaryValue("projectile_evasion", p.chance)
 		self:removeTemporaryValue("projectile_evasion_spread", p.spread)
-		
+		if self:attr("save_cleanup") then return true end
+	
 		local tg = self:getTalentTarget(t)
 		local tx, ty = self:getTarget(tg)
 		if not tx or not ty then return nil end

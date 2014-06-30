@@ -618,6 +618,7 @@ function _M:spawnWorldAmbush(enc, dx, dy, kind)
 			actor = { class = "mod.class.generator.actor.Random", nb_npc = enc.nb or {1,1}, filters=enc.filters },
 		},
 
+		reload_lists = false,
 		npc_list = mod.class.NPC:loadList("/data/general/npcs/all.lua", nil, nil, function(e) e.make_escort=nil end),
 		grid_list = terrains,
 		object_list = mod.class.Object:loadList("/data/general/objects/objects.lua"),
