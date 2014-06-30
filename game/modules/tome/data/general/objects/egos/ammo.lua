@@ -64,7 +64,7 @@ newEntity{
 	rarity = 7,
 	cost = 6,
 	combat = {
-		capacity = resolvers.generic(function(e) return e.combat.capacity * rng.float(1.3, 1.6) end),
+		capacity = resolvers.generic(function(e) return math.ceil(e.combat.capacity * rng.float(1.3, 1.6)) end),
 	},
 	wielder = {
 		ammo_reload_speed = resolvers.mbonus_material(4, 1),
@@ -327,7 +327,7 @@ newEntity{
 		dam = resolvers.mbonus_material(10, 2),
 		apr  = resolvers.mbonus_material(10, 2),
 		ammo_regen = resolvers.mbonus_material(3, 1),
-		capacity = resolvers.generic(function(e) return e.combat.capacity * rng.float(1.2, 1.5) end),
+		capacity = resolvers.generic(function(e) return math.ceil(e.combat.capacity * rng.float(1.2, 1.5)) end),
 	},
 	resolvers.genericlast(function(e)
 		e.combat.ammo_every = 6 - e.combat.ammo_regen
