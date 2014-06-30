@@ -155,8 +155,8 @@ newTalent{
 	cooldown = 10,
 	range = function(self,t) return self:combatTalentScale(t, 4, 6) end,
 	radius = function(self,t) return self:combatTalentScale(t, 2, 4) end,
-	tactical = { ATTACKAREA = { FIRE = 2, COLD = 2 } },
-	getDamage = function(self, t) return self:combatTalentMindDamage(t, 30, 300) end,
+	tactical = { ATTACKAREA = { FIRE = 3, COLD = 2 }, PSI = 2 },
+	getDamage = function(self, t) return self:combatTalentMindDamage(t, 50, 150) end,
 	action = function(self, t)
 		local tg = {type="ball", range=self:getTalentRange(t), selffire=false, radius=self:getTalentRadius(t), talent=t}
 		local x, y = self:getTarget(tg)
@@ -180,7 +180,7 @@ newTalent{
 	info = function(self, t)
 		local dam = t.getDamage(self, t)
 		local dam1 = dam * (self:getMaxPsi() - self:getPsi()) / self:getMaxPsi()
-		local dam2 = dam * self:getPsi() / self:getMaxPsi()
+		local dam2 = dam * self:getPsi() / self:getMaxPsi() * 2
 		return ([[You seek balance between fire and cold based on your current Psi level.
 		You blast your foes with %0.1f Fire damage based on your current Psi, %0.1f Cold damage based on your max Psi minus your current Psi, in a radius %d ball.
 		This sets your current Psi to half of your maximum Psi.

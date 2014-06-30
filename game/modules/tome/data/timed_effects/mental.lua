@@ -1336,7 +1336,7 @@ newEffect{
 newEffect{
 	name = "QUICKNESS", image = "effects/quickness.png",
 	desc = "Quick",
-	long_desc = function(self, eff) return ("Increases physical attack speed by %d%%."):format(eff.power * 100) end,
+	long_desc = function(self, eff) return ("Increases global speed by %d%%."):format(eff.power * 100) end,
 	type = "mental",
 	subtype = { telekinesis=true, speed=true },
 	status = "beneficial",
@@ -1344,12 +1344,13 @@ newEffect{
 	on_gain = function(self, err) return "#Target# speeds up.", "+Quick" end,
 	on_lose = function(self, err) return "#Target# slows down.", "-Quick" end,
 	activate = function(self, eff)
-		eff.tmpid = self:addTemporaryValue("combat_physspeed", eff.power)
+		eff.tmpid = self:addTemporaryValue("global_speed_add", eff.power)
 	end,
 	deactivate = function(self, eff)
-		self:removeTemporaryValue("combat_physspeed", eff.tmpid)
+		self:removeTemporaryValue("global_speed_add", eff.tmpid)
 	end,
 }
+
 newEffect{
 	name = "PSIFRENZY", image = "talents/frenzied_focus.png",
 	desc = "Frenzied Focus",
@@ -3118,6 +3119,7 @@ newEffect{
 	on_lose = function(self, eff) return nil, nil end,
 	on_merge = function(self, old_eff, new_eff)
 		old_eff.power = new_eff.power + old_eff.power
+		old_eff.dur = new_eff.dur
 		return old_eff
 	end,
 	activate = function(self, eff)

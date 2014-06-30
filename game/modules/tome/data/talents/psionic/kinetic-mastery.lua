@@ -53,67 +53,107 @@ newTalent{
 	end,
 }
 
+
 newTalent{
-	name = "Telekinetic Throw",
+	name = "Kinetic Surge",
 	type = {"psionic/kinetic-mastery", 2},
 	require = psi_wil_high2,
 	points = 5,
 	random_ego = "attack",
 	cooldown = 15,
 	psi = 20,
-	tactical = { ATTACK = { PHYSICAL = 2 } },
-	range = function(self, t) return math.floor(self:combatStatScale("str", 1, 5) + self:combatMindpower()/20) end,
+	tactical = { CLOSEIN = 2, ATTACK = { PHYSICAL = 2 }, ESCAPE = 2 },
+	range = function(self, t) return self:combatTalentLimit(t, 10, 6, 9) end,
 	getDamage = function (self, t)
-		return math.floor(self:combatTalentMindDamage(t, 10, 170))
+		return math.floor(self:combatTalentMindDamage(t, 20, 180))
 	end,
 	getKBResistPen = function(self, t) return self:combatTalentLimit(t, 100, 25, 45) end,
 	requires_target = true,
 	target = function(self, t) return {type="ball", range=self:getTalentRange(t), radius=2, selffire=false, talent=t} end,
 	action = function(self, t)
-		local tg = {type="hit", range=1}
+		local tg = {type="hit", range=1, nowarning=true }
 		local x, y, target = self:getTarget(tg)
 		if not x or not y or not target then return nil end
 		if core.fov.distance(self.x, self.y, x, y) > 1 then return nil end
-		
-		local tg = self:getTalentTarget(t)
-		local x, y = self:getTarget(tg)
-		if not x or not y then return nil end
 		local dam = self:mindCrit(t.getDamage(self, t))
-		
-		if target:canBe("knockback") or rng.percent(t.getKBResistPen(self, t)) then
-			self:project({type="hit", range=tg.range}, target.x, target.y, DamageType.PHYSICAL, dam) --Direct Damage
-			
-		local tx, ty = util.findFreeGrid(x, y, 5, true, {[Map.ACTOR]=true})
-		if tx and ty then
-			local ox, oy = target.x, target.y
-			target:move(tx, ty, true)
-			if config.settings.tome.smooth_move > 0 then
-				target:resetMoveAnim()
-				target:setMoveAnim(ox, oy, 8, 5)
+				
+		if self:reactionToward(target) < 0 then
+			local tg = self:getTalentTarget(t)
+			local x, y = self:getTarget(tg)
+			if not x or not y then return nil end
+
+			if target:canBe("knockback") or rng.percent(t.getKBResistPen(self, t)) then
+				self:project({type="hit", range=tg.range}, target.x, target.y, DamageType.PHYSICAL, dam) --Direct Damage
+				
+				local tx, ty = util.findFreeGrid(x, y, 5, true, {[Map.ACTOR]=true})
+				if tx and ty then
+					local ox, oy = target.x, target.y
+					target:move(tx, ty, true)
+					if config.settings.tome.smooth_move > 0 then
+						target:resetMoveAnim()
+						target:setMoveAnim(ox, oy, 8, 5)
+					end
+				end
+				self:project(tg, target.x, target.y, DamageType.SPELLKNOCKBACK, dam/2) --AOE damage
+				if target:canBe("stun") then
+					target:setEffect(target.EFF_STUNNED, math.floor(self:getTalentRange(t) / 2), {apply_power=self:combatMindpower()})
+				else
+					game.logSeen(target, "%s resists the stun!", target.name:capitalize())
+				end
+			else --If the target resists the knockback, do half damage to it.
+				target:logCombat(self, "#YELLOW##Source# resists #Target#'s throw!")
+				self:project({type="hit", range=tg.range}, target.x, target.y, DamageType.PHYSICAL, dam/2)
 			end
-		end
-		self:project(tg, target.x, target.y, DamageType.SPELLKNOCKBACK, dam/2) --AOE damage
-		if target:canBe("stun") then
-			target:setEffect(target.EFF_STUNNED, 4, {apply_power=self:combatMindpower()})
 		else
-			game.logSeen(target, "%s resists the stun!", target.name:capitalize())
-		end
-		else --If the target resists the knockback, do half damage to it.
-			target:logCombat(self, "#YELLOW##Source# resists #Target#'s throw!")
-			self:project({type="hit", range=tg.range}, target.x, target.y, DamageType.PHYSICAL, dam/2)
+			local tg = {type="beam", range=self:getTalentRange(t), nolock=true, talent=t, display={particle="bolt_earth", trail="earthtrail"}}
+			local x, y = self:getTarget(tg)
+			if not x or not y then return nil end
+			if core.fov.distance(self.x, self.y, x, y) > tg.range then return nil end
+
+			for i = 1, math.floor(self:getTalentRange(t) / 2) do
+				self:project(tg, x, y, DamageType.DIG, 1)
+			end
+			self:project(tg, x, y, DamageType.MINDKNOCKBACK, dam)
+			local _ _, x, y = self:canProject(tg, x, y)
+			game.level.map:particleEmitter(self.x, self.y, tg.radius, "flamebeam", {tx=x-self.x, ty=y-self.y})
+			game:playSoundNear(self, "talents/lightning")
+
+			local block_actor = function(_, bx, by) return game.level.map:checkEntity(bx, by, engine.Map.TERRAIN, "block_move", self) end
+			local l = self:lineFOV(x, y, block_actor)
+			local lx, ly, is_corner_blocked = l:step()
+			local tx, ty = self.x, self.y
+			while lx and ly do
+				if is_corner_blocked or block_actor(_, lx, ly) then break end
+				tx, ty = lx, ly
+				lx, ly, is_corner_blocked = l:step()
+			end
+
+			--self:move(tx, ty, true)
+			local fx, fy = util.findFreeGrid(tx, ty, 5, true, {[Map.ACTOR]=true})
+			if not fx then
+				self:move(fx, fy, true)
+			end
+			return true
 		end
 		return true
 	end,
 	info = function(self, t)
 		local range = self:getTalentRange(t)
 		local dam = damDesc(self, DamageType.PHYSICAL, t.getDamage(self, t))
-		return ([[Use your telekinetic power to enhance your strength, allowing you to pick up an adjacent enemy and hurl it anywhere within radius %d. 
-		Upon landing, your target takes %0.1f Physical damage and is stunned for 4 turns.  All other creatures within radius 2 of the landing point take %0.1f Physical damage and are knocked away from you.
+		return ([[Build telekinetic power and dump it onto an adjacent creature or yourself. 
+		This will launch them to where ever you target in a radius of %d. 
+		
+		Upon landing, launched enemy takes %0.1f Physical damage and is stunned for %d turns.  
+		All other creatures within radius 2 of the landing point take %0.1f Physical damage and are knocked away from you.
 		This talent ignores %d%% of the knockback resistance of the thrown target, which takes half damage if it resists being thrown.
+		
+		When used on yourself, you will launch in a straight line, knocking enemies flying and doing %0.1f Physical damage to each.
+		You can break through %d walls while doing this.
 		The damage improves with your Mindpower and the range increases with both Mindpower and Strength.]]):
-		format(range, dam, dam/2, t.getKBResistPen(self, t))
+		format(range, dam, math.floor(range/2), dam/2, t.getKBResistPen(self, t), dam, math.floor(range/2))
 	end,
 }
+
 
 newTalent{
 	name = "Deflect Projectiles",

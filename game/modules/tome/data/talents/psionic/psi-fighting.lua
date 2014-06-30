@@ -110,6 +110,7 @@ newTalent{
 	no_energy = true,
 	tactical = { BUFF = 2 },
 	getWeaponDamage = function(self, t) return self:combatTalentWeaponDamage(t, 0.75, 1.1) end,
+	getChance = function(self, t) return math.floor(self:combatStatScale("cun", 1, 30)) end,
 	action = function(self, t)
 		self:setEffect(self.EFF_WEAPON_WARDING, 1, {})
 		return true
@@ -117,9 +118,10 @@ newTalent{
 	info = function(self, t)
 		return ([[Assume a defensive mental state.
 		For one turn, you will fully block the next melee attack used against you with your telekinetically-wielded weapon and then strike the attacker with it for %d%% weapon damage. 
-		At talent level 3 you will also disarm the attacker for 3 turns.
-		This requires both a mainhand and a telekinetically-wielded weapon.]]):
-		format(100 * t.getWeaponDamage(self, t))
+		At raw talent level 3 you will also disarm the attacker for 3 turns.
+		At raw talent level 5 you will be able to reflexively block up to one attack per turn with a %d%% chance, based on your cunning. Each trigger requires and uses 15 Psi.
+		This requires a telekinetically-wielded weapon.]]):
+		format(100 * t.getWeaponDamage(self, t), t.getChance(self, t))
 	end,
 }
 

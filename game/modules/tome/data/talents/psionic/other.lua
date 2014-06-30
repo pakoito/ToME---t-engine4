@@ -249,7 +249,7 @@ newTalent{
 
 		local ret = {}
 		if tk.type == "gem" then
-			local power = (tk.material_level or 1) * 4 + math.ceil(self:callTalent(self.T_RESONANT_FOCUS, "bonus") / 5)
+			local power = (tk.material_level or 1) * 3 + math.ceil(self:callTalent(self.T_RESONANT_FOCUS, "bonus") / 5)
 			self:talentTemporaryValue(ret, "inc_stats", {
 				[self.STAT_STR] = power,
 				[self.STAT_DEX] = power,
@@ -273,7 +273,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		local base = [[Allows you to wield a physical melee weapon, a mindstar or a gem telekinetically, gaining a special effect for each.
-		A gem will provide +4 bonus to all primary stats per tier of the gem.
+		A gem will provide +3 bonus to all primary stats per tier of the gem.
 		A mindstar will randomly try to telekinetically grab a far away foe (5% chance and range 2 for a tier 1 mindstar, +1 range and +5% chance for each tier above 1) and pull it into melee range.
 		A physical melee weapon will act as a semi independant entity, attacking foes nearby each turn while also replacing Strength and Dexterity with Willpower and Cunning for accuracy and damage calculations (for all melee weapons).
 

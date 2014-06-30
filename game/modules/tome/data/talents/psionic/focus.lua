@@ -76,7 +76,7 @@ newTalent{
 	range = 0,
 	radius = function(self,t) return self:combatTalentScale(t, 4, 6) end,
 	getDamage = function (self, t)
-		return self:combatTalentMindDamage(t, 50, 480)
+		return self:combatTalentMindDamage(t, 20, 450)
 	end,
 	target = function(self, t)
 		return {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t), friendlyfire=false}
@@ -110,7 +110,7 @@ newTalent{
 	range = function(self,t) return self:combatTalentScale(t, 3, 5) end,
 	radius = function(self,t) return self:combatTalentScale(t, 2, 3) end,
 	tactical = { DISABLE = 2, ATTACKAREA = { LIGHTNING = 2 } },
-	getDamage = function(self, t) return self:combatTalentMindDamage(t, 30, 300) end,
+	getDamage = function(self, t) return self:combatTalentMindDamage(t, 20, 290) end,
 	action = function(self, t)		
 		local tg = {type="ball", range=self:getTalentRange(t), selffire=false, radius=self:getTalentRadius(t), talent=t}
 		local x, y = self:getTarget(tg)
@@ -150,13 +150,13 @@ newTalent{
 	require = psi_wil_req4,
 	points = 5,
 	mode = "passive",
-	stunImmune = function(self, t) return self:combatTalentLimit(t, 1, 0.10, 0.50) end,
-	cureChance = function(self, t) return self:combatTalentLimit(t, 1, 0.10, 0.35) end,
+	stunImmune = function(self, t) return self:combatTalentLimit(t, 1, 0.10, 0.40) end,
+	cureChance = function(self, t) return self:combatTalentLimit(t, 1, 0.10, 0.30) end,
 	passives = function(self, t, p)
 		self:talentTemporaryValue(p, "stun_immune", t.stunImmune(self, t))
 	end,
 	callbackOnActBase = function(self, t)
-		if not rng.chance(t.cureChance(self, t)*100) then return end
+		if not rng.percent(t.cureChance(self, t)*100) then return end
 	
 		local effs = {}
 		-- Go through all spell effects
@@ -170,7 +170,7 @@ newTalent{
 		if #effs > 0 then
 			local eff = rng.tableRemove(effs)
 			self:removeEffect(eff[2])
-			game.logSeen(self, "%s has recovered!", self.name:capitalize())
+			game.logSeen(self, "#ORCHID#%s has recovered!", self.name:capitalize())
 		end
 	end,
 	info = function(self, t)

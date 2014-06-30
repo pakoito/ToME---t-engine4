@@ -53,11 +53,9 @@ newTalent{
 			end
 		end
 
-
 		for i = 1, t.numCure(self, t) do
 			if #effs == 0 then break end
 			local eff = rng.tableRemove(effs)
-
 
 			if eff[1] == "effect" then
 				self:removeEffect(eff[2])
@@ -195,33 +193,7 @@ newTalent{
 			self:setEffect(self.EFF_PSI_REGEN, dur, {power=amt})
 			self.changed = true
 			d.used_talent = true
-			local gem_names = {
-				GEM_DIAMOND = "Diamond",
-				GEM_PEARL = "Pearl",
-				GEM_MOONSTONE = "Moonstone", 
-				GEM_FIRE_OPAL = "Fire Opal",
-				GEM_BLOODSTONE = "Bloodstone",
-				GEM_RUBY = "Ruby",
-				GEM_AMBER = "Amber",
-				GEM_TURQUOISE = "Turquoise",
-				GEM_JADE = "Jade",
-				GEM_SAPPHIRE = "Sapphire",
-				GEM_QUARTZ = "Quartz",
-				GEM_EMERALD = "Emerald",
-				GEM_LAPIS_LAZULI = "Lapis Lazuli",
-				GEM_GARNET = "Garnet",
-				GEM_ONYX = "Onyx",
-				GEM_AMETHYST = "Amethyst", 
-				GEM_OPAL = "Opal", 
-				GEM_TOPAZ = "Topaz",
-				GEM_AQUAMARINE = "Aquamarine",
-				GEM_AMETRINE = "Ametrine",
-				GEM_ZIRCON = "Zircon",
-				GEM_SPINEL = "Spinel",
-				GEM_CITRINE = "Citrine",
-				GEM_AGATE = "Agate",
-			}
-			self:setEffect(self.EFF_CRYSTAL_BUFF, dur, {name=gem_names[gem.define_as], gem=gem.define_as})
+			self:setEffect(self.EFF_CRYSTAL_BUFF, dur, {name=gem.name, effects=gem.wielder})
 		end)
 		local co = coroutine.running()
 		d.unload = function(self) coroutine.resume(co, self.used_talent) end
@@ -259,9 +231,9 @@ newTalent{
 	info = function(self, t)
 		local inc = t.bonus(self,t)
 		return ([[By carefully synchronizing your mind to the resonant frequencies of your psionic focus, you strengthen its effects.
-		For conventional weapons, this increases the percentage of your willpower and cunning that is used in place of strength and dexterity, from 80%% to %d%%.
-		For mindstars, this increases the chance to pull enemies to you by +%d%%.
+		For conventional weapons, this increases the percentage of your willpower and cunning that is used in place of strength and dexterity, from 60%% to %d%%.
+		For mindstars, this increases the amount of Psi you can store by +%d.
 		For gems, this increases the bonus stats by %d.]]):
-		format(80+inc, inc, math.ceil(inc/5))
+		format(60+inc, inc, math.ceil(inc/5))
 	end,
 }

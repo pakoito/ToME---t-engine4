@@ -21,16 +21,11 @@
 -- Note: This is consistent with raw damage but is applied after damage multipliers
 local function getShieldStrength(self, t)
 	--return math.max(0, self:combatMindpower())
-	return self:combatTalentMindDamage(t, 10, 100)
-end
-
-local function getSpikeStrength(self, t)
-	local ss = getShieldStrength(self, t)
-	return 75*self:getTalentLevel(t) + ss*6.85
+	return self:combatTalentMindDamage(t, 20, 100)
 end
 
 local function getEfficiency(self, t)
-	return self:combatTalentLimit(t, 100, 20, 70)/100 -- Limit to <100%
+	return self:combatTalentLimit(t, 100, 20, 55)/100 -- Limit to <100%
 end
 
 local function maxPsiAbsorb(self, t) -- Max psi/turn to prevent runaway psi gains (solipsist randbosses)
@@ -60,9 +55,9 @@ local function shieldAbsorb(self, t, p, absorbed)
 	local cturn = math.floor(game.turn / 10)
 	if cturn ~= p.last_absorbs.last_turn then
 		local diff = cturn - p.last_absorbs.last_turn
-		for i = 5, 0, -1 do
+		for i = 2, 0, -1 do
 			local ni = i + diff
-			if ni <= 5 then
+			if ni <= 2 then
 				p.last_absorbs.values[ni] = p.last_absorbs.values[i]
 			end
 			p.last_absorbs.values[i] = nil
@@ -74,14 +69,14 @@ end
 
 local function shieldSpike(self, t, p)
 	local val = 0
-	for i = 0, 5 do val = val + (p.last_absorbs.values[i] or 0) end
+	for i = 0, 2 do val = val + (p.last_absorbs.values[i] or 0) end
 
-	self:setEffect(self.EFF_PSI_DAMAGE_SHIELD, 5, {power=val})
+	self:setEffect(self.EFF_PSI_DAMAGE_SHIELD, 5, {power=val*2})
 end
 
 local function shieldOverlay(self, t, p)
 	local val = 0
-	for i = 0, 5 do val = val + (p.last_absorbs.values[i] or 0) end
+	for i = 0, 2 do val = val + (p.last_absorbs.values[i] or 0) end
 	if val <= 0 then return "" end
 	local fnt = "buff_font_small"
 	if val >= 1000 then fnt = "buff_font_smaller" end
@@ -173,7 +168,6 @@ newTalent{
 	end,
 	deactivate = function(self, t, p)
 		self:removeParticles(p.particle)
-		local spike_str = getSpikeStrength(self, t)
 		self:removeTemporaryValue("kinetic_shield", p.am)
 		if self:attr("save_cleanup") then return true end
 
@@ -225,7 +219,7 @@ newTalent{
 		local absorb = 100*getEfficiency(self,t)
 		return ([[Surround yourself with a shield that will absorb %d%% of any physical/acid/nature/temporal attack, up to a maximum of %d damage per attack.
 		Every time your shield absorbs damage, you convert some of the attack into energy, gaining two points of Psi, plus an additional point for every %0.1f points of damage absorbed, up to a maximum %0.1f points each turn.
-		At talent level 3, when you de-activate the shield all the absorbed damage in the last 6 turns is released as a full psionic shield (absorbing all damage).
+		At talent level 3, when you de-activate the shield twice the absorbed damage in the last 3 turns is released as a full psionic shield (absorbing all damage).
 		The maximum amount of damage your shield can absorb and the efficiency of the psi gain scale with your mindpower.]]):
 		format(absorb, s_str, shieldMastery(self, t), maxPsiAbsorb(self,t))
 	end,
@@ -318,7 +312,6 @@ newTalent{
 	end,
 	deactivate = function(self, t, p)
 		self:removeParticles(p.particle)
-		local spike_str = getSpikeStrength(self, t)
 		self:removeTemporaryValue("thermal_shield", p.am)
 		if self:attr("save_cleanup") then return true end
 
@@ -368,7 +361,7 @@ newTalent{
 		local absorb = 100*getEfficiency(self,t)
 		return ([[Surround yourself with a shield that will absorb %d%% of any fire/cold/light/arcane attack, up to a maximum of %d damage per attack. 
 		Every time your shield absorbs damage, you convert some of the attack into energy, gaining two points of Psi, plus an additional point for every %0.1f points of damage absorbed, up to a maximum %0.1f points each turn.
-		At talent level 3, when you de-activate the shield all the absorbed damage in the last 6 turns is released as a full psionic shield (absorbing all damage).
+		At talent level 3, when you de-activate the shield twice the absorbed damage in the last 3 turns is released as a full psionic shield (absorbing all damage).
 		The maximum amount of damage your shield can absorb and the efficiency of the psi gain scale with your mindpower.]]):
 		format(absorb, s_str, shieldMastery(self, t), maxPsiAbsorb(self,t))
 	end,
@@ -458,7 +451,6 @@ newTalent{
 	end,
 	deactivate = function(self, t, p)
 		self:removeParticles(p.particle)
-		local spike_str = getSpikeStrength(self, t)
 		self:removeTemporaryValue("charged_shield", p.am)
 		if self:attr("save_cleanup") then return true end
 
@@ -510,7 +502,7 @@ newTalent{
 		local absorb = 100*getEfficiency(self,t)
 		return ([[Surround yourself with a shield that will absorb %d%% of any lightning/blight/darkness/mind attack, up to a maximum of %d damage per attack.
 		Every time your shield absorbs damage, you convert some of the attack into energy, gaining two points of Psi, plus an additional point for every %0.1f points of damage absorbed, up to a maximum %0.1f points each turn.
-		At talent level 3, when you de-activate the shield all the absorbed damage in the last 6 turns is released as a full psionic shield (absorbing all damage).
+		At talent level 3, when you de-activate the shield twice the absorbed damage in the last 3 turns is released as a full psionic shield (absorbing all damage).
 		The maximum amount of damage your shield can absorb and the efficiency of the psi gain scale with your mindpower.]]):
 		format(absorb, s_str, shieldMastery(self, t), maxPsiAbsorb(self,t))
 	end,

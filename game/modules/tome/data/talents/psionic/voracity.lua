@@ -37,11 +37,11 @@ newTalent{
 	end,
 	getLeech = function(self, t, psi)
 		local psi = psi or self:getPsi()
-		return self:combatTalentScale(t, 10, 27)*math.max(0.5, (1.5-psi/self:getMaxPsi()))
+		return self:combatTalentScale(t, 10, 20)*math.max(0.5, (1.5-psi/self:getMaxPsi()))
 	end,
 	getDam = function(self, t, psi)
 		local psi = psi or self:getPsi()
-		return self:combatTalentMindDamage(t, 20, 200)*math.max(0.5, (1.5-psi/self:getMaxPsi())) --this looks high
+		return self:combatTalentMindDamage(t, 5, 45)*math.max(0.5, (1.5-psi/self:getMaxPsi())) --this looks high
 	end,
 	getSlow = function(self, t, psi)
 		local psi = psi or self:getPsi()
@@ -103,11 +103,11 @@ newTalent{
 	end,
 	getLeech = function(self, t, psi)
 		local psi = psi or self:getPsi()
-		return self:combatTalentScale(t, 10, 27)*math.max(0.5, (1.5-psi/self:getMaxPsi()))
+		return self:combatTalentScale(t, 10, 20)*math.max(0.5, (1.5-psi/self:getMaxPsi()))
 	end,
 	getDam = function(self, t, psi)
 		local psi = psi or self:getPsi()
-		return self:combatTalentMindDamage(t, 20, 200)*math.max(0.5, (1.5-psi/self:getMaxPsi()))
+		return self:combatTalentMindDamage(t, 20, 130)*math.max(0.5, (1.5-psi/self:getMaxPsi()))
 	end,
 	getDur = function(self, t, psi)
 		local psi = psi or self:getPsi()
@@ -163,11 +163,11 @@ newTalent{
 	end,
 	getLeech = function(self, t, psi)
 		local psi = psi or self:getPsi()
-		return self:combatTalentScale(t, 10, 27)*math.max(0.5, (1.5-psi/self:getMaxPsi()))
+		return self:combatTalentScale(t, 10, 20)*math.max(0.5, (1.5-psi/self:getMaxPsi()))
 	end,
 	getDam = function(self, t, psi)
 		local psi = psi or self:getPsi()
-		return self:combatTalentMindDamage(t, 20, 200)*math.max(0.5, (1.5-psi/self:getMaxPsi()))
+		return self:combatTalentMindDamage(t, 20, 130)*math.max(0.5, (1.5-psi/self:getMaxPsi()))
 	end,
 	getDaze = function(self, t, psi)
 		local psi = psi or self:getPsi()
@@ -222,13 +222,13 @@ newTalent{
 	getPsiRecover = function(self, t) return self:combatTalentScale(t, 1.5, 5, 0.75) end,
 	passives = function(self, t, p)
 		local recover = t.getPsiRecover(self, t)
-		self:talentTemporaryValue(p, "max_psi", self:getTalentLevel(t)*10)
+		self:talentTemporaryValue(p, "max_psi", recover*5)
 		self:talentTemporaryValue(p, "psi_per_kill", recover)
 		self:talentTemporaryValue(p, "psi_on_crit", recover*0.5)
 	end,
 	info = function(self, t)
 		local recover = t.getPsiRecover(self, t)
-		return ([[Increases your maximum energy by %d. You also gain %0.1f Psi for each kill and %0.1f Psi for each mind critical.]]):format(10 * self:getTalentLevel(t), recover, 0.5*recover)
+		return ([[Increases your maximum energy by %d. You also gain %0.1f Psi for each kill and %0.1f Psi for each mind critical.]]):format(5 * recover, recover, 0.5*recover)
 	end,
 }
 

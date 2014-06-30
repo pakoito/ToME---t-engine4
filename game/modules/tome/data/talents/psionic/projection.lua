@@ -469,7 +469,7 @@ newTalent{
 	points = 5,
 	tactical = { ATTACK = { PHYSICAL = 3 } },
 	getTargNum = function(self,t)
-		return math.ceil(self:combatTalentScale(t, 1.2, 2.1, "log"))
+		return math.ceil(self:combatTalentScale(t, 1.0, 3.0, "log"))
 	end,
 	getDamage = function (self, t)
 		return math.floor(self:combatTalentMindDamage(t, 10, 200))
@@ -483,9 +483,8 @@ newTalent{
 		local targets = t.getTargNum(self,t)
 		local dur = t.duration(self,t)
 		return ([[Overcharge your psionic focus with energy for %d turns, producing a different effect depending on what it is.
-		A telekinetically wielded weapon enters a frenzy, striking up to %d targets every turn, also increases the radius by %d.
-		A mindstar will attempt to pull in all enemies within its normal range.
-		A gem will fire an energy bolt at a random enemy in range 6, each turn for %0.1f damage. The type is determined by the colour of the gem. Damage scales with Mindpower.]]):
+		A telekinetically wielded weapon enters a frenzy, striking up to %d times every turn, also increases the radius by %d.
+		A mindstar or a gem will fire an energy bolt at a random enemy in range 6, each turn for %0.1f damage. The type is determined by the colour of the gem or mindstar base damage. Damage scales with Mindpower. The mindstar will stop its normal attacks.]]):
 		format(dur, targets, targets, t.getDamage(self,t))
 	end,
 }

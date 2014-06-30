@@ -59,9 +59,9 @@ newTalent{
 	psi = 30,
 	no_energy = true,
 	getDuration = function(self, t) return math.floor(self:combatLimit(self:combatMindpower(0.1), 10, 4, 0, 6, 6)) end, -- Limit < 10
-	speed = function(self, t) return self:combatTalentScale(t, 0.1, 0.6, 0.75) end,
+	speed = function(self, t) return self:combatTalentScale(t, 0.1, 0.4, 0.75) end,
 	getBoost = function(self, t)
-		return self:combatScale(self:getTalentLevel(t)*self:combatStatTalentIntervalDamage(t, "combatMindpower", 1, 9), 15, 0, 49, 34)
+		return self:combatScale(self:combatTalentMindDamage(t, 20, 60), 0, 0, 50, 100, 0.75)
 	end,
 	action = function(self, t)
 		self:setEffect(self.EFF_QUICKNESS, t.getDuration(self, t), {power=t.speed(self, t)})
@@ -73,23 +73,56 @@ newTalent{
 		local percentinc = 100 * inc
 		local boost = t.getBoost(self, t)
 		return ([[Encase your body in a sheath of thought-quick forces, allowing you to control your body's movements directly without the inefficiency of dealing with crude mechanisms like nerves and muscles.
-		Increases Accuracy by %d, your critical strike chance by %0.1f%% and your attack speed by %d%% for %d turns.
+		Increases Accuracy by %d, your critical strike chance by %0.1f%% and your global speed by %d%% for %d turns.
 		The duration improves with your Mindpower.]]):
 		format(boost, 0.5*boost, percentinc, t.getDuration(self, t))
 	end,
 }
 
+newTalent{
+	name = "Mindhook",
+	type = {"psionic/augmented-mobility", 3},
+	require = psi_wil_req3,
+	cooldown = function(self, t) return math.ceil(self:combatTalentLimit(t, 5, 18, 10)) end, -- Limit to >5
+	psi = 10,
+	points = 5,
+	tactical = { CLOSEIN = 2 },
+	range = function(self, t) return self:combatTalentLimit(t, 10, 3, 7) end, -- Limit base range to 10
+	action = function(self, t)
+		local tg = {type="bolt", range=self:getTalentRange(t)}
+		local x, y = self:getTarget(tg)
+		if not x or not y then return nil end
+		local _ _, x, y = self:canProject(tg, x, y)
+		local target = game.level.map(x, y, engine.Map.ACTOR)
+		if not target then
+			game.logPlayer(self, "The target is out of range")
+			return
+		end
+		target:pull(self.x, self.y, tg.range)
+		target:setEffect(target.EFF_DAZED, 1, {apply_power=self:combatMindpower()})
+		game:playSoundNear(self, "talents/arcane")
+
+		return true
+	end,
+	info = function(self, t)
+		local range = self:getTalentRange(t)
+		return ([[Briefly extend your telekinetic reach to grab an enemy and haul them towards you.
+		Works on enemies up to %d squares away. 
+		The cooldown decreases, and the range increases, with additional talent points spent.]]):
+		format(range)
+	end,
+}
 
 newTalent{
 	name = "Telekinetic Leap",
-	type = {"psionic/augmented-mobility", 3},
-	require = psi_wil_req3,
+	type = {"psionic/augmented-mobility", 4},
+	require = psi_wil_req4,
 	cooldown = 15,
 	psi = 10,
 	points = 5,
 	tactical = { CLOSEIN = 2 },
 	range = function(self, t)
-		return self:combatTalentLimit(t, 10, 5, 9) -- Limit < 10
+		return math.floor(self:combatTalentLimit(t, 10, 2, 7.5)) -- Limit < 10
 	end,
 	action = function(self, t)
 		local tg = {default_target=self, type="ball", nolock=true, pass_terrain=false, nowarning=true, range=self:getTalentRange(t), radius=0, requires_knowledge=false}
@@ -98,13 +131,11 @@ newTalent{
 		local _ _, x, y = self:canProject(tg, x, y)
 		if not x or not y then return nil end
 
-
 		local fx, fy = util.findFreeGrid(x, y, 5, true, {[Map.ACTOR]=true})
 		if not fx then
 			return
 		end
 		self:move(fx, fy, true)
-
 
 		return true
 	end,
@@ -112,83 +143,5 @@ newTalent{
 		local range = self:getTalentRange(t)
 		return ([[You perform a precise, telekinetically-enhanced leap, landing up to %d squares away.]]):
 		format(range)
-	end,
-}
-
-newTalent{
-	name = "Shattering Charge",
-	type = {"psionic/augmented-mobility", 4},
-	require = psi_wil_req4,
-	points = 5,
-	psi = 40,
-	cooldown = 12,
-	tactical = { CLOSEIN = 2, ATTACK = { PHYSICAL = 2 } },
-	range = function(self, t) return self:combatTalentLimit(t, 10, 6, 9) end,
-	direct_hit = true,
-	requires_target = true,
-	getDam = function(self, t) return self:combatTalentMindDamage(t, 20, 180) end,
-	action = function(self, t)
-		if self:getTalentLevelRaw(t) < 5 then
-			local tg = {type="beam", range=self:getTalentRange(t), nolock=true, talent=t}
-			local x, y = self:getTarget(tg)
-			if not x or not y then return nil end
-			if core.fov.distance(self.x, self.y, x, y) > tg.range then return nil end
-			if self:hasLOS(x, y) and not game.level.map:checkEntity(x, y, Map.TERRAIN, "block_move") then
-				local dam = self:mindCrit(t.getDam(self, t))
-				self:project(tg, x, y, DamageType.MINDKNOCKBACK, self:mindCrit(rng.avg(2*dam/3, dam, 3)))
-				--local _ _, x, y = self:canProject(tg, x, y)
-				game.level.map:particleEmitter(self.x, self.y, tg.radius, "flamebeam", {tx=x-self.x, ty=y-self.y})
-				game:playSoundNear(self, "talents/lightning")
-				--self:move(x, y, true)
-				local fx, fy = util.findFreeGrid(x, y, 5, true, {[Map.ACTOR]=true})
-				if not fx then
-					return
-				end
-				self:move(fx, fy, true)
-			else
-				game.logSeen(self, "You can't move there.")
-				return nil
-			end
-			return true
-		else
-			local tg = {type="beam", range=self:getTalentRange(t), nolock=true, talent=t, display={particle="bolt_earth", trail="earthtrail"}}
-			local x, y = self:getTarget(tg)
-			if not x or not y then return nil end
-			if core.fov.distance(self.x, self.y, x, y) > tg.range then return nil end
-			local dam = self:mindCrit(t.getDam(self, t))
-
-			for i = 1, self:getTalentRange(t) do
-				self:project(tg, x, y, DamageType.DIG, 1)
-			end
-			self:project(tg, x, y, DamageType.MINDKNOCKBACK, self:mindCrit(rng.avg(2*dam/3, dam, 3)))
-			local _ _, x, y = self:canProject(tg, x, y)
-			game.level.map:particleEmitter(self.x, self.y, tg.radius, "flamebeam", {tx=x-self.x, ty=y-self.y})
-			game:playSoundNear(self, "talents/lightning")
-
-			local block_actor = function(_, bx, by) return game.level.map:checkEntity(bx, by, engine.Map.TERRAIN, "block_move", self) end
-			local l = self:lineFOV(x, y, block_actor)
-			local lx, ly, is_corner_blocked = l:step()
-			local tx, ty = self.x, self.y
-			while lx and ly do
-				if is_corner_blocked or block_actor(_, lx, ly) then break end
-				tx, ty = lx, ly
-				lx, ly, is_corner_blocked = l:step()
-			end
-
-			--self:move(tx, ty, true)
-			local fx, fy = util.findFreeGrid(tx, ty, 5, true, {[Map.ACTOR]=true})
-			if not fx then
-				return
-			end
-			self:move(fx, fy, true)
-			return true
-		end
-	end,
-	info = function(self, t)
-		local range = self:getTalentRange(t)
-		local dam = damDesc(self, DamageType.PHYSICAL, t.getDam(self, t))
-		return ([[You expend massive amounts of energy to launch yourself across %d squares at incredible speed. All enemies in your path will be knocked flying and dealt between %d and %d Physical damage. 
-		At talent level 5, you can batter through solid walls.]]):
-		format(range, 2*dam/3, dam)
 	end,
 }

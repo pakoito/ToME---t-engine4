@@ -2466,40 +2466,140 @@ newTalent{
 }
 
 newTalent{
-	name = "Mindhook",
+	name = "Shattering Charge",
 	type = {"psionic/other", 1},
-	cooldown = function(self, t) return math.ceil(self:combatTalentLimit(t, 5, 18, 10)) end, -- Limit to >5
-	psi = 20,
+--	require = psi_wil_req4,
 	points = 5,
-	tactical = { CLOSEIN = 2 },
-	range = function(self, t)
-		local r = self:combatTalentLimit(t, 10, 3, 7) -- Limit base range to 10
-		local gem_level = getGemLevel(self)
-		local mult = 1 + 0.005*gem_level*self:callTalent(self.T_REACH, "rangebonus") -- reduced effect of reach
-		return math.floor(r*mult)
-	end,
+	psi = 40,
+	cooldown = 12,
+	tactical = { CLOSEIN = 2, ATTACK = { PHYSICAL = 2 } },
+	range = function(self, t) return self:combatTalentLimit(t, 10, 6, 9) end,
+	direct_hit = true,
+	requires_target = true,
+	getDam = function(self, t) return self:combatTalentMindDamage(t, 20, 180) end,
 	action = function(self, t)
-		local tg = {type="bolt", range=self:getTalentRange(t)}
+		if self:getTalentLevelRaw(t) < 5 then
+			local tg = {type="beam", range=self:getTalentRange(t), nolock=true, talent=t}
+			local x, y = self:getTarget(tg)
+			if not x or not y then return nil end
+			if core.fov.distance(self.x, self.y, x, y) > tg.range then return nil end
+			if self:hasLOS(x, y) and not game.level.map:checkEntity(x, y, Map.TERRAIN, "block_move") then
+				local dam = self:mindCrit(t.getDam(self, t))
+				self:project(tg, x, y, DamageType.MINDKNOCKBACK, self:mindCrit(rng.avg(2*dam/3, dam, 3)))
+				--local _ _, x, y = self:canProject(tg, x, y)
+				game.level.map:particleEmitter(self.x, self.y, tg.radius, "flamebeam", {tx=x-self.x, ty=y-self.y})
+				game:playSoundNear(self, "talents/lightning")
+				--self:move(x, y, true)
+				local fx, fy = util.findFreeGrid(x, y, 5, true, {[Map.ACTOR]=true})
+				if fx then
+					self:move(fx, fy, true)
+				end
+			else
+				game.logSeen(self, "You can't move there.")
+				return nil
+			end
+			return true
+		else
+			local tg = {type="beam", range=self:getTalentRange(t), nolock=true, talent=t, display={particle="bolt_earth", trail="earthtrail"}}
+			local x, y = self:getTarget(tg)
+			if not x or not y then return nil end
+			if core.fov.distance(self.x, self.y, x, y) > tg.range then return nil end
+			local dam = self:mindCrit(t.getDam(self, t))
+
+			for i = 1, self:getTalentRange(t) do
+				self:project(tg, x, y, DamageType.DIG, 1)
+			end
+			self:project(tg, x, y, DamageType.MINDKNOCKBACK, self:mindCrit(rng.avg(2*dam/3, dam, 3)))
+			local _ _, x, y = self:canProject(tg, x, y)
+			game.level.map:particleEmitter(self.x, self.y, tg.radius, "flamebeam", {tx=x-self.x, ty=y-self.y})
+			game:playSoundNear(self, "talents/lightning")
+
+			local block_actor = function(_, bx, by) return game.level.map:checkEntity(bx, by, engine.Map.TERRAIN, "block_move", self) end
+			local l = self:lineFOV(x, y, block_actor)
+			local lx, ly, is_corner_blocked = l:step()
+			local tx, ty = self.x, self.y
+			while lx and ly do
+				if is_corner_blocked or block_actor(_, lx, ly) then break end
+				tx, ty = lx, ly
+				lx, ly, is_corner_blocked = l:step()
+			end
+
+			--self:move(tx, ty, true)
+			local fx, fy = util.findFreeGrid(tx, ty, 5, true, {[Map.ACTOR]=true})
+			if fx then
+				self:move(fx, fy, true)
+			end
+			return true
+		end
+	end,
+	info = function(self, t)
+		local range = self:getTalentRange(t)
+		local dam = damDesc(self, DamageType.PHYSICAL, t.getDam(self, t))
+		return ([[You expend massive amounts of energy to launch yourself across %d squares at incredible speed. All enemies in your path will be knocked flying and dealt between %d and %d Physical damage. 
+		At talent level 5, you can batter through solid walls.]]):
+		format(range, 2*dam/3, dam)
+	end,
+}
+
+newTalent{
+	name = "Telekinetic Throw",
+	type = {"psionic/other", 1},
+--	require = psi_wil_high2,
+	points = 5,
+	random_ego = "attack",
+	cooldown = 15,
+	psi = 20,
+	tactical = { ATTACK = { PHYSICAL = 2 } },
+	range = function(self, t) return math.floor(self:combatStatScale("str", 1, 5) + self:combatMindpower()/20) end,
+	getDamage = function (self, t)
+		return math.floor(self:combatTalentMindDamage(t, 10, 170))
+	end,
+	getKBResistPen = function(self, t) return self:combatTalentLimit(t, 100, 25, 45) end,
+	requires_target = true,
+	target = function(self, t) return {type="ball", range=self:getTalentRange(t), radius=2, selffire=false, talent=t} end,
+	action = function(self, t)
+		local tg = {type="hit", range=1}
+		local x, y, target = self:getTarget(tg)
+		if not x or not y or not target then return nil end
+		if core.fov.distance(self.x, self.y, x, y) > 1 then return nil end
+		
+		local tg = self:getTalentTarget(t)
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
-		local _ _, x, y = self:canProject(tg, x, y)
-		local target = game.level.map(x, y, engine.Map.ACTOR)
-		if not target then
-			game.logPlayer(self, "The target is out of range")
-			return
+		local dam = self:mindCrit(t.getDamage(self, t))
+		
+		if target:canBe("knockback") or rng.percent(t.getKBResistPen(self, t)) then
+			self:project({type="hit", range=tg.range}, target.x, target.y, DamageType.PHYSICAL, dam) --Direct Damage
+			
+		local tx, ty = util.findFreeGrid(x, y, 5, true, {[Map.ACTOR]=true})
+		if tx and ty then
+			local ox, oy = target.x, target.y
+			target:move(tx, ty, true)
+			if config.settings.tome.smooth_move > 0 then
+				target:resetMoveAnim()
+				target:setMoveAnim(ox, oy, 8, 5)
+			end
 		end
-		target:pull(self.x, self.y, tg.range)
-		target:setEffect(target.EFF_DAZED, 1, {})
-		game:playSoundNear(self, "talents/arcane")
-
+		self:project(tg, target.x, target.y, DamageType.SPELLKNOCKBACK, dam/2) --AOE damage
+		if target:canBe("stun") then
+			target:setEffect(target.EFF_STUNNED, 4, {apply_power=self:combatMindpower()})
+		else
+			game.logSeen(target, "%s resists the stun!", target.name:capitalize())
+		end
+		else --If the target resists the knockback, do half damage to it.
+			target:logCombat(self, "#YELLOW##Source# resists #Target#'s throw!")
+			self:project({type="hit", range=tg.range}, target.x, target.y, DamageType.PHYSICAL, dam/2)
+		end
 		return true
 	end,
 	info = function(self, t)
 		local range = self:getTalentRange(t)
-		return ([[Briefly extend your telekinetic reach to grab an enemy and haul them towards you.
-		Works on enemies up to %d squares away. The cooldown decreases, and the range increases, with additional talent points spent.
-		This talent receives a reduced benefit from the Reach talent.]]):
-		format(range)
+		local dam = damDesc(self, DamageType.PHYSICAL, t.getDamage(self, t))
+		return ([[Use your telekinetic power to enhance your strength, allowing you to pick up an adjacent enemy and hurl it anywhere within radius %d. 
+		Upon landing, your target takes %0.1f Physical damage and is stunned for 4 turns.  All other creatures within radius 2 of the landing point take %0.1f Physical damage and are knocked away from you.
+		This talent ignores %d%% of the knockback resistance of the thrown target, which takes half damage if it resists being thrown.
+		The damage improves with your Mindpower and the range increases with both Mindpower and Strength.]]):
+		format(range, dam, dam/2, t.getKBResistPen(self, t))
 	end,
 }
 

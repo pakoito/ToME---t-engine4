@@ -119,6 +119,13 @@ function _M:attackTarget(target, damtype, mult, noenergy, force_unharmed)
 		local ret = target:callTalent(target.T_INTUITIVE_SHOTS, "proc", self)
 		if ret then return false end
 	end
+	
+	if not target.turn_procs.warding_weapon and target:knowTalent(target.T_WARDING_WEAPON) and target:getTalentLevelRaw(target.T_WARDING_WEAPON) >= 5 
+		and rng.percent(target:callTalent(target.T_WARDING_WEAPON, "getChance")) and target:getPsi() >= 15 then
+		target:setEffect(target.EFF_WEAPON_WARDING, 1, {})
+		target.turn_procs.warding_weapon = true
+		target:incPsi(-15)
+	end
 
 	-- Change attack type if using gems
 	if not damtype and self:getInven(self.INVEN_GEM) then

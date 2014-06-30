@@ -107,7 +107,7 @@ newTalent{
 			DamageType.STATIC_NET, {dam=t.getDamage(self, t), slow=t.getSlow(self, t), weapon=t.getWeaponDamage(self, t)},
 			self:getTalentRadius(t),
 			5, nil,
-			{type="ice_vapour"},
+			MapEffect.new{color_br=30, color_bg=100, color_bb=160, effect_shader="shader_images/retch_effect.png"},
 			nil, true
 		)
 		game:playSoundNear(self, "talents/lightning")
