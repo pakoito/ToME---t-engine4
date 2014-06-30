@@ -64,7 +64,6 @@ newTalent{
 	points = 5,
 	cooldown = 0,
 	stamina = 16,
-	no_energy = "fake",
 	tactical = { ATTACK = { weapon = 2 }, CLOSEIN = 0.5 },
 	requires_target = true,
 	getDamage = function(self, t) return self:combatTalentWeaponDamage(t, 0.7, 1.8) end,
@@ -80,10 +79,8 @@ newTalent{
 		local dir = util.getDir(x, y, self.x, self.y) or 6
 		local moved = 0.5
 		if self:canMove(x, y) then
-			self:move(x, y)
+			self:move(x, y, true)
 			moved = 1
-		else
-			self:useEnergy(game.energy_to_act)
 		end
 
 		local fx, fy = util.coordAddDir(self.x, self.y, dir)
