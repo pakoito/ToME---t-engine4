@@ -34,6 +34,7 @@ newBirthDescriptor{
 		},
 	},
 	copy = {
+		mana_regen = 0.25,
 		max_life = 100,
 	},
 }
