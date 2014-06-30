@@ -70,7 +70,7 @@ newEntity{ base = "BASE_NPC_IRKKK_TOWN",
 
 newEntity{ base = "BASE_NPC_IRKKK_TOWN",
 	name = "yeek psionic", color=colors.YELLOW,
-	desc = [[You can literaly feel the mental energies emited by this yeek.]],
+	desc = [[You can literaly feel the mental energies emitted by this yeek.]],
 	level_range = {1, nil}, exp_worth = 1,
 	rarity = 3,
 	max_life = resolvers.rngavg(50,60),

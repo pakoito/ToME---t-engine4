@@ -55,7 +55,7 @@ newTalent{
 
 
 newTalent{
-	name = "Kinetic Surge",
+	name = "Kinetic Surge", image = "talents/telekinetic_throw.png",
 	type = {"psionic/kinetic-mastery", 2},
 	require = psi_wil_high2,
 	points = 5,

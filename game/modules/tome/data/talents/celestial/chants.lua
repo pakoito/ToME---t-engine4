@@ -112,7 +112,7 @@ newTalent{
 	info = function(self, t)
 		local range = -t.getDamageChange(self, t)
 		local damageonmeleehit = t.getDamageOnMeleeHit(self, t)
-		return ([[You chant the glory of the Sun, reducing the damage enemies 2 or more spaces away deal by %d%%.
+		return ([[You chant the glory of the Sun, reducing the damage enemies 3 or more spaces away deal by %d%%.
 		In addition, this talent surrounds you with a shield of light, dealing %0.1f light damage to anything that hits you in melee.
 		You may only have one Chant active at once.
 		The damage reduction will increase with talent level and light damage will increase with your Spellpower.]]):
