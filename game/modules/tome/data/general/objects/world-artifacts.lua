@@ -5634,6 +5634,7 @@ newEntity{ base = "BASE_CLOAK",
 	rarity = 400,
 	cost = 250,
 	material_level = 4,
+	special_desc = function(self) return ("Damage shields have +1 duration and +15% power") end,
 	wielder = {
 		combat_spellcrit = 6,
 		combat_def = 10,
