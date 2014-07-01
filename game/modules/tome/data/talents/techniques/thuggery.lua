@@ -122,9 +122,8 @@ newTalent{
 	sustain_stamina = 40,
 	no_energy = true,
 	require = techs_req4,
-	requires_target = true,
 	range = 1,
-	tactical = { DISABLE = 2, ATTACK = 2 },
+	tactical = { BUFF = 2 },
 	getCrit = function(self, t) return self:combatTalentStatDamage(t, "dex", 10, 50) / 1.5 end,
 	getPen = function(self, t) return self:combatLimit(self:combatTalentStatDamage(t, "str", 10, 50), 100, 0, 0, 35.7, 35.7) end, -- Limit to <100%
 	getDrain = function(self, t) return self:combatTalentLimit(t, 0, 11, 6) end, -- Limit to >0 stam
