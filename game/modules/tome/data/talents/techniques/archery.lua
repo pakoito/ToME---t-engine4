@@ -69,6 +69,7 @@ newTalent{
 		local weapon = self:hasArcheryWeapon("sling")
 		local bombardment = self:getTalentFromId("T_SKIRMISHER_BOMBARDMENT")
 		local shots = bombardment.bullet_count(self, bombardment)
+		local mult = bombardment.damage_multiplier(self, bombardment)
 
 		-- Do targeting.
 		local old_target_forced = game.target.forced
@@ -82,7 +83,7 @@ newTalent{
 		for i = 1, shots do
 			local targets = self:archeryAcquireTargets(nil, {no_energy=true, one_shot=true})
 			if not targets then break end
-			self:archeryShoot(targets, t, nil, {use_psi_archery = t.use_psi_archery(self, t)})
+			self:archeryShoot(targets, t, nil, {mult=mult, use_psi_archery = t.use_psi_archery(self, t)})
 		end
 
 		local speed = self:combatSpeed(weapon)
