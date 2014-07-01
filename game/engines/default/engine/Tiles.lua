@@ -68,7 +68,7 @@ function _M:checkTileset(f)
 	return tex, d.factorx, d.factory, d.x, d.y
 end
 
-function _M:get(char, fr, fg, fb, br, bg, bb, image, alpha, do_outline, allow_tileset)
+function _M:get(char, fr, fg, fb, br, bg, bb, image, alpha, do_outline, allow_tileset, force_texture_repeat)
 	if self.force_back_color then br, bg, bb, alpha = self.force_back_color.r, self.force_back_color.g, self.force_back_color.b, self.force_back_color.a end
 
 	alpha = alpha or 0
@@ -121,7 +121,7 @@ function _M:get(char, fr, fg, fb, br, bg, bb, image, alpha, do_outline, allow_ti
 
 		if self.texture then
 			w, h = s:getSize()
-			s, sw, sh = s:glTexture(self.sharp_scaling, true)
+			s, sw, sh = s:glTexture(self.sharp_scaling, not force_texture_repeat)
 			sw, sh = w / sw, h / sh
 			if not is_image and do_outline then
 				if type(do_outline) == "boolean" then

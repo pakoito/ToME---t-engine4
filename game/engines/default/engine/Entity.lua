@@ -328,7 +328,7 @@ function _M:makeMapObject(tiles, idx)
 					local t = amo.textures[i]
 					if type(t) == "function" then local tex, is3d = t(amo, tiles); if tex then mo:texture(i, tex, is3d, 1, 1) tiles.texture_store[tex] = true end
 					elseif type(t) == "table" then
-						if t[1] == "image" then local tex = tiles:get('', 0, 0, 0, 0, 0, 0, t[2]); mo:texture(i, tex, false, 1, 1) tiles.texture_store[tex] = true
+						if t[1] == "image" then local tex = tiles:get('', 0, 0, 0, 0, 0, 0, t[2], nil, nil, nil, true); mo:texture(i, tex, false, 1, 1) tiles.texture_store[tex] = true
 						end
 					end
 				end
