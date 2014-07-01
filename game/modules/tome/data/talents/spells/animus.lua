@@ -147,6 +147,7 @@ newTalent{
 				if m:knowTalent(m.T_BONE_SHIELD) then m:unlearnTalent(m.T_BONE_SHIELD, m:getTalentLevelRaw(m.T_BONE_SHIELD)) end
 				if m:knowTalent(m.T_MULTIPLY) then m:unlearnTalent(m.T_MULTIPLY, m:getTalentLevelRaw(m.T_MULTIPLY)) end
 				if m:knowTalent(m.T_SUMMON) then m:unlearnTalent(m.T_SUMMON, m:getTalentLevelRaw(m.T_SUMMON)) end
+				m:learnTalent(m.T_HUSK_DESTRUCT, 1)
 				m.no_points_on_levelup = true
 				m.faction = self.faction
 
@@ -234,5 +235,40 @@ newTalent{
 		- Ice Shards: each shard becomes a beam
 		- Consume Soul: effect increased by 50%%]]):
 		format(nb)
+	end,
+}
+
+
+newTalent{
+	name = "Self-destruction", short_name = "HUSK_DESTRUCT", image = "talents/golem_destruct.png",
+	type = {"spell/other", 1},
+	points = 1,
+	range = 0,
+	radius = 4,
+	no_unlearn_last = true,
+	target = function(self, t)
+		return {type="ball", range=self:getTalentRange(t), selffire=false, radius=self:getTalentRadius(t)}
+	end,
+	tactical = { ATTACKAREA = { DARKNESS = 3 } },
+	no_npc_use = true,
+	on_pre_use = function(self, t)
+		return self.summoner and self.summoner.dead
+	end,
+	action = function(self, t)
+		local tg = self:getTalentTarget(t)
+		self:project(tg, self.x, self.y, DamageType.DARKNESS, 50 + 10 * self.level)
+		if core.shader.active() then
+			game.level.map:particleEmitter(self.x, self.y, tg.radius, "starfall", {radius=tg.radius})
+		else
+			game.level.map:particleEmitter(self.x, self.y, tg.radius, "shadow_flash", {radius=tg.radius})
+		end
+		game:playSoundNear(self, "talents/fireflash")
+		self:die(self)
+		return true
+	end,
+	info = function(self, t)
+		local rad = self:getTalentRadius(t)
+		return ([[The husk self-destructs, destroying itself and generating a blast of shadows in a radius of %d, doing %0.2f darkness damage.
+		This spell is only usable when the husk's master is dead.]]):format(rad, damDesc(self, DamageType.DARKNESS, 50 + 10 * self.level))
 	end,
 }
