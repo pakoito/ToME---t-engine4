@@ -81,7 +81,7 @@ newTalent{
 	require = techs_req_high3,
 	points = 5,
 	mode = "passive",
-	getDam = function(self, t) return self:combatScale(self:getStr(7, true) * self:getTalentLevel(t), 5, 0, 40, 35) end,
+	getDam = function(self, t) return self:combatScale(self:getStr(5, true) * self:getTalentLevel(t), 5, 0, 40, 35) end,
 	getResist = function(self,t) return self:combatTalentLimit(t, 50, 10, 40) end,
 	info = function(self, t)
 		return ([[You delight in the inflicting of wounds, providing %d physical power.

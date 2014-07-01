@@ -166,6 +166,11 @@ newEffect{
 	on_lose = function(self, err) return "#Target# stops bleeding.", "-Deep Wounds" end,
 	activate = function(self, eff)
 		eff.healid = self:addTemporaryValue("healing_factor", -eff.heal_factor / 100)
+		if eff.src and eff.src:knowTalent(self.T_BLOODY_BUTCHER) then
+			local t = eff.src:getTalentFromId(eff.src.T_BLOODY_BUTCHER)
+			local resist = math.min(t.getResist(eff.src, t), math.max(0, self:combatGetResist(DamageType.PHYSICAL)))
+			self:effectTemporaryValue(eff, "resists", {[DamageType.PHYSICAL] = -resist})
+		end
 	end,
 	on_timeout = function(self, eff)
 		DamageType:get(DamageType.PHYSICAL).projector(eff.src or self, self.x, self.y, DamageType.PHYSICAL, eff.power)

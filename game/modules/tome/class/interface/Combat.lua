@@ -1498,6 +1498,9 @@ function _M:combatPhysicalpower(mod, weapon, add)
 	if self:isTalentActive(Talents.T_BLOOD_FRENZY) then
 		add = add + self.blood_frenzy
 	end
+	if self:knowTalent(self.T_BLOODY_BUTCHER) then
+		add = add + self:callTalent(Talents.T_BLOODY_BUTCHER, "getDam")
+	end
 	if self:knowTalent(self.T_EMPTY_HAND) and self:isUnarmed() then
 		local t = self:getTalentFromId(self.T_EMPTY_HAND)
 		add = add + t.getDamage(self, t)
