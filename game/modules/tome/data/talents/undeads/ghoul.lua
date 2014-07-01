@@ -23,7 +23,7 @@ newTalent{
 	mode = "passive",
 	require = undeads_req1,
 	points = 5,
-	statBonus = function(self, t) return self:combatTalentScale(t, 2, 10, 0.75) end,
+	statBonus = function(self, t) return math.ceil(self:combatTalentScale(t, 2, 10, 0.75)) end,
 	getMaxDamage = function(self, t) return math.max(50, 100 - self:getTalentLevelRaw(t) * 10) end,
 	passives = function(self, t, p)
 		self:talentTemporaryValue(p, "inc_stats", {[self.STAT_STR]=t.statBonus(self, t)})
