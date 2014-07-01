@@ -112,6 +112,7 @@ newTalent {
 	radius = archery_range,
 	cooldown = 7,
 	stamina = 45,
+	requires_target = true,
 	target = function(self, t)
 		return {
 			type = "cone",
