@@ -61,6 +61,7 @@ newTalent {
 	range = archery_range,
 	cooldown = 5,
 	stamina = 15,
+	requires_target = true,
 	on_pre_use = function(self, t, silent) return sling_equipped(self, silent) end,
 	getDamage = function(self, t)
 		return self:combatTalentWeaponDamage(t, 0.4, 1.6)
