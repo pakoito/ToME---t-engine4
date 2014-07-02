@@ -82,6 +82,10 @@ _M.temporary_values_conf.combat_mindspeed = "add" -- Prevent excessive mind spee
 -- Damage cap takes the lowest
 _M.temporary_values_conf.flat_damage_cap = "lowest"
 
+-- Projectile evasion uses highest
+_M.temporary_values_conf.projectile_evasion = "highest"
+_M.temporary_values_conf.projectile_evasion_spread = "highest"
+
 -- Damage redirection takes last
 _M.temporary_values_conf.force_use_resist = "last"
 _M.temporary_values_conf.force_use_resist_percent = "last"
