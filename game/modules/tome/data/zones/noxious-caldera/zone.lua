@@ -129,7 +129,7 @@ return {
 	fumes_active = true,
 
 	on_enter = function()
-		if not game.level.data.fumes_active or game.player:attr("no_breath") then return end
+		if not game.zone.fumes_active or game.player:attr("no_breath") then return end
 		if game.level.turn_counter then return end
 
 		game.level.turn_counter = 60 * 10 * (game.level.level == 1 and 10 or 1)
@@ -139,7 +139,7 @@ return {
 
 	on_turn = function(self)
 		if not game.level.turn_counter then return end
-		if not game.level.data.fumes_active or game.player:attr("no_breath") then return end
+		if not game.zone.fumes_active or game.player:attr("no_breath") then return end
 
 		game.level.turn_counter = game.level.turn_counter - 1
 		game.player.changed = true

@@ -84,7 +84,7 @@ newEntity{ define_as = "MINDWORM",
 	ai = "tactical", ai_state = { talent_in=1, ai_move="move_astar", },
 
 	on_die = function(self)
-		game.level.data.fumes_active = false
+		game.zone.fumes_active = false
 		require("engine.ui.Dialog"):simplePopup("Fumes", "As Mindworm dies you can feel the fumes getting less poisonous for your mind.")
 	end,
 }
