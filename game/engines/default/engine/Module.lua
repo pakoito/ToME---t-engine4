@@ -755,7 +755,7 @@ function _M:instanciate(mod, name, new_game, no_reboot, extra_module_info)
 			local f = dir.."/"..file
 			if fs.isdir(f) then
 				fp(f)
-			elseif f:find("%.lua$") then
+			elseif f:find("%.lua$") and f ~= "/mod/addons/dgo/superload/engine/PlayerProfile.lua" then				
 				local fff = fs.open(f, "r")
 				if fff then
 					local data = fff:read(10485760)
