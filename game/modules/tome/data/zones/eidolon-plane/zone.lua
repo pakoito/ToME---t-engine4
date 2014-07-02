@@ -162,7 +162,9 @@ return {
 				end
 			end
 
-			if to_worldmap then
+			if to_worldmap == "teleport" then
+				game.player:teleportRandom(math.floor(game.level.map.w / 2), math.floor(game.level.map.h / 2), 100, 10)
+			elseif to_worldmap then
 				game:changeLevel(1, game.player.last_wilderness or "wilderness", {temporary_zone_shift_back=game.level.temp_shift_zone and true or false, direct_switch=true})
 			end
 
