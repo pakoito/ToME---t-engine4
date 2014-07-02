@@ -5728,7 +5728,7 @@ newEntity{ base = "BASE_RING", define_as = "SET_LICH_RING",
 	unique = true,
 	name = "Ring of the Archlich", image = "object/artifact/ring_of_the_archlich.png",
 	unided_name = "dusty, cracked ring",
-	desc = [[This ring is filled with an overwhelming, yet restrained, power. It lashes, grasps from its metal prison, seatching for life to snuff out. You alone are unharmed.
+	desc = [[This ring is filled with an overwhelming, yet restrained, power. It lashes, grasps from its metal prison, searching for life to snuff out. You alone are unharmed.
 Perhaps it feels all the death you will bring to others in the near future.]],
 	color = colors.DARK_GREY,
 	level_range = {30, 40},
