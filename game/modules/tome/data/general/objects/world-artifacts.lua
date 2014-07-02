@@ -6216,15 +6216,13 @@ newEntity{ base = "BASE_GREATMAUL",
 		damrange=1.3,
 		dammod = {str=1.2, mag=0.1},
 	},
-	max_power = 1, power_regen = 1,
-	use_power = { name = "imbue the hammer with a gem of your choice", power = 0,
+	max_power = 10, power_regen = 1,
+	use_power = { name = "imbue the hammer with a gem of your choice", power = 10,
 		use = function(self, who)
 			local DamageType = require "engine.DamageType"
 			local Stats = require "engine.interface.ActorStats"
 			local d
 			d = who:showInventory("Use which gem?", who:getInven("INVEN"), function(gem) return gem.type == "gem" and gem.imbue_powers and gem.material_level end, function(gem, gem_item)
-				local _, _, inven_id = who:findInAllInventoriesByObject(self)
-				who:onTakeoff(self, inven_id)
 				local name_old=self.name
 				local old_hotkey
 				for i, v in pairs(who.hotkey) do
@@ -6235,15 +6233,17 @@ newEntity{ base = "BASE_GREATMAUL",
 				
 				-- Recycle the old gem
 				local old_gem=self.Gem
-				if old_gem then
-					who:addObject(who:getInven("INVEN"), old_gem)
-					game.logPlayer(who, "You remove your %s.", old_gem:getName{do_colour=true, no_count=true})
-				end
-				
 				if gem then
+					local gem = who:removeObject(who:getInven("INVEN"), gem_item)
+					if old_gem then
+						who:addObject(who:getInven("INVEN"), old_gem)
+						game.logPlayer(who, "You remove your %s.", old_gem:getName{do_colour=true, no_count=true})
+					end
+					who:sortInven()
+
+					local _, _, inven_id = who:findInAllInventoriesByObject(self)
+					who:onTakeoff(self, inven_id)
 	
-					-- The Blank Slate.
-					self.Gem = nil
 					self.Gem = gem
 					self.gemDesc = "something has gone wrong"
 					
@@ -6267,7 +6267,6 @@ newEntity{ base = "BASE_GREATMAUL",
 						inc_stats = {[Stats.STAT_MAG] = (2 * scalingFactor), [Stats.STAT_CUN] = (2 * scalingFactor), [Stats.STAT_DEX] = (2 * scalingFactor),},
 					}
 					
-					who:removeObject(who:getInven("INVEN"), gem_item)
 
 					-- Each element merges its effect into the combat/wielder tables (or anything else) after the base stats are scaled
 					-- You can modify damage and such here too but you should probably make static tables instead of merging
@@ -6353,12 +6352,13 @@ newEntity{ base = "BASE_GREATMAUL",
 					
 					table.mergeAdd(self.wielder, gem.imbue_powers, true)
 					
+					if gem.talent_on_spell then
+						self.talent_on_spell = self.talent_on_spell or {}
+						table.append(self.talent_on_spell, gem.talent_on_spell)
+					end
+
+					who:onWear(self, inven_id)
 				end
-				if gem.talent_on_spell then
-					self.talent_on_spell = self.talent_on_spell or {}
-					table.append(self.talent_on_spell, gem.talent_on_spell)
-				end
-				who:onWear(self, inven_id)
 				for i, v in pairs(who.hotkey) do
 					if v[2]==name_old then
 						v[2]=self.name
