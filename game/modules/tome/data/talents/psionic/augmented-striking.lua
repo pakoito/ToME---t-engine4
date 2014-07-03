@@ -17,6 +17,8 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
+local Object = require "mod.class.Object"
+
 newTalent{
 	name = "Kinetic Strike",
 	type = {"psionic/augmented-striking", 1},
@@ -142,12 +144,60 @@ newTalent{
 				DamageType:get(DamageType.COLD).projector(self, x, y, DamageType.COLD, dam)
 				DamageType:get(DamageType.FREEZE).projector(self, x, y, DamageType.FREEZE, {dur=dur, hp=dam})
 			end
+
+			if target:hasEffect(target.EFF_PINNED) and target:hasEffect(target.EFF_FROZEN) then
+				local freeze = function(x, y)
+					for i = -1, 1 do for j = -1, 1 do if game.level.map:isBound(x + i, y + j) then
+						local oe = game.level.map(x + i, y + j, Map.TERRAIN)
+						if oe and not oe:attr("temporary") and not game.level.map:checkAllEntities(x + i, y + j, "block_move") and not oe.special then
+							local e = Object.new{
+								old_feat = oe,
+								name = "ice wall", image = "npc/iceblock.png",
+								desc = "a summoned, transparent wall of ice",
+								type = "wall",
+								display = '#', color=colors.LIGHT_BLUE, back_color=colors.BLUE,
+								always_remember = true,
+								can_pass = {pass_wall=1},
+								does_block_move = true,
+								show_tooltip = true,
+								block_move = true,
+								block_sight = false,
+								temporary = 3,
+								x = x + i, y = y + j,
+								canAct = false,
+								act = function(self)
+									self:useEnergy()
+									self.temporary = self.temporary - 1
+									if self.temporary <= 0 then
+										game.level.map(self.x, self.y, engine.Map.TERRAIN, self.old_feat)
+										game.level:removeEntity(self)
+										game.level.map:updateMap(self.x, self.y)
+										game.nicer_tiles:updateAround(game.level, self.x, self.y)
+									end
+								end,
+								dig = function(src, x, y, old)
+									game.level:removeEntity(old)
+									return nil, old.old_feat
+								end,
+								summoner_gain_exp = true,
+								summoner = self,
+							}
+							e.tooltip = mod.class.Grid.tooltip
+							game.level:addEntity(e)
+							game.level.map(x + i, y + j, Map.TERRAIN, e)
+						end
+					end end end
+				end
+				freeze(self.x, self.y)
+				freeze(target.x, target.y)
+			end
 		end
 		return true
 	end,
 	info = function(self, t)
 		return ([[Focus thermal energy and strike an enemy for %d%% weapon damage as cold.
 		A burst of cold will then engulf them, doing an extra %0.1f Cold damage and also freeze them for %d turns.
+		If the attack freezes a pinned creature a burst of ice is summoned, circling the caster and the creature with a wall of ice for 3 turns.
 		The cold burst damage will scale with your Mindpower.]]):
 		format(100 * self:combatTalentWeaponDamage(t, 0.5, 2.0), damDesc(self, DamageType.COLD, t.getDam(self, t)), t.getDur(self, t))
 	end,
