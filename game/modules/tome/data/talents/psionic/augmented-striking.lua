@@ -97,7 +97,7 @@ newTalent{
 	info = function(self, t)
 		return ([[Focus kinetic energy and strike an enemy for %d%% weapon damage as physical.
 		They will be pinned to the ground for %d turns by the force of this attack.
-		Any frozen creature hit by this attack will take an extra %0.1f physical damage.
+		Any frozen creature hit by this attack will take an extra %0.2f physical damage.
 		The extra damage will scale with your Mindpower.]]):
 		format(100 * self:combatTalentWeaponDamage(t, 0.5, 2.0), t.getDur(self, t), damDesc(self, DamageType.PHYSICAL, t.getDam(self, t)))
 	end,
@@ -245,7 +245,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Focus charged energy and strike an enemy for %d%% weapon damage as lightning.
-		Energy will then discharge from your weapon, doing an extra %0.1f Lightning damage and halving their stun/daze/freeze resistance for %d turns.
+		Energy will then discharge from your weapon, doing an extra %0.1f Lightning damage and halving their stun/daze/freeze/pin resistance for %d turns.
 		The discharge damage will scale with your Mindpower.]]):
 		format(100 * self:combatTalentWeaponDamage(t, 0.5, 2.0), damDesc(self, DamageType.LIGHTNING, t.getDam(self, t)), t.getDur(self, t))
 	end,
@@ -263,7 +263,7 @@ newTalent{
 		self:talentTemporaryValue(p, "combat_apr", t.getPsiRecover(self, t)*3)
 	end,
 	info = function(self, t)
-		return ([[Wrap a psionic energy field around you weapons, increasing their armour penentration by %d and allowing you to siphon excess energy from each weapon hit you land, gaining %0.1f psi per hit.]]):format(t.getPsiRecover(self, t)*3, t.getPsiRecover(self, t))
+		return ([[Wrap a psionic energy field around your weapons, increasing their armour penentration by %d and allowing you to siphon excess energy from each weapon hit you land, gaining %0.1f psi per hit.]]):format(t.getPsiRecover(self, t)*3, t.getPsiRecover(self, t))
 	end,
 }
 

@@ -2770,7 +2770,7 @@ newEffect{
 newEffect{
 	name = "SHOCKED",
 	desc = "Shocked",
-	long_desc = function(self, eff) return ("Target is reeling from an lightning shock, halving its stun resistance."):format() end,
+	long_desc = function(self, eff) return ("Target is reeling from an lightning shock, halving its stun and pinning resistance."):format() end,
 	type = "magical",
 	subtype = { lightning=true },
 	status = "detrimental",
@@ -2779,6 +2779,9 @@ newEffect{
 	activate = function(self, eff)
 		if self:attr("stun_immune") then
 			self:effectTemporaryValue(eff, "stun_immune", -self:attr("stun_immune") / 2)
+		end
+		if self:attr("pin_immune") then
+			self:effectTemporaryValue(eff, "pin_immune", -self:attr("pin_immune") / 2)
 		end
 	end,
 	deactivate = function(self, eff)

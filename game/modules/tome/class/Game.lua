@@ -611,7 +611,7 @@ Exploring level %d of %s.]]):format(
 		player.name, player.level, player.descriptor.subrace, player.descriptor.subclass,
 		player.descriptor.difficulty, player.descriptor.permadeath,
 		player.descriptor.world,
-		self.level.level, self.zone.name
+		self.level and self.level.level or "--", self.zone and self.zone.name or "--"
 		),
 	}
 end

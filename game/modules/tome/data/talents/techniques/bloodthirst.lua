@@ -82,7 +82,7 @@ newTalent{
 	points = 5,
 	mode = "passive",
 	getDam = function(self, t) return self:combatScale(self:getStr(5, true) * self:getTalentLevel(t), 5, 0, 40, 35) end,
-	getResist = function(self,t) return self:combatTalentLimit(t, 50, 10, 40) end,
+	getResist = function(self,t) return self:combatTalentScale(t, 10, 40) end,
 	info = function(self, t)
 		return ([[You delight in the inflicting of wounds, providing %d physical power.
 		In addition when you make a creature bleed its physical damage resistance is reduced by %d%% (but never below 0%%).

@@ -110,7 +110,7 @@ newTalent{
 	no_energy = true,
 	tactical = { BUFF = 2 },
 	getWeaponDamage = function(self, t) return self:combatTalentWeaponDamage(t, 0.75, 1.1) end,
-	getChance = function(self, t) return math.floor(self:combatStatScale("cun", 1, 30)) end,
+	getChance = function(self, t) return math.floor(self:combatStatLimit("cun", 100, 5, 30)) end,
 	action = function(self, t)
 		self:setEffect(self.EFF_WEAPON_WARDING, 1, {})
 		return true
