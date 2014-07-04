@@ -296,6 +296,16 @@ newTalent{
 				local cs = self:isTalentActive(self.T_CHARGED_SHIELD)
 				t.shieldAbsorb(self, t, cs, damDesc(self, DamageType.LIGHTNING, dam) * 1.5)
 			end
+
+			if target:hasEffect(target.EFF_FROZEN) then
+				target:removeEffect(target.EFF_FROZEN)
+				game.level.map:particleEmitter(target.x, target.y, 2, "generic_ball", {img="particles_images/smoke_whispery_bright", size={8,20}, life=16, density=10, radius=2})
+				self:project({type="ball", radius=2, range=1}, target.x, target.y, function(px, py)
+					local act = game.level.map(px, py, Map.ACTOR)
+					if not act or act == self or act == target then return end
+					act:knockback(target.x, target.y, 3)
+				end)
+			end
 		end
 		return true
 	end,
@@ -303,6 +313,7 @@ newTalent{
 		return ([[Focus charged energy and strike an enemy for %d%% weapon damage as lightning.
 		Energy will then discharge from your weapon, doing an extra %0.2f lightning damage and halving their stun/daze/freeze/pin resistance for %d turns.
 		If Charged Shield is sustained and the target pinned it will increase the absorbed value by %0.2f.
+		If the target frozen the ice will melt in a flash of vapour, knocking back all creatures around it in radius 2.
 		The discharge damage will scale with your Mindpower.]]):
 		format(100 * self:combatTalentWeaponDamage(t, 0.5, 2.0), damDesc(self, DamageType.LIGHTNING, t.getDam(self, t)), t.getDur(self, t), 1.5 * damDesc(self, DamageType.LIGHTNING, t.getDam(self, t)))
 	end,

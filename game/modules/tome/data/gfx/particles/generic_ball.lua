@@ -17,6 +17,8 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
+local life = life or 30
+local density = density or 266
 bx = x or 0
 by = y or 0
 local nb = 0
@@ -31,35 +33,39 @@ return { generator = function()
 	local bx = math.floor(x / engine.Map.tile_w)
 	local by = math.floor(y / engine.Map.tile_h)
 	local static = rng.percent(40)
+	local s = 3
+	if size then
+		s = rng.range(size[1], size[2])
+	end
 
 	return {
 		trail = 1,
-		life = 30,
-		size = 3, sizev = 0, sizea = 0,
+		life = life,
+		size = s, sizev = 0, sizea = 0,
 
 		x = bx + x, xv = 0, xa = 0,
 		y = by + y, yv = 0, ya = 0,
 		dir = a, dirv = 0, dira = 0,
-		vel = sradius / 2 / 30, velv = 0, vela = 0,
+		vel = sradius / 2 / life, velv = 0, vela = 0,
 		
-		r = rng.range(rm, rM)/255,    rv = 0, ra = 0,
-		g = rng.range(gm, gM)/255,	  gv = 0, ga = 0,
-		b = rng.range(bm, bM)/255,	  bv = 0, ba = 0,
-		a = rng.range(am, aM)/255,    av = 0.01, aa = 0,
+		r = rng.range(rm or 255, rM or 255)/255,    rv = 0, ra = 0,
+		g = rng.range(gm or 255, gM or 255)/255,	  gv = 0, ga = 0,
+		b = rng.range(bm or 255, bM or 255)/255,	  bv = 0, ba = 0,
+		a = rng.range(am or 255, aM or 255)/255,    av = 0.01, aa = 0,
 	}
 end, },
 function(self)
 	if nb < 5 then
-		self.ps:emit(radius*266)
+		self.ps:emit(radius*density)
 		nb = nb + 1
-		self.ps:emit(radius*266)
+		self.ps:emit(radius*density)
 		nb = nb + 1
-		self.ps:emit(radius*266)
+		self.ps:emit(radius*density)
 		nb = nb + 1
-		self.ps:emit(radius*266)
+		self.ps:emit(radius*density)
 		nb = nb + 1
-		self.ps:emit(radius*266)
+		self.ps:emit(radius*density)
 		nb = nb + 1
 	end
 end,
-5*radius*266
+5*radius*density, img or nil
