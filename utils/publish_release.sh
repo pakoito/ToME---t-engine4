@@ -15,8 +15,8 @@ read ivmd
 echo "*********** MD5 for Stone Wardens: *********"
 read swmd
 
-ln -fs /var/www/te4.org/htdocs/dl/t-engine/t-engine4-windows-$v.zip /var/www/te4.org/htdocs/dl/t-engine/full/tome-full-windows-$v.zip
-fmd5=`md5sum /var/www/te4.org/htdocs/dl/t-engine/full/tome-full-windows-$v.zip | cut -d' ' -f1`
+ln -fs /foreign/eyal/var/www/te4.org/htdocs/dl/t-engine/t-engine4-windows-$v.zip /foreign/eyal/var/www/te4.org/htdocs/dl/t-engine/full/tome-full-windows-$v.zip
+fmd5=`md5sum /foreign/eyal/var/www/te4.org/htdocs/dl/t-engine/full/tome-full-windows-$v.zip | cut -d' ' -f1`
 
 echo "SQL:"
 echo "replace into modules_addons_versions set module='tome', addon='tome-items-vault-$v' , md5='$ivmd', md5_2 ='';"

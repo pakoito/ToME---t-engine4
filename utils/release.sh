@@ -42,13 +42,13 @@ find . -name '*~' -or -name '.svn' -or -name '.keep' | xargs rm -rf
 cd game/engines
 te4_pack_engine.sh default/ te4-"$ever"
 te4_pack_engine.sh default/ te4-"$ever" 1
-\cp -f te4-*.teae boot-te4-*.team /var/www/te4.org/htdocs/dl/engines
+\cp -f te4-*.teae boot-te4-*.team /foreign/eyal/var/www/te4.org/htdocs/dl/engines
 mv boot*team ../modules
 rm -rf default
 cd ../modules
 te4_pack_module_tome.sh tome "$tver"
 #te4_pack_module.sh tome "$tver" 1
-\cp -f tome*.team /var/www/te4.org/htdocs/dl/modules/tome/
+\cp -f tome*.team /foreign/eyal/var/www/te4.org/htdocs/dl/modules/tome/
 rm -f tome*nomusic.team
 rm -f boot*nomusic.team
 rm -rf tome
@@ -109,8 +109,8 @@ done
 rm game/modules/tome*-music.team
 #rm game/modules/tome*team
 rm game/modules/boot*team
-#cp /var/www/te4.org/htdocs/dl/modules/tome/tome-"$tver"-nomusic.team game/modules/
-cp /var/www/te4.org/htdocs/dl/engines/boot-te4-"$ever"-nomusic.team game/modules/
+#cp /foreign/eyal/var/www/te4.org/htdocs/dl/modules/tome/tome-"$tver"-nomusic.team game/modules/
+cp /foreign/eyal/var/www/te4.org/htdocs/dl/engines/boot-te4-"$ever"-nomusic.team game/modules/
 cd ..
 tar cvjf t-engine4-src-"$ver"-nomusic.tar.bz2 t-engine4-src-"$ver"
 
@@ -124,8 +124,8 @@ done
 rm game/modules/tome*-music.team
 #rm game/modules/tome*team
 rm game/modules/boot*team
-#cp /var/www/te4.org/htdocs/dl/modules/tome/tome-"$tver"-nomusic.team game/modules/
-cp /var/www/te4.org/htdocs/dl/engines/boot-te4-"$ever"-nomusic.team game/modules/
+#cp /foreign/eyal/var/www/te4.org/htdocs/dl/modules/tome/tome-"$tver"-nomusic.team game/modules/
+cp /foreign/eyal/var/www/te4.org/htdocs/dl/engines/boot-te4-"$ever"-nomusic.team game/modules/
 cd ..
 zip -r -9 t-engine4-windows-"$ver"-nomusic.zip t-engine4-windows-"$ver"
 
@@ -139,8 +139,8 @@ done
 rm game/modules/tome*-music.team
 #rm game/modules/tome*team
 rm game/modules/boot*team
-#cp /var/www/te4.org/htdocs/dl/modules/tome/tome-"$tver"-nomusic.team game/modules/
-cp /var/www/te4.org/htdocs/dl/engines/boot-te4-"$ever"-nomusic.team game/modules/
+#cp /foreign/eyal/var/www/te4.org/htdocs/dl/modules/tome/tome-"$tver"-nomusic.team game/modules/
+cp /foreign/eyal/var/www/te4.org/htdocs/dl/engines/boot-te4-"$ever"-nomusic.team game/modules/
 cd ..
 tar -cvjf t-engine4-linux32-"$ver"-nomusic.tar.bz2 t-engine4-linux32-"$ver"
 
@@ -154,12 +154,12 @@ done
 rm game/modules/tome*-music.team
 #rm game/modules/tome*team
 rm game/modules/boot*team
-#cp /var/www/te4.org/htdocs/dl/modules/tome/tome-"$tver"-nomusic.team game/modules/
-cp /var/www/te4.org/htdocs/dl/engines/boot-te4-"$ever"-nomusic.team game/modules/
+#cp /foreign/eyal/var/www/te4.org/htdocs/dl/modules/tome/tome-"$tver"-nomusic.team game/modules/
+cp /foreign/eyal/var/www/te4.org/htdocs/dl/engines/boot-te4-"$ever"-nomusic.team game/modules/
 cd ..
 tar -cvjf t-engine4-linux64-"$ver"-nomusic.tar.bz2 t-engine4-linux64-"$ver"
 
-cp *zip *bz2 *dmg.gz /var/www/te4.org/htdocs/dl/t-engine
+cp *zip *bz2 *dmg.gz /foreign/eyal/var/www/te4.org/htdocs/dl/t-engine
 
 ########## Announce
 
