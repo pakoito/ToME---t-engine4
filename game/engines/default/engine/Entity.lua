@@ -955,6 +955,18 @@ function _M:loadList(file, no_default, res, mod, loaded)
 			local e = newenv.class.new(t, no_default)
 			if type(mod) == "function" then mod(e) end
 
+			if config.settings.cheat then
+				local ok, err = table.check(e, function(t, where, v, tv)
+					if tv ~= "function" then return true end
+					local n, v = debug.getupvalue(v, 1)
+					if not n then return true end
+					return nil, ("Entity closure checker: %s has upvalue %s"):format(tostring(where), tostring(n))
+				end)
+				if not ok then
+					error("Entity definition has a closure: "..err)
+				end
+			end
+
 			res[#res+1] = e
 			if t.define_as then res[t.define_as] = e end
 		end,

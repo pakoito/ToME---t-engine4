@@ -255,6 +255,28 @@ function table.removeFromList(t, ...)
 	end
 end
 
+function table.check(t, fct)
+	for k, e in pairs(t) do
+		local tk, te = type(k), type(e)
+		if te == "table" and not e.__CLASSNAME then
+			local ok, err = table.check(e, fct)
+			if not ok then return nil, err end
+		else
+			local ok, err = fct(t, "value["..tostring(k).."]", e, te)
+			if not ok then return nil, err end
+		end
+		
+		if tk == "table" and not k.__CLASSNAME then
+			local ok, err = table.check(k, fct)
+			if not ok then return nil, err end
+		else
+			local ok, err = fct(t, "key", k, tk)
+			if not ok then return nil, err end
+		end
+	end
+	return true
+end
+
 --- Adds missing keys from the src table to the dst table.
 -- @param dst The destination table, which will have all merged values.
 -- @param src The source table, supplying values to be merged.
