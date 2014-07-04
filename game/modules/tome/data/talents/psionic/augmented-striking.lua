@@ -290,14 +290,21 @@ newTalent{
 					actor:setEffect(actor.EFF_SHOCKED, dur, {apply_power=self:combatMindpower()})
 				end
 			end
+
+			if target:hasEffect(target.EFF_PINNED) and self:isTalentActive(self.T_CHARGED_SHIELD) then
+				local t = self:getTalentFromId(self.T_CHARGED_SHIELD)
+				local cs = self:isTalentActive(self.T_CHARGED_SHIELD)
+				t.shieldAbsorb(self, t, cs, damDesc(self, DamageType.LIGHTNING, dam) * 1.5)
+			end
 		end
 		return true
 	end,
 	info = function(self, t)
 		return ([[Focus charged energy and strike an enemy for %d%% weapon damage as lightning.
-		Energy will then discharge from your weapon, doing an extra %0.1f Lightning damage and halving their stun/daze/freeze/pin resistance for %d turns.
+		Energy will then discharge from your weapon, doing an extra %0.2f lightning damage and halving their stun/daze/freeze/pin resistance for %d turns.
+		If Charged Shield is sustained and the target pinned it will increase the absorbed value by %0.2f.
 		The discharge damage will scale with your Mindpower.]]):
-		format(100 * self:combatTalentWeaponDamage(t, 0.5, 2.0), damDesc(self, DamageType.LIGHTNING, t.getDam(self, t)), t.getDur(self, t))
+		format(100 * self:combatTalentWeaponDamage(t, 0.5, 2.0), damDesc(self, DamageType.LIGHTNING, t.getDam(self, t)), t.getDur(self, t), 1.5 * damDesc(self, DamageType.LIGHTNING, t.getDam(self, t)))
 	end,
 }
 

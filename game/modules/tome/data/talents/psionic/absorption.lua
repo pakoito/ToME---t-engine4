@@ -378,6 +378,7 @@ newTalent{
 	range = 0,
 	no_energy = true,
 	tactical = { DEFEND = 2 },
+	shieldAbsorb = shieldAbsorb,
 	callbackOnActBase = function(self, t)
 		shieldAbsorb(self, t, self.sustain_talents[t.id], 0) -- make sure we compute the table correctly
 	end,

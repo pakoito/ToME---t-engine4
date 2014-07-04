@@ -297,7 +297,7 @@ function _M:generateList()
 			elseif t.mode == "passive" then
 				nodes = passives
 			end
-			status = TalentStatus(self.actor,t)
+			local status = TalentStatus(self.actor,t)
 			
 			-- Pregenerate icon with the Tiles instance that allows images
 			if t.display_entity then t.display_entity:getMapObjects(game.uiset.hotkeys_display_icons.tiles, {}, 1) end
