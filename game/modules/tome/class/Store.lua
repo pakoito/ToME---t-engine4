@@ -26,7 +26,7 @@ module(..., package.seeall, class.inherit(Store))
 _M.stores_def = {}
 
 function _M:loadStores(f)
-	self.stores_def = self:loadList(f)
+	self:loadList(f, nil, self.stores_def)
 end
 
 function _M:init(t, no_default)

@@ -37,9 +37,19 @@
     <property name="display" value="t"/>
    </properties>
   </tile>
+  <tile id="69">
+   <properties>
+    <property name="display" value="]"/>
+   </properties>
+  </tile>
   <tile id="72">
    <properties>
     <property name="display" value="~"/>
+   </properties>
+  </tile>
+  <tile id="81">
+   <properties>
+    <property name="display" value="^"/>
    </properties>
   </tile>
   <tile id="117">
@@ -148,6 +158,11 @@
     <property name="display" value="#"/>
    </properties>
   </tile>
+  <tile id="2">
+   <properties>
+    <property name="display" value="~"/>
+   </properties>
+  </tile>
   <tile id="4">
    <properties>
     <property name="display" value="3"/>
@@ -183,110 +198,17 @@
     <property name="display" value="'"/>
    </properties>
   </tile>
+  <tile id="35">
+   <properties>
+    <property name="display" value="+"/>
+   </properties>
+  </tile>
  </tileset>
  <layer name="Terrain" width="50" height="50">
   <data encoding="base64" compression="zlib">
-   eJzt2EtOAzEMBuCwrdRVD1CJS3DdbjkAh+DNkt6AHWLJDo2UCMuKnd/2JJMKKllD23TkbxxnMhxSSofOcTMgehusjl2OEY4dGNxxJoGeA3X1yF/KIeJoWSKGMxDS+Og1sTq0cy75XCmBOK4bgVpGOz7I5yVX6SVZyrVAHXwNkRzlvN/k75qDRsugWSyO2lqoOZb3R+FzyVFetzk0izQ/NYe0pmt9zh1aP6O1oA5q8Tgsa8kRHGcxUIvFgdaC58+jh6NYPpPeHx5DcdDf1RzUaHHQvuF9gjos9ZActRqhDt77iEP63juvtDlW63NtvSoGq8MayLyK9kjr3m65d0t7J68DWX/RPUpkT+hdrySPZY8Vcdzn40PS79Ujwzqv1grrHh8xzOx4CzhGWJbcXvLxOR+/gJw1Q82xJzGiPtZAnwf3aU6L9/8Ma3mse2aPAXmujVhq+5tWj/PxiAFxUEv0GiIOWkPUYHVYLJLjMef9lI+vFYe1Fh6Hty49ewN1bLke93SMtPw7MMdsFtSxtaXliTpm8VgcM1usjpall+lUiajD4kG97w4HtUQca5m89Til3zm2liPqv3RHsczs4PNHG9faS27lKLmXPtQsdNzWfa7lxi214M8pMztqnta+aQYHkicammFUn69l4TW6dMca+8S/6rgb5PgBYjdSQA==
+   eJzt2c0NwyAMBeBs0jGyAQOwa4epskoPvTQSsvgzfrYTwuGpqtQgf7GBQ/dt2/ZMAiBv5u9zdUjycoqV40OyHDbGKzq4ntoa3g7UHl8OW4OHg65ZWncGxx3uwCc50HPlnRkMHItlPUcmd3XUvkvnKrfvNO68mRxnvhlHaVYkDst565n7qztG7jvvfT6zA2Xyrh1l8a4bZfGumZ7Dx40diL5c2cHxPM0RHBwae8TKoX0flhxSX3pWSQ05R0g+a7Ui+6Th6E36X4bU5WVAZ7T++I/2vGg6WgbqoPNjlTjo4NZKzwO09ayzZqj1RBKkJa2z5dDwaPSEmkqOlqc2N/Q59D5q1YzqjcZ8oh0tm9Y+Q1l6+iTtJecZpCMy1u2ZPe57QFu030FrxldWVp6RH0fSBak=
   </data>
  </layer>
- <objectgroup name="addSpot" width="50" height="50">
-  <object name="portal" x="1030" y="230" width="18" height="18">
-   <properties>
-    <property name="subtype" value="&quot;portal&quot;"/>
-    <property name="type" value="&quot;portal&quot;"/>
-   </properties>
-  </object>
-  <object name="portal" x="1253" y="262" width="18" height="18">
-   <properties>
-    <property name="subtype" value="&quot;portal&quot;"/>
-    <property name="type" value="&quot;portal&quot;"/>
-   </properties>
-  </object>
-  <object name="portal" x="1223" y="486" width="18" height="18">
-   <properties>
-    <property name="subtype" value="&quot;portal&quot;"/>
-    <property name="type" value="&quot;portal&quot;"/>
-   </properties>
-  </object>
-  <object name="portal" x="1031" y="485" width="18" height="18">
-   <properties>
-    <property name="subtype" value="&quot;portal&quot;"/>
-    <property name="type" value="&quot;portal&quot;"/>
-   </properties>
-  </object>
-  <object name="POP" x="1127" y="360" width="18" height="18">
-   <properties>
-    <property name="subtype" value="&quot;arena&quot;"/>
-    <property name="type" value="&quot;quest&quot;"/>
-   </properties>
-  </object>
-  <object name="POP" x="901" y="390" width="18" height="18">
-   <properties>
-    <property name="subtype" value="&quot;outside-arena&quot;"/>
-    <property name="type" value="&quot;quest&quot;"/>
-   </properties>
-  </object>
-  <object name="rhaloren" x="489" y="1001" width="176" height="144">
-   <properties>
-    <property name="subtype" value="&quot;rhaloren&quot;"/>
-    <property name="type" value="&quot;arrival&quot;"/>
-   </properties>
-  </object>
-  <object name="ziguranth" x="900" y="520" width="52" height="49">
-   <properties>
-    <property name="subtype" value="&quot;ziguranth&quot;"/>
-    <property name="type" value="&quot;arrival&quot;"/>
-   </properties>
-  </object>
-  <object name="ziguranth" x="772" y="232" width="52" height="49">
-   <properties>
-    <property name="subtype" value="&quot;ziguranth&quot;"/>
-    <property name="type" value="&quot;arrival&quot;"/>
-   </properties>
-  </object>
-  <object name="ziguranth" x="293" y="421" width="52" height="49">
-   <properties>
-    <property name="subtype" value="&quot;ziguranth&quot;"/>
-    <property name="type" value="&quot;arrival&quot;"/>
-   </properties>
-  </object>
-  <object name="ziguranth" x="325" y="965" width="52" height="49">
-   <properties>
-    <property name="subtype" value="&quot;ziguranth&quot;"/>
-    <property name="type" value="&quot;arrival&quot;"/>
-   </properties>
-  </object>
-  <object name="ziguranth" x="583" y="679" width="52" height="49">
-   <properties>
-    <property name="subtype" value="&quot;ziguranth&quot;"/>
-    <property name="type" value="&quot;arrival&quot;"/>
-   </properties>
-  </object>
-  <object name="ziguranth" x="933" y="1127" width="52" height="49">
-   <properties>
-    <property name="subtype" value="&quot;ziguranth&quot;"/>
-    <property name="type" value="&quot;arrival&quot;"/>
-   </properties>
-  </object>
-  <object name="ziguranth" x="996" y="741" width="52" height="49">
-   <properties>
-    <property name="subtype" value="&quot;ziguranth&quot;"/>
-    <property name="type" value="&quot;arrival&quot;"/>
-   </properties>
-  </object>
-  <object name="POP" x="933" y="391" width="18" height="18">
-   <properties>
-    <property name="subtype" value="&quot;sealed-gate&quot;"/>
-    <property name="type" value="&quot;quest&quot;"/>
-   </properties>
-  </object>
- </objectgroup>
- <objectgroup name="Actor" width="50" height="50">
-  <object name="Myssil" x="616" y="165" width="17" height="19">
-   <properties>
-    <property name="display" value="@"/>
-    <property name="value" value="&quot;PROTECTOR_MYSSIL&quot;"/>
-   </properties>
-  </object>
- </objectgroup>
+ <objectgroup name="addSpot" width="50" height="50"/>
+ <objectgroup name="Actor" width="50" height="50"/>
 </map>

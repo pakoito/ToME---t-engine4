@@ -632,6 +632,7 @@ Campaign: %s]]):format(
 end
 
 function _M:getStore(def)
+	print("[STORE] Grabbing", def)
 	return Store.stores_def[def]:clone()
 end
 
