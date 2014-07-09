@@ -66,6 +66,7 @@ local credits = {
 	{"Hetdegon"},
 	{"John 'Benli' Truchard"},
 	{"Nicolas 'DarkGod' Casalini"},
+	{"Simon 'HousePet' Curtis"},
 	{"Shoob"},
 	{"Taylor 'PureQuestion' Miller"},
 	{"Thomas 'Tomisgo' Cretan"},
