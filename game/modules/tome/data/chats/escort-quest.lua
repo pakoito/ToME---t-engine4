@@ -162,10 +162,10 @@ local reward_types = {
 	},
 	temporal = {
 		types = {
-			["chronomancy/chronomancy"] = 0.8,
+			["chronomancy/fate-weaving"] = 0.8,
 		},
 		talents = {
-			[Talents.T_PRECOGNITION] = 1,
+			[Talents.T_WEBS_OF_FATE] = 1,
 			[Talents.T_SPIN_FATE] = 1,
 		},
 		stats = {

@@ -17,164 +17,130 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
+-- EDGE TODO: Icons, Particles, Timed Effect Particles
+
 newTalent{
 	name = "Celerity",
 	type = {"chronomancy/speed-control", 1},
 	require = chrono_req1,
 	points = 5,
 	mode = "passive",
-	getSpeed = function(self, t) return self:combatTalentScale(t, 0.15, 0.5, 0.75) end,
-	passives = function(self, t, p)
-		self:talentTemporaryValue(p, "movement_speed", t.getSpeed(self, t))
-	end,
+	getSpeed = function(self, t) return self:combatTalentScale(t, 0.1, 0.25, 0.5) end,
 	info = function(self, t)
-		return ([[Increases your movement speed by %d%%, and switching between already equipped weapon sets (default hotkey q) no longer takes a turn.]]):
-		format(t.getSpeed(self, t)*100)
+		local speed = t.getSpeed(self, t) * 100
+		return ([[When you move you gain %d%% movement speed, stacking up to three times.
+		Performing any action other than movement will break this effect.]]):
+		format(speed, speed)
 	end,
 }
 
 newTalent{
-	name = "Stop",
+	name = "Time Dilation",
 	type = {"chronomancy/speed-control",2},
 	require = chrono_req2,
 	points = 5,
-	paradox = 10,
+	sustain_paradox = 50,
+	mode = "sustained",
 	cooldown = 12,
 	tactical = { ATTACKAREA = 1, DISABLE = 3 },
-	range = 6,
-	radius = function(self, t) return math.floor(self:combatTalentScale(t, 1.3, 2.7)) end,
-	direct_hit = true,
-	requires_target = true,
+	range = 0,
+	radius = 3,
+	getSlow = function(self, t) return math.min(self:combatTalentSpellDamage(t, 10, 25, getParadoxSpellpower(self))/ 100 , 0.6) end,
 	target = function(self, t)
-		return {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t), selffire=self:spellFriendlyFire(), talent=t}
+		return {type="ball", range=self:getTalentRange(t), friendlyfire=false, radius = self:getTalentRadius(t), talent=t}
 	end,
-	getDuration = function(self, t) return math.ceil(self:combatTalentScale(self:getTalentLevel(t) * getParadoxModifier(self, pm), 2.3, 4.3)) end,
-	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 20, 170)  * getParadoxModifier(self, pm) end,
-	action = function(self, t)
-		local tg = self:getTalentTarget(t)
-		local x, y = self:getTarget(tg)
-		if not x or not y then return nil end
-		local _ _, _, _, x, y = self:canProject(tg, x, y)
-		x, y = checkBackfire(self, x, y)
-		local grids = self:project(tg, x, y, DamageType.STOP, t.getDuration(self, t))
-		self:project(tg, x, y, DamageType.TEMPORAL, self:spellCrit(t.getDamage(self, t)))
-
-		game.level.map:particleEmitter(x, y, tg.radius, "temporal_flash", {radius=tg.radius, tx=x, ty=y})
-		game:playSoundNear(self, "talents/tidalwave")
-		return true
+	iconOverlay = function(self, t, p)
+		local val = p.charges or 0
+		if val <= 0 then return "" end
+		local fnt = "buff_font"
+		return tostring(math.ceil(val)), fnt
+	end,
+	doTimeDilation = function(self, t, p)
+		-- If we moved lower the power
+		if self.x ~= p.x or self.y ~= p.y then
+			p.x = self.x; p.y=self.y; p.charges = math.max(0, p.charges - 1)
+		-- Otherwise increase it
+		elseif not self.resting then
+			p.charges = math.min(p.charges + 1, 3)
+		end
+		-- Dilate Time
+		if p.charges > 0 and not self.resting then
+			self:project(self:getTalentTarget(t), self.x, self.y, function(px, py)
+				local target = game.level.map(px, py, Map.ACTOR)
+				if not target then return end
+				target:setEffect(target.EFF_SLOW, 2, {power=p.power*p.charges, apply_power=self:combatSpellpower(), no_ct_effect=true})		
+			end)
+		end
+	end,
+	activate = function(self, t)
+		local ret ={
+			x = self.x, y=self.y, power = t.getSlow(self, t), charges = 0, particle = self:addParticles(Particles.new("gloom", 1))
+		}
+		game:playSoundNear(self, "talents/arcane")
+		return ret
+	end,
+	deactivate = function(self, t, p)
+		self:removeParticles(p.particle)
+		return true	
 	end,
 	info = function(self, t)
-		local damage = t.getDamage(self, t)
-		local radius = self:getTalentRadius(t)
-		local duration = t.getDuration(self, t)
-		return ([[Inflicts %0.2f temporal damage, and attempts to stun all creatures in a radius %d ball for %d turns.
-		The stun duration will scale with your Paradox, and the damage will scale with your Paradox and Spellpower.]]):
-		format(damage, radius, duration)
-	end,
-}
-
-newTalent{
-	name = "Slow",
-	type = {"chronomancy/speed-control", 3},
-	require = chrono_req3,
-	points = 5,
-	paradox = 15,
-	cooldown = 24,
-	tactical = { ATTACKAREA = {TEMPORAL = 2}, DISABLE = 2 },
-	range = 6,
-	radius = function(self, t) return math.floor(self:combatTalentScale(t, 2.25, 3.25))	end,
-	direct_hit = true,
-	requires_target = true,
-	target = function(self, t)
-		return {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t)}
-	end,
-	getSlow = function(self, t) return math.min((10 + (self:combatTalentSpellDamage(t, 10, 50) * getParadoxModifier(self, pm))) / 100, 0.6) end,
-	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 20, 60) * getParadoxModifier(self, pm) end,
-	getDuration = function(self, t) return math.floor(self:combatTalentScale(t, 6, 10)) end,
-	action = function(self, t)
-		local tg = self:getTalentTarget(t)
-		local x, y = self:getTarget(tg)
-		if not x or not y then return nil end
-		x, y = checkBackfire(self, x, y)
-		local _ _, _, _, x, y = self:canProject(tg, x, y)
-		-- Add a lasting map effect
-		game.level.map:addEffect(self,
-			x, y, t.getDuration(self, t),
-			DamageType.CHRONOSLOW, {dam=t.getDamage(self, t), slow=t.getSlow(self, t)},
-			self:getTalentRadius(t),
-			5, nil,
-			{type="temporal_cloud"},
-			nil, self:spellFriendlyFire()
-		)
-		game:playSoundNear(self, "talents/teleport")
-		return true
-	end,
-	info = function(self, t)
-		local slow = t.getSlow(self, t)
-		local damage = t.getDamage(self, t)
-		local radius = self:getTalentRadius(t)
-		local duration = t.getDuration(self, t)
-		return ([[Creates a time distortion in a radius of %d that lasts for %d turns, decreasing global speed by %d%% for 3 turns and inflicting %0.2f temporal damage each turn to all targets within the area.
-		The slow effect and damage dealt will scale with your Paradox and Spellpower.]]):
-		format(radius, duration, 100 * slow, damDesc(self, DamageType.TEMPORAL, damage))
+		local slow = t.getSlow(self, t) * 100
+		return ([[Time Dilates around you, reducing the speed of all enemies within a radius of three by up to %d%%.  This effect builds gradually over three turns and loses %d%% power each time you move.
+		The speed decrease will scale with your Spellpower]]):
+		format(slow*3, slow)
 	end,
 }
 
 newTalent{
 	name = "Haste",
-	type = {"chronomancy/speed-control", 4},
-	require = chrono_req4,
+	type = {"chronomancy/speed-control", 3},
+	require = chrono_req3,
 	points = 5,
-	paradox = 20,
+	paradox = function (self, t) return getParadoxCost(self, t, 20) end,
 	cooldown = 24,
 	tactical = { BUFF = 2, CLOSEIN = 2, ESCAPE = 2 },
-	no_energy = true,
-	getPower = function(self, t) return self:combatScale(self:combatTalentSpellDamage(t, 20, 80) * getParadoxModifier(self, pm), 0, 0, 0.57, 57, 0.75) end,
-	do_haste_double = function(self, t, x, y)
-		-- Find space
-		local tx, ty = util.findFreeGrid(x, y, 0, true, {[Map.ACTOR]=true})
-		if not tx then
-			return
-		end
-				
-		local NPC = require "mod.class.NPC"
-		local m = NPC.new{
-			type = "figment", subtype = "temporal",
-			display = "@", color=colors.LIGHT_STEEL_BLUE,
-			name = "Afterimage", faction = self.faction, image = "npc/undead_ghost_kor_s_fury.png",
-			desc = [[An afterimage created by someone using the Haste spell.]],
-			autolevel = "none",
-			ai = "summoned", ai_real = "dumb_talented", ai_state = { talent_in=1, },
-			level_range = {1, 1}, exp_worth = 0,
-
-			max_life = self.max_life,
-			life_rating = 0,
-			never_move = 1,
-
-			summon_time = 2,
-		}
-		
-		m.life = self.life
-		m.combat = nil
-		m.never_anger = true
-		m:resolve() m:resolve(nil, true)
-		m:forceLevelup(self.level)
-		m.on_takehit = function(self, value, src)
-			self:die(src)
-			return value
-		end,
-				
-		game.zone:addEntity(game.level, m, "actor", x, y)
-		m:removeAllMOs()
-		game.level.map:updateMap(x, y)
-	end,
+	getPower = function(self, t) return self:combatScale(self:combatTalentSpellDamage(t, 20, 80, getParadoxSpellpower(self)), 0, 0, 0.57, 57, 0.75) end,
 	action = function(self, t)
-		self:setEffect(self.EFF_HASTE, 4, {power=t.getPower(self, t)})
+		self:setEffect(self.EFF_SPEED, 4, {power=t.getPower(self, t)})
 		return true
 	end,
 	info = function(self, t)
 		local power = t.getPower(self, t)
-		return ([[Increases your global speed by %d%% for the next 4 game turns.  Each time you move with this effect active, you'll leave behind an image of yourself for two turns that may draw enemy attacks.
-		The speed increase will scale with your Paradox and Spellpower.]]):format(100 * power)
+		return ([[Increases your global speed by %d%% for the next 4 game turns.
+		The speed increase will scale with your Spellpower.]]):format(100 * power)
+	end,
+}
+
+newTalent{
+	name = "Time Stop",
+	type = {"chronomancy/speed-control", 4},
+	require = chrono_req4,
+	points = 5,
+	paradox = function (self, t) return getParadoxCost(self, t, 40) end,
+	cooldown = function(self, t) return math.ceil(self:combatTalentLimit(t, 10, 45, 25)) end, -- Limit >10
+	tactical = { BUFF = 2, CLOSEIN = 2, ESCAPE = 2 },
+	no_energy = true,
+	on_pre_use = function(self, t, silent)
+		local time_dilated = false
+		if self:isTalentActive(self.T_TIME_DILATION) then
+			local t, p = self:getTalentFromId(self.T_TIME_DILATION), self:isTalentActive(self.T_TIME_DILATION)
+			if p.charges == 3 then
+				time_dilated = true
+			end
+		end
+		if not time_dilated then if not silent then game.logPlayer(self, "Time must be fully dilated in order to stop time.") end return false end return true 
+	end,
+	getReduction = function(self, t) return 80 - math.min(self:combatTalentSpellDamage(t, 0, 20, getParadoxSpellpower(self)), 30) end,
+	action = function(self, t)
+		self.energy.value = self.energy.value + 2000
+		self:setEffect(self.EFF_TIME_STOP, 2, {power=t.getReduction(self, t)})
+		game.logSeen(self, "#STEEL_BLUE#%s has stopped time!#LAST#", self.name:capitalize())
+		return true
+	end,
+	info = function(self, t)
+		local reduction = t.getReduction(self, t)
+		return ([[Gain two turns.  During this time your damage will be reduced by %d%%.
+		Time must be fully dilated in order to use this talent.
+		The damage reduction penalty will be lessened by your Spellpower.]]):format(reduction)
 	end,
 }

@@ -22,7 +22,7 @@ newTalent{
 	type = {"chronomancy/gravity",1},
 	require = chrono_req1,
 	points = 5,
-	paradox = 5,
+	paradox = function (self, t) return getParadoxCost(self, t, 10) end,
 	cooldown = 4,
 	tactical = { ATTACKAREA = {PHYSICAL = 2}, ESCAPE = 2 },
 	range = 0,
@@ -32,7 +32,7 @@ newTalent{
 	target = function(self, t)
 		return {type="cone", range=self:getTalentRange(t), radius=self:getTalentRadius(t), friendlyfire=false, talent=t}
 	end,
-	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 10, 170)*getParadoxModifier(self, pm) end,
+	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 10, 170, getParadoxSpellpower(self)) end,
 	action = function(self, t)
 		local tg = self:getTalentTarget(t)
 		local x, y = self:getTarget(tg)
@@ -47,7 +47,7 @@ newTalent{
 		local radius = self:getTalentRadius(t)
 		return ([[Sends out a blast wave of gravity in a %d radius cone, dealing %0.2f physical damage and knocking back creatures caught in the area.  This deals 50%% extra damage to pinned targets, in addition to the knockback.
 		The blast wave may hit targets more then once, depending on the radius and the knockback effect.
-		The damage will scale with your Paradox and Spellpower.]]):
+		The damage will scale with your Spellpower.]]):
 		format(radius, damDesc(self, DamageType.PHYSICAL, t.getDamage(self, t)))
 	end,
 }
@@ -57,7 +57,7 @@ newTalent{
 	type = {"chronomancy/gravity", 2},
 	require = chrono_req2,
 	points = 5,
-	paradox = 10,
+	paradox = function (self, t) return getParadoxCost(self, t, 20) end,
 	cooldown = 6,
 	tactical = { ATTACKAREA = {PHYSICAL = 2}, DISABLE = 2 },
 	range = 10,
@@ -67,13 +67,12 @@ newTalent{
 	target = function(self, t)
 		return {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t)}
 	end,
-	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 10, 170)*getParadoxModifier(self, pm) end,
+	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 10, 170, getParadoxSpellpower(self)) end,
 	action = function(self, t)
 		local tg = self:getTalentTarget(t)
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
 		local _ _, _, _, x, y = self:canProject(tg, x, y)
-		x, y = checkBackfire(self, x, y)
 		local grids = self:project(tg, x, y, function(px, py)
 			local target = game.level.map(px, py, Map.ACTOR)
 			if not target then return end
@@ -83,7 +82,7 @@ newTalent{
 				game.logSeen(target, "%s is drawn in by the gravity spike!", target.name:capitalize())
 			end
 		end)
-		self:project (tg, x, y, DamageType.GRAVITY, self:spellCrit(t.getDamage(self, t)))
+		self:project(tg, x, y, DamageType.GRAVITY, self:spellCrit(t.getDamage(self, t)))
 		game.level.map:particleEmitter(x, y, tg.radius, "gravity_spike", {radius=tg.radius, allow=core.shader.allow("distort")})
 
 		game:playSoundNear(self, "talents/earth")
@@ -93,7 +92,7 @@ newTalent{
 		local damage = t.getDamage(self, t)
 		local radius = self:getTalentRadius(t)
 		return ([[Creates a gravity spike in a radius of %d that moves all targets towards the spells center and inflicts %0.2f physical damage.  This deals 50%% extra damage to pinned targets, in addition to the knockback.
-		The damage dealt will scale with your Paradox and Spellpower.]]):format(radius, damDesc(self, DamageType.PHYSICAL, t.getDamage(self, t)))
+		The damage dealt will scale with your Spellpower.]]):format(radius, damDesc(self, DamageType.PHYSICAL, t.getDamage(self, t)))
 	end,
 }
 
@@ -102,7 +101,7 @@ newTalent{
 	type = {"chronomancy/gravity",3},
 	require = chrono_req3,
 	points = 5,
-	paradox = 15,
+	paradox = function (self, t) return getParadoxCost(self, t, 30) end,
 	cooldown = 14,
 	tactical = { ATTACKAREA = {PHYSICAL = 2}, ESCAPE = 2 },
 	range = 0,
@@ -110,7 +109,7 @@ newTalent{
 	target = function(self, t)
 		return {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t), selffire=false}
 	end,
-	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 8, 80)*getParadoxModifier(self, pm) end,
+	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 8, 80, getParadoxSpellpower(self)) end,
 	getDuration = function(self, t) return math.floor(self:combatTalentScale(t, 4, 8)) end,
 	direct_hit = true,
 	requires_target = true,
@@ -138,7 +137,7 @@ newTalent{
 		local radius = self:getTalentRadius(t)
 		return ([[You surround yourself with a radius %d distortion of gravity, knocking back and dealing %0.2f physical damage to all creatures inside it.  The effect lasts %d turns.  Deals 50%% extra damage to pinned targets, in addition to the knockback.
 		The blast wave may hit targets more then once, depending on the radius and the knockback effect.
-		The damage will scale with your Paradox and Spellpower.]]):format(radius, damDesc(self, DamageType.PHYSICAL, damage), duration)
+		The damage will scale with your Spellpower.]]):format(radius, damDesc(self, DamageType.PHYSICAL, damage), duration)
 	end,
 }
 
@@ -147,7 +146,7 @@ newTalent{
 	type = {"chronomancy/gravity", 4},
 	require = chrono_req4,
 	points = 5,
-	paradox = 20,
+	paradox = function (self, t) return getParadoxCost(self, t, 40) end,
 	cooldown = 24,
 	tactical = { ATTACKAREA = {PHYSICAL = 2}, DISABLE = 2 },
 	range = 10,
@@ -157,7 +156,7 @@ newTalent{
 	target = function(self, t)
 		return {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t)}
 	end,
-	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 20, 80)*getParadoxModifier(self, pm) end,
+	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 20, 80, getParadoxSpellpower(self)) end,
 	getDuration = function(self, t) return math.floor(self:combatTalentScale(t, 4, 8)) end,
 	action = function(self, t)
 		local duration = t.getDuration(self,t)
@@ -167,7 +166,6 @@ newTalent{
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
 		local _ _, _, _, x, y = self:canProject(tg, x, y)
-		x, y = checkBackfire(self, x, y)
 		-- Add a lasting map effect
 		game.level.map:addEffect(self,
 			x, y, duration,
@@ -185,6 +183,6 @@ newTalent{
 		local duration = t.getDuration(self, t)
 		local radius = self:getTalentRadius(t)
 		return ([[Increases local gravity of an area, doing %0.2f physical damage with a chance to pin in a radius of %d each turn for %d turns.
-		The damage done will scale with your Paradox and Spellpower.]]):format(damDesc(self, DamageType.PHYSICAL, damage), radius, duration)
+		The damage done will scale with your Spellpower.]]):format(damDesc(self, DamageType.PHYSICAL, damage), radius, duration)
 	end,
 }

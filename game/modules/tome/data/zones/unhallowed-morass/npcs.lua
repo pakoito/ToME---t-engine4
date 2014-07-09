@@ -95,7 +95,7 @@ newEntity{ base = "BASE_NPC_SPIDER",
 		[Talents.T_SPIN_FATE]=2,
 		[Talents.T_BANISH]=2,
 		[Talents.T_RETHREAD]=2,
-		[Talents.T_STATIC_HISTORY]=2,
+		[Talents.T_DISENTANGLE]=2,
 	},
 }
 
@@ -127,7 +127,7 @@ newEntity{ base = "BASE_NPC_SPIDER", define_as = "WEAVER_QUEEN",
 		[Talents.T_SPIN_FATE]=2,
 		[Talents.T_BANISH]=2,
 		[Talents.T_RETHREAD]=2,
-		[Talents.T_STATIC_HISTORY]=2,
+		[Talents.T_DISENTANGLE]=2,
 		[Talents.T_FADE_FROM_TIME]=3,
 	},
 

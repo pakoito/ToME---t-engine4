@@ -366,7 +366,7 @@ newEntity{
 		resists = {
 			[DamageType.TEMPORAL] = resolvers.mbonus_material(10, 5),
 		},
-		paradox_reduce_fails = resolvers.mbonus_material(15, 15),
+		paradox_reduce_anomalies = resolvers.mbonus_material(8, 8),
 	},	
 }
 newEntity{

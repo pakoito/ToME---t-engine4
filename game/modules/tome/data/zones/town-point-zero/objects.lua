@@ -38,6 +38,6 @@ newEntity{ base = "BASE_TOOL_MISC",
 		inc_stats = { [Stats.STAT_WIL] = 4, [Stats.STAT_CON] = 2, },
 		combat_def = 5,
 		inc_damage = { [DamageType.TEMPORAL] = 7 },
-		paradox_reduce_fails = 25,
+		paradox_reduce_anomalies = 10,
 	},
 }

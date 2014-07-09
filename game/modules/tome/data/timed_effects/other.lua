@@ -433,44 +433,11 @@ newEffect{
 	on_timeout = function(self, eff)
 		DamageType:get(DamageType.TEMPORAL).projector(eff.src, self.x, self.y, DamageType.TEMPORAL, eff.power)
 	end,
-}
-
-newEffect{
-	name = "PRECOGNITION", image = "talents/precognition.png",
-	desc = "Precognition",
-	long_desc = function(self, eff) return "You walk into the future; when the effect ends, if you are not dead, you are brought back to the past." end,
-	type = "other",
-	subtype = { time=true },
-	status = "beneficial",
-	parameters = { power=10 },
-	cancel_on_level_change = function(self, eff)
-		game.logPlayer(game.player, "#LIGHT_BLUE#Precognition fizzles and dissipates.")
-		game._chronoworlds = nil
-	end,
 	activate = function(self, eff)
-		game:onTickEnd(function()
-			game:chronoClone("precognition")
-		end)
+		eff.particle = self:addParticles(Particles.new("time_shield", 1))
 	end,
 	deactivate = function(self, eff)
-		game:onTickEnd(function()
-			-- Update the shader of the original player
-			self:updateMainShader()
-			if game._chronoworlds == nil then
-				game.logSeen(self, "#LIGHT_RED#The spell fizzles.")
-				return
-			end
-			game.logPlayer(game.player, "#LIGHT_BLUE#You unfold the spacetime continuum to a previous state!")
-			game:chronoRestore("precognition", true)
-			game.player.tmp[self.EFF_PRECOGNITION] = nil
-			if game._chronoworlds then game._chronoworlds = nil end
-			if game.player:knowTalent(game.player.T_FORESIGHT) then
-				local t = game.player:getTalentFromId(game.player.T_FORESIGHT)
-				t.do_precog_foresight(game.player, t)
-			end
-			game.player.energy.value = game.energy_to_act
-			game.paused = true
-		end)
+		self:removeParticles(eff.particle)
 	end,
 }
 
@@ -481,13 +448,16 @@ newEffect{
 	type = "other",
 	subtype = { time=true },
 	status = "beneficial",
-	parameters = { power=10 },
+	parameters = { power=10, defense=0, crits=0 },
 	activate = function(self, eff)
 		eff.thread = 1
 		eff.max_dur = eff.dur
 		game:onTickEnd(function()
 			game:chronoClone("see_threads_base")
 		end)
+		
+		self:effectTemporaryValue(eff, "ignore_direct_crits", eff.crits)
+		self:effectTemporaryValue(eff, "combat_def", eff.defense)
 	end,
 	deactivate = function(self, eff)
 		game:onTickEnd(function()
@@ -2493,5 +2463,136 @@ newEffect{
 		else
 			self:incParadox(eff.power)
 		end
+	end,
+}
+
+newEffect{
+	name = "TIME_STOP", image = "talents/stop.png",
+	desc = "Time Stop",
+	long_desc = function(self, eff)
+		return ("The target has stopped time and is dealing %d%% less damage."):format(eff.power)
+	end,
+	charges = function(self, eff)
+		local energy = self.energy.value
+		if energy < 2000 then
+			self:removeEffect(self.EFF_TIME_STOP)
+		end
+		return math.floor(energy/1000) 
+	end,
+	type = "other",
+	subtype = {time=true},
+	status = "detrimental",
+	decrease = 0,
+	no_stop_enter_worlmap = true, no_stop_resting = true,
+	parameters = {power=50},
+	activate = function(self, eff)
+		self:effectTemporaryValue(eff, "time_stop_damage_penalty", eff.power)
+	end,
+	deactivate = function(self, eff)
+	end,
+}
+
+newEffect{
+	name = "TEMPORAL_REPRIEVE", image = "talents/temporal_reprieve.png",
+	desc = "Temporal Reprieve",
+	long_desc = function(self, eff) return ("This target has retreated to a safe place."):format() end,
+	type = "other",
+	subtype = { time=true },
+	status = "beneficial",
+	parameters = { power=1 },
+	on_timeout = function(self, eff)
+		-- Clone protection
+		if not self.on_die then return end
+		-- Certain talents don't cooldown in the reprieve
+		if not self:attr("no_talents_cooldown") then
+			for tid, _ in pairs(self.talents_cd) do
+				local t = self:getTalentFromId(tid)
+				if t and t.fixed_cooldown then
+					self.talents_cd[tid] = self.talents_cd[tid] + 1
+				end
+			end
+		end
+	end,
+	activate = function(self, eff)
+
+	end,
+	deactivate = function(self, eff)
+		-- Clone protection
+		if not self.on_die then return end
+		-- Return from the reprieve
+		game:onTickEnd(function()
+			-- Collect objects
+			local objs = {}
+			for i = 0, game.level.map.w - 1 do for j = 0, game.level.map.h - 1 do
+				for z = game.level.map:getObjectTotal(i, j), 1, -1 do
+					objs[#objs+1] = game.level.map:getObject(i, j, z)
+					game.level.map:removeObject(i, j, z)
+				end
+			end end
+
+			local oldzone = game.zone
+			local oldlevel = game.level
+			local zone = game.level.source_zone
+			local level = game.level.source_level
+
+			if not self.dead then
+				oldlevel:removeEntity(self)
+				level:addEntity(self)
+			end
+
+			game.zone = zone
+			game.level = level
+			game.zone_name_s = nil
+
+			local x1, y1 = util.findFreeGrid(eff.x, eff.y, 20, true, {[Map.ACTOR]=true})
+			if x1 then
+				if not self.dead then
+					self:move(x1, y1, true)
+					self.on_die, self.temporal_reprieve_on_die = self.temporal_reprieve_on_die, nil
+					game.level.map:particleEmitter(x1, y1, 1, "generic_teleport", {rm=0, rM=0, gm=180, gM=255, bm=180, bM=255, am=35, aM=90})
+				else
+					self.x, self.y = x1, y1
+				end
+			end
+
+			-- Add objects back
+			for i, o in ipairs(objs) do
+				game.level.map:addObject(self.x, self.y, o)
+			end
+
+			-- Remove all npcs in the reprieve
+			for uid, e in pairs(oldlevel.entities) do
+				if e ~= self and e.die then e:die() end
+			end
+
+			-- Reload MOs
+			game.level.map:redisplay()
+			game.level.map:recreate()
+			game.uiset:setupMinimap(game.level)
+			game.nicer_tiles:postProcessLevelTilesOnLoad(game.level)
+
+			game.logPlayer(game.player, "#STEEL_BLUE#You are brought back from your repreive!")
+
+		end)
+	end,
+}
+
+newEffect{
+	name = "WARDEN_FOCUS", image = "talents/warden_focus.png",
+	desc = "Warden's Focus",
+	long_desc = function(self, eff)
+		return ("The target is dealing %d%% bonus damage to %s."):format(eff.power, eff.type)
+	end,
+	type = "other",
+	subtype = {tactic=true},
+	status = "beneficial",
+	decrease = 0,
+	no_stop_enter_worlmap = true, no_stop_resting = true,
+	parameters = {power=50},
+	activate = function(self, eff)
+	--	local type = eff.type
+		self:effectTemporaryValue(eff, "inc_damage_type", {[eff.type]=eff.power})
+	end,
+	deactivate = function(self, eff)
 	end,
 }

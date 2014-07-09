@@ -65,7 +65,7 @@ newEntity{ define_as = "EPOCH",
 		[Talents.T_MULTIPLY]=1,
 		[Talents.T_TURN_BACK_THE_CLOCK]=3, -- TBTC gets an extra bolt at tl 4, very dangerous
 		[Talents.T_CONGEAL_TIME]={base=3, every=7},
-		[Talents.T_STATIC_HISTORY]=5,
+		[Talents.T_DISENTANGLE]=5,
 		[Talents.T_BANISH]={base=3, every=7},
 		[Talents.T_HASTE]={base=1, every=7},
 		[Talents.T_SWAP]={base=1, every=7},

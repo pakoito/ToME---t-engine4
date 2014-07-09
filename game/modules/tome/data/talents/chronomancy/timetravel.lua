@@ -17,54 +17,24 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
-newTalent{
-	name = "Static History",
-	type = {"chronomancy/timetravel", 1},
-	require = chrono_req1,
-	points = 5,
-	message = "@Source@ rearranges history.",
-	cooldown = 24,
-	tactical = { PARADOX = 2 },
-	getDuration = function(self, t)
-		local duration = math.floor(self:combatTalentScale(t, 1.5, 3.5))
-		if self:knowTalent(self.T_PARADOX_MASTERY) then
-			duration = duration + self:callTalent(self.T_PARADOX_MASTERY, "stabilityDuration")
-		end
-		return duration
-	end,
-	getReduction = function(self, t) return self:combatTalentSpellDamage(t, 20, 200) end,
-	action = function(self, t)
-		self:incParadox (- t.getReduction(self, t))
-		game:playSoundNear(self, "talents/spell_generic")
-		self:setEffect(self.EFF_SPACETIME_STABILITY, t.getDuration(self, t), {})
-		return true
-	end,
-	info = function(self, t)
-		local reduction = t.getReduction(self, t)
-		local duration = t.getDuration(self, t)
-		return ([[By slightly reorganizing history, you reduce your Paradox by %d and temporarily stabilize the timeline; this allows chronomancy to be used without chance of failure for %d turns (backfires and anomalies may still occur).
-		The paradox reduction will increase with your Spellpower.]]):
-		format(reduction, duration)
-	end,
-}
+-- EDGE TODO: Icons, Particles, Timed Effect Particles
 
 newTalent{
 	name = "Time Skip",
-	type = {"chronomancy/timetravel",2},
-	require = chrono_req2,
+	type = {"chronomancy/timetravel",1},
+	require = chrono_req_high1,
 	points = 5,
-	cooldown = 6,
-	paradox = 5,
+	cooldown = 4,
+	paradox = function (self, t) return getParadoxCost(self, t, 10) end,
 	tactical = { ATTACK = {TEMPORAL = 1}, DISABLE = 2 },
-	range = 6,
+	range = 10,
 	direct_hit = true,
-	reflectable = true,
 	requires_target = true,
 	target = function(self, t)
 		return {type="hit", range=self:getTalentRange(t), talent=t}
 	end,
-	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 25, 250) * getParadoxModifier(self, pm) end,
-	getDuration = function(self, t) return 2 + math.ceil(self:combatTalentScale(self:getTalentLevel(t) * getParadoxModifier(self, pm), 0.3, 2.3)) end,
+	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 25, 250, getParadoxSpellpower(self)) end,
+	getDuration = function(self, t) return 2 + math.ceil(self:combatTalentScale(self:getTalentLevel(t), 0.3, 2.3)) end,
 	action = function(self, t)
 		local tg = self:getTalentTarget(t)
 		local x, y = self:getTarget(tg)
@@ -127,17 +97,97 @@ newTalent{
 		local damage = t.getDamage(self, t)
 		local duration = t.getDuration(self, t)
 		return ([[Inflicts %0.2f temporal damage, if the target fails a spell save.  If your target survives, it will be removed from time for %d turns.
-		The duration will scale with your Paradox.  The damage will scale with your Paradox and Spellpower.]]):format(damDesc(self, DamageType.TEMPORAL, damage), duration)
+		The damage will scale with your Spellpower.]]):format(damDesc(self, DamageType.TEMPORAL, damage), duration)
+	end,
+}
+
+newTalent{
+	name = "Temporal Reprieve",
+	type = {"chronomancy/timetravel", 2},
+	require = chrono_req_high2,
+	points = 5,
+	paradox = function (self, t) return getParadoxCost(self, t, 20) end,
+	cooldown = 24,
+	no_npc_use = true,
+	on_pre_use = function(self, t) return self:canBe("planechange") end,
+	getDuration = function(self, t) return math.floor(self:combatTalentScale(t, 6, 10)) end,
+	fixed_cooldown = true,
+	action = function(self, t)
+		if game.zone.is_temporal_reprieve then
+			game.logPlayer(self, "This talent cannot be used from within the reprieve.")
+			return
+		end
+		if game.zone.no_planechange then
+			game.logPlayer(self, "This talent cannot be used here.")
+			return
+		end
+		if not (self.player and self.game_ender) then return nil end
+
+		if not self:canBe("planechange") or self.summon_time or self.summon then
+			game.logPlayer(self, "The spell fizzles...")
+			return
+		end
+
+		game:onTickEnd(function()
+			if self:attr("dead") then return end
+			local oldzone = game.zone
+			local oldlevel = game.level
+
+			-- Remove them before making the new elvel, this way party memebrs are not removed from the old
+			if oldlevel:hasEntity(self) then oldlevel:removeEntity(self) end
+
+			oldlevel.no_remove_entities = true
+			local zone = mod.class.Zone.new("temporal-reprieve-talent")
+			local level = zone:getLevel(game, 1, 0)
+			oldlevel.no_remove_entities = nil
+
+			level:addEntity(self)
+
+			level.source_zone = oldzone
+			level.source_level = oldlevel
+			game.zone = zone
+			game.level = level
+			game.zone_name_s = nil
+
+			local x1, y1 = util.findFreeGrid(4, 4, 20, true, {[Map.ACTOR]=true})
+			if x1 then
+				self:move(x1, y1, true)
+				game.level.map:particleEmitter(x1, y1, 1, "generic_teleport", {rm=0, rM=0, gm=180, gM=255, bm=180, bM=255, am=35, aM=90})
+			end
+
+			self.temporal_reprieve_on_die = self.on_die
+			self.on_die = function(self, ...)
+				self:removeEffect(self.EFF_DREAMSCAPE)
+				local args = {...}
+				game:onTickEnd(function()
+					if self.temporal_reprieve_on_die then self:temporal_reprieve_on_die(unpack(args)) end
+					self.on_die, self.temporal_reprieve_on_die = self.temporal_reprieve_on_die, nil
+				end)
+			end
+
+			game.logPlayer(game.player, "#STEEL_BLUE#You time travel to a quiet place.")
+			game.nicer_tiles:postProcessLevelTiles(game.level)
+
+		end)
+
+		self:setEffect(self.EFF_TEMPORAL_REPRIEVE, t.getDuration(self, t), {x=self.x, y=self.y})
+		game:playSoundNear(self, "talents/teleport")
+		return true
+	end,
+	info = function(self, t)
+		local duration = t.getDuration(self, t)
+		return ([[Transport yourself to a safe place for %d turns.]]):
+		format(duration)
 	end,
 }
 
 newTalent{
 	name = "Echoes From The Past",
 	type = {"chronomancy/timetravel", 3},
-	require = chrono_req3,
+	require = chrono_req_high3,
 	points = 5,
-	paradox = 10,
-	cooldown = 6,
+	paradox = function (self, t) return getParadoxCost(self, t, 20) end,
+	cooldown = 10,
 	tactical = { ATTACKAREA = {TEMPORAL = 2} },
 	range = 0,
 	radius = function(self, t) return math.floor(self:combatTalentScale(t, 2, 6)) end,
@@ -145,9 +195,8 @@ newTalent{
 		return {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t), selffire=false, talent=t}
 	end,
 	direct_hit = true,
-	requires_target = true,
-	getDamage = function(self, t) return (self:combatTalentSpellDamage(t, 18, 160)*getParadoxModifier(self, pm)) end,
-	getPercent = function(self, t) return self:combatLimit(self:combatTalentSpellDamage(t, 1, 10), 0.5, .1, 0, 0.1575, 5.75) end, -- Limit to <50%
+	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 18, 160, getParadoxSpellpower(self)) end,
+	getPercent = function(self, t) return self:combatLimit(self:combatTalentSpellDamage(t, 1, 10, getParadoxSpellpower(self)), 0.5, .1, 0, 0.1575, 5.75) end, -- Limit to <50%
 	action = function(self, t)
 		local tg = self:getTalentTarget(t)
 		self:project(tg, self.x, self.y, DamageType.TEMPORAL, self:spellCrit(t.getDamage(self, t)))
@@ -161,47 +210,35 @@ newTalent{
 		local radius = self:getTalentRadius(t)
 		local damage = t.getDamage(self, t)
 		return ([[Creates a temporal echo in a nova around you, in a radius of %d.  Affected targets will take %0.2f temporal damage, as well as %d%% of the difference between their current life and max life as additional temporal damage.
-		The percentage and damage scales with your Paradox and Spellpower.]]):
+		The percentage and damage scales with your Spellpower.]]):
 		format(radius, damDesc(self, DamageType.TEMPORAL, damage), percent)
 	end,
 }
 
 newTalent{
-	name = "Temporal Reprieve",
+	name = "Damage Smearing",
 	type = {"chronomancy/timetravel", 4},
-	require = chrono_req4,
+	mode = "sustained",
+	require = chrono_req_high4,
+	sustain_paradox = 100,
+	cooldown = 24,
+	tactical = { DEFEND = 2 },
 	points = 5,
-	paradox = 20,
-	cooldown = 50,
-	tactical = { BUFF = 0.5, CURE = 0.5 },
-	message = "@Source@ manipulates the flow of time.",
-	getCooldownReduction = function(self, t) return math.floor(self:combatTalentScale(self:getTalentLevel(t) * getParadoxModifier(self, pm), 2, 6)) end,
-	action = function(self, t)
-		-- update cooldowns
-		for tid, cd in pairs(self.talents_cd) do
-			self.talents_cd[tid] = cd - t.getCooldownReduction(self, t)
-		end
-
-		local target = self
-		local todel = {}
-		for eff_id, p in pairs(target.tmp) do
-			local e = target.tempeffect_def[eff_id]
-			if e.type ~= "other" then
-				p.dur = p.dur - t.getCooldownReduction(self, t)
-				if p.dur <= 0 then todel[#todel+1] = eff end
-			end
-		end
-		while #todel > 0 do
-			target:removeEffect(table.remove(todel))
-		end
-
+	-- called in damage_types to split the damage
+	getPercent = function(self, t) return self:combatTalentLimit(t, 50, 10, 30)/100 end, -- Limit < 50%
+	getDuration = function(self, t) return math.floor(self:combatTalentScale(t, 3, 6)) end,
+	activate = function(self, t)
+		game:playSoundNear(self, "talents/spell_generic")
+		return {}
+	end,
+	deactivate = function(self, t, p)
 		return true
 	end,
 	info = function(self, t)
-		local reduction = t.getCooldownReduction(self, t)
-		return ([[Manipulate the flow of time, reducing the cooldown of all your talents on cooldown by %d turns, and reducing the duration of most status effects currently affecting you (good or bad) by %d turns.
-		The effect will scale with your Paradox.]]):
-		format(reduction, reduction)
+		local percent = t.getPercent(self, t) * 100
+		local duration = t.getDuration(self, t)
+		return ([[You convert %d%% of all non-temporal damage you receive into temporal damage spread out over %d turns.
+		]]):format(percent, duration)
 	end,
 }
 
@@ -209,7 +246,7 @@ newTalent{
 newTalent{
 	name = "Door to the Past",
 	type = {"chronomancy/timetravel", 4},
-	require = chrono_req4, no_sustain_autoreset = true,
+	require = chrono_req_high4, no_sustain_autoreset = true,
 	points = 5,
 	mode = "sustained",
 	sustain_paradox = 150,

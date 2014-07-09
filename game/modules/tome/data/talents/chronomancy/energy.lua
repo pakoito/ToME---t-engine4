@@ -26,7 +26,7 @@ newTalent{
 	sustain_paradox = 75,
 	cooldown = 10,
 	tactical = { BUFF = 2 },
-	getAbsorption = function(self, t) return self:combatTalentSpellDamage(t, 5, 150) end, -- Increase shield strength
+	getAbsorption = function(self, t) return  self:combatTalentSpellDamage(t, 5, 150, getParadoxSpellpower(self)) end, -- Increase shield strength
 	on_damage = function(self, t, damtype, dam)
 		if not DamageType:get(damtype).antimagic_resolve then return dam end
 		local absorb = t.getAbsorption(self, t)
@@ -61,7 +61,7 @@ newTalent{
 	sustain_paradox = 100,
 	cooldown = 10,
 	tactical = { BUFF = 2 },
-	getPower = function(self, t) return math.min(90, 10 + (self:combatTalentSpellDamage(t, 10, 50))) end,
+	getPower = function(self, t) return math.min(90, 10 +  self:combatTalentSpellDamage(t, 10, 50, getParadoxSpellpower(self))) end,
 	activate = function(self, t)
 		game:playSoundNear(self, "talents/heal")
 		return {
@@ -88,14 +88,14 @@ newTalent{
 	type = {"chronomancy/energy", 3},
 	require = chrono_req3,
 	points = 5,
-	paradox = 10,
+	paradox = function (self, t) return getParadoxCost(self, t, 20) end,
 	cooldown = 10,
 	tactical = { DISABLE = 2 },
 	direct_hit = true,
 	requires_target = true,
 	range = 6,
 	getTalentCount = function(self, t)
-		return 1 + math.floor(self:combatTalentScale(math.max(1, self:getTalentLevel(t) * getParadoxModifier(self, pm)), 0.5, 2.5, "log"))
+		return 1 + math.floor(self:combatTalentScale(math.max(1, self:getTalentLevel(t)), 0.5, 2.5, "log"))
 	end,
 	getCooldown = function(self, t) return math.ceil(self:combatTalentScale(t, 1, 2.6)) end,
 	action = function(self, t)
@@ -103,7 +103,6 @@ newTalent{
 		local tx, ty = self:getTarget(tg)
 		if not tx or not ty then return nil end
 		local _ _, tx, ty = self:canProject(tg, tx, ty)
-		tx, ty = checkBackfire(self, tx, ty)
 		local target = game.level.map(tx, ty, Map.ACTOR)
 		if not target then return end
 
@@ -152,8 +151,8 @@ newTalent{
 	info = function(self, t)
 		local talentcount = t.getTalentCount(self, t)
 		local cooldown = t.getCooldown(self, t)
-		return ([[You sap the target's energy and add it to your own, placing up to %d random talents on cooldown for %d turns.  For each talent put on cooldown, you reduce the cooldown of one of your chronomancy talents currently on cooldown by %d turns.
-		The number of talents affected scales with your Paradox.]]):
+		return ([[You sap the target's energy and add it to your own, placing up to %d random talents on cooldown for %d turns.  
+		For each talent put on cooldown, you reduce the cooldown of one of your chronomancy talents currently on cooldown by %d turns.]]):
 		format(talentcount, cooldown, cooldown)
 	end,
 }
@@ -163,7 +162,7 @@ newTalent{
 	type = {"chronomancy/energy",4},
 	require = chrono_req4,
 	points = 5,
-	paradox = 20,
+	paradox = function (self, t) return getParadoxCost(self, t, 40) end,
 	cooldown = 12,
 	tactical = { BUFF = 2 },
 	no_energy = true,

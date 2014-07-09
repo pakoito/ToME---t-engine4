@@ -70,16 +70,17 @@ newTalent{
 	-- confusion effect implemented in "LOBOTOMIZED" effect in data\timed_effects\mental.lua
 	getConfuse = function(self, t) return self:combatLimit(t.getPower(self,t), 50, 0, 0, 34.7, 34.7) end, -- Limit < 50%
 	getDuration = function(self, t) return math.floor(self:combatTalentScale(t, 2, 6)) end,
-	no_npc = true,
+	target = function(self, t)
+		return {type="hit", range=self:getTalentRange(t), talent=t}
+	end,
 	action = function(self, t)
-		local tg = {type="hit", range=self:getTalentRange(t), talent=t}
+		local tg = self:getTalentTarget(t)
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
 		local _ _, x, y = self:canProject(tg, x, y)
 		if not x or not y then return nil end
 		local target = game.level.map(x, y, Map.ACTOR)
 		if not target then return nil end
-		local ai = target.ai or nil		
 		
 		local dam = self:mindCrit(t.getDamage(self, t))
 		if target:canBe("confusion") then

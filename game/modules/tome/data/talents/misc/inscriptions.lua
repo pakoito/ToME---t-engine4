@@ -1015,7 +1015,6 @@ newInscription{
 		self:project(tg, x, y, DamageType.TEMPORAL, self:spellCrit(t.getDamage(self, t)))
 		game.level.map:particleEmitter(x, y, 1, "temporal_thrust")
 		game:playSoundNear(self, "talents/arcane")
-		self:incParadox(-60)
 		if target.dead or target.player then return true end
 		target:setEffect(target.EFF_CONTINUUM_DESTABILIZATION, 100, {power=self:combatSpellpower(0.3)})
 		
@@ -1059,7 +1058,6 @@ newInscription{
 		local damage = t.getDamage(self, t)
 		local duration = t.getDuration(self, t)
 		return ([[Inflicts %0.2f temporal damage.  If your target survives, it will be sent %d turns into the future.
-		It will also lower your paradox by 60 (if you have any).
 		Note that messing with the spacetime continuum may have unforeseen consequences.]]):format(damDesc(self, DamageType.TEMPORAL, damage), duration)
 	end,
 	short_info = function(self, t)

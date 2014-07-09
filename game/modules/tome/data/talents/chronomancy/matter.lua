@@ -22,7 +22,7 @@ newTalent{
 	type = {"chronomancy/matter",1},
 	require = chrono_req1,
 	points = 5,
-	paradox = 5,
+	paradox = function (self, t) return getParadoxCost(self, t, 10) end,
 	cooldown = 3,
 	tactical = { ATTACKAREA = {TEMPORAL = 1, PHYSICAL = 1} },
 	range = 10,
@@ -32,12 +32,11 @@ newTalent{
 	target = function(self, t)
 		return {type="beam", range=self:getTalentRange(t), talent=t}
 	end,
-	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 20, 230)*getParadoxModifier(self, pm) end,
+	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 20, 230, getParadoxSpellpower(self)) end,
 	action = function(self, t)
 		local tg = self:getTalentTarget(t)
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
-		x, y = checkBackfire(self, x, y)
 		self:project(tg, x, y, DamageType.MATTER, self:spellCrit(t.getDamage(self, t)))
 		local _ _, _, _, x, y = self:canProject(tg, x, y)
 		game.level.map:particleEmitter(self.x, self.y, math.max(math.abs(x-self.x), math.abs(y-self.y)), "matter_beam", {tx=x-self.x, ty=y-self.y})
@@ -47,7 +46,7 @@ newTalent{
 	info = function(self, t)
 		local damage = t.getDamage(self, t)
 		return ([[Fires a beam that turns matter into dust, inflicting %0.2f temporal damage and %0.2f physical damage.
-		The damage will scale with your Paradox and Spellpower.]]):
+		The damage will scale with your Spellpower.]]):
 		format(damDesc(self, DamageType.TEMPORAL, damage / 2), damDesc(self, DamageType.PHYSICAL, damage / 2))
 	end,
 }
@@ -61,8 +60,8 @@ newTalent{
 	sustain_paradox = 100,
 	cooldown = 12,
 	tactical = { BUFF =2, DEFEND = 2 },
-	getDamageOnMeleeHit = function(self, t) return self:combatTalentSpellDamage(t, 10, 100) end,
-	getArmor = function(self, t) return math.ceil (self:combatTalentSpellDamage(t, 20, 50)) end,
+	getDamageOnMeleeHit = function(self, t) return self:combatTalentSpellDamage(t, 1, 150, getParadoxSpellpower(self)) end,
+	getArmor = function(self, t) return math.ceil(self:combatTalentSpellDamage(t, 20, 50, getParadoxSpellpower(self))) end,
 	do_carbonRegrowth = function(self, t)
 		local maxspikes = t.getArmor(self, t)
 		if self.carbon_armor < maxspikes then
@@ -108,18 +107,17 @@ newTalent{
 	require = chrono_req3,
 	points = 5,
 	cooldown = 10,
-	paradox = 15,
+	paradox = function (self, t) return getParadoxCost(self, t, 30) end,
 	range = 10,
 	tactical = { ATTACK = 2 },
 	requires_target = true,
 	direct_hit = true,
-	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 10, 60)*getParadoxModifier(self, pm) end,
-	getExplosion = function(self, t) return self:combatTalentSpellDamage(t, 20, 230)*getParadoxModifier(self, pm) end,
+	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 10, 60, getParadoxSpellpower(self)) end,
+	getExplosion = function(self, t) return self:combatTalentSpellDamage(t, 20, 230, getParadoxSpellpower(self)) end,
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t), talent=t}
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
-		x, y = checkBackfire(self, x, y)
 		self:project(tg, x, y, function(px, py)
 			local target = game.level.map(px, py, Map.ACTOR)
 			if not target then return end
@@ -134,7 +132,7 @@ newTalent{
 		local explosion = t.getExplosion(self, t)
 		return ([[Destabilizes the target, inflicting %0.2f temporal damage per turn for 10 turns.  If the target dies while destabilized, it will explode, doing %0.2f temporal damage and %0.2f physical damage in a radius of 4.
 		If the target dies while also under the effects of continuum destabilization, all explosion damage will be done as temporal damage.
-		The damage will scale with your Paradox and Spellpower.]]):
+		The damage will scale with your Spellpower.]]):
 		format(damDesc(self, DamageType.TEMPORAL, damage), damDesc(self, DamageType.TEMPORAL, explosion/2), damDesc(self, DamageType.PHYSICAL, explosion/2))
 	end,
 }
@@ -144,7 +142,7 @@ newTalent{
 	type = {"chronomancy/matter", 4},
 	require = chrono_req4,
 	points = 5,
-	paradox = 20,
+	paradox = function (self, t) return getParadoxCost(self, t, 40) end,
 	cooldown = 4,
 	tactical = { ATTACK = {TEMPORAL = 1, PHYSICAL = 1} },
 	range = 10,
@@ -154,12 +152,11 @@ newTalent{
 	target = function(self, t)
 		return {type="hit", range=self:getTalentRange(t), talent=t}
 	end,
-	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 30, 300)*getParadoxModifier(self, pm) end,
+	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 30, 300, getParadoxSpellpower(self)) end,
 	action = function(self, t)
 		local tg = self:getTalentTarget(t)
 		local x, y, target = self:getTarget(tg)
 		if not x or not y then return nil end
-		x, y = checkBackfire(self, x, y)
 		
 		-- bonus damage on targets with temporal destabilization
 		local damage = t.getDamage(self, t)
@@ -197,7 +194,7 @@ newTalent{
 		local damage = t.getDamage(self, t)
 		return ([[Attempts to pull the target apart at a molecular level, inflicting %0.2f temporal damage and %0.2f physical damage.  If the target ends up with low enough life (<20%%), it might be instantly killed.
 		Quantum Spike deals 50%% additional damage to targets affected by temporal destabilization and/or continuum destabilization.
-		The damage will scale with your Paradox and Spellpower.]]):format(damDesc(self, DamageType.TEMPORAL, damage/2), damDesc(self, DamageType.PHYSICAL, damage/2))
+		The damage will scale with your Spellpower.]]):format(damDesc(self, DamageType.TEMPORAL, damage/2), damDesc(self, DamageType.PHYSICAL, damage/2))
 	end,
 }
 

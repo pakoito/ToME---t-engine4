@@ -441,7 +441,7 @@ newEntity{
 		max_positive = resolvers.mbonus_material(20, 20),
 		max_negative = resolvers.mbonus_material(20, 20),
 		max_hate = resolvers.mbonus_material(10, 10),
-		paradox_reduce_fails = resolvers.mbonus_material(20, 20),
+		paradox_reduce_anomalies = resolvers.mbonus_material(10, 10),
 		max_psi = resolvers.mbonus_material(20, 20),
 		},
 }

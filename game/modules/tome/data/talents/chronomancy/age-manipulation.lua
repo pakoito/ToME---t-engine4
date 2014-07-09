@@ -22,21 +22,20 @@ newTalent{
 	type = {"chronomancy/age-manipulation", 1},
 	require = chrono_req1,
 	points = 5,
-	paradox = 5,
+	paradox = function (self, t) return getParadoxCost(self, t, 10) end,
 	cooldown = 4,
 	tactical = { ATTACK = {TEMPORAL = 2}, DISABLE = 2 },
 	range = 10,
 	reflectable = true,
 	requires_target = true,
 	proj_speed = 5,
-	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 15, 150)*getParadoxModifier(self, pm) end,
+	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 15, 150, getParadoxSpellpower(self)) end,
 	getDamageStat = function(self, t) return 2 + math.ceil(t.getDamage(self, t) / 15) end,
 	action = function(self, t)
 		local tg = {type="bolt", range=self:getTalentRange(t), talent=t, display={particle="temporal_bolt"}}
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
-		x, y = checkBackfire(self, x, y)
-		self:projectile(tg, x, y, DamageType.CLOCK, self:spellCrit(t.getDamage(self, t)), nil)
+		self:projectile(tg, x, y, DamageType.CLOCK, self:spellCrit(t.getDamage(self, t)))
 		game:playSoundNear(self, "talents/spell_generic2")
 
 		--bolt #2 (Talent Level 4 Bonus Bolt)
@@ -44,13 +43,14 @@ newTalent{
 			local tg2 = {type="bolt", range=self:getTalentRange(t), talent=t, display={particle="temporal_bolt"}}
 			local x, y = self:getTarget(tg2)
 			if x and y then
-				x, y = checkBackfire(self, x, y)
 				if x and y then
-					self:projectile(tg2, x, y, DamageType.CLOCK, self:spellCrit(t.getDamage(self, t)), nil)
+					self:projectile(tg2, x, y, DamageType.CLOCK, self:spellCrit(t.getDamage(self, t)))
 					game:playSoundNear(self, "talents/spell_generic2")
 				end
 			end
 		else end
+		
+		
 
 		return true
 	end,
@@ -59,7 +59,7 @@ newTalent{
 		local damagestat = t.getDamageStat(self, t)
 		return ([[Projects a bolt of temporal energy that deals %0.2f temporal damage, and reduces all of the target's stats by %d for 3 turns.
 		At talent level 4 you may project a second bolt.
-		The damage dealt will scale with your Paradox and Spellpower.]]):format(damDesc(self, DamageType.TEMPORAL, damage), damagestat)
+		The damage dealt will scale with your Spellpower.]]):format(damDesc(self, DamageType.TEMPORAL, damage), damagestat)
 	end,
 }
 
@@ -68,7 +68,7 @@ newTalent{
 	type = {"chronomancy/age-manipulation", 2},
 	require = chrono_req2,
 	points = 5,
-	paradox = 15,
+	paradox = function (self, t) return getParadoxCost(self, t, 30) end,
 	cooldown = 14,
 	tactical = { ATTACKAREA = 2, DISABLE= 2 },
 	range = 0,
@@ -78,7 +78,7 @@ newTalent{
 	target = function(self, t)
 		return {type="cone", range=self:getTalentRange(t), radius=self:getTalentRadius(t), selffire=false, talent=t}
 	end,
-	getConfuseDuration = function(self, t) return math.floor(self:combatScale((self:getTalentLevel(t) + 2) * getParadoxModifier(self, pm), 2, 2, 7, 7)) end,
+	getConfuseDuration = function(self, t) return math.floor(self:combatScale((self:getTalentLevel(t) + 2), 2, 2, 7, 7)) end,
 	getConfuseEfficency = function(self, t) return math.min(50, self:getTalentLevelRaw(t) * 10) end,
 	action = function(self, t)
 		local tg = self:getTalentTarget(t)
@@ -96,8 +96,7 @@ newTalent{
 	info = function(self, t)
 		local duration = t.getConfuseDuration(self, t)
 		local radius = self:getTalentRadius(t)
-		return ([[Reverts the minds of all creatures in a radius %d cone to an infantile state, in effect confusing them (%d%% to act randomly) for %d turns.
-		The duration will scale with your Paradox.]]):
+		return ([[Reverts the minds of all creatures in a radius %d cone to an infantile state, in effect confusing them (%d%% to act randomly) for %d turns.]]):
 		format(radius, t.getConfuseEfficency(self, t), duration)
 	end,
 }
@@ -107,7 +106,7 @@ newTalent{
 	type = {"chronomancy/age-manipulation",3},
 	require = chrono_req3,
 	points = 5,
-	paradox = 20,
+	paradox = function (self, t) return getParadoxCost(self, t, 40) end,
 	cooldown = 14,
 	tactical = { ATTACKAREA = {TEMPORAL = 2} },
 	range = 0,
@@ -115,7 +114,7 @@ newTalent{
 	target = function(self, t)
 		return {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t), selffire=false}
 	end,
-	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 8, 135)*getParadoxModifier(self, pm) end,
+	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 8, 135, getParadoxSpellpower(self)) end,
 	getDuration = function(self, t) return 5 + math.ceil(self:getTalentLevel(t)) end,
 	direct_hit = true,
 	requires_target = true,
@@ -142,7 +141,7 @@ newTalent{
 		local duration = t.getDuration(self, t)
 		local radius = self:getTalentRadius(t)
 		return ([[You surround yourself with a radius %d distortion of time, which deals %0.2f stacking temporal damage over 3 turns to all other creatures.  The effect lasts %d turns.
-		The damage dealt will scale with your Paradox and Spellpower.]]):format(radius, damDesc(self, DamageType.TEMPORAL, damage), duration)
+		The damage dealt will scale with your Spellpower.]]):format(radius, damDesc(self, DamageType.TEMPORAL, damage), duration)
 	end,
 }
 
@@ -151,7 +150,7 @@ newTalent{
 	type = {"chronomancy/age-manipulation", 4},
 	require = chrono_req4,
 	points = 5,
-	paradox = 10,
+	paradox = function (self, t) return getParadoxCost(self, t, 20) end,
 	cooldown = 10,
 	tactical = { HEAL = 2, CURE = function(self, t, target)
 		local nb = 0
@@ -164,7 +163,7 @@ newTalent{
 		return nb
 	end },
 	is_heal = true,
-	getHeal = function(self, t) return self:combatTalentSpellDamage(t, 40, 440)*getParadoxModifier(self, pm) end,
+	getHeal = function(self, t) return self:combatTalentSpellDamage(t, 40, 440, getParadoxSpellpower(self)) end,
 	getRemoveCount = function(self, t) return math.floor(self:combatTalentScale(t, 1, 5, "log")) end,
 	action = function(self, t)
 		self:attr("allow_on_heal", 1)
@@ -201,7 +200,7 @@ newTalent{
 		local heal = t.getHeal(self, t)
 		local count = t.getRemoveCount(self, t)
 		return ([[You revert your body to a previous state, healing yourself for %0.2f life and removing %d physical status effects (both good and bad).
-		The amount of life healed will scale with your Paradox and Spellpower.]]):
+		The amount of life healed will scale with your Spellpower.]]):
 		format(heal, count)
 	end,
 }

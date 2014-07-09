@@ -42,17 +42,17 @@ newTalent{
 	require = chrono_req_high2,
 	points = 5,
 	cooldown = 24,
-	paradox = 20,
+	paradox = function (self, t) return getParadoxCost(self, t, 40) end,
 	range = 10,
 	tactical = { ATTACK = 2 },
 	requires_target = true,
 	direct_hit = true,
 	no_npc_use = true,
-	getDuration = function(self, t) return math.floor(self:combatTalentScale(self:getTalentLevel(t)*getParadoxModifier(self, pm), 5, 9)) end,
-	getPower = function(self, t) return self:combatTalentSpellDamage(t, 10, 50) * getParadoxModifier(self, pm) end,
+	getDuration = function(self, t) return math.floor(self:combatTalentScale(self:getTalentLevel(t), 5, 9)) end,
+	getPower = function(self, t) return self:combatTalentSpellDamage(t, 10, 50, getParadoxSpellpower(self)) end,
 	-- Resistance reduction handled under CEASE_TO_EXIST in data\timed_effects\magical.lua
 	getPower = function(self, t)
-		return self:combatLimit(self:combatTalentSpellDamage(t, 10, 50) * getParadoxModifier(self, pm), 100, 0, 0, 32.9, 32.9) -- Limit < 100%
+		return self:combatLimit(self:combatTalentSpellDamage(t, 10, 50, getParadoxSpellpower(self)), 100, 0, 0, 32.9, 32.9) -- Limit < 100%
 	end,
 	do_instakill = function(self, t)
 		-- search for target because it's ID will change when the chrono restore takes place
@@ -118,7 +118,7 @@ newTalent{
 		local power = t.getPower(self, t)
 		return ([[Over the next %d turns, you attempt to remove the target from the timeline.  Its resistances will be reduced by %d%%, and if you manage to kill it while the spell is in effect, you'll be returned to the point in time you cast this spell and the target will be slain.
 		This spell splits the timeline.  Attempting to use another spell that also splits the timeline while this effect is active will be unsuccessful.
-		The duration will scale with your Paradox and the resistance penalty will scale with your Paradox and Spellpower.]])
+		The duration will scale with your Paradox and the resistance penalty will scale with your Spellpower.]])
 		:format(duration, power)
 	end,
 }
@@ -128,11 +128,11 @@ newTalent{
 	type = {"chronomancy/paradox", 3},
 	require = chrono_req_high3,
 	points = 5,
-	paradox = 10,
+	paradox = function (self, t) return getParadoxCost(self, t, 20) end,
 	cooldown = 24,
 	tactical = { DEFEND = 2, CURE = 2 },
-	getResist = function(self, t) return self:combatTalentSpellDamage(t, 10, 50) * getParadoxModifier(self, pm) end,
-	getdurred = function(self, t) return self:combatLimit(self:combatTalentSpellDamage(t, 10, 50) * getParadoxModifier(self, pm), 100, 0, 0, 32.9, 32.9) end, -- Limit < 100%
+	getResist = function(self, t) return self:combatTalentSpellDamage(t, 10, 50, getParadoxSpellpower(self)) end,
+	getdurred = function(self, t) return self:combatLimit(self:combatTalentSpellDamage(t, 10, 50, getParadoxSpellpower(self)), 100, 0, 0, 32.9, 32.9) end, -- Limit < 100%
 	action = function(self, t)
 		-- fading managed by FADE_FROM_TIME effect in mod.data.timed_effects.other.lua
 		self:setEffect(self.EFF_FADE_FROM_TIME, 10, {power=t.getResist(self, t), durred=t.getdurred(self,t)})
@@ -145,7 +145,7 @@ newTalent{
 		return ([[You partially remove yourself from the timeline for 10 turns.
 		This increases your resistance to all damage by %d%%, reduces the duration of all detrimental effects on you by %d%%, and reduces all damage you deal by 20%%.
 		The resistance bonus, effect reduction, and damage penalty will gradually lose power over the duration of the spell.
-		The effects scale with your Paradox and Spellpower.]]):
+		The effects scale with your Spellpower.]]):
 		format(resist, dur)
 	end,
 }
@@ -155,13 +155,13 @@ newTalent{
 	type = {"chronomancy/paradox", 4},
 	require = chrono_req_high4,
 	points = 5,
-	paradox = 25,
+	paradox = function (self, t) return getParadoxCost(self, t, 50) end,
 	cooldown = 50,
 	tactical = { ATTACK = 1, DISABLE = 2 },
 	range = 2,
 	requires_target = true,
 	no_npc_use = true,
-	getDuration = function(self, t)	return math.floor(self:combatTalentLimit(self:getTalentLevel(t)*getParadoxModifier(self, pm), 50, 4, 8)) end, -- Limit <50
+	getDuration = function(self, t)	return math.floor(self:combatTalentLimit(self:getTalentLevel(t), 50, 4, 8)) end, -- Limit <50
 	getModifier = function(self, t) return rng.range(t.getDuration(self,t)*2, t.getDuration(self, t)*4) end,
 	action = function (self, t)
 		if checkTimeline(self) == true then
@@ -241,7 +241,6 @@ newTalent{
 	info = function(self, t)
 		local duration = t.getDuration(self, t)
 		return ([[You summon your future self to fight alongside you for %d turns.  At some point in the future, you'll be pulled into the past to fight alongside your past self after the initial effect ends.
-		This spell splits the timeline.  Attempting to use another spell that also splits the timeline while this effect is active will be unsuccessful.
-		The duration will scale with your Paradox.]]):format(duration)
+		This spell splits the timeline.  Attempting to use another spell that also splits the timeline while this effect is active will be unsuccessful.]]):format(duration)
 	end,
 }

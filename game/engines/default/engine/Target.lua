@@ -149,7 +149,63 @@ function _M:display(dispx, dispy, prevfbo, rotate_keyframes)
 	self.display_x, self.display_y = ox, oy
 end
 
-function _M:realDisplay(dispx, dispy)
+function _M:realDisplay(dispx, dispy, display_highlight)
+	if not display_highlight then
+		if util.isHex() then
+			display_highlight = function(texture, tx, ty, count)
+				count = count or 1
+				for i = 1, count do
+					texture:toScreenHighlightHex(
+						dispx + (tx - game.level.map.mx) * self.tile_w * Map.zoom,
+						dispy + (ty - game.level.map.my + util.hexOffset(tx)) * self.tile_h * Map.zoom,
+						self.tile_w * Map.zoom,
+						self.tile_h * Map.zoom)
+				end
+			end
+		else
+			display_highlight = function(texture, tx, ty, count)
+				count = count or 1
+				for i = 1, count do
+					texture:toScreen(
+						dispx + (tx - game.level.map.mx) * self.tile_w * Map.zoom,
+						dispy + (ty - game.level.map.my) * self.tile_h * Map.zoom,
+						self.tile_w * Map.zoom,
+						self.tile_h * Map.zoom)
+				end
+			end
+		end
+	end
+
+	if self.target_type.multiple then
+		local make_display_highlight = function(collector)
+			return function(texture, tx, ty, count)
+				count = count or 1
+				collector[tx] = collector[tx] or {}
+				collector[tx][ty] = {texture, count}
+			end
+		end
+		local draw_highlight = function(collector)
+			for x, ys in pairs(collector) do
+				for y, tex in pairs(ys) do
+					display_highlight(tex[1], x, y, tex[2])
+				end
+			end
+		end
+
+		local target_type = self.target_type
+
+		local textures = {}
+		local sub_display_highlight = make_display_highlight(textures)
+		for _, tt in ipairs(target_type) do
+			self.target_type = tt
+			self:realDisplay(dispx, dispy, sub_display_highlight)
+		end
+		draw_highlight(textures)
+
+		self.target_type = target_type
+		return
+	end
+
 	-- Make sure we have a source
 	if not self.target_type.source_actor then
 		self.target_type.source_actor = self.source_actor
@@ -169,25 +225,6 @@ function _M:realDisplay(dispx, dispy)
 
 	-- Do not display if not requested
 	if not self.active then return end
-
-	local display_highlight
-	if util.isHex() then
-		display_highlight = function(texture, tx, ty)
-			texture:toScreenHighlightHex(
-				dispx + (tx - game.level.map.mx) * self.tile_w * Map.zoom,
-				dispy + (ty - game.level.map.my + util.hexOffset(tx)) * self.tile_h * Map.zoom,
-				self.tile_w * Map.zoom,
-				self.tile_h * Map.zoom)
-			end
-	else
-		display_highlight = function(texture, tx, ty)
-			texture:toScreen(
-				dispx + (tx - game.level.map.mx) * self.tile_w * Map.zoom,
-				dispy + (ty - game.level.map.my) * self.tile_h * Map.zoom,
-				self.tile_w * Map.zoom,
-				self.tile_h * Map.zoom)
-			end
-	end
 
 	local s = self.sb
 	local l
@@ -266,8 +303,7 @@ function _M:realDisplay(dispx, dispy)
 			s = self.sr
 			-- double the fun :-P
 			if game.level.map:isBound(blocked_corner_x, blocked_corner_y) then
-				display_highlight(s, blocked_corner_x, blocked_corner_y)
-				display_highlight(s, blocked_corner_x, blocked_corner_y)
+				display_highlight(s, blocked_corner_x, blocked_corner_y, 2)
 			end
 		end
 
@@ -359,6 +395,15 @@ end
 -- @param t.block_radius(typ, lx, ly) Function called on each tile when projecting the radius to determine if the radius projection is blocked.  Automatically set when using t.typ, but the user can provide their own if they know what they are doing.
 function _M:getType(t)
 	if not t then return {} end
+
+	-- Allow multiple targeting types.
+	if t.multiple then
+		for k, v in ipairs(t) do
+			t[k] = self:getType(v)
+		end
+		return t
+	end
+
 	-- Add the default values
 	t = table.clone(t)
 	-- Default type def

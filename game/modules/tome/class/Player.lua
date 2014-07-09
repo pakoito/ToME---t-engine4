@@ -948,6 +948,10 @@ function _M:restCheck()
 				if cd > 0 then return true end
 			end
 		end
+		for tid, sus in pairs(self.talents) do
+			local p = self:isTalentActive(tid)
+			if p and p.rest_count and p.rest_count > 0 then return true end
+		end
 	end
 
 	self.resting.wait_cooldowns = nil
@@ -1240,7 +1244,7 @@ function _M:playerUseItem(object, item, inven)
 	)
 end
 
-function _M:quickSwitchWeapons()
+function _M:quickSwitchWeapons(free_swap, message)
 	if self.no_inventory_access then return end
 	local mh1, mh2 = self.inven[self.INVEN_MAINHAND], self.inven[self.INVEN_QS_MAINHAND]
 	local oh1, oh2 = self.inven[self.INVEN_OFFHAND], self.inven[self.INVEN_QS_OFFHAND]
@@ -1253,8 +1257,8 @@ function _M:quickSwitchWeapons()
 	self.no_power_reset_on_wear = true
 
 	-- Check for free weapon swaps
-	local free_swap = false
-	if self:knowTalent(self.T_CELERITY) or self:attr("quick_weapon_swap") then free_swap = true end
+	local free_swap = free_swap or false
+	if self:attr("quick_weapon_swap") then free_swap = true end
 
 	local mhset1, mhset2 = {}, {}
 	local ohset1, ohset2 = {}, {}
@@ -1311,7 +1315,11 @@ function _M:quickSwitchWeapons()
 
 	self:playerCheckSustains()
 
-	game.logPlayer(self, "You switch your weapons to: %s.", names)
+	if message == "warden" then
+		game.logPlayer(self, "You teleport %s into your hands.", names)
+	else
+		game.logPlayer(self, "You switch your weapons to: %s.", names)
+	end
 	self.off_weapon_slots = not self.off_weapon_slots
 	self.changed = true
 end

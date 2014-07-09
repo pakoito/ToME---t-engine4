@@ -928,7 +928,7 @@ function _M:displayResources(scale, bx, by, a)
 		if player:knowTalent(player.T_PARADOX_POOL) and not player._hide_resource_paradox then
 			sshat[1]:toScreenFull(x-6, y+8, sshat[6], sshat[7], sshat[2], sshat[3], 1, 1, 1, a)
 			bshat[1]:toScreenFull(x, y, bshat[6], bshat[7], bshat[2], bshat[3], 1, 1, 1, a)
-			local _, chance = player:paradoxFailChance()
+			local chance = player:paradoxAnomalyChance()
 			local s = chance
 			if s > 15 then s = 15 end
 			s = s / 15
