@@ -39,7 +39,7 @@ newTalent{
 	type = {"chronomancy/speed-control",2},
 	require = chrono_req2,
 	points = 5,
-	sustain_paradox = 50,
+	sustain_paradox = 100,
 	mode = "sustained",
 	cooldown = 12,
 	tactical = { ATTACKAREA = 1, DISABLE = 3 },

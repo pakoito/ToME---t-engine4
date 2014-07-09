@@ -54,6 +54,15 @@ newTalent{
 	getPower = function(self, t)
 		return self:combatLimit(self:combatTalentSpellDamage(t, 10, 50, getParadoxSpellpower(self)), 100, 0, 0, 32.9, 32.9) -- Limit < 100%
 	end,
+	on_pre_use = function(self, t, silent)
+		if checkTimeline(self) then
+			if not silent then
+				game.logPlayer(self, "The timeline is too fractured to do this now.")
+			end
+			return false
+		end
+		return true
+	end,
 	do_instakill = function(self, t)
 		-- search for target because it's ID will change when the chrono restore takes place
 		local tg = false
@@ -74,11 +83,6 @@ newTalent{
 		end
 	end,
 	action = function(self, t)
-		-- check for other chrono worlds
-		if checkTimeline(self) == true then
-			return
-		end
-		
 		-- get our target
 		local tg = {type="hit", range=self:getTalentRange(t)}
 		local tx, ty = self:getTarget(tg)

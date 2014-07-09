@@ -99,7 +99,7 @@ newTalent{
 	paradox = function (self, t) return getParadoxCost(self, t, 10) end,
 	cooldown = 10,
 	tactical = { ESCAPE = 2 },
-	range = function (self, t) return math.floor(self:combatTalentScale(t, 10.5, 12.5)) end,
+	range = 10,
 	radius = function(self, t) return math.floor(self:combatTalentLimit(t, 0, 7, 3)) end, -- Limit to radius 0
 	requires_target = true,
 	getDuration = function (self, t) return math.floor(self:combatTalentScale(self:getTalentLevel(t), 6, 10)) end,

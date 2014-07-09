@@ -67,7 +67,7 @@ newTalent{
 	require = chrono_req3,
 	points = 5,
 	mode = "passive",
-	getPower = function(self, t) return self:combatTalentSpellDamage(t, 10, 50, getParadoxSpellpower(self)) end,
+	getPower = function(self, t) return self:combatTalentSpellDamage(t, 4, 20, getParadoxSpellpower(self)) end,
 	info = function(self, t)
 		local power = t.getPower(self, t)
 		return ([[You deal %d%% more damage to targets who share a creature type (undead, humanoid, giant, etc.) with the last target you killed.

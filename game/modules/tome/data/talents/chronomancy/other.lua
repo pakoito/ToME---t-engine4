@@ -195,7 +195,6 @@ checkTimeline = function(self)
 	if game._chronoworlds  == nil then
 		return false
 	else
-		game.logPlayer(self, "The timeline is too fractured right now to use this ability.")
 		return true
 	end
 end

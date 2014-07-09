@@ -150,13 +150,23 @@ newTalent{
 	paradox = function (self, t) return getParadoxCost(self, t, 50) end,
 	cooldown = 50,
 	no_npc_use = true,
-	getDuration = function(self, t) return math.floor(self:combatTalentScale(self:getTalentLevel(t), 5, 9)) end,
-	action = function(self, t)
-		if checkTimeline(self) == true or game.level.see_the_threads then
-			game.logPlayer(self, "You can't do that right now.")
-			return
+	getDuration = function(self, t) return math.floor(self:combatTalentScale(self:getTalentLevel(t), 10, 25)) end,
+	on_pre_use = function(self, t, silent)
+		if checkTimeline(self) then
+			if not silent then
+				game.logPlayer(self, "The timeline is too fractured to do this now.")
+			end
+			return false
 		end
-		
+		if game.level and game.level.see_the_threads_done then
+			if not silent then
+				game.logPlayer(self, "You've seen as much as you can here.")
+			end
+			return false
+		end
+		return true
+	end,
+	action = function(self, t)
 		-- Foresight Bonuses
 		local defense = 0
 		local crits = 0
@@ -165,7 +175,7 @@ newTalent{
 			crits = self:callTalent(self.T_FORESIGHT, "getCritDefense")
 		end
 		
-		game.level.see_the_threads = true
+		game.level.see_the_threads_done = true
 		
 		self:setEffect(self.EFF_SEE_THREADS, t.getDuration(self, t), {defense=defense, crits=crits})
 		return true
