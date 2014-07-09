@@ -266,7 +266,7 @@ newTalent{
 	do_anomalyCount = function(self, t)
 		if self.dttp_anomaly_count == 0 then
 			-- check for anomaly
-			if not game.zone.no_anomalies and not self:attr("no_paradox_fail") and self:paradoxAnomalyChance() then
+			if not game.zone.no_anomalies and not self:attr("no_paradox_fail") and self:paradoxFailChance() then
 				-- Random anomaly
 				local ts = {}
 				for id, t in pairs(self.talents_def) do

@@ -360,7 +360,7 @@ function _M:display()
 		self:mouseTooltip(self.TOOLTIP_UNNATURAL_BODY, self:makeTextureBar("#c00000#Un.body:", ("%0.1f (%0.1f/turn)"):format(player.unnatural_body_heal, math.min(regen, player.unnatural_body_heal)), regen, player.unnatural_body_heal, nil, x, h, 255, 255, 255, colors.DARK_RED, colors.VERY_DARK_RED)) h = h + self.font_h
 	end
 	if player:knowTalent(player.T_PARADOX_POOL) then
-		local chance = player:paradoxAnomalyChance()
+		local chance = player:paradoxFailChance()
 		self:mouseTooltip(self.TOOLTIP_PARADOX, self:makeTextureBar("#LIGHT_STEEL_BLUE#Paradox:", ("%d (%d%s)"):format(player:getParadox(), chance, "%%"), chance, 100, player.paradox_regen, x, h, 255, 255, 255,
 			{r=176 / 2, g=196 / 2, b=222 / 2},
 			{r=176 / 5, g=196 / 5, b=222 / 5}

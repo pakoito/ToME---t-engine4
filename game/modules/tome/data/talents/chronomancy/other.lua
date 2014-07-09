@@ -257,7 +257,7 @@ newTalent{
 		local spellpower = getParadoxSpellpower(self)
 		local _, will_modifier = self:getModifiedParadox()
 		local after_will = self:getModifiedParadox()
-		local anomaly = self:paradoxAnomalyChance()
+		local anomaly = self:paradoxFailChance()
 		return ([[Use to set your preferred Paradox.  While resting you'll adjust your Paradox towards this number over %d turns.
 		The time it takes you to adjust your Paradox scales down with your Spellpower to a minimum of 10 turns.
 		

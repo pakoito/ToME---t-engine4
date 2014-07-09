@@ -366,7 +366,7 @@ function _M:drawDialog(kind, actor_to_compare)
 			self:mouseTooltip(self.TOOLTIP_HATE, s:drawColorStringBlended(self.font, ("#F53CBE#Hate: #00ff00#%d/%d"):format(player:getHate(), player.max_hate), w, h, 255, 255, 255, true)) h = h + self.font_h
 		end
 		if player:knowTalent(player.T_PARADOX_POOL) then
-			text = compare_fields(player, actor_to_compare, function(actor) local chance = actor:paradoxAnomalyChance() return chance end, "%d%%", "%+.1f%%", 1, true)
+			text = compare_fields(player, actor_to_compare, function(actor) local chance = actor:paradoxFailChance() return chance end, "%d%%", "%+.1f%%", 1, true)
 			self:mouseTooltip(self.TOOLTIP_PARADOX, s:drawColorStringBlended(self.font, ("#LIGHT_STEEL_BLUE#Paradox: #00ff00#%d(anomaly: %s)"):format(player:getParadox(), text), w, h, 255, 255, 255, true)) h = h + self.font_h
 		end
 		if player:knowTalent(player.T_PSI_POOL) then

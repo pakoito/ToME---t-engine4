@@ -4184,7 +4184,7 @@ function _M:getModifiedParadox()
 end
 
 -- Anomaly stuff
-function _M:paradoxAnomalyChance()
+function _M:paradoxFailChance()
 	local chance = 0
 	local fatigue_modifier = (100 + 2 * self:combatFatigue()) / 100
 	if self:getModifiedParadox() > 300 then
@@ -4192,7 +4192,7 @@ function _M:paradoxAnomalyChance()
 	end
 	-- If there's any chance, round it up
 	chance = util.bound(math.ceil(chance), 0, 100)
-	return chance
+	return chance, chance -- return this twice so we're compatable with older UIs
 end
 
 -- This handles anomalies
@@ -4203,7 +4203,7 @@ end
 function _M:paradoxDoAnomaly(reduction, anomaly_type, chance, target, silent)
 	local anomaly_type = anomaly_type or "random"
 	local forced = false
-	local chance = chance or self:paradoxAnomalyChance()
+	local chance = chance or self:paradoxFailChance()
 	if chance == "forced" then 
 		forced = true
 		chance = 100
@@ -4526,7 +4526,7 @@ function _M:preUseTalent(ab, silent, fake)
 		if cost > 0 then
 			local multi = 2
 			if self:knowTalent(self.T_THREAD_WALKER) then multi = multi + self:callTalent(self.T_THREAD_WALKER, "getParadoxMulti") end
-			if self:paradoxDoAnomaly(cost * multi, ab.anomaly_type or nil, self:paradoxAnomalyChance(), nil, silent) then
+			if self:paradoxDoAnomaly(cost * multi, ab.anomaly_type or nil, self:paradoxFailChance(), nil, silent) then
 				self:useEnergy()
 				game:playSoundNear(self, "talents/dispel")
 				return false
