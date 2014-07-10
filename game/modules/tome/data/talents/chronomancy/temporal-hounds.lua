@@ -86,6 +86,21 @@ summonTemporalHound = function(self, t)
 			if p.rest_count == 0 then p.rest_count = self.summoner:getTalentCooldown(tid) end
 		end
 	end
+	-- Make sure hounds stay close
+	m.on_act = function(self)
+		if game.level:hasEntity(self.summoner) and core.fov.distance(self.x, self.y, self.summoner.x, self.summoner.y) > 10 then
+			local Map = require "engine.Map"
+			local x, y = util.findFreeGrid(self.summoner.x, self.summoner.y, 5, true, {[engine.Map.ACTOR]=true})
+			if not x then
+				return
+			end
+			-- Clear it's targeting on teleport
+			if self:teleportRandom(x, y, 0) then
+				game.level.map:particleEmitter(x, y, 1, "temporal_teleport")
+				self:setTarget(nil)
+			end
+		end
+	end
 	
 	-- Make it look and sound nice :)
 	game.zone:addEntity(game.level, m, "actor", x, y)
@@ -111,7 +126,7 @@ newTalent{
 	require = chrono_req_high1,
 	mode = "sustained",
 	points = 5,
-	sustain_paradox = 100,
+	sustain_paradox = 48,
 	no_sustain_autoreset = true,
 	cooldown = function(self, t) return math.ceil(self:combatTalentLimit(t, 15, 45, 25)) end, -- Limit >15
 	tactical = { BUFF = 2 },
@@ -238,7 +253,7 @@ newTalent{
 				end
 				-- Set the target so we feel like a wolf pack
 				if target and self:reactionToward(target) < 0 then
-					a.ai_target.actor = target
+					a:setTarget(target)
 				end
 			end
 		end

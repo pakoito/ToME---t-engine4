@@ -23,7 +23,7 @@ newTalent{
 	mode = "sustained",
 	require = chrono_req1,
 	points = 5,
-	sustain_paradox = 75,
+	sustain_paradox = 20,
 	cooldown = 10,
 	tactical = { BUFF = 2 },
 	getAbsorption = function(self, t) return  self:combatTalentSpellDamage(t, 5, 150, getParadoxSpellpower(self)) end, -- Increase shield strength
@@ -58,7 +58,7 @@ newTalent{
 	mode = "sustained",
 	require = chrono_req2,
 	points = 5,
-	sustain_paradox = 100,
+	sustain_paradox = 20,
 	cooldown = 10,
 	tactical = { BUFF = 2 },
 	getPower = function(self, t) return math.min(90, 10 +  self:combatTalentSpellDamage(t, 10, 50, getParadoxSpellpower(self))) end,

@@ -83,7 +83,7 @@ newTalent{
 	type = {"chronomancy/chronomancy", 3},
 	require = chrono_req3,
 	points = 5,
-	sustain_paradox = 50,
+	sustain_paradox = 36,
 	mode = "sustained",
 	no_sustain_autoreset = true,
 	cooldown = function(self, t) return math.ceil(self:combatTalentLimit(t, 15, 45, 25)) end, -- Limit >15
@@ -147,7 +147,7 @@ newTalent{
 	type = {"chronomancy/chronomancy", 4},
 	require = chrono_req4,
 	points = 5,
-	paradox = function (self, t) return getParadoxCost(self, t, 50) end,
+	paradox = function (self, t) return getParadoxCost(self, t, 20) end,
 	cooldown = 50,
 	no_npc_use = true,
 	getDuration = function(self, t) return math.floor(self:combatTalentScale(self:getTalentLevel(t), 10, 25)) end,

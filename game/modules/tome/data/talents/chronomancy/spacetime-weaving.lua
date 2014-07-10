@@ -72,7 +72,7 @@ newTalent{
 	type = {"chronomancy/spacetime-weaving", 2},
 	mode = "sustained",
 	require = chrono_req2,
-	sustain_paradox = 50,
+	sustain_paradox = 24,
 	cooldown = 10,
 	tactical = { BUFF = 2 },
 	points = 5,
@@ -222,7 +222,7 @@ newTalent{
 		local duration = t.getDuration(self, t)
 		local radius = self:getTalentRadius(t)
 		return ([[You fold the space between yourself and a second point within range (radius %d accuracy), creating a pair of wormholes.  Any creature stepping on either wormhole will be teleported to the other.  The wormholes will last %d turns.
-		The chance of teleportation will scale with your Spellpower.]])
+		The chance of teleporting enemies will scale with your Spellpower.]])
 		:format(radius, duration)
 	end,
 }
@@ -233,7 +233,7 @@ newTalent{
 	mode = "passive",
 	require = chrono_req4,
 	points = 5,
-	getChance = function(self, t) return 10 + self:combatTalentSpellDamage(t, 10, 50, getParadoxSpellpower(self)) end,
+	getChance = function(self, t) return self:combatTalentSpellDamage(t, 10, 50, getParadoxSpellpower(self)) end,
 	doPhaseShift = function(self, t)
 		local effs = {}
 		-- Go through all effects

@@ -24,7 +24,7 @@ newTalent{
 	type = {"chronomancy/blade-threading", 1},
 	mode = "sustained",
 	require = chrono_req1,
-	sustain_paradox = 50,
+	sustain_paradox = 12,
 	cooldown = 10,
 	tactical = { BUFF = 2 },
 	points = 5,

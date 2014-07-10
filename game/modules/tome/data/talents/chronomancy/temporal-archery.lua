@@ -76,7 +76,7 @@ newTalent{
 	require = temporal_req3,
 	mode = "sustained",
 	points = 5,
-	sustain_paradox = 225,
+	sustain_paradox = 30,
 	cooldown = 10,
 	tactical = { BUFF = 2 },
 	no_energy = true,

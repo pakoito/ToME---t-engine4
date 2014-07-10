@@ -2305,7 +2305,7 @@ newEffect{
 		self:effectTemporaryValue(eff, "resists", {[DamageType.TEMPORAL] = 30})
 		self:effectTemporaryValue(eff, "resists_pen", {[DamageType.TEMPORAL] = 20})
 		self:effectTemporaryValue(eff, "talent_cd_reduction", {[self.T_ANOMALY_REARRANGE] = -4, [self.T_ANOMALY_TEMPORAL_STORM] = -4})
-		self:effectTemporaryValue(eff, "paradox_reduce_anomalies", 400)
+		self:effectTemporaryValue(eff, "paradox_reduce_anomalies", 200)
 		self:learnTalent(self.T_ANOMALY_REARRANGE, true)
 		self:learnTalent(self.T_ANOMALY_TEMPORAL_STORM, true)
 		self:incParadox(400)

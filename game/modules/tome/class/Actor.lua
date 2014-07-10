@@ -4177,10 +4177,11 @@ end
 
 --- Paradox checks
 function _M:getModifiedParadox()
-	local will_modifier = 1 + self:callTalent(self.T_PARADOX_MASTERY,"WilMult")
+	local will_modifier = 2 + self:callTalent(self.T_PARADOX_MASTERY,"WilMult")
 	will_modifier = (self:getWil() + (self:attr("paradox_reduce_anomalies") or 0)) * will_modifier
-	local modified_paradox = math.max(0, self:getParadox() - will_modifier)
-	return modified_paradox, will_modifier
+	local sustain_modifier = self:getMinParadox()
+	local modified_paradox = math.max(0, self:getParadox() - will_modifier + sustain_modifier)
+	return modified_paradox, will_modifier, sustain_modifier
 end
 
 -- Anomaly stuff

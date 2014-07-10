@@ -220,7 +220,7 @@ newTalent{
 	type = {"chronomancy/timetravel", 4},
 	mode = "sustained",
 	require = chrono_req_high4,
-	sustain_paradox = 100,
+	sustain_paradox = 84,
 	cooldown = 24,
 	tactical = { DEFEND = 2 },
 	points = 5,

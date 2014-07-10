@@ -1354,6 +1354,7 @@ newTalent{
 			local target, id = rng.table(tgts)
 			table.remove(tgts, id)
 			local orig_x, orig_y = getAnomalyPosition(self, self:getTalentRange(t))
+			checkAnomalyTriggers(self, target)
 						
 			local proj = require("mod.class.Projectile"):makeHoming(
 				self,
@@ -1366,7 +1367,6 @@ newTalent{
 					--src:project({type="ball", radius=1, x=self.x, y=self.y}, self.x, self.y, DT.SPELLKNOCKBACK, self.def.dam)
 				end,
 				function(self, src, target)
-					checkAnomalyTriggers(src, target)
 					if target:canBe("anomaly") then
 						local DT = require("engine.DamageType")
 						src:project({type="ball", radius=1, x=self.x, y=self.y}, self.x, self.y, DT.SPELLKNOCKBACK, self.def.dam)
@@ -1415,6 +1415,7 @@ newTalent{
 			local target, id = rng.table(tgts)
 			table.remove(tgts, id)
 			local orig_x, orig_y = getAnomalyPosition(self, self:getTalentRange(t))
+			checkAnomalyTriggers(self, target)
 						
 			local proj = require("mod.class.Projectile"):makeHoming(
 				self,
@@ -1428,7 +1429,6 @@ newTalent{
 				end,
 				function(self, src, target)
 					local DT = require("engine.DamageType")
-					checkAnomalyTriggers(src, target)
 					game.level.map:addEffect(src, self.x, self.y, 4, DT.FIRE, self.def.movedam, 1, 5, nil, {type="inferno"}, nil, nil)
 				end
 			)
@@ -1678,6 +1678,7 @@ newTalent{
 		local target, id = rng.table(tgts)
 		table.remove(tgts, id)
 		local orig_x, orig_y = getAnomalyPosition(self, self:getTalentRange(t))
+		checkAnomalyTriggers(self, target)
 					
 		local proj = require("mod.class.Projectile"):makeHoming(
 			self,
@@ -1691,7 +1692,6 @@ newTalent{
 				DT:get(DT.DARKNESS).projector(src, self.x, self.y, DT.DARKNESS, self.def.movedam)
 			end,
 			function(self, src, target)
-				checkAnomalyTriggers(src, target)
 				local DT = require("engine.DamageType")
 				DT:get(DT.TEMPORAL).projector(src, self.x, self.y, DT.TEMPORAL, self.def.movedam)
 				DT:get(DT.DARKNESS).projector(src, self.x, self.y, DT.DARKNESS, self.def.movedam)
@@ -1738,6 +1738,7 @@ newTalent{
 			local target, id = rng.table(tgts)
 			table.remove(tgts, id)
 			local orig_x, orig_y = getAnomalyPosition(self, self:getTalentRange(t))
+			checkAnomalyTriggers(self, target)
 						
 			local proj = require("mod.class.Projectile"):makeHoming(
 				self,
@@ -1750,7 +1751,6 @@ newTalent{
 					DT:get(DT.LIGHTNING).projector(src, self.x, self.y, DT.LIGHTNING, self.def.movedam)
 				end,
 				function(self, src, target)
-					checkAnomalyTriggers(src, target)
 					local DT = require("engine.DamageType")
 					src:project({type="ball", radius=1, x=self.x, y=self.y}, self.x, self.y, DT.LIGHTNING, self.def.dam)
 					src:project({type="ball", radius=1, x=self.x, y=self.y}, self.x, self.y, DT.MINDKNOCKBACK, self.def.dam)
@@ -1854,7 +1854,6 @@ newTalent{
 				src:project({type="ball", radius=tg.radius}, x, y, function(px, py)
 					local target = game.level.map(px, py, engine.Map.ACTOR)
 					if target then
-						checkAnomalyTriggers(src, target)
 						if target:canBe("stun") then
 							target:setEffect(target.EFF_STUNNED, 3, {apply_power=src:combatSpellpower()})
 						else

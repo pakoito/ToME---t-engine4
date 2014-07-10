@@ -58,7 +58,7 @@ newTalent{
 	type = {"chronomancy/bow-threading", 2},
 	mode = "sustained",
 	require = chrono_req2,
-	sustain_paradox = 50,
+	sustain_paradox = 12,
 	cooldown = 10,
 	tactical = { BUFF = 2 },
 	points = 5,
@@ -167,7 +167,14 @@ newTalent{
 		local tg = self:getTalentTarget(t)
 		local x, y, target = self:getTarget(tg)
 		if not x or not y or not target then return nil end
+		local __, x, y = self:canProject(tg, x, y)
 		
+		-- Don't cheese arrow stitching through walls
+		if not self:hasLOS(x, y) or game.level.map:checkEntity(x, y, Map.TERRAIN, "block_move") then
+			game.logSeen(self, "You do not have line of sight.")
+			return nil
+		end
+				
 		local targets = self:archeryAcquireTargets(self:getTalentTarget(t), {one_shot=true, x=x, y=y})
 		if not targets then return end
 		self:archeryShoot(targets, t, {type="bolt", friendlyfire=false, friendlyblock=false}, {mult=dam})
@@ -203,7 +210,6 @@ newTalent{
 					self:die()
 					game.level.map:particleEmitter(self.x, self.y, 1, "temporal_teleport")
 				end
-				game.level.map:particleEmitter(x, y, 1, "temporal_teleport")
 			end
 		end
 

@@ -254,17 +254,17 @@ newTalent{
 		local duration = t.getDuration(self, t)
 		local preference = self.preferred_paradox
 		local spellpower = getParadoxSpellpower(self)
-		local _, will_modifier = self:getModifiedParadox()
-		local after_will = self:getModifiedParadox()
+		local after_will, will_modifier, sustain_modifier = self:getModifiedParadox()
 		local anomaly = self:paradoxFailChance()
 		return ([[Use to set your preferred Paradox.  While resting you'll adjust your Paradox towards this number over %d turns.
 		The time it takes you to adjust your Paradox scales down with your Spellpower to a minimum of 10 turns.
 		
-		Preferred Paradox           : %d
-		Spellpower for Chronomancy  : %d
-		Willpower Paradox Modifier  : %d
-		Paradox after Willpower     : %d
-		Current Anomaly Chance      : %d%%]]):format(duration, preference, spellpower, will_modifier, after_will, anomaly)
+		Preferred Paradox          : %d
+		Spellpower for Chronomancy : %d
+		Willpower Paradox Modifier : %d
+		Paradox Sustain Modifier   : %d
+		Total Modifed Paradox      : %d
+		Current Anomaly Chance     : %d%%]]):format(duration, preference, spellpower, will_modifier, sustain_modifier, after_will, anomaly)
 	end,
 }
 
@@ -481,8 +481,7 @@ newTalent{
 	require = chrono_req1,
 	mode = "sustained",
 	points = 5,
-	sustain_stamina = 50,
-	sustain_paradox = 100,
+	sustain_paradox = 20,
 	cooldown = 18,
 	tactical = { BUFF = 2 },
 	getPower = function(self, t) return self:combatTalentScale(t, 1.5, 7.5, 0.75) + self:combatTalentStatDamage(t, "wil", 5, 20) end,

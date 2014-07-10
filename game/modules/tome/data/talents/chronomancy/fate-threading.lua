@@ -108,7 +108,7 @@ newTalent{
 	require = chrono_req4,
 	points = 5,
 	mode = "sustained",
-	sustain_paradox = 50,
+	sustain_paradox = 48,
 	cooldown = function(self, t) return math.ceil(self:combatTalentLimit(t, 15, 45, 25)) end, -- Limit >15
 	tactical = { DEFEND = 2 },
 	getHeal = function(self, t) return self.max_life * self:combatTalentLimit(t, 1.5, 0.09, 0.4) end, -- Limit < 150% max life (to survive a large string of hits between turns)
@@ -165,7 +165,7 @@ newTalent{
 		local heal = t.getHeal(self, t)
 		local cooldown = self:getTalentCooldown(t)
 		return ([[Any attack that would drop you below 1 hit point instead triggers Preserve Pattern, setting your life to 1, then healing you for %d.
-		Afterwords between three and six anomalies will occur as you move from timeline to timeline until you find one in which you're still alive.
+		Afterwards between three and six anomalies will occur as you move from timeline to timeline until you find one in which you're still alive.
 		These anomalies may not be targeted though they may be biased.  This effect can only occur once every %d turns.]]):format(heal, cooldown)
 	end,
 }
