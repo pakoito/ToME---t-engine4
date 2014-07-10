@@ -190,34 +190,13 @@ newTalent{
 	requires_target = true,
 	is_teleport = true,
 	direct_hit = true,
-	range = function(self, t) return math.floor(self:combatTalentScale(t, 5, 10, 0.5, 0, 1)) end,
 	getDamage = function(self, t) return self:combatTalentWeaponDamage(t, 0.6, 1.2) end,
 	on_pre_use = function(self, t, silent) if not doWardenPreUse(self, "dual") then if not silent then game.logPlayer(self, "You require two weapons to use this talent.") end return false end return true end,
-	target = function(self, t)
-		return {type="hit", range=self:getTalentRange(t), talent=t}
-	end,
 	action = function(self, t)
 		local dam = doWardenWeaponSwap(self, t, t.getDamage(self, t))
-		local tg = self:getTalentTarget(t)
+		local tg = {type="hit", range=self:getTalentRange(t), talent=t}
 		local x, y, target = self:getTarget(tg)
 		if not x or not y or not target then return nil end
-		if core.fov.distance(self.x, self.y, target.x, target.y) > self:getTalentRange(t) then return nil end
-		if not self:hasLOS(x, y) or game.level.map:checkEntity(x, y, Map.TERRAIN, "block_move") then
-			game.logSeen(self, "You do not have line of sight.")
-			return nil
-		end
-		local _ _, x, y = self:canProject(tg, x, y)
-		
-		-- since we're using a precise teleport we'll look for a free grid first
-		local tx, ty = util.findFreeGrid(x, y, 5, true, {[Map.ACTOR]=true})
-		if tx and ty then
-			game.level.map:particleEmitter(self.x, self.y, 1, "temporal_teleport")
-			if not self:teleportRandom(tx, ty, 0) then
-				game.logSeen(self, "The teleport fizzles!")
-			else
-				game.level.map:particleEmitter(self.x, self.y, 1, "temporal_teleport")
-			end
-		end
 			
 		-- Hit the target
 		if core.fov.distance(self.x, self.y, target.x, target.y) > 1 then return nil end
@@ -226,7 +205,7 @@ newTalent{
 		if hitted then
 			-- Get available targets
 			local tgts = {}
-			local grids = core.fov.circle_grids(tx, ty, self:getTalentRange(t), true)
+			local grids = core.fov.circle_grids(self.x, self.y, 10, true)
 			for x, yy in pairs(grids) do for y, _ in pairs(grids[x]) do
 				local target_type = Map.ACTOR
 				local a = game.level.map(x, y, Map.ACTOR)
@@ -265,7 +244,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		local damage = t.getDamage(self, t) * 100
-		return ([[Teleport to and attack the target with your melee weapons for %d%% damage.  If the attack hits you'll teleport next to up to two random enemies, attacking each for %d%% damage.
+		return ([[Attack the target with your melee weapons for %d%% damage.  If the attack hits you'll teleport next to up to two random enemies, attacking each for %d%% damage.
 		Temporal Assault can hit the same target multiple times.]])
 		:format(damage, damage)
 	end
