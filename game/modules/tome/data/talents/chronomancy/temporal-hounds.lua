@@ -65,7 +65,6 @@ summonTemporalHound = function(self, t)
 	if self:knowTalent(self.T_COMMAND_BLINK) then
 		m:attr("defense_on_teleport", self:callTalent(self.T_COMMAND_BLINK, "getDefense"))
 		m:attr("resist_all_on_teleport", self:callTalent(self.T_COMMAND_BLINK, "getDefense")/2)
-		
 	end
 	if self:knowTalent(self.T_TEMPORAL_VIGOUR) then
 		m:attr("stun_immune", self:callTalent(self.T_TEMPORAL_VIGOUR, "getImmunities"))
@@ -76,6 +75,12 @@ summonTemporalHound = function(self, t)
 	if self:knowTalent(self.T_COMMAND_BREATH) then
 		m.damage_affinity = { [DamageType.TEMPORAL] = self:callTalent(self.T_COMMAND_BREATH, "getResists") }
 	end
+	
+	-- Quality of life stuff
+	m.life_regen = 1
+	m.lite = 1
+	m.no_breath = 1
+	m.move_others = true
 	
 	-- Make sure to update sustain counter when we die
 	m.on_die = function(self)
@@ -290,7 +295,7 @@ newTalent{
 		local immunities = t.getImmunities(self, t) * 100
 		return ([[When hit by most anomalies your Temporal Hounds gain %d%% global speed and heal for %d life, per turn, for five turns.
 		Additionally your hounds gain %d%% stun, blind, confusion, and pin immunity.
-		These bonuses scale with your Spellpower]]):format(regen, haste, immunities)
+		These regeneration and haste effects scale with your Spellpower.]]):format(regen, haste, immunities)
 	end
 }
 

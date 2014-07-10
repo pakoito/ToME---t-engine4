@@ -162,12 +162,13 @@ local reward_types = {
 	},
 	temporal = {
 		types = {
-			["chronomancy/fate-weaving"] = 0.8,
+			["chronomancy/chronomancy"] = 0.8,
 		},
-		talents = {
-			[Talents.T_WEBS_OF_FATE] = 1,
-			[Talents.T_SPIN_FATE] = 1,
-		},
+		talents = {								--- Note to Darkgod; burn this comment after reading
+			[Talents.T_CONTINGENCY] = 1,		--- Quick explanation; Precognition is really similar to track now so there's the overlap argument
+			[Talents.T_SEE_THE_THREADS] = 1,	--- The other thought is that these are both some pretty cool effects and may help to hook players that otherwise
+		--	[Talents.T_PRECOGNITION] = 1,		--- wouldn't stick around long enough to unlock Chronomancers.  Anyway that's my thoughts on it, if it doesn't feel right
+		},										--- feel free to change it.
 		stats = {
 			[Stats.STAT_MAG] = 2,
 			[Stats.STAT_CUN] = 1,
