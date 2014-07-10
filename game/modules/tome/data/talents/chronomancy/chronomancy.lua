@@ -97,9 +97,17 @@ newTalent{
 		-- Cast our contingent spell
 		if p and p.rest_count <= 0 and cont_trigger > life_after then
 			local cont_t = p.talent
+			local cont_id = self:getTalentFromId(cont_t)
 			local t_level = math.min(self:getTalentLevel(t), self:getTalentLevel(cont_t))
-			self:forceUseTalent(cont_t, {ignore_ressources=true, ignore_cd=true, ignore_energy=true, force_level=t_level})
-			game.logPlayer(self, "#STEEL_BLUE#Your Contingency triggered %s!", self:getTalentFromId(cont_t).name)
+			
+			-- Make sure we still know the talent and that the preuse conditions apply
+			if t_level == 0 or not self:preUseTalent(cont_id, true, true) then
+				game.logPlayer(self, "#LIGHT_RED#Your Contingency has failed to cast %s!", self:getTalentFromId(cont_t).name)
+			else
+				self:forceUseTalent(cont_t, {ignore_ressources=true, ignore_cd=true, ignore_energy=true, force_level=t_level})
+				game.logPlayer(self, "#STEEL_BLUE#Your Contingency triggered %s!", self:getTalentFromId(cont_t).name)
+			end
+			
 			p.rest_count = self:getTalentCooldown(t)
 		end
 		
@@ -158,7 +166,7 @@ newTalent{
 			end
 			return false
 		end
-		if game.level and game.level.see_the_threads_done then
+		if game.level and game.level.data and game.level.data.see_the_threads_done then
 			if not silent then
 				game.logPlayer(self, "You've seen as much as you can here.")
 			end
@@ -175,7 +183,9 @@ newTalent{
 			crits = self:callTalent(self.T_FORESIGHT, "getCritDefense")
 		end
 		
-		game.level.see_the_threads_done = true
+		if game.level and game.level.data then
+			game.level.data.see_the_threads_done = true
+		end
 		
 		self:setEffect(self.EFF_SEE_THREADS, t.getDuration(self, t), {defense=defense, crits=crits})
 		return true
