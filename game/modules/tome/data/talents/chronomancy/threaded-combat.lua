@@ -48,6 +48,7 @@ newTalent{
 	range = archery_range,
 	no_energy = "fake",
 	getDamage = function(self, t) return self:combatTalentWeaponDamage(t, 1.2, 1.9) end,
+	getCooldown = function(self, t) return self:getTalentLevel(t) >= 5 and 2 or 1 end,
 	on_pre_use = function(self, t, silent) if self:attr("disarmed") then if not silent then game.logPlayer(self, "You require a weapon to use this talent.") end return false end return true end,
 	target = function(self, t)
 		local tg = {type="beam", range=self:getTalentRange(t)}
@@ -61,7 +62,7 @@ newTalent{
 		for tid, cd in pairs(self.talents_cd) do
 			local tt = self:getTalentFromId(tid)
 			if tt.type[1]:find("^chronomancy/blade") then
-				self.talents_cd[tid] = cd - 1
+				self.talents_cd[tid] = cd - t.getCooldown(self, t)
 			end
 		end
 	end,
@@ -69,7 +70,7 @@ newTalent{
 		local tg = self:getTalentTarget(t)
 		local damage = t.getDamage(self, t)
 		local mainhand, offhand = self:hasDualWeapon()
-		
+				
 		if self:hasArcheryWeapon("bow") then
 			-- Ranged attack
 			local targets = self:archeryAcquireTargets(tg, {one_shot=true})
@@ -86,7 +87,7 @@ newTalent{
 						for tid, cd in pairs(self.talents_cd) do
 							local tt = self:getTalentFromId(tid)
 							if tt.type[1]:find("^chronomancy/bow") then
-								self.talents_cd[tid] = cd - 1
+								self.talents_cd[tid] = cd - t.getCooldown(self, t)
 							end
 						end
 					end
@@ -102,10 +103,12 @@ newTalent{
 	end,
 	info = function(self, t)
 		local damage = t.getDamage(self, t) * 100
+		local cooldown = t.getCooldown(self, t)
 		return ([[Attack with your bow or dual-weapons for %d%% damage.
-		If you use your bow you'll shoot a beam and each target hit will reduce the cooldown of one Blade Threading spell currently on cooldown by one.
-		If you use your dual-weapons you'll attack all targets within a radius of one around you and each target hit will reduce the cooldown of one Bow Threading spell currently on cooldown by one.]])
-		:format(damage)
+		If you use your bow you'll shoot a beam and each target hit will reduce the cooldown of one Blade Threading spell currently on cooldown by %d.
+		If you use your dual-weapons you'll attack all targets within a radius of one around you and each target hit will reduce the cooldown of one Bow Threading spell currently on cooldown by %d.
+		At talent level five cooldowns are reduced by two.]])
+		:format(damage, cooldown, cooldown)
 	end
 }
 

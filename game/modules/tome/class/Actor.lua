@@ -3910,6 +3910,13 @@ function _M:canWearObject(o, try_slot)
 			end
 		end end
 	end
+	if o.type == "weapon" and self:knowTalent(self.T_STRENGTH_OF_PURPOSE) then
+		oldreq = rawget(o, "require")
+		o.require = table.clone(oldreq or {}, true)
+		if o.require.stat and o.require.stat.str then
+			o.require.stat.mag, o.require.stat.str = o.require.stat.str, nil
+		end
+	end
 
 	local ok, reason = engine.interface.ActorInventory.canWearObject(self, o, try_slot)
 

@@ -116,7 +116,7 @@ newTalent{
 	type = {"chronomancy/speed-control", 4},
 	require = chrono_req4,
 	points = 5,
-	paradox = function (self, t) return getParadoxCost(self, t, 40) end,
+	paradox = function (self, t) return getParadoxCost(self, t, 48) end,
 	cooldown = function(self, t) return math.ceil(self:combatTalentLimit(t, 10, 45, 25)) end, -- Limit >10
 	tactical = { BUFF = 2, CLOSEIN = 2, ESCAPE = 2 },
 	no_energy = true,

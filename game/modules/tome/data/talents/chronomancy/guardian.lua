@@ -31,7 +31,7 @@ newTalent{
 		local damage = t.getDamage(self, t)
 		local inc = t.getPercentInc(self, t)
 		return ([[Increases Physical Power by %d, and increases weapon damage by %d%% when using swords, axes, maces, knives, or bows.
-		Also you now use your Magic instead of your Strength for bonus weapon damage and physical power calculations.
+		You now also use your Magic in place of Strength when equipping weapons, calculating weapon damage, and physical power.
 		These bonuses override rather than stack with weapon mastery, knife mastery, and bow mastery.]]):
 		format(damage, 100*inc)
 	end,

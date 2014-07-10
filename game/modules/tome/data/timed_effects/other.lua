@@ -449,6 +449,7 @@ newEffect{
 	subtype = { time=true },
 	status = "beneficial",
 	parameters = { power=10, defense=0, crits=0 },
+	remove_on_clone = true,
 	activate = function(self, eff)
 		eff.thread = 1
 		eff.max_dur = eff.dur
@@ -460,8 +461,13 @@ newEffect{
 		self:effectTemporaryValue(eff, "combat_def", eff.defense)
 	end,
 	deactivate = function(self, eff)
+		-- clone protection
+		if self ~= game.player then
+			return
+		end
+		
 		game:onTickEnd(function()
-
+			
 			if game._chronoworlds == nil then
 				game.logSeen(self, "#LIGHT_RED#The see the threads spell fizzles and cancels, leaving you in this timeline.")
 				return

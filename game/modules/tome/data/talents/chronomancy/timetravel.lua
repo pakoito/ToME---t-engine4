@@ -106,11 +106,11 @@ newTalent{
 	type = {"chronomancy/timetravel", 2},
 	require = chrono_req_high2,
 	points = 5,
-	paradox = function (self, t) return getParadoxCost(self, t, 20) end,
-	cooldown = 24,
+	paradox = function (self, t) return getParadoxCost(self, t, 24) end,
+	cooldown = function(self, t) return math.ceil(self:combatTalentLimit(t, 10, 45, 25)) end, -- Limit >10
 	no_npc_use = true,
 	on_pre_use = function(self, t) return self:canBe("planechange") end,
-	getDuration = function(self, t) return math.floor(self:combatTalentScale(t, 6, 10)) end,
+	getDuration = function(self, t) return math.floor(self:combatTalentScale(t, 2, 6)) end,
 	fixed_cooldown = true,
 	action = function(self, t)
 		if game.zone.is_temporal_reprieve then
