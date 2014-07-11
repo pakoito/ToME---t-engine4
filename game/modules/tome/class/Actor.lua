@@ -4531,10 +4531,13 @@ function _M:preUseTalent(ab, silent, fake)
 		-- Random anomalies reduce paradox by twice the talent's paradox cost
 		local cost = util.getval(ab.paradox or ab.sustain_paradox, self, ab)
 		if cost > 0 then
-			local multi = 2
-			if self:knowTalent(self.T_THREAD_WALKER) then multi = multi + self:callTalent(self.T_THREAD_WALKER, "getParadoxMulti") end
+			local multi = 2 + (self:attr("anomaly_paradox_recovery") or 0)
+			print("Anomaly Refund Multi", multi, "Anomaly Refund Base", cost * 2, "Actual", cost* multi)
 			if self:paradoxDoAnomaly(cost * multi, ab.anomaly_type or nil, self:paradoxFailChance(), nil, silent) then
-				self:useEnergy()
+				local speed = math.max(0, 1 - (self:attr("anomaly_recovery_speed") or 0))
+				print("Anomaly Speed", speed)
+				self:useEnergy(game.energy_to_act * speed)
+				print("Anomaly Energy Left", self.energy.value)
 				game:playSoundNear(self, "talents/dispel")
 				return false
 			end

@@ -103,7 +103,12 @@ end
 checkAnomalyTargeting = function(self, t, tg)
 	local x, y = self.x, self.y
 	if self:knowTalent(self.T_PULL_SKEIN) and rng.percent(self:callTalent(self.T_PULL_SKEIN, "getTargetChance")) then
+		if self == game.player then
+			game.bignews:saySimple(180, "#STEEL_BLUE#Targeting %s", t.name)
+		end
+		
 		x, y = self:getTarget(tg)
+		
 		-- If the player cancels target them anyway
 		if not x or not y then
 			x, y = self.x, self.y
