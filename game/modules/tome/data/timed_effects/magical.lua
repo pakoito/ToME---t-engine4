@@ -1634,7 +1634,7 @@ newEffect{
 	type = "magical",
 	subtype = { temporal=true },
 	status = "beneficial",
-	parameters = { save_bonus=0, spin=0, resists=0, max_spin=5},
+	parameters = { save_bonus=0, spin=0, resists=0, max_spin=3},
 	on_gain = function(self, err) return "#Target# spins fate.", "+Spin Fate" end,
 	on_lose = function(self, err) return "#Target#'s fate is no longer being spun.", "-Spin Fate" end,
 	on_merge = function(self, old_eff, new_eff)
@@ -2956,10 +2956,11 @@ newEffect{
 	type = "magical",
 	subtype = { sense=true },
 	status = "beneficial",
-	parameters = { range=10, actor=1, defense=0, crits=0 },
+	parameters = { range=10, actor=1, trap=1, defense=0, crits=0 },
 	activate = function(self, eff)
 		self:effectTemporaryValue(eff, "detect_range", eff.range)
 		self:effectTemporaryValue(eff, "detect_actor", eff.actor)
+		self:effectTemporaryValue(eff, "detect_trap", eff.actor)
 		self:effectTemporaryValue(eff, "ignore_direct_crits", eff.crits)
 		self:effectTemporaryValue(eff, "combat_def", eff.defense)
 		self.detect_function = eff.on_detect

@@ -67,7 +67,7 @@ newTalent{
 		if self.x ~= p.x or self.y ~= p.y then
 			p.x = self.x; p.y=self.y; p.charges = math.max(0, p.charges - 1)
 		-- Otherwise increase it
-		elseif not self.resting then
+		else
 			p.charges = math.min(p.charges + 1, 3)
 		end
 		-- Dilate Time

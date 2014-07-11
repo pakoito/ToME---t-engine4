@@ -25,20 +25,20 @@ newTalent{
 	require = chrono_req1,
 	mode = "passive",
 	points = 5,
-	getSaveBonus = function(self, t) return math.ceil(self:combatTalentScale(t, 1, 5, 0.75)) end,
+	getSaveBonus = function(self, t) return math.ceil(self:combatTalentScale(t, 2, 8, 0.75)) end,
 	doSpinFate = function(self, t)
 		local save_bonus = t.getSaveBonus(self, t)
 		local resists = self:knowTalent(self.T_FATEWEAVER) and self:callTalent(self.T_FATEWEAVER, "getResist") or 0
 		
-		self:setEffect(self.EFF_SPIN_FATE, 5, {save_bonus=save_bonus, resists=resists, spin=1, max_spin=5})
+		self:setEffect(self.EFF_SPIN_FATE, 3, {save_bonus=save_bonus, resists=resists, spin=1, max_spin=3})
 		
 		return true
 	end,
 	info = function(self, t)
 		local save = t.getSaveBonus(self, t)
-		return ([[Each time you damage someone else you gain one spin, increasing your defense and saves by %d for five turns.
-		This effect may occur once per turn and stacks up to five spin (for a maximum bonus of %d).]]):
-		format(save, save * 5)
+		return ([[Each time you take damage from someone else you gain one spin, increasing your defense and saves by %d for three turns.
+		This effect may occur once per turn and stacks up to three spin (for a maximum bonus of %d).]]):
+		format(save, save * 3)
 	end,
 }
 
@@ -77,8 +77,8 @@ newTalent{
 		local pin = t.getPower(self, t)/2
 		local eff = self:hasEffect(self.EFF_SPIN_FATE)
 		if eff then 
-			move = move * (1 + eff.spin/5)
-			pin = pin * (1 + eff.spin/5)
+			move = move * (1 + eff.spin/3)
+			pin = pin * (1 + eff.spin/3)
 		end
 		pin = math.min(1, pin) -- Limit 100%
 		
@@ -90,7 +90,7 @@ newTalent{
 		local power = t.getPower(self, t) * 100
 		local duration = t.getDuration(self, t)
 		return ([[Activate to remove pins.  You also gain %d%% movement speed and %d%% pin immunity for %d turns.
-		If you have Spin Fate active these bonuses will be increased by 20%% per spin (up to a maximum of %d%% and %d%% respectively).
+		If you have Spin Fate active these bonuses will be increased by 33%% per spin (up to a maximum of %d%% and %d%% respectively).
 		This spell will automatically cast when you're hit by most anomalies.  This will not consume a turn or put the spell on cooldown.
 		While Webs of Fate is active you may gain one additional spin per turn.
 		These bonuses will scale with your Spellpower.]]):format(power, math.min(100, power/2), duration, power * 2, math.min(100, power/2 * 2))
@@ -103,11 +103,11 @@ newTalent{
 	require = chrono_req3,
 	mode = "passive",
 	points = 5,
-	getResist = function(self, t) return self:combatTalentScale(t, 1, 5, 0.75)/2 end,
+	getResist = function(self, t) return self:combatTalentScale(t, 2, 8, 0.75)/2 end,
 	info = function(self, t)
 		local resist = t.getResist(self, t)
-		return ([[You now gain %0.1f%% resist all when you gain spin with Spin Fate (up to a maximum of %0.1f%% resist all at five spin).]]):
-		format(resist, resist*5)
+		return ([[You now gain %0.1f%% resist all when you gain spin with Spin Fate (up to a maximum of %0.1f%% resist all at three spin).]]):
+		format(resist, resist*3)
 	end,
 }
 
@@ -126,7 +126,7 @@ newTalent{
 		local crits = t.getPower(self, t)
 		local eff = self:hasEffect(self.EFF_SPIN_FATE)
 		if eff then 
-			crits = crits * (1 + eff.spin/5)
+			crits = crits * (1 + eff.spin/3)
 		end
 			
 		self:setEffect(self.EFF_SEAL_FATE, t.getDuration(self, t), {crit=crits})
@@ -137,7 +137,7 @@ newTalent{
 		local power = t.getPower(self, t)
 		local duration = t.getDuration(self, t)
 		return ([[Activate to increase critical hit chance and critical damage by %d%% for five turns.
-		If you have Spin Fate active these bonuses will be increased by 20%% per spin (up to a maximum of %d%%).
+		If you have Spin Fate active these bonuses will be increased by 33%% per spin (up to a maximum of %d%%).
 		This spell will automatically cast when you're hit by most anomalies.  This will not consume a turn or put the spell on cooldown.
 		While Seal Fate is active you may gain one additional spin per turn.
 		These bonuses will scale with your Spellpower.]]):format(power, power * 2)

@@ -38,7 +38,7 @@ newTalent{
 			crits = self:callTalent(self.T_FORESIGHT, "getCritDefense")
 		end
 		
-		self:setEffect(self.EFF_PRECOGNITION, t.getDuration(self, t), {range=self:getTalentRange(t), actor=1, defense=defense, crits=crits})
+		self:setEffect(self.EFF_PRECOGNITION, t.getDuration(self, t), {range=self:getTalentRange(t), actor=1, traps=1, defense=defense, crits=crits})
 		
 		return true
 	end,

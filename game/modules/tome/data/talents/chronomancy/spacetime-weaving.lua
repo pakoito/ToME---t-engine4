@@ -78,7 +78,7 @@ newTalent{
 	points = 5,
 	-- called by _M:onTakeHit function in mod\class\Actor.lua to perform the damage displacment
 	getchance = function(self, t) return self:combatTalentLimit(t, 50, 10, 30) end, -- Limit < 50%
-	getrange = function(self, t) return math.floor(self:combatTalentScale(t, 5, 10, 0.5, 0, 1)) end,
+	getrange = function(self, t) return math.floor(self:combatTalentScale(t, 4, 8, 0.5, 0, 1)) end,
 	activate = function(self, t)
 		return {}
 	end,

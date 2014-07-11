@@ -482,15 +482,15 @@ setDefaultProjector(function(src, x, y, type, dam, tmp, no_martyr)
 			end
 		end
 		
-		if dam > 0 and src ~= target and src.knowTalent and src:knowTalent(src.T_SPIN_FATE) then
-			if src.turn_procs and not src.turn_procs.spin_fate then
-				src:callTalent(src.T_SPIN_FATE, "doSpinFate")
-				if src.hasEffect and src:hasEffect(src.EFF_WEBS_OF_FATE) and not src.turn_procs.webs_of_fate then
-					src.turn_procs.webs_of_fate = true
-				elseif src.hasEffect and src:hasEffect(src.EFF_SEAL_FATE) and not src.turn_procs.seal_fate then
-					src.turn_procs.seal_fate = true
+		if dam > 0 and src ~= target and target.knowTalent and target:knowTalent(target.T_SPIN_FATE) then
+			if target.turn_procs and not target.turn_procs.spin_fate then
+				target:callTalent(target.T_SPIN_FATE, "doSpinFate")
+				if target.hasEffect and target:hasEffect(target.EFF_WEBS_OF_FATE) and not target.turn_procs.webs_of_fate then
+					target.turn_procs.webs_of_fate = true
+				elseif target.hasEffect and target:hasEffect(target.EFF_SEAL_FATE) and not target.turn_procs.seal_fate then
+					target.turn_procs.seal_fate = true
 				else
-					src.turn_procs.spin_fate = true
+					target.turn_procs.spin_fate = true
 				end
 			end
 		end

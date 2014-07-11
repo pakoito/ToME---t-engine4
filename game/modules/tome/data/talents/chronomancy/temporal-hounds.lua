@@ -47,7 +47,7 @@ summonTemporalHound = function(self, t)
 		no_auto_resists = true,
 
 		max_life = 50,
-		life_rating = 6,
+		life_rating = 12,
 		infravision = 10,
 
 		combat_armor = 2, combat_def = 4,
