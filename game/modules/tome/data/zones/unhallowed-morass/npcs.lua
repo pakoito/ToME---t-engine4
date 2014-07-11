@@ -89,13 +89,9 @@ newEntity{ base = "BASE_NPC_SPIDER",
 	combat_armor = 3, combat_def = 4,
 	combat = { dam=resolvers.levelup(8, 1, 0.9), atk=15, apr=3, damtype=DamageType.WASTING, },
 
-	talent_cd_reduction = {[Talents.T_RETHREAD]=-10},
-
 	resolvers.talents{
-		[Talents.T_SPIN_FATE]=2,
-		[Talents.T_BANISH]=2,
+		[Talents.T_SPIN_FATE]=1,
 		[Talents.T_RETHREAD]=2,
-		[Talents.T_DISENTANGLE]=2,
 	},
 }
 
@@ -121,13 +117,11 @@ newEntity{ base = "BASE_NPC_SPIDER", define_as = "WEAVER_QUEEN",
 
 	inc_damage = {all=-20},
 	healing_factor = 0.5,
-	talent_cd_reduction = {[Talents.T_RETHREAD]=-10},
 
 	resolvers.talents{
-		[Talents.T_SPIN_FATE]=2,
+		[Talents.T_SPIN_FATE]=1,
 		[Talents.T_BANISH]=2,
 		[Talents.T_RETHREAD]=2,
-		[Talents.T_DISENTANGLE]=2,
 		[Talents.T_FADE_FROM_TIME]=3,
 	},
 
