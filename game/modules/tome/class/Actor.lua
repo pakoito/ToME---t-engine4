@@ -1315,8 +1315,7 @@ function _M:move(x, y, force)
 			if eff then eff.moved = true end
 			
 			if self:knowTalent(self.T_CELERITY) then
-				local power = self:callTalent(self.T_CELERITY, "getSpeed")
-				self:setEffect(self.EFF_CELERITY, 2, {power=power, max_power = power*3})
+				self:callTalent(self.T_CELERITY, "doCelerity")
 			end
 
 			if self:attr("move_stamina_instead_of_energy") and self:getStamina() > self:attr("move_stamina_instead_of_energy") then
@@ -5048,7 +5047,7 @@ function _M:getTalentFullDescription(t, addlevel, config, fake_mastery)
 		if t.sustain_positive then d:add({"color",0x6f,0xff,0x83}, "Sustain positive energy cost: ", {"color",255, 215, 0}, ""..(util.getval(t.sustain_positive, self, t)), true) end
 		if t.sustain_negative then d:add({"color",0x6f,0xff,0x83}, "Sustain negative energy cost: ", {"color", 127, 127, 127}, ""..(util.getval(t.sustain_negative, self, t)), true) end
 		if t.sustain_hate then d:add({"color",0x6f,0xff,0x83}, "Sustain hate cost:  ", {"color", 127, 127, 127}, ""..(util.getval(t.sustain_hate, self, t)), true) end
-		if t.sustain_paradox then d:add({"color",0x6f,0xff,0x83}, "Sustain paradox cost: ", {"color",  176, 196, 222}, ("%0.1f"):format(util.getval(t.sustain_paradox, self, t)), true) end
+		if t.sustain_paradox then d:add({"color",0x6f,0xff,0x83}, "Sustain paradox cost: ", {"color",  176, 196, 222}, ""..(util.getval(t.sustain_paradox, self, t)), true) end
 		if t.sustain_psi then d:add({"color",0x6f,0xff,0x83}, "Sustain psi cost: ", {"color",0x7f,0xff,0xd4}, ""..(util.getval(t.sustain_psi, self, t)), true) end
 		if t.sustain_feedback then d:add({"color",0x6f,0xff,0x83}, "Sustain feedback cost: ", {"color",0xFF, 0xFF, 0x00}, ""..(util.getval(t.sustain_feedback, self, t)), true) end
 

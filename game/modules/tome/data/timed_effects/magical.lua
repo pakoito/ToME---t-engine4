@@ -1634,7 +1634,7 @@ newEffect{
 	type = "magical",
 	subtype = { temporal=true },
 	status = "beneficial",
-	parameters = { save_bonus=0, spin=0, max_spin=5},
+	parameters = { save_bonus=0, spin=0, resists=0, max_spin=5},
 	on_gain = function(self, err) return "#Target# spins fate.", "+Spin Fate" end,
 	on_lose = function(self, err) return "#Target#'s fate is no longer being spun.", "-Spin Fate" end,
 	on_merge = function(self, old_eff, new_eff)

@@ -30,7 +30,7 @@ newTalent{
 		local save_bonus = t.getSaveBonus(self, t)
 		local resists = self:knowTalent(self.T_FATEWEAVER) and self:callTalent(self.T_FATEWEAVER, "getResist") or 0
 		
-		self:setEffect(self.EFF_SPIN_FATE, 5, {save_bonus = t.getSaveBonus(self, t), resists=resists, spin=1, max_spin=5})
+		self:setEffect(self.EFF_SPIN_FATE, 5, {save_bonus=save_bonus, resists=resists, spin=1, max_spin=5})
 		
 		return true
 	end,

@@ -259,12 +259,12 @@ newTalent{
 		return ([[Use to set your preferred Paradox.  While resting you'll adjust your Paradox towards this number over %d turns.
 		The time it takes you to adjust your Paradox scales down with your Spellpower to a minimum of 10 turns.
 		
-		Preferred Paradox          : %d
-		Spellpower for Chronomancy : %d
-		Willpower Paradox Modifier : %d
-		Paradox Sustain Modifier   : %d
-		Total Modifed Paradox      : %d
-		Current Anomaly Chance     : %d%%]]):format(duration, preference, spellpower, will_modifier, sustain_modifier, after_will, anomaly)
+		Preferred Paradox          :  %d
+		Spellpower for Chronomancy :  %d
+		Willpower Paradox Modifier : -%d
+		Paradox Sustain Modifier   : +%d
+		Total Modifed Paradox      :  %d
+		Current Anomaly Chance     :  %d%%]]):format(duration, preference, spellpower, will_modifier, sustain_modifier, after_will, anomaly)
 	end,
 }
 

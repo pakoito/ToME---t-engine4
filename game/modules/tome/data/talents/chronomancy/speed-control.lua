@@ -26,6 +26,13 @@ newTalent{
 	points = 5,
 	mode = "passive",
 	getSpeed = function(self, t) return self:combatTalentScale(t, 0.1, 0.25, 0.5) end,
+	doCelerity = function(self, t)
+		local speed = t.getSpeed(self, t)
+		
+		self:setEffect(self.EFF_CELERITY, 3, {speed=speed, charges=1, max_charges=3})
+		
+		return true
+	end,
 	info = function(self, t)
 		local speed = t.getSpeed(self, t) * 100
 		return ([[When you move you gain %d%% movement speed, stacking up to three times.
