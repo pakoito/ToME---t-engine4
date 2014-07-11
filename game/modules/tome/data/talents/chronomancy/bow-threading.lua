@@ -17,12 +17,36 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
--- EDGE TODO: Icons, Particles, Timed Effect Particles
+-- EDGE TODO: Particles, Timed Effect Particles
+
+newTalent{
+	name = "Impact",
+	type = {"chronomancy/bow-threading", 1},
+	mode = "sustained",
+	require = chrono_req1,
+	sustain_paradox = 12,
+	cooldown = 10,
+	tactical = { BUFF = 2 },
+	points = 5,
+	getDamage = function(self, t) return 7 + self:combatSpellpower(0.092) * self:combatTalentScale(t, 1, 7) end,
+	getApplyPower = function(self, t) return getParadoxSpellpower(self) end,
+	activate = function(self, t)
+		return {}
+	end,
+	deactivate = function(self, t, p)
+		return true
+	end,
+	info = function(self, t)
+		local damage = t.getDamage(self, t)
+		return ([[Your weapons and ammo hit with greater force, dealing an additional %0.2f physical damage and having a %d%% chance to daze on hit.
+		The daze chance and damage will increase with your Spellpower.]]):format(damDesc(self, DamageType.PHYSICAL, damage), damage/2)
+	end,
+}
 
 newTalent{
 	name = "Threaded Arrow",
-	type = {"chronomancy/bow-threading", 1},
-	require = chrono_req1,
+	type = {"chronomancy/bow-threading", 2},
+	require = chrono_req2,
 	points = 5,
 	cooldown = 4,
 	tactical = { ATTACK = {weapon = 2} },
@@ -36,10 +60,10 @@ newTalent{
 		self:incParadox(-t.getParadoxReduction(self, t))
 	end,
 	action = function(self, t)
-		local dam = doWardenWeaponSwap(self, t, t.getDamage(self, t))
+		local dam, swap = doWardenWeaponSwap(self, t, t.getDamage(self, t))
 
 		local targets = self:archeryAcquireTargets(nil, {one_shot=true, infinite=true})
-		if not targets then return end
+		if not targets then if swap then doWardenWeaponSwap(self, t, nil, "blade") end return end
 		self:archeryShoot(targets, t, nil, {mult=dam, damtype=DamageType.TEMPORAL})
 
 		return true
@@ -51,30 +75,6 @@ newTalent{
 		This attack does not consume ammo.]])
 		:format(damage, paradox)
 	end
-}
-
-newTalent{
-	name = "Impact",
-	type = {"chronomancy/bow-threading", 2},
-	mode = "sustained",
-	require = chrono_req2,
-	sustain_paradox = 12,
-	cooldown = 10,
-	tactical = { BUFF = 2 },
-	points = 5,
-	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 15, 40, getParadoxSpellpower(self)) end,
-	getApplyPower = function(self, t) return getParadoxSpellpower(self) end,
-	activate = function(self, t)
-		return {}
-	end,
-	deactivate = function(self, t, p)
-		return true
-	end,
-	info = function(self, t)
-		local damage = t.getDamage(self, t)
-		return ([[Your weapons and ammo hit with greater force, dealing an additional %0.2f physical damage and having a %d%% chance to daze on hit.
-		The daze chance and damage will increase with your Spellpower.]]):format(damDesc(self, DamageType.PHYSICAL, damage), damage/2)
-	end,
 }
 
 newTalent{
@@ -118,12 +118,12 @@ newTalent{
 		end)
 	end,
 	action = function(self, t)
-		local dam = doWardenWeaponSwap(self, t, t.getDamage(self, t))
+		local dam, swap = doWardenWeaponSwap(self, t, t.getDamage(self, t))
 		
 		-- Pull x, y from getTarget and pass it so we can show the player the area of effect
 		local tg = self:getTalentTarget(t)
 		local x, y = self:getTarget(tg)
-		if not x or not y then return nil end
+		if not x or not y then if swap == true then doWardenWeaponSwap(self, t, nil, "blade") end return nil end
 		
 		tg.type = "bolt" -- switch our targeting back to a bolt
 
@@ -162,12 +162,12 @@ newTalent{
 	end,
 	on_pre_use = function(self, t, silent) if not doWardenPreUse(self, "bow") then if not silent then game.logPlayer(self, "You require a bow to use this talent.") end return false end return true end,
 	action = function(self, t)
-		local dam = doWardenWeaponSwap(self, t, t.getDamage(self, t))
+		local dam, swap = doWardenWeaponSwap(self, t, t.getDamage(self, t))
 		
 		-- Grab our target so we can spawn clones
 		local tg = self:getTalentTarget(t)
 		local x, y, target = self:getTarget(tg)
-		if not x or not y or not target then return nil end
+		if not x or not y or not target then if swap == true then doWardenWeaponSwap(self, t, nil, "blade") end return nil end
 		local __, x, y = self:canProject(tg, x, y)
 		
 		-- Don't cheese arrow stitching through walls

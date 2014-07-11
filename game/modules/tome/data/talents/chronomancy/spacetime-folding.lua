@@ -17,7 +17,7 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
--- EDGE TODO: Icons, Particles, Timed Effect Particles, Mine Tiles
+-- EDGE TODO: Particles, Timed Effect Particles, Mine Tiles
 
 local Trap = require "mod.class.Trap"
 
@@ -27,7 +27,7 @@ newTalent{
 	points = 5,
 	mode = "passive",
 	require = chrono_req1,
-	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 20, 100, getParadoxSpellpower(self)) end,
+	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 20, 200, getParadoxSpellpower(self)) end,
 	getDuration = function(self, t) return math.floor(self:combatTalentScale(t, 6, 10)) end, -- Duration of glyph
 	trapPower = function(self,t) return math.max(1,self:combatScale(self:getTalentLevel(t) * self:getMag(15, true), 0, 0, 75, 75)) end, -- Used to determine detection and disarm power, about 75 at level 50
 	on_learn = function(self, t)

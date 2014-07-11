@@ -17,35 +17,12 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
--- EDGE TODO: Icons, Particles, Timed Effect Particles
-
-newTalent{
-	name = "Weapon Folding",
-	type = {"chronomancy/blade-threading", 1},
-	mode = "sustained",
-	require = chrono_req1,
-	sustain_paradox = 12,
-	cooldown = 10,
-	tactical = { BUFF = 2 },
-	points = 5,
-	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 15, 40, getParadoxSpellpower(self)) end,
-	activate = function(self, t)
-		return {}
-	end,
-	deactivate = function(self, t, p)
-		return true
-	end,
-	info = function(self, t)
-		local damage = t.getDamage(self, t)
-		return ([[Folds a single dimension of your weapons (or ammo) upon itself, increasing your armour penetration by %d and adding %0.2f temporal damage to your strikes.
-		The armour penetration and damage will increase with your Spellpower.]]):format(damage/2, damDesc(self, DamageType.TEMPORAL, damage))
-	end,
-}
+-- EDGE TODO: Particles, Timed Effect Particles
 
 newTalent{
 	name = "Warp Blade",
-	type = {"chronomancy/blade-threading", 2},
-	require = chrono_req2,
+	type = {"chronomancy/blade-threading", 1},
+	require = chrono_req1,
 	points = 5,
 	cooldown = 6,
 	paradox = function (self, t) return getParadoxCost(self, t, 10) end,
@@ -56,11 +33,12 @@ newTalent{
 	getDuration = function(self, t) return math.floor(self:combatTalentScale(t, 3, 7)) end,
 	on_pre_use = function(self, t, silent) if not doWardenPreUse(self, "dual") then if not silent then game.logPlayer(self, "You require two weapons to use this talent.") end return false end return true end,
 	action = function(self, t)
-		local dam = doWardenWeaponSwap(self, t, t.getDamage(self, t))
+		local dam, swap = doWardenWeaponSwap(self, t, t.getDamage(self, t))
+		
 		local tg = {type="hit", range=self:getTalentRange(t), talent=t}
 		local x, y, target = self:getTarget(tg)
-		if not x or not y or not target then return nil end
-		if core.fov.distance(self.x, self.y, x, y) > 1 then return nil end
+		if not x or not y or not target then if swap then doWardenWeaponSwap(self, t, nil, "bow") end return nil end
+		if core.fov.distance(self.x, self.y, x, y) > 1 then if swap then doWardenWeaponSwap(self, t, nil, "bow") end return nil end
 		local hitted = self:attackTarget(target, DamageType.MATTER, dam)
 
 		if hitted then
@@ -107,6 +85,29 @@ newTalent{
 }
 
 newTalent{
+	name = "Weapon Folding",
+	type = {"chronomancy/blade-threading", 2},
+	mode = "sustained",
+	require = chrono_req2,
+	sustain_paradox = 12,
+	cooldown = 10,
+	tactical = { BUFF = 2 },
+	points = 5,
+	getDamage = function(self, t) return 7 + self:combatSpellpower(0.092) * self:combatTalentScale(t, 1, 7) end,
+	activate = function(self, t)
+		return {}
+	end,
+	deactivate = function(self, t, p)
+		return true
+	end,
+	info = function(self, t)
+		local damage = t.getDamage(self, t)
+		return ([[Folds a single dimension of your weapons (or ammo) upon itself, adding %0.2f temporal damage to your strikes and  increasing your armour penetration by %d.
+		The armour penetration and damage will increase with your Spellpower.]]):format(damage/2, damDesc(self, DamageType.TEMPORAL, damage))
+	end,
+}
+
+newTalent{
 	name = "Braided Blade",
 	type = {"chronomancy/blade-threading", 3},
 	require = chrono_req3,
@@ -121,10 +122,10 @@ newTalent{
 	getPower = function(self, t) return self:combatTalentSpellDamage(t, 50, 150, getParadoxSpellpower(self)) end,
 	on_pre_use = function(self, t, silent) if not doWardenPreUse(self, "dual") then if not silent then game.logPlayer(self, "You require two weapons to use this talent.") end return false end return true end,
 	action = function(self, t)
-		local dam = doWardenWeaponSwap(self, t, t.getDamage(self, t))
+		local dam, swap = doWardenWeaponSwap(self, t, t.getDamage(self, t))
 		local tg = {type="hit", range=self:getTalentRange(t), talent=t}
 		local x, y, target = self:getTarget(tg)
-		if not x or not y or not target then return nil end
+		if not x or not y or not target then if swap then doWardenWeaponSwap(self, t, nil, "bow") end return nil end
 		local hit1 = false
 		local hit2 = false
 		local hit3 = false
@@ -165,7 +166,9 @@ newTalent{
 					rt:setEffect(rt.EFF_BRAIDED, t.getDuration(self, t), {power=t.getPower(self, t), src=self, braid_one=target or nil, braid_two=lt or nil})
 				end
 			end
-			
+		else
+			if swap then doWardenWeaponSwap(self, t, nil, "bow") end
+			return nil
 		end
 
 		return true
@@ -197,13 +200,13 @@ newTalent{
 	getTeleports = function(self, t) return self:getTalentLevel(t) >= 5 and 2 or 1 end,
 	on_pre_use = function(self, t, silent) if not doWardenPreUse(self, "dual") then if not silent then game.logPlayer(self, "You require two weapons to use this talent.") end return false end return true end,
 	action = function(self, t)
-		local dam = doWardenWeaponSwap(self, t, t.getDamage(self, t))
+		local dam, swap = doWardenWeaponSwap(self, t, t.getDamage(self, t))
 		local tg = {type="hit", range=self:getTalentRange(t), talent=t}
 		local x, y, target = self:getTarget(tg)
-		if not x or not y or not target then return nil end
+		if not x or not y or not target then if swap then doWardenWeaponSwap(self, t, nil, "bow") end return nil end
 			
 		-- Hit the target
-		if core.fov.distance(self.x, self.y, target.x, target.y) > 1 then return nil end
+		if core.fov.distance(self.x, self.y, target.x, target.y) > 1 then if swap then doWardenWeaponSwap(self, t, nil, "bow") end return nil end
 		local hitted = self:attackTarget(target, nil, dam)
 
 		if hitted then

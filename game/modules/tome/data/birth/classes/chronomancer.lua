@@ -105,7 +105,6 @@ newBirthDescriptor{
 	locked_desc = "We preserve the past to protect the future. The hands of time are guarded by the arms of war.",
 	desc = {
 		"The Temporal Wardens have learned to blend archery, dual-weapon fighting, and chronomancy into a fearsome whole.",
-		"Through their use of the chronomantic arts, the Temporal Wardens seek to control the battlefield while peppering their foes with arrows or engaging in hand-to-hand combat.",
 		"Their study of chronomancy enables them to amplify their own physical and magical abilities, and to manipulate the speed of themselves and those around them.",
 		"Their most important stats are: Magic, Dexterity, Constitution, and Willpower",
 		"#GOLD#Stat modifiers:",
@@ -141,8 +140,8 @@ newBirthDescriptor{
 		[ActorTalents.T_SHOOT] = 1,
 		[ActorTalents.T_WEAPON_COMBAT] = 1,
 		
-		[ActorTalents.T_THREADED_ARROW] = 1,
-		[ActorTalents.T_WEAPON_FOLDING] = 1,
+		[ActorTalents.T_WARP_BLADE] = 1,
+		[ActorTalents.T_IMPACT] = 1,
 		[ActorTalents.T_DIMENSIONAL_STEP] = 1,
 		[ActorTalents.T_STRENGTH_OF_PURPOSE] = 1,
 	},

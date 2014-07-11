@@ -17,7 +17,7 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
--- EDGE TODO: Icons, Particles, Timed Effect Particles
+-- EDGE TODO: Particles, Timed Effect Particles
 
 newTalent{
 	name = "Spin Fate",
@@ -103,7 +103,7 @@ newTalent{
 	require = chrono_req3,
 	mode = "passive",
 	points = 5,
-	getResist = function(self, t) return self:combatTalentScale(t, 2, 8, 0.75)/2 end,
+	getResist = function(self, t) return self:combatTalentScale(t, 2, 8, 0.75) end,
 	info = function(self, t)
 		local resist = t.getResist(self, t)
 		return ([[You now gain %0.1f%% resist all when you gain spin with Spin Fate (up to a maximum of %0.1f%% resist all at three spin).]]):

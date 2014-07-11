@@ -72,7 +72,8 @@ doWardenWeaponSwap = function(self, t, dam, type)
 			swap = true
 			warden_weapon = "blade"
 		end
-	elseif t.type[1]:find("^chronomancy/bow") or type == "bow" then
+	end
+	if t.type[1]:find("^chronomancy/bow") or type == "bow" then
 		if not self:hasArcheryWeapon("bow") then
 			swap = true
 			warden_weapon = "bow"
@@ -93,28 +94,7 @@ doWardenWeaponSwap = function(self, t, dam, type)
 			end
 		end
 	end
-	return dam
-end
-
--- Checks for blended threads and adds the bonus
-getWardenWeaponDamage = function(self, t, base, max, t2)
-	local damage = self:combatTalentWeaponDamage(t, base, max, t2)
-	local effect = self:hasEffect(self.EFF_BLENDED_THREADS)
-	if effect then
-		if effect.weapon == "bow" and t.warden_weapon == "bow" then
-			damage = damage + effect.dam
-		elseif effect.weapon == "dual" and t.warden_weapon == "dual" then
-			damage = damage + effect.dam
-		end
-	end
-	return damage
-end
-
--- Turns off friendly fire on archery spells after we learn Temporal Hounds 
-getWardenTarget = function(self, t)
-	if t.weapon == "bow" then
-		return {type="bolt", range=self:getTalentRange(t), talent=t,  friendlyfire=not self:knowTalent(self.T_TEMPORAL_HOUNDS), friendlyblock=not self:knowTalent(self.T_TEMPORAL_HOUNDS)}
-	end
+	return dam, swap
 end
 
 -- Spell functions

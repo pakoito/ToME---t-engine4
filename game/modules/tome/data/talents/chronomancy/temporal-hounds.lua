@@ -17,7 +17,7 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
--- EDGE TODO: Talents, Icons, Particles, Timed Effect Particles
+-- EDGE TODO: Particles, Timed Effect Particles
 
 -- Ode to Angband/Tome 2 and all the characters I lost to Time Hounds
 summonTemporalHound = function(self, t)  
@@ -64,7 +64,7 @@ summonTemporalHound = function(self, t)
 	m.resists = { [DamageType.PHYSICAL] = t.getResists(self, t)/2, [DamageType.TEMPORAL] = math.min(100, t.getResists(self, t)*2) }
 	if self:knowTalent(self.T_COMMAND_BLINK) then
 		m:attr("defense_on_teleport", self:callTalent(self.T_COMMAND_BLINK, "getDefense"))
-		m:attr("resist_all_on_teleport", self:callTalent(self.T_COMMAND_BLINK, "getDefense")/2)
+		m:attr("resist_all_on_teleport", self:callTalent(self.T_COMMAND_BLINK, "getDefense"))
 	end
 	if self:knowTalent(self.T_TEMPORAL_VIGOUR) then
 		m:attr("stun_immune", self:callTalent(self.T_TEMPORAL_VIGOUR, "getImmunities"))
@@ -259,6 +259,8 @@ newTalent{
 				-- Set the target so we feel like a wolf pack
 				if target and self:reactionToward(target) < 0 then
 					a:setTarget(target)
+				else
+					a:setTarget(nil)
 				end
 			end
 		end
@@ -268,9 +270,9 @@ newTalent{
 	end,
 	info = function(self, t)
 		local defense = t.getDefense(self, t)
-		return ([[Command your Temporal Hounds to teleport too the location.  If you target a creature with this effect you're hounds will set that creature as their target.
+		return ([[Command your Temporal Hounds to teleport to the location.  If you target a creature with this effect your hounds will set that creature as their target.
 		Additionally your hounds now gain %d defense and %d%% resist all after any teleport from any source.
-		The teleportation bonuses scale with your Spellpower.]]):format(defense, defense/2)
+		The teleportation bonuses scale with your Spellpower.]]):format(defense, defense)
 	end,
 }
 

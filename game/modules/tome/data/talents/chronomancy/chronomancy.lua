@@ -72,7 +72,7 @@ newTalent{
 		local defense = t.getDefense(self, t)
 		local crits = t.getCritDefense(self, t)
 		return ([[Gain %d defense and %d%% chance to shrug off critical hits.
-		If you have Foresight or See the Threads active these bonuses will be added to those effects, granting additional defense and chance to shrug off critical hits.
+		If you have Precognition or See the Threads active these bonuses will be added to those effects, granting additional defense and chance to shrug off critical hits.
 		These bonuses scale with your Magic stat.]]):
 		format(defense, crits)
 	end,
