@@ -81,7 +81,7 @@ newTalent{
 			self:project(tg, self.x, self.y, function(px, py, tg, self)
 				local target = game.level.map(px, py, Map.ACTOR)
 				if target and target ~= self then
-					local hit = self:attackTarget(target, nil, dam, true)
+					local hit = self:attackTarget(target, nil, dam)
 					-- Refresh bow talents
 					if hit then
 						for tid, cd in pairs(self.talents_cd) do

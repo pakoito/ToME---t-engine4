@@ -51,6 +51,7 @@ newTalent{
 	paradox = function (self, t) return getParadoxCost(self, t, 10) end,
 	tactical = { ATTACK = {weapon = 2}, DISABLE = 3 },
 	requires_target = true,
+	no_energy = "fake",
 	getDamage = function(self, t) return self:combatTalentWeaponDamage(t, 1, 1.5) end,
 	getDuration = function(self, t) return math.floor(self:combatTalentScale(t, 3, 7)) end,
 	on_pre_use = function(self, t, silent) if not doWardenPreUse(self, "dual") then if not silent then game.logPlayer(self, "You require two weapons to use this talent.") end return false end return true end,
@@ -60,7 +61,7 @@ newTalent{
 		local x, y, target = self:getTarget(tg)
 		if not x or not y or not target then return nil end
 		if core.fov.distance(self.x, self.y, x, y) > 1 then return nil end
-		local hitted = self:attackTarget(target, DamageType.MATTER, dam, true)
+		local hitted = self:attackTarget(target, DamageType.MATTER, dam)
 
 		if hitted then
 			local chance = rng.range(1, 4)
@@ -114,6 +115,7 @@ newTalent{
 	paradox = function (self, t) return getParadoxCost(self, t, 15) end,
 	tactical = { ATTACKAREA = {weapon = 2}, DISABLE = 3 },
 	requires_target = true,
+	no_energy = "fake",
 	getDamage = function(self, t) return self:combatTalentWeaponDamage(t, 1, 1.5) end,
 	getDuration = function(self, t) return math.floor(self:combatTalentScale(t, 3, 7)) end,
 	getPower = function(self, t) return self:combatTalentSpellDamage(t, 50, 150, getParadoxSpellpower(self)) end,
@@ -136,7 +138,7 @@ newTalent{
 			local lt, rt = game.level.map(lx, ly, Map.ACTOR), game.level.map(rx, ry, Map.ACTOR)
 
 			-- target hit
-			hit1 = self:attackTarget(target, nil, damage, true)
+			hit1 = self:attackTarget(target, nil, damage)
 			
 			--left hit
 			if lt then
@@ -190,6 +192,7 @@ newTalent{
 	requires_target = true,
 	is_teleport = true,
 	direct_hit = true,
+	no_energy = "fake",
 	getDamage = function(self, t) return self:combatTalentWeaponDamage(t, 0.6, 1.2) end,
 	on_pre_use = function(self, t, silent) if not doWardenPreUse(self, "dual") then if not silent then game.logPlayer(self, "You require two weapons to use this talent.") end return false end return true end,
 	action = function(self, t)
@@ -200,7 +203,7 @@ newTalent{
 			
 		-- Hit the target
 		if core.fov.distance(self.x, self.y, target.x, target.y) > 1 then return nil end
-		local hitted = self:attackTarget(target, nil, dam, true)
+		local hitted = self:attackTarget(target, nil, dam)
 
 		if hitted then
 			-- Get available targets
