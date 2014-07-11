@@ -2587,7 +2587,7 @@ newEffect{
 	name = "WARDEN_FOCUS", image = "talents/warden_focus.png",
 	desc = "Warden's Focus",
 	long_desc = function(self, eff)
-		return ("The target is dealing %d%% bonus damage to %s."):format(eff.power, eff.type)
+		return ("The target is dealing %d%% bonus damage to %ss."):format(eff.power, eff.type)
 	end,
 	type = "other",
 	subtype = {tactic=true},

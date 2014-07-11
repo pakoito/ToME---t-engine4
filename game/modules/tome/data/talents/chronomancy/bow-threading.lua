@@ -156,6 +156,7 @@ newTalent{
 	radius = function(self, t) return math.floor(self:combatTalentScale(t, 2.3, 3.7)) end,
 	no_energy = "fake",
 	getDamage = function(self, t) return self:combatTalentWeaponDamage(t, 1, 1.5) end,
+	getClones = function(self, t) return self:getTalentLevel(t) >= 5 and 3 or self:getTalentLevel(t) >= 3 and 2 or 1 end,
 	target = function(self, t)
 		return {type="bolt", range=self:getTalentRange(t), talent=t, friendlyfire=false, friendlyblock=false}
 	end,
@@ -181,7 +182,7 @@ newTalent{
 		
 		-- Summon our clones
 		if not self.arrow_stitched_clone then
-			for i = 1, 3 do
+			for i = 1, t.getClones(self, t) do
 				local m = makeParadoxClone(self, self, 2)
 				local poss = {}
 				local range = self:getTalentRange(t)
@@ -217,8 +218,10 @@ newTalent{
 	end,
 	info = function(self, t)
 		local damage = t.getDamage(self, t) * 100
-		return ([[Fire upon the target for %d%% damage and summon up to three temporal clones (depending on available space).
-		These clones are out of phase with normal reality and deal 50%% damage but shoot through friendly targets.]])
-		:format(damage)
+		local clones = t.getClones(self, t)
+		return ([[Fire upon the target for %d%% damage and summon up to %d temporal clones (depending on available space).
+		These clones are out of phase with normal reality and deal 50%% damage but shoot through friendly targets.
+		At talent level three and five you can summon an additional clone.]])
+		:format(damage, clones)
 	end
 }

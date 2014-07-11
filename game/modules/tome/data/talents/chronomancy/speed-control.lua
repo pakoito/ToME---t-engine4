@@ -81,13 +81,13 @@ newTalent{
 	end,
 	activate = function(self, t)
 		local ret ={
-			x = self.x, y=self.y, power = t.getSlow(self, t), charges = 0, particle = self:addParticles(Particles.new("gloom", 1))
+			x = self.x, y=self.y, power = t.getSlow(self, t), charges = 0
 		}
 		game:playSoundNear(self, "talents/arcane")
 		return ret
 	end,
 	deactivate = function(self, t, p)
-		self:removeParticles(p.particle)
+	--	self:removeParticles(p.particle)
 		return true	
 	end,
 	info = function(self, t)

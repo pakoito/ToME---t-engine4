@@ -45,7 +45,7 @@ newTalent{
 	info = function(self, t)
 		local range = self:getTalentRange(t)
 		local duration = t.getDuration(self, t)
-		return ([[You peer into the future, sensing targets in a radius of %d for %d turns.
+		return ([[You peer into the future, sensing creatures and traps in a radius of %d for %d turns.
 		If you know Foresight you'll gain additional defense and chance to shrug off critical hits (equal to your Foresight bonuses) while Precognition is active.
 		The detection radius will scale with your Spellpower.]]):format(range, duration)
 	end,

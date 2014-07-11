@@ -194,6 +194,7 @@ newTalent{
 	direct_hit = true,
 	no_energy = "fake",
 	getDamage = function(self, t) return self:combatTalentWeaponDamage(t, 0.6, 1.2) end,
+	getTeleports = function(self, t) return self:getTalentLevel(t) >= 5 and 2 or 1 end,
 	on_pre_use = function(self, t, silent) if not doWardenPreUse(self, "dual") then if not silent then game.logPlayer(self, "You require two weapons to use this talent.") end return false end return true end,
 	action = function(self, t)
 		local dam = doWardenWeaponSwap(self, t, t.getDamage(self, t))
@@ -218,7 +219,7 @@ newTalent{
 			end end
 			
 			-- Randomly take targets
-			local teleports = 2
+			local teleports = t.getTeleports(self, t)
 			local attempts = 10
 			while teleports > 0 and #tgts > 0 and attempts > 0 do
 				local a, id = rng.table(tgts)
@@ -247,8 +248,9 @@ newTalent{
 	end,
 	info = function(self, t)
 		local damage = t.getDamage(self, t) * 100
-		return ([[Attack the target with your melee weapons for %d%% damage.  If the attack hits you'll teleport next to up to two random enemies, attacking each for %d%% damage.
-		Temporal Assault can hit the same target multiple times.]])
-		:format(damage, damage)
+		local teleports = t.getTeleports(self, t)
+		return ([[Attack the target with your melee weapons for %d%% damage.  If the attack hits you'll teleport next to up to %d random enemies, attacking for %d%% damage.
+		Temporal Assault can hit the same target multiple times and at talent level five you get an additional teleport.]])
+		:format(damage, teleports, damage)
 	end
 }
