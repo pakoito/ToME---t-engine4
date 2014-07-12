@@ -311,7 +311,13 @@ newTalent{
 		-- Check for visible monsters, only see LOS actors, so telepathy wont prevent it
 		core.fov.calc_circle(self.x, self.y, game.level.map.w, game.level.map.h, 20, function(_, x, y) return game.level.map:opaque(x, y) end, function(_, x, y)
 			local actor = game.level.map(x, y, game.level.map.ACTOR)
-			if actor and actor ~= self then seen = true end
+			if actor and actor ~= self then 
+				if actor.summoner and actor.summoner == self then
+					seen = false
+				else
+					seen = true
+				end
+			end
 		end, nil)
 		if seen then
 			game.log("There are creatures that could be watching you; you cannot take the risk.")

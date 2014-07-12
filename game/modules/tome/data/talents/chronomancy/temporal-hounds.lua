@@ -217,7 +217,7 @@ newTalent{
 	requires_target = true,
 	on_pre_use = function(self, t, silent)
 		local p = self:isTalentActive(self.T_TEMPORAL_HOUNDS)
-		if not p or p and p.hounds == 0 then
+		if not p then
 			if not silent then
 				game.logPlayer(self, "You must have temporal hounds to use this talent.")
 			end
@@ -348,7 +348,7 @@ newTalent{
 	direct_hit = true,
 	on_pre_use = function(self, t, silent)
 		local p = self:isTalentActive(self.T_TEMPORAL_HOUNDS)
-		if not p or p and p.hounds == 0 then
+		if not p then
 			if not silent then
 				game.logPlayer(self, "You must have temporal hounds to use this talent.")
 			end
@@ -363,9 +363,6 @@ newTalent{
 	getDamageStat = function(self, t) return 2 + math.ceil(t.getDamage(self, t) / 15) end,
 	target = function(self, t)
 		return {type="cone", range=0, radius=self:getTalentRadius(t), selffire=false, talent=t}
-	end,
-	passives = function(self, t, p)
-		self:talentTemporaryValue(p, "damage_affinity", {[DamageType.TEMPORAL] = t.getResists(self, t)/2})
 	end,
 	action = function(self, t)
 		-- Grab our hounds and build our multi-targeting display; thanks grayswandir for making this possible
@@ -419,6 +416,6 @@ newTalent{
 		local affinity = t.getResists(self, t)
 		return ([[Command your Temporal Hounds to breath time, dealing %0.2f temporal damage and reducing the stats of all targets in a radius %d cone.
 		Affected targets will have their stats reduced by %d for 3 turns.  You are not immune to the breath of your own hounds but your hounds are immune to stat damage from other hounds.
-		Upon learning this talent your hounds gain %d%% temporal damage affinity and you gain half this value (%d%%).]]):format(damDesc(self, DamageType.TEMPORAL, damage), radius, stat_damage, affinity, affinity/2)
+		Upon learning this talent your hounds gain %d%% temporal damage affinity.]]):format(damDesc(self, DamageType.TEMPORAL, damage), radius, stat_damage, affinity)
 	end,
 }

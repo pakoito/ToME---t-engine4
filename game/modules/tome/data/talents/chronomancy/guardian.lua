@@ -72,14 +72,14 @@ newTalent{
 	remove_on_clone = true,
 	callbackOnHit = function(self, t, cb, src)
 		local split = cb.value * t.getSplit(self, t)
-		if not self:knowTalent(self.T_DOUBLE_EDGE) then return cb.value end  -- Clone protection
-		
+	
 		-- Do our split
-		if self.max_life and self.life - cb.value < self.max_life * 0.5 then
+		if self.max_life and self.life - cb.value < self.max_life * 0.5 and not self.turn_procs.double_edge then
 			-- Look for space first
 			local tx, ty = util.findFreeGrid(self.x, self.y, 5, true, {[Map.ACTOR]=true})
 			if tx and ty then
 				game.level.map:particleEmitter(tx, ty, 1, "temporal_teleport")
+				self.turn_procs.double_edge = true
 				
 				-- clone our caster
 				local m = makeParadoxClone(self, self, t.getDuration(self, t))
@@ -115,6 +115,7 @@ newTalent{
 						orders = {target=true},
 					})
 				end
+								
 			else
 				game.logPlayer(self, "Not enough space to summon warden!")
 			end
@@ -126,7 +127,7 @@ newTalent{
 		local split = t.getSplit(self, t) * 100
 		local duration = t.getDuration(self, t)
 		return ([[When an attack would reduce you below 50%% of your maximum life another you from an alternate timeline appears and takes %d%% of the damage.
-		Your double will remain for %d turns and knows most talents you do.
+		Your double will remain for %d turns and knows most talents you do.  This effect can only occur once per turn.
 		The amount of damage split scales with your Spellpower.]]):format(split, duration)
 	end,
 }
