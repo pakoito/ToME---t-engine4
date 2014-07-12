@@ -63,8 +63,8 @@ newTalent{
 
 newTalent{
 	name = "Double Edge",
-	type = {"chronomancy/guardian", 4},
-	require = chrono_req4,
+	type = {"chronomancy/guardian", 3},
+	require = chrono_req3,
 	points = 5,
 	mode = "passive",
 	getSplit = function(self, t) return math.min(100, self:combatTalentSpellDamage(t, 20, 50, getParadoxSpellpower(self)))/100 end,
