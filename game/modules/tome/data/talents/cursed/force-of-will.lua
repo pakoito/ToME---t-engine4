@@ -26,7 +26,7 @@ local function forceHit(self, t, target, sourceX, sourceY, damage, knockback, kn
 	-- apply initial damage
 	if damage > 0 then
 		damage = self:mindCrit(damage)
-		self:project({type="hit", range=10, talent=t}, target.x, target.y, DamageType.PHYSICAL, damage)
+		self:project({type="hit", range=10, talent=t, pass_terrain=true}, target.x, target.y, DamageType.PHYSICAL, damage)
 		game.level.map:particleEmitter(target.x, target.y, 1, "force_hit", {power=power, dx=target.x - sourceX, dy=target.y - sourceY})
 	end
 
