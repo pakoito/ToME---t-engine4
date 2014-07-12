@@ -179,9 +179,9 @@ newTalent{
 				m.talents[t.id] = nil
 			end
 			game.zone:addEntity(game.level, m, "actor", tx, ty)
-			m.ai_target.actor = target or nil
 			m.ai_state = { talent_in=2, ally_compassion=10 }	
 			m.generic_damage_penalty = t.getDamagePenalty(self, t)
+			m:setTarget(target or nil)
 			
 			if game.party:hasMember(self) then
 				game.party:addMember(m, {
@@ -238,11 +238,11 @@ newTalent{
 			end
 			
 			game.zone:addEntity(game.level, m, "actor", tx, ty)
-			m.ai_target.actor = target or nil
 			m.ai_state = { talent_in=2, ally_compassion=10 }
 			m.generic_damage_penalty = t.getDamagePenalty(self, t)
 			m.remove_from_party_on_death = true
 			m:attr("archery_pass_friendly", 1)
+			m:setTarget(target or nil)
 			
 			if game.party:hasMember(self) then
 				game.party:addMember(m, {

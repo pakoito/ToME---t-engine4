@@ -97,7 +97,6 @@ newTalent{
 				
 				-- add our clone
 				game.zone:addEntity(game.level, m, "actor", tx, ty)
-				m.ai_target.actor = src or nil
 				m.ai_state = { talent_in=2, ally_compassion=10 }
 				m.remove_from_party_on_death = true				
 				
@@ -106,6 +105,7 @@ newTalent{
 				cb.value = cb.value - split
 				
 				m:takeHit(split, src)
+				m:setTarget(src or nil)
 								
 				if game.party:hasMember(self) then
 					game.party:addMember(m, {
