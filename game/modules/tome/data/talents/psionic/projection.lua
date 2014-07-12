@@ -403,7 +403,6 @@ newTalent{
 			print("[Chain lightning] targetting", fx, fy, "from", self.x, self.y)
 			local actor = game.level.map(dx, dy, Map.ACTOR)
 			if actor and not affected[actor] then
-				ignored = false
 				affected[actor] = true
 				first = actor
 

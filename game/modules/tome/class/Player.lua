@@ -297,7 +297,7 @@ function _M:move(x, y, force)
 
 	if not force and ox == self.x and oy == self.y and self.doPlayerSlide then
 		self.doPlayerSlide = nil
-		tx, ty = self:tryPlayerSlide(x, y, false)
+		local tx, ty = self:tryPlayerSlide(x, y, false)
 		if tx then moved = self:move(tx, ty, false) end
 	end
 	self.doPlayerSlide = nil

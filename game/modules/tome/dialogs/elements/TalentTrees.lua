@@ -232,7 +232,7 @@ function _M:moveSel(i, j)
 	if self.scrollbar and self.last_input_was_keyboard then
 		local pos = 0
 		for i = 1, #self.tree do
-			tree = self.tree[i]
+			local tree = self.tree[i]
 			pos = pos + tree.h
 			-- we've reached selected row
 			if self.sel_i == i then
@@ -344,7 +344,7 @@ end
 function _M:on_select(item, force)
 	if self.prev_item == item and not force then return end
 	local str, fx, fy = self.tooltip(item)
-	tx,ty = fx or (self.last_display_x + self.last_mz.x2), fy or (self.last_display_y + self.last_mz.y1)
+	local tx,ty = fx or (self.last_display_x + self.last_mz.x2), fy or (self.last_display_y + self.last_mz.y1)
 	if not self.no_tooltip then game:tooltipDisplayAtMap(tx, ty, str) end
 	self.prev_item = item
 end

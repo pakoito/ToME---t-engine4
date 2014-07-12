@@ -18,6 +18,7 @@
 -- darkgod@te4.org
 
 -- Keepsake
+
 name = "Keepsake"
 id = "keepsake"
 
@@ -172,9 +173,9 @@ on_cave_description = function(self, who)
 	game.party:learnLore("keepsake-cave-description")
 	
 	-- spawn the guards
-	spot = game.level:pickSpot{type="guards", subtype="wardog"}
-	x, y = util.findFreeGrid(spot.x, spot.y, 2, true, {[engine.Map.ACTOR]=true})
-	m = game.zone:makeEntityByName(game.level, "actor", "CORRUPTED_WAR_DOG")
+	local spot = game.level:pickSpot{type="guards", subtype="wardog"}
+	local x, y = util.findFreeGrid(spot.x, spot.y, 2, true, {[engine.Map.ACTOR]=true})
+	local m = game.zone:makeEntityByName(game.level, "actor", "CORRUPTED_WAR_DOG")
 	if m and x and y then game.zone:addEntity(game.level, m, "actor", x, y) end
 	
 	for i = 1, 2 do
@@ -191,6 +192,7 @@ on_vault_entrance = function(self, who)
 end
 
 on_vault_trigger = function(self, who)
+	local spot, x, y, m
 	for i = 1, 7 do
 		spot = game.level:pickSpot{type="vault1", subtype="encounter"}
 		x, y = util.findFreeGrid(spot.x, spot.y, 2, true, {[engine.Map.ACTOR]=true})
@@ -210,7 +212,6 @@ on_kyless_encounter = function(self, who)
 end
 
 on_kyless_death = function(self, who, kyless)
-	local Chat = require "engine.Chat"
 	local chat = Chat.new("keepsake-kyless-death", {name="Death of Kyless"}, game.player)
 	chat:invoke()
 
@@ -230,6 +231,7 @@ on_keep_book = function(self, who)
 end
 
 on_spawn_berethh = function(self, who)
+	local spot, x, y, m
 	spot = game.level:pickSpot{type="berethh", subtype="encounter"}
 	x, y = util.findFreeGrid(spot.x, spot.y, 5, true, {[engine.Map.ACTOR]=true})
 	m = game.zone:makeEntityByName(game.level, "actor", "BERETHH")

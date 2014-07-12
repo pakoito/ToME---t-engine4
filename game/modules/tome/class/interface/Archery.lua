@@ -85,7 +85,7 @@ function _M:archeryAcquireTargets(tg, params)
 			end
 			if a then
 				local hd = {"Combat:archeryAcquire", tg=tg, params=params, weapon=weapon, ammo=a}
-				if self:triggerHook(hd) then hitted = hd.hitted end
+				self:triggerHook(hd)
 
 				if weapon.use_resource then
 					self['inc'..weapon.use_resource.kind:capitalize()](self, -weapon.use_resource.value)
@@ -114,7 +114,7 @@ function _M:archeryAcquireTargets(tg, params)
 					end
 					if a then 
 						local hd = {"Combat:archeryAcquire", tg=tg, params=params, weapon=weapon, ammo=a}
-						if self:triggerHook(hd) then hitted = hd.hitted end
+						self:triggerHook(hd)
 
 						targets[#targets+1] = {x=tx, y=ty, ammo=a.combat}
 
