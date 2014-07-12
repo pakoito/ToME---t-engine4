@@ -102,7 +102,7 @@ end
 -- For this to work all anomalies have to have no_energy set to true in the talent table, otherwise it will use two turns
 checkAnomalyTargeting = function(self, t, tg)
 	local x, y = self.x, self.y
-	if self:knowTalent(self.T_PULL_SKEIN) and rng.percent(self:callTalent(self.T_PULL_SKEIN, "getTargetChance")) then
+	if self:knowTalent(self.T_BIAS_WEAVE) and rng.percent(self:callTalent(self.T_BIAS_WEAVE, "getTargetChance")) then
 		if self == game.player then
 			game.bignews:saySimple(180, "#STEEL_BLUE#Targeting %s", t.name)
 		end
@@ -127,9 +127,9 @@ checkAnomalyTriggers = function(self, target)
 	if target:knowTalent(target.T_SEAL_FATE) then
 		target:forceUseTalent(target.T_SEAL_FATE, {ignore_cd=true, ignore_energy=true, ignore_ressources=true})
 	end
-	if target.summoner and target.summoner:knowTalent(target.summoner.T_TEMPORAL_VIGOUR) then
-		local t = target.summoner:getTalentFromId(target.summoner.T_TEMPORAL_VIGOUR)
-		t.doAnomaly(target.summoner, target, t)
+	if target:hasEffect(target.EFF_TRIM_THREADS) then
+		local eff = target:hasEffect(target.EFF_TRIM_THREADS)
+		eff.src:callTalent(eff.src.T_TRIM_THREADS, "doAnomaly", target, eff)
 	end
 end
 
@@ -293,7 +293,7 @@ newTalent{
 	no_energy = true, 
 	requires_target = true,
 	target = function(self, t)
-		return {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t)}
+		return {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t), nowarning=true}
 	end,
 	message = "@Source@ transfers damage to a nearby target.",
 	action = function(self, t)
@@ -430,7 +430,7 @@ newTalent{
 	no_energy = true, 
 	requires_target = true,
 	target = function(self, t)
-		return {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t)}
+		return {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t), nowarning=true}
 	end,
 	message = "@Source@ places several targets out of phase.",
 	action = function(self, t)
@@ -669,7 +669,7 @@ newTalent{
 	no_energy = true, 
 	requires_target = true,
 	target = function(self, t)
-		return {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t)}
+		return {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t), nowarning=true}
 	end,
 	getHaste = function(self, t) return 1 - 1 / (1 + (getAnomalyEffectPower(self)) / 100) end,
 	message = "@Source@ creates a bubble of fast time.",
@@ -800,7 +800,7 @@ newTalent{
 	no_energy = true, 
 	requires_target = true,
 	target = function(self, t)
-		return {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t)}
+		return {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t), nowarning=true}
 	end,
 	message = "@Source@ smears several targets.",
 	action = function(self, t)
@@ -842,7 +842,7 @@ newTalent{
 	no_energy = true, 
 	requires_target = true,
 	target = function(self, t)
-		return {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t)}
+		return {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t), nowarning=true}
 	end,
 	message = "@Source@ energizes several targets.",
 	action = function(self, t)
@@ -884,7 +884,7 @@ newTalent{
 	no_energy = true, 
 	requires_target = true,
 	target = function(self, t)
-		return {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t)}
+		return {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t), nowarning=true}
 	end,
 	message = "@Source@ clones a nearby creature.",
 	action = function(self, t)
@@ -1044,7 +1044,7 @@ newTalent{
 	no_energy = true, 
 	requires_target = true,
 	target = function(self, t)
-		return {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t)}
+		return {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t), nowarning=true}
 	end,
 	message = "@Source@ creates a stone wall.",
 	action = function(self, t)

@@ -2492,7 +2492,7 @@ newEffect{
 	no_stop_enter_worlmap = true, no_stop_resting = true,
 	parameters = {power=50},
 	activate = function(self, eff)
-		self:effectTemporaryValue(eff, "time_stop_damage_penalty", eff.power)
+		self:effectTemporaryValue(eff, "generic_damage_penalty", eff.power)
 	end,
 	deactivate = function(self, eff)
 	end,
@@ -2580,25 +2580,5 @@ newEffect{
 			game.logPlayer(game.player, "#STEEL_BLUE#You are brought back from your repreive!")
 
 		end)
-	end,
-}
-
-newEffect{
-	name = "WARDEN_FOCUS", image = "talents/warden_focus.png",
-	desc = "Warden's Focus",
-	long_desc = function(self, eff)
-		return ("The target is dealing %d%% bonus damage to %ss."):format(eff.power, eff.type)
-	end,
-	type = "other",
-	subtype = {tactic=true},
-	status = "beneficial",
-	decrease = 0,
-	no_stop_enter_worlmap = true, no_stop_resting = true,
-	parameters = {power=50},
-	activate = function(self, eff)
-	--	local type = eff.type
-		self:effectTemporaryValue(eff, "inc_damage_type", {[eff.type]=eff.power})
-	end,
-	deactivate = function(self, eff)
 	end,
 }

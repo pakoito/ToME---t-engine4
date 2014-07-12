@@ -2079,25 +2079,8 @@ function _M:onTakeHit(value, src, death_note)
 		end
 	end
 
-	if value > 0 and self:isTalentActive(self.T_DISPLACE_DAMAGE) and rng.percent(self:callTalent(self.T_DISPLACE_DAMAGE, "getchance")) then
-		-- find available targets
-		local tgts = {}
-		local grids = core.fov.circle_grids(self.x, self.y, self:callTalent(self.T_DISPLACE_DAMAGE,"getrange"), true)
-		for x, yy in pairs(grids) do for y, _ in pairs(grids[x]) do
-			local a = game.level.map(x, y, Map.ACTOR)
-			if a and self:reactionToward(a) < 0 then
-				tgts[#tgts+1] = a
-			end
-		end end
-
-		local a = rng.table(tgts)
-		if a then
-			local displace = value/2
-			game:delayedLogMessage(self, a, "displace_damage"..(a.uid or ""), "#PINK##Source# displaces some damage onto #Target#!")
-			game:delayedLogDamage(self, a, displace, ("#PINK#%d displaced#LAST#"):format(displace), false)
-			a:takeHit(value / 2, self)
-			value = value / 2
-		end
+	if value > 0 and self:isTalentActive(self.T_DISPLACE_DAMAGE) then
+		self:callTalent(self.T_DISPLACE_DAMAGE, "doDisplaceDamage", value)
 	end
 	
 	--Special Flag (currently for Terrasca)
@@ -2938,12 +2921,6 @@ function _M:die(src, death_note)
 	-- Increases blood frenzy
 	if src and src.knowTalent and src:knowTalent(src.T_BLOOD_FRENZY) and src:isTalentActive(src.T_BLOOD_FRENZY) then
 		src.blood_frenzy = src.blood_frenzy + src:callTalent(src.T_BLOOD_FRENZY,"bonuspower")
-	end
-	
-	-- Warden's Focus
-	if src and src.knowTalent and src:knowTalent(src.T_WARDEN_FOCUS) then
-		local power = src:callTalent(src.T_WARDEN_FOCUS, "getPower")
-		src:setEffect(src.EFF_WARDEN_FOCUS, 2, {power=power, type=self.type})
 	end
 
 	-- Increases necrotic aura count

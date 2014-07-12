@@ -62,16 +62,72 @@ newTalent{
 }
 
 newTalent{
-	name = "Warden's Focus", short_name = "WARDEN_FOCUS",
-	type = {"chronomancy/guardian", 3},
-	require = chrono_req3,
+	name = "Double Edge",
+	type = {"chronomancy/guardian", 4},
+	require = chrono_req4,
 	points = 5,
 	mode = "passive",
-	getPower = function(self, t) return self:combatTalentSpellDamage(t, 4, 20, getParadoxSpellpower(self)) end,
+	getSplit = function(self, t) return math.min(100, self:combatTalentSpellDamage(t, 20, 50, getParadoxSpellpower(self)))/100 end,
+	getDuration = function(self, t) return math.floor(self:combatTalentScale(t, 2, 6)) end,
+	remove_on_clone = true,
+	callbackOnHit = function(self, t, cb, src)
+		local split = cb.value * t.getSplit(self, t)
+		if not self:knowTalent(self.T_DOUBLE_EDGE) then return cb.value end  -- Clone protection
+		
+		-- Do our split
+		if self.max_life and self.life - cb.value < self.max_life * 0.5 then
+			-- Look for space first
+			local tx, ty = util.findFreeGrid(self.x, self.y, 5, true, {[Map.ACTOR]=true})
+			if tx and ty then
+				game.level.map:particleEmitter(tx, ty, 1, "temporal_teleport")
+				
+				-- clone our caster
+				local m = makeParadoxClone(self, self, t.getDuration(self, t))
+				
+				-- remove some talents; note most of this is handled by makeParadoxClone already but we don't want to keep splitting
+				local tids = {}
+				for tid, _ in pairs(m.talents) do
+					local t = m:getTalentFromId(tid)
+					if t.remove_on_clone then tids[#tids+1] = t end
+				end
+				for i, t in ipairs(tids) do
+					if t.mode == "sustained" and m:isTalentActive(t.id) then m:forceUseTalent(t.id, {ignore_energy=true, silent=true}) end
+					m.talents[t.id] = nil
+				end
+				
+				-- add our clone
+				game.zone:addEntity(game.level, m, "actor", tx, ty)
+				m.ai_target.actor = src or nil
+				m.ai_state = { talent_in=2, ally_compassion=10 }
+				m.remove_from_party_on_death = true				
+				
+				-- split the damage
+				game:delayedLogDamage(src, m, split, ("#PINK#%d displaced#LAST#"):format(split), false)
+				cb.value = cb.value - split
+				
+				m:takeHit(split, src)
+								
+				if game.party:hasMember(self) then
+					game.party:addMember(m, {
+						control="no",
+						type="minion",
+						title="Temporal Clone",
+						orders = {target=true},
+					})
+				end
+			else
+				game.logPlayer(self, "Not enough space to summon warden!")
+			end
+		end
+		
+		return cb.value
+	end,
 	info = function(self, t)
-		local power = t.getPower(self, t)
-		return ([[You deal %d%% more damage to targets who share a creature type (undead, humanoid, giant, etc.) with the last target you killed.
-		This bonus damage will scale with your Spellpower.]]):format(power)
+		local split = t.getSplit(self, t) * 100
+		local duration = t.getDuration(self, t)
+		return ([[When an attack would reduce you below 50%% of your maximum life another you from an alternate timeline appears and takes %d%% of the damage.
+		Your double will remain for %d turns and knows most talents you do.
+		The amount of damage split scales with your Spellpower.]]):format(split, duration)
 	end,
 }
 

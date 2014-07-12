@@ -358,13 +358,9 @@ setDefaultProjector(function(src, x, y, type, dam, tmp, no_martyr)
 			dam = dam - dam * src:attr("numbed") / 100
 			print("[PROJECTOR] numbed dam", dam)
 		end
-		if src:attr("time_stop_damage_penalty") then
-			dam = dam - dam * src:attr("time_stop_damage_penalty") / 100
-			print("[PROJECTOR] time stop dam", dam)
-		end
-		if src:attr("clone_damage_penalty") then
-			dam = dam - dam * src:attr("clone_damage_penalty") / 100
-			print("[PROJECTOR] clone dam", dam)
+		if src:attr("generic_damage_penalty") then
+			dam = dam - dam * src:attr("generic_damage_penalty") / 100
+			print("[PROJECTOR] generic dam", dam)
 		end
 
 		-- Curse of Misfortune: Unfortunate End (chance to increase damage enough to kill)

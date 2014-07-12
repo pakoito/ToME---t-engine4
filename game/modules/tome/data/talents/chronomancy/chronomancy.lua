@@ -142,7 +142,7 @@ newTalent{
 		local cooldown = self:getTalentCooldown(t)
 		local talent = self:isTalentActive(t.id) and self:getTalentFromId(self:isTalentActive(t.id).talent).name or "None"
 		return ([[Choose an activatable spell that's not targeted.  When you take damage that reduces your life below 30%% the spell will automatically cast.
-		This spell will cast even if it is currently on cooldown, will not consume a turn or resources, and uses the talent level of Contingency or it's own, whichever is lower.
+		This spell will cast even if it is currently on cooldown, will not consume a turn or resources, and uses the talent level of Contingency or its own, whichever is lower.
 		This effect can only occur once every %d turns and takes place after the damage is resolved.
 		
 		Current Contingency Spell: %s]]):

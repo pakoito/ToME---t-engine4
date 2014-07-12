@@ -147,7 +147,7 @@ newTalent{
 	action = function(self, t)
 		local tg = self:getTalentTarget(t)
 		local x, y, target = self:getTarget(tg)
-		if not x or not y or not target then return nil end
+		if not x or not y then return nil end
 		if not self:hasLOS(x, y) or game.level.map:checkEntity(x, y, Map.TERRAIN, "block_move") then
 			game.logSeen(self, "You do not have line of sight.")
 			return nil
@@ -179,9 +179,18 @@ newTalent{
 				m.talents[t.id] = nil
 			end
 			game.zone:addEntity(game.level, m, "actor", tx, ty)
-			m.ai_target.actor = target
+			m.ai_target.actor = target or nil
 			m.ai_state = { talent_in=2, ally_compassion=10 }	
-			m.clone_damage_penalty = t.getDamagePenalty(self, t)
+			m.generic_damage_penalty = t.getDamagePenalty(self, t)
+			
+			if game.party:hasMember(self) then
+				game.party:addMember(m, {
+					control="no",
+					type="minion",
+					title="Blade Guardian",
+					orders = {target=true},
+				})
+			end
 			
 			-- Swap to our blade if needed
 			doWardenWeaponSwap(m, t, 0, "blade")
@@ -199,7 +208,7 @@ newTalent{
 				if game.level.map:isBound(i, j) and
 					core.fov.distance(x, y, i, j) <= range and -- make sure they're within arrow range
 					core.fov.distance(i, j, self.x, self.y) <= range/2 and -- try to place them close to the caster so enemies dodge less
-					self:canMove(i, j) and target:hasLOS(i, j) then
+					self:canMove(i, j) and self:hasLOS(x, y) then
 					poss[#poss+1] = {i,j}
 				end
 			end
@@ -229,10 +238,20 @@ newTalent{
 			end
 			
 			game.zone:addEntity(game.level, m, "actor", tx, ty)
-			m.ai_target.actor = target
+			m.ai_target.actor = target or nil
 			m.ai_state = { talent_in=2, ally_compassion=10 }
-			m.clone_damage_penalty = t.getDamagePenalty(self, t)
+			m.generic_damage_penalty = t.getDamagePenalty(self, t)
+			m.remove_from_party_on_death = true
 			m:attr("archery_pass_friendly", 1)
+			
+			if game.party:hasMember(self) then
+				game.party:addMember(m, {
+					control="no",
+					type="minion",
+					title="Bow Guardian",
+					orders = {target=true},
+				})
+			end
 				
 			-- Swap to our bow if needed
 			doWardenWeaponSwap(m, t, 0, "bow")

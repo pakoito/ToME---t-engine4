@@ -137,7 +137,7 @@ newTalent{
 		local damage = t.getDamage(self, t) * 100
 		local radius = self:getTalentRadius(t)
 		local aoe = t.getDamageAoE(self, t)
-		return ([[Fire a shot doing %d%% damage.  When the arrow reaches it's destination it will draw in creatures in a radius of %d and inflict %0.2f additional physical damage.
+		return ([[Fire a shot doing %d%% damage.  When the arrow reaches its destination it will draw in creatures in a radius of %d and inflict %0.2f additional physical damage.
 		The additional damage scales with your Spellpower and inflicts 50%% extra damage to pinned targets.]])
 		:format(damage, radius, damDesc(self, DamageType.PHYSICAL, aoe))
 	end
@@ -171,7 +171,7 @@ newTalent{
 		local __, x, y = self:canProject(tg, x, y)
 		
 		-- Don't cheese arrow stitching through walls
-		if not self:hasLOS(x, y) or game.level.map:checkEntity(x, y, Map.TERRAIN, "block_move") then
+		if not self:hasLOS(x, y) then
 			game.logSeen(self, "You do not have line of sight.")
 			return nil
 		end
@@ -202,7 +202,7 @@ newTalent{
 				game.zone:addEntity(game.level, m, "actor", x, y)
 				m.shoot_target = target
 				m.arrow_stitched_clone = true
-				m.clone_damage_penalty = 50
+				m.generic_damage_penalty = 50
 				m.energy.value = 1000
 				m.on_act = function(self)
 					if not self.shoot_target.dead then

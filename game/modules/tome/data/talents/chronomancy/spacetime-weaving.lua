@@ -68,26 +68,36 @@ newTalent{
 }
 
 newTalent{
-	name = "Displace Damage",
+	name = "Phase Shift",
 	type = {"chronomancy/spacetime-weaving", 2},
-	mode = "sustained",
+	mode = "passive",
 	require = chrono_req2,
-	sustain_paradox = 24,
-	cooldown = 10,
-	tactical = { BUFF = 2 },
 	points = 5,
-	-- called by _M:onTakeHit function in mod\class\Actor.lua to perform the damage displacment
-	getchance = function(self, t) return self:combatTalentLimit(t, 50, 10, 30) end, -- Limit < 50%
-	getrange = function(self, t) return math.floor(self:combatTalentScale(t, 4, 8, 0.5, 0, 1)) end,
-	activate = function(self, t)
-		return {}
-	end,
-	deactivate = function(self, t, p)
-		return true
+	getChance = function(self, t) return self:combatTalentSpellDamage(t, 10, 50, getParadoxSpellpower(self)) end,
+	doPhaseShift = function(self, t)
+		local effs = {}
+		-- Go through all effects
+		for eff_id, p in pairs(self.tmp) do
+			local e = self.tempeffect_def[eff_id]
+			if e.status == "detrimental" and e.type ~= "other" then
+				effs[#effs+1] = {"effect", eff_id}
+			end
+		end
+
+		-- Roll to remove each one
+		for i = 1, #effs do
+			if #effs == 0 then break end
+			local eff = rng.tableRemove(effs)
+			if eff[1] == "effect" and rng.percent(t.getChance(self, t)) then
+				self:removeEffect(eff[2])
+			end
+		end
 	end,
 	info = function(self, t)
-		return ([[Space bends around you, giving you a %d%% chance to displace half of any damage you receive onto a random enemy within a radius of %d.
-		]]):format(t.getchance(self, t), t.getrange(self, t))
+		local chance = t.getChance(self, t)
+		return ([[When you teleport you have a %d%% chance to remove each detrimental status effect currently affecting you.
+		Each effect is checked individually and the chance scales with your Spellpower.]]):
+		format(chance)
 	end,
 }
 
@@ -228,35 +238,50 @@ newTalent{
 }
 
 newTalent{
-	name = "Phase Shift",
+	name = "Displace Damage",
 	type = {"chronomancy/spacetime-weaving", 4},
-	mode = "passive",
+	mode = "sustained",
 	require = chrono_req4,
+	sustain_paradox = 48,
+	cooldown = 10,
+	tactical = { BUFF = 2 },
 	points = 5,
-	getChance = function(self, t) return self:combatTalentSpellDamage(t, 10, 50, getParadoxSpellpower(self)) end,
-	doPhaseShift = function(self, t)
-		local effs = {}
-		-- Go through all effects
-		for eff_id, p in pairs(self.tmp) do
-			local e = self.tempeffect_def[eff_id]
-			if e.status == "detrimental" and e.type ~= "other" then
-				effs[#effs+1] = {"effect", eff_id}
+	-- called by _M:onTakeHit function in mod\class\Actor.lua to perform the damage displacment
+	getDisplaceDamage = function(self, t) return self:combatTalentLimit(t, 25, 5, 15)/100 end, -- Limit < 25%
+	range = 10,
+	doDisplaceDamage = function(self, t, value)
+		-- find available targets
+		local tgts = {}
+		local grids = core.fov.circle_grids(self.x, self.y, self:getTalentRange(t), true)
+		for x, yy in pairs(grids) do for y, _ in pairs(grids[x]) do
+			local a = game.level.map(x, y, Map.ACTOR)
+			if a and self:reactionToward(a) < 0 then
+				tgts[#tgts+1] = a
 			end
-		end
+		end end
 
-		-- Roll to remove each one
-		for i = 1, #effs do
-			if #effs == 0 then break end
-			local eff = rng.tableRemove(effs)
-			if eff[1] == "effect" and rng.percent(t.getChance(self, t)) then
-				self:removeEffect(eff[2])
-			end
+		local a = rng.table(tgts)
+		if a then
+			local displace = value * t.getDisplaceDamage(self, t)
+			game:delayedLogMessage(self, a, "displace_damage"..(a.uid or ""), "#PINK##Source# displaces some damage onto #Target#!")
+			game:delayedLogDamage(self, a, displace, ("#PINK#%d displaced#LAST#"):format(displace), false)
+			a:takeHit(displace, self)
+			print("Displace Value", value)
+			value = value - displace
+			print("Displacement Value Final", value, "Displacement Displace", displace)
 		end
+		
+		return value
+	end,
+	activate = function(self, t)
+		return {}
+	end,
+	deactivate = function(self, t, p)
+		return true
 	end,
 	info = function(self, t)
-		local chance = t.getChance(self, t)
-		return ([[When you teleport you have a %d%% chance to remove each detrimental status effect currently affecting you.
-		Each effect is checked individually and the chance scales with your Spellpower.]]):
-		format(chance)
+		local displace = t.getDisplaceDamage(self, t) * 100
+		return ([[You bend space around you, displacing %d%% of any damage you receive onto a random enemy within a range.
+		]]):format(displace)
 	end,
 }

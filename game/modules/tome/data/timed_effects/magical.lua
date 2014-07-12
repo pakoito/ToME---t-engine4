@@ -3006,3 +3006,59 @@ newEffect{
 		self:effectTemporaryValue(eff, "combat_critical_power", eff.crit)
 	end,
 }
+
+newEffect{
+	name = "UNRAVEL", image = "talents/temporal_vigour.png",
+	desc = "Unravel",
+	long_desc = function(self, eff)
+		return ("The target is immune to further damage but is dealing %d%% less damage."):format(eff.power)
+	end,
+	on_gain = function(self, err) return "#Target# has started to unravel.", "+Unraveling" end,
+	type = "magical",
+	subtype = {time=true},
+	status = "beneficial",
+	parameters = {power=50, die_at=50},
+	on_timeout = function(self, eff)
+		if self.life > 0 then
+			self:removeEffect(self.EFF_UNRAVEL)
+		end
+	end,
+	activate = function(self, eff)
+		self:effectTemporaryValue(eff, "die_at", eff.die_at)
+		self:effectTemporaryValue(eff, "generic_damage_penalty", eff.power)
+		self:effectTemporaryValue(eff, "invulnerable", 1)
+	end,
+	deactivate = function(self, eff)
+		-- check negative life first incase the creature has healing
+		if self.life <= (self.die_at or 0) then
+			local sx, sy = game.level.map:getTileToScreen(self.x, self.y)
+			game.flyers:add(sx, sy, 30, (rng.range(0,2)-1) * 0.5, rng.float(-2.5, -1.5), "Unravels!", {255,0,255})
+			game.logSeen(self, "%s has unraveled!", self.name:capitalize())
+			self:die(self)
+		end
+	end,
+}
+
+newEffect{
+	name = "TRIM_THREADS", image = "talents/trim_threads.png",
+	desc = "Trim Threads",
+	long_desc = function(self, eff) return ("The target is being cut from the timeline and is taking %0.2f temporal damage per turn."):format(eff.power) end,
+	type = "magical",
+	subtype = { temporal=true },
+	status = "detrimental",
+	parameters = { power=10 },
+	on_gain = function(self, err) return "#Target# is being cut from the timeline!", "+Trim Threads" end,
+	on_lose = function(self, err) return "#Target# is no longer being cut from the timeline.", "-Trim Threads" end,
+	on_merge = function(self, old_eff, new_eff)
+		-- Merge the flames!
+		local olddam = old_eff.power * old_eff.dur
+		local newdam = new_eff.power * new_eff.dur
+		local dur = math.ceil((old_eff.dur + new_eff.dur) / 2)
+		old_eff.dur = dur
+		old_eff.power = (olddam + newdam) / dur
+		return old_eff
+	end,
+	on_timeout = function(self, eff)
+		DamageType:get(DamageType.TEMPORAL).projector(eff.src, self.x, self.y, DamageType.TEMPORAL, eff.power)
+	end,
+}

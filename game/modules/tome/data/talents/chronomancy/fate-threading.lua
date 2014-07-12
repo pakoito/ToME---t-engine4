@@ -48,22 +48,67 @@ newTalent{
 }
 
 newTalent{
-	name = "Bias Weave",
+	name = "Trim Threads",
 	type = {"chronomancy/fate-threading", 2},
 	require = chrono_req2,
+	points = 5,
+	paradox = function (self, t) return getParadoxCost(self, t, 10) end,
+	cooldown = 4,
+	tactical = { ATTACKAREA = { TEMPORAL = 2 } },
+	range = 10,
+	radius = function(self, t) return math.floor(self:combatTalentScale(t, 2.5, 4.5)) end,
+	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 30, 300, getParadoxSpellpower(self)) end,
+	getDuration = function(self, t) return math.floor(self:combatTalentScale(t, 6, 10)) end,
+	target = function(self, t)
+		return {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t), talent=t}
+	end,
+	requires_target = true,
+	direct_hit = true,
+	doAnomaly = function(self, t, target, eff)
+		self:project({type=hit}, target.x, target.y, DamageType.TEMPORAL, eff.power * eff.dur)
+		target:removeEffect(target.EFF_TRIM_THREADS)
+	end,
+	action = function(self, t)
+		local tg = self:getTalentTarget(t)
+		local x, y = self:getTarget(tg)
+		if not x or not y then return nil end
+		local _ _, x, y = self:canProject(tg, x, y)
+		
+		local damage = self:spellCrit(t.getDamage(self, t))
+		self:project(tg, x, y, function(px, py)
+			local target = game.level.map(px, py, Map.ACTOR)
+			if not target then return end
+			target:setEffect(target.EFF_TRIM_THREADS, 3, {power=damage/3, src=self, apply_power=getParadoxSpellpower(self)})
+		end)
+
+		game.level.map:particleEmitter(x, y, tg.radius, "temporal_flash", {radius=tg.radius})
+
+		game:playSoundNear(self, "talents/teleport")
+
+		return true
+	end,
+	info = function(self, t)
+		local damage = t.getDamage(self, t)
+		local radius = self:getTalentRadius(t)
+		return ([[Deals %0.2f temporal damage over three turns to all targets in a radius of %d.  If the target is hit by an Anomaly the remaining damage will be done instantly.
+		The damage will scale with your Spellpower.]]):format(damDesc(self, DamageType.TEMPORAL, damage), radius)
+	end,
+}
+
+newTalent{
+	name = "Bias Weave",
+	type = {"chronomancy/fate-threading", 3},
+	require = chrono_req3,
 	points = 5,
 	cooldown = 10,
 	-- Anomaly biases can be set manually for monsters
 	-- Use the following format anomaly_bias = { type = "teleport", chance=50}
 	on_pre_use = function(self, t, silent) if not self == game.player then return false end	return true end,
-	getAnomalyImmunity = function(self, t) return self:combatTalentLimit(t, 1, 0.10, .75) end,
 	getBiasChance = function(self, t) return self:combatTalentLimit(t, 100, 10, 75) end,
+	getTargetChance = function(self, t) return self:combatTalentLimit(t, 100, 10, 75) end,
+	getAnomalySpeed = function(self, t) return self:combatTalentLimit(t, 1, 0.10, .75) end,
 	passives = function(self, t, p)
-		self:talentTemporaryValue(p, "anomaly_immune", t.getAnomalyImmunity(self, t)) -- Please don't put this stat on equipment
-		self:talentTemporaryValue(p, "pin_immune", t.getAnomalyImmunity(self, t)/3)
-		self:talentTemporaryValue(p, "blind_immune", t.getAnomalyImmunity(self, t)/3)
-		self:talentTemporaryValue(p, "confusion_immune", t.getAnomalyImmunity(self, t)/3)
-		self:talentTemporaryValue(p, "stun_immune", t.getAnomalyImmunity(self, t)/3)
+		self:talentTemporaryValue(p, "anomaly_recovery_speed", t.getAnomalySpeed(self, t))
 	end,
 	on_learn = function(self, t)
 		if self.anomaly_bias and self.anomaly_bias.chance then
@@ -88,32 +133,13 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		local immunity = 100 * t.getAnomalyImmunity(self, t)
+		local target_chance = t.getTargetChance(self, t)
 		local bias_chance = t.getBiasChance(self, t)
-		return ([[You navigate time threads more easily and have a %d%% chance of ignoring the direct negative consequences of anomalies.
-		You also may bias the type of anomaly effects you produce with %d%% probability.
-		Additionally you gain %d%% immunity to stun, pin, confusion, and blind effects.
-		Major anomalies, those occuring when your modified Paradox is over 600, are not affected by this talent.]]):format(immunity, bias_chance, immunity/3)
-	end,
-}
-
-newTalent{
-	name = "Pull Skein",
-	type = {"chronomancy/fate-threading", 3},
-	require = chrono_req3,
-	mode = "passive",
-	points = 5,
-	getTargetChance = function(self, t) return self:combatTalentLimit(t, 100, 10, 75) end,
-	getAnomalySpeed = function(self, t) return self:combatTalentLimit(t, 1, 0.10, .75) end,
-	passives = function(self, t, p)
-		self:talentTemporaryValue(p, "anomaly_recovery_speed", t.getAnomalySpeed(self, t))
-	end,
-	info = function(self, t)
-		local targeting = t.getTargetChance(self, t)
-		local speed = 100 - (t.getAnomalySpeed(self, t) * 100)
+		local anomaly_recovery = t.getAnomalySpeed(self, t) * 100
 		return ([[You've learned to focus most anomalies when they occur and may choose the target area with %d%% probability.
+		You also may bias the type of anomaly effects you produce with %d%% probability.
 		Additionally random anomalies only cost you %d%% of a turn rather than a full turn when they occur.
-		Major anomalies cannot be targeted in this manner.]]):format(targeting, speed)
+		Major anomalies, those occuring when your modified Paradox is over 600, are not affected by this talent.]]):format(target_chance, bias_chance, anomaly_recovery)
 	end,
 }
 

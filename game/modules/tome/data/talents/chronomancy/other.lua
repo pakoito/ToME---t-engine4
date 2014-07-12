@@ -198,7 +198,7 @@ newTalent{
 		return math.max(20 - power, 10)
 	end,
 	action = function(self, t)
-		function getQuantity(title, prompt, default, min, max)
+		local function getQuantity(title, prompt, default, min, max)
 			local result
 			local co = coroutine.running()
 
