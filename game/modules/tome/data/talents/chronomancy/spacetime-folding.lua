@@ -74,6 +74,12 @@ newTalent{
 		if not tx or not ty then return nil end
 		local __, tx, ty = self:canProject(tg, tx, ty)
 		
+
+		local dam = self:spellCrit(self:callTalent(self.T_WARP_MINES, "getDamage"))
+		local duration = self:callTalent(self.T_WARP_MINES, "getDuration")
+		local detect = self:callTalent(self.T_WARP_MINES, "trapPower") * 0.8
+		local disarm = self:callTalent(self.T_WARP_MINES, "trapPower")
+		
 		-- Lay the mines in a ball
 		self:project(tg, tx, ty, function(px, py)
 			local target_trap = game.level.map(px, py, Map.TRAP)
@@ -81,15 +87,13 @@ newTalent{
 			if game.level.map:checkEntity(px, py, Map.TERRAIN, "block_move") then return end
 			
 			-- Our Mines
-			local dam = self:spellCrit(self:callTalent(self.T_WARP_MINES, "getDamage"))
-			local duration = self:callTalent(self.T_WARP_MINES, "getDuration")
-			local detect = self:callTalent(self.T_WARP_MINES, "trapPower") * 0.8
-			local disarm = self:callTalent(self.T_WARP_MINES, "trapPower")
 			local power = getParadoxSpellpower(self)
 			local trap = Trap.new{
-				name = "warp mine",
+				name = "warp mine: toward",
 				type = "temporal", id_by_type=true, unided_name = "trap",
-				display = '^', color=colors.BLUE, image = "trap/trap_teleport_01.png",
+				display = '^', color=colors.BLUE, image = "trap/trap_warpmine_01.png",
+				shader = "shadow_simulacrum",
+				shader_args = { color = {0.2, 0.2, 0.6}, base = 0.8, time_factor = 1500 },
 				dam = dam, power = power,
 				canTrigger = function(self, x, y, who)
 					if who:reactionToward(self.summoner) < 0 then return mod.class.Trap.canTrigger(self, x, y, who) end
@@ -177,6 +181,12 @@ newTalent{
 		local tx, ty = self:getTarget(tg)
 		if not tx or not ty then return nil end
 		local _ _, tx, ty = self:canProject(tg, tx, ty)
+				
+		local dam = self:spellCrit(self:callTalent(self.T_WARP_MINES, "getDamage"))
+		local duration = self:callTalent(self.T_WARP_MINES, "getDuration")
+		local detect = self:callTalent(self.T_WARP_MINES, "trapPower") * 0.8
+		local disarm = self:callTalent(self.T_WARP_MINES, "trapPower")
+		local power = getParadoxSpellpower(self)
 		
 		-- Lay the mines in a ball
 		self:project(tg, tx, ty, function(px, py)
@@ -185,15 +195,12 @@ newTalent{
 			if game.level.map:checkEntity(px, py, Map.TERRAIN, "block_move") then return end
 			
 			-- Our Mines
-			local dam = self:spellCrit(self:callTalent(self.T_WARP_MINES, "getDamage"))
-			local duration = self:callTalent(self.T_WARP_MINES, "getDuration")
-			local detect = self:callTalent(self.T_WARP_MINES, "trapPower") * 0.8
-			local disarm = self:callTalent(self.T_WARP_MINES, "trapPower")
-			local power = getParadoxSpellpower(self)
 			local trap = Trap.new{
-				name = "warp mine",
+				name = "warp mine away",
 				type = "temporal", id_by_type=true, unided_name = "trap",
-				display = '^', color=colors.BLUE, image = "trap/trap_teleport_01.png",
+				display = '^', color=colors.BLUE, image = "trap/trap_warpmine_02.png",
+				shader = "shadow_simulacrum",
+				shader_args = { color = {0.6, 0.2, 0.2}, base = 0.8, time_factor = 1500 },
 				dam = dam, power = power,
 				canTrigger = function(self, x, y, who)
 					if who:reactionToward(self.summoner) < 0 then return mod.class.Trap.canTrigger(self, x, y, who) end

@@ -68,8 +68,9 @@ newTalent{
 					game.logSeen(target, "%s resists the confusion!", target.name:capitalize())
 				end
 			end
+			
 			game.level.map:particleEmitter(target.x, target.y, 1, "generic_discharge", {rm=64, rM=64, gm=134, gM=134, bm=170, bM=170, am=35, aM=90})
-			game:playSoundNear(self, "talents/arcane")
+			--game:playSoundNear(self, "talents/distortion")
 		end				
 
 		return true
@@ -103,7 +104,7 @@ newTalent{
 	info = function(self, t)
 		local damage = t.getDamage(self, t)
 		return ([[Folds a single dimension of your weapons (or ammo) upon itself, adding %0.2f temporal damage to your strikes and  increasing your armour penetration by %d.
-		The armour penetration and damage will increase with your Spellpower.]]):format(damage/2, damDesc(self, DamageType.TEMPORAL, damage))
+		The armour penetration and damage will increase with your Spellpower.]]):format(damDesc(self, DamageType.TEMPORAL, damage), damage/2)
 	end,
 }
 

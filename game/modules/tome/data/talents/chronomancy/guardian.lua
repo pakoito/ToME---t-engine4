@@ -69,12 +69,14 @@ newTalent{
 	mode = "passive",
 	getSplit = function(self, t) return math.min(100, self:combatTalentSpellDamage(t, 20, 50, getParadoxSpellpower(self)))/100 end,
 	getDuration = function(self, t) return math.floor(self:combatTalentScale(t, 2, 6)) end,
+	getLifeTrigger = function(self, t) return self:combatTalentLimit(t, 10, 40, 24)	end,
 	remove_on_clone = true,
 	callbackOnHit = function(self, t, cb, src)
 		local split = cb.value * t.getSplit(self, t)
+		
 	
 		-- Do our split
-		if self.max_life and self.life - cb.value < self.max_life * 0.5 and not self.turn_procs.double_edge then
+		if self.max_life and cb.value >= self.max_life * t.getLifeTrigger(self, t) * 0.01 and not self.turn_procs.double_edge then
 			-- Look for space first
 			local tx, ty = util.findFreeGrid(self.x, self.y, 5, true, {[Map.ACTOR]=true})
 			if tx and ty then
@@ -106,6 +108,8 @@ newTalent{
 				
 				m:takeHit(split, src)
 				m:setTarget(src or nil)
+				m:attr("archery_pass_friendly", 1)
+				m.generic_damage_penalty = 50
 								
 				if game.party:hasMember(self) then
 					game.party:addMember(m, {
@@ -124,11 +128,13 @@ newTalent{
 		return cb.value
 	end,
 	info = function(self, t)
+		local trigger = t.getLifeTrigger(self, t)
 		local split = t.getSplit(self, t) * 100
 		local duration = t.getDuration(self, t)
-		return ([[When an attack would reduce you below 50%% of your maximum life another you from an alternate timeline appears and takes %d%% of the damage.
-		Your double will remain for %d turns and knows most talents you do.  This effect can only occur once per turn.
-		The amount of damage split scales with your Spellpower.]]):format(split, duration)
+		return ([[When a single hit deals more than %d%% of your maximum life another you from an alternate timeline appears nearby and takes %d%% of the damage.
+		The clone is out of phase with this reality and deals 50%% less damage but its arrows will pass through friendly targets.  After %d turns it returns to its own timeline.
+		This effect can only occur once per turn.
+		The amount of damage split scales with your Spellpower.]]):format(trigger, split, duration)
 	end,
 }
 

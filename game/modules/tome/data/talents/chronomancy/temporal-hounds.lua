@@ -72,8 +72,8 @@ summonTemporalHound = function(self, t)
 		m:attr("pin_immune", self:callTalent(self.T_TEMPORAL_VIGOUR, "getImmunities"))
 		m:attr("confusion_immune", self:callTalent(self.T_TEMPORAL_VIGOUR, "getImmunities"))
 	end
-	if self:knowTalent(self.T_COMMAND_BREATH) then
-		m.damage_affinity = { [DamageType.TEMPORAL] = self:callTalent(self.T_COMMAND_BREATH, "getResists") }
+	if self:knowTalent(self.T_COMMAND_BREATHE) then
+		m.damage_affinity = { [DamageType.TEMPORAL] = self:callTalent(self.T_COMMAND_BREATHE, "getResists") }
 	end
 	
 	-- Quality of life stuff
@@ -197,9 +197,9 @@ newTalent{
 		local incStats = t.incStats(self, t, true)
 		local cooldown = self:getTalentCooldown(t)
 		local resists = t.getResists(self, t)
-		return ([[Upon activation summon a Temporal Hound.  Every %d turns another hound will be summoned up to a maximum of three hounds. If a hound dies you'll summon a new hound in %d turns.  
+		return ([[Upon activation summon a Temporal Hound.  Every %d turns another hound will be summoned, up to a maximum of three hounds. If a hound dies you'll summon a new hound in %d turns.  
 		Your hounds inherit your increased damage percent and have %d%% physical resistance and %d%% temporal resistance.
-		Hounds will get %d Strength, %d Dexterity, %d Constitution, %d Magic, %d Willpower, and %d Cunning based on your Spellpower.
+		Hounds will get, %d Strength, %d Dexterity, %d Constitution, %d Magic, %d Willpower, and %d Cunning ,based on your Spellpower.
 		While Temporal Hounds is active your arrows will shoot through friendly targets.]])
 		:format(cooldown, cooldown, resists/2, math.min(100, resists*2), incStats.str + 1, incStats.dex + 1, incStats.con + 1, incStats.mag + 1, incStats.wil +1, incStats.cun + 1)
 	end
@@ -288,8 +288,8 @@ newTalent{
 	end,
 	info = function(self, t)
 		local defense = t.getDefense(self, t)
-		return ([[Command your Temporal Hounds to teleport to the location.  If you target a creature with this effect your hounds will set that creature as their target.
-		Upon learning this talent your hounds gain %d defense and %d%% resist all after any teleport.
+		return ([[Command your Temporal Hounds to teleport to the targeted location.  If you target a creature with this effect your hounds will set that creature as their target.
+		When you learn this talent, your hounds gain %d defense and %d%% resist all after any teleport.
 		If you're not at your maximum number of hounds when you cast this spell a new one will be summoned.
 		The teleportation bonuses scale with your Spellpower.]]):format(defense, defense, defense/2, defense/2)
 	end,
@@ -329,13 +329,13 @@ newTalent{
 		local immunities = t.getImmunities(self, t) * 100
 		return ([[Your hounds can now survive for up to %d turns after their hit points are reduced below 1.  While in this state they deal 50%% less damage but are immune to additional damage.
 		Command Blink will now regenerate your hounds for %d life per turn and increase their global speed by %d%% for five turns.  Hounds below 1 life when this effect occurs will have the bonuses doubled.
-		Upon learning this talent your hounds gain %d%% stun, blind, confusion, and pin resistance.
+		When you learn this talent, your hounds gain %d%% stun, blind, confusion, and pin resistance.
 		The regeneration and haste effects scale with your Spellpower.]]):format(duration, regen, haste, immunities)
 	end
 }
 
 newTalent{
-	name = "Command Hounds: Breath", short_name= "COMMAND_BREATH",  -- Turn Back the Clock multi-breath attack
+	name = "Command Hounds: Breathe", short_name= "COMMAND_BREATHE",  -- Turn Back the Clock multi-breath attack
 	type = {"chronomancy/temporal-hounds", 4},
 	require = chrono_req_high4,
 	points = 5,
@@ -414,8 +414,8 @@ newTalent{
 		local radius = self:getTalentRadius(t)
 		local stat_damage = t.getDamageStat(self, t)
 		local affinity = t.getResists(self, t)
-		return ([[Command your Temporal Hounds to breath time, dealing %0.2f temporal damage and reducing the stats of all targets in a radius %d cone.
-		Affected targets will have their stats reduced by %d for 3 turns.  You are not immune to the breath of your own hounds but your hounds are immune to stat damage from other hounds.
-		Upon learning this talent your hounds gain %d%% temporal damage affinity.]]):format(damDesc(self, DamageType.TEMPORAL, damage), radius, stat_damage, affinity)
+		return ([[Command your Temporal Hounds to breathe time, dealing %0.2f temporal damage and reducing the stats of all targets in a radius %d cone.
+		Affected targets will have their stats reduced by %d for 3 turns.  You are not immune to the breath of your own hounds, but your hounds are immune to stat damage from other hounds.
+		When you learn this talent, your hounds gain %d%% temporal damage affinity.]]):format(damDesc(self, DamageType.TEMPORAL, damage), radius, stat_damage, affinity)
 	end,
 }

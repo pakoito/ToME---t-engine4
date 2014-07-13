@@ -4194,51 +4194,56 @@ function _M:paradoxDoAnomaly(reduction, anomaly_type, chance, target, silent)
 	end
 	
 	-- See if we create an anomaly
-	if not game.zone.no_anomalies and not self:attr("no_paradox_fail") and rng.percent(chance) then
-		-- If our Paradox is over 600 do a major anomaly
-		if anomaly_type ~= "no-major" and self:getModifiedParadox() > 600 then
-			anomaly_type = "major"
-		else
-			-- Check for Bias?
-			if self.anomaly_bias and rng.percent(self.anomaly_bias.chance) then
-				anomaly_type = self.anomaly_bias.type
-			end
-		end
+	if not game.zone.no_anomalies and not self:attr("no_paradox_fail") and not self.turn_procs.anomalies_checked then
+		self.turn_procs.anomalies_checked = true -- This is so players can't chain cancel out of targeting to trigger anomalies on purpose, we clear it out in postUse
 		
-		-- Now pick anomalies filtered by type
-		local ts = {}
-		for id, t in pairs(self.talents_def) do
-			if anomaly_type ~= "random" and anomaly_type ~= "no-major" then
-				if t.type[1] == "chronomancy/anomalies" and t.anomaly_type and t.anomaly_type == anomaly_type then ts[#ts+1] = id end
+		-- return true if we roll an anomly
+		if rng.percent(chance) then
+			-- If our Paradox is over 600 do a major anomaly
+			if anomaly_type ~= "no-major" and self:getModifiedParadox() > 600 then
+				anomaly_type = "major"
 			else
-				if t.type[1] == "chronomancy/anomalies" and t.anomaly_type and t.anomaly_type ~= "major" then ts[#ts+1] = id end
-			end
-		end
-		
-		-- Did we find anomalies? 		
-		if ts[1] then
-			-- Do we have a target?  If not we pass to anomaly targeting
-			-- The ignore energy calls here allow anomalies to be cast even when it's not the players turn (i.e. Preserve Pattern)
-			if target then
-				self:forceUseTalent(rng.table(ts), {ignore_cooldown=true, ignore_energy=true, force_target=target})
-			else
-				self:forceUseTalent(rng.table(ts), {ignore_cooldown=true, ignore_energy=true})
-			end
-			-- Drop some game messages
-			if not silent then 
-				if forced then
-					game.logPlayer(self, "#STEEL_BLUE#You've moved to another time thread.")
-				else
-					game.logPlayer(self, "#LIGHT_RED#You lose control and unleash an anomaly!")	
+				-- Check for Bias?
+				if self.anomaly_bias and rng.percent(self.anomaly_bias.chance) then
+					anomaly_type = self.anomaly_bias.type
 				end
 			end
-			-- Reduce Paradox
-			if reduction and reduction > 0 then
-				self:incParadox(-reduction)
+			
+			-- Now pick anomalies filtered by type
+			local ts = {}
+			for id, t in pairs(self.talents_def) do
+				if anomaly_type ~= "random" and anomaly_type ~= "no-major" then
+					if t.type[1] == "chronomancy/anomalies" and t.anomaly_type and t.anomaly_type == anomaly_type then ts[#ts+1] = id end
+				else
+					if t.type[1] == "chronomancy/anomalies" and t.anomaly_type and t.anomaly_type ~= "major" then ts[#ts+1] = id end
+				end
 			end
+			
+			-- Did we find anomalies? 		
+			if ts[1] then
+				-- Do we have a target?  If not we pass to anomaly targeting
+				-- The ignore energy calls here allow anomalies to be cast even when it's not the players turn (i.e. Preserve Pattern)
+				if target then
+					self:forceUseTalent(rng.table(ts), {ignore_cooldown=true, ignore_energy=true, force_target=target})
+				else
+					self:forceUseTalent(rng.table(ts), {ignore_cooldown=true, ignore_energy=true})
+				end
+				-- Drop some game messages
+				if not silent then 
+					if forced then
+						game.logPlayer(self, "#STEEL_BLUE#You've moved to another time thread.")
+					else
+						game.logPlayer(self, "#LIGHT_RED#You lose control and unleash an anomaly!")	
+					end
+				end
+				-- Reduce Paradox
+				if reduction and reduction > 0 then
+					self:incParadox(-reduction)
+				end
+			end
+			
+			return true
 		end
-		
-		return true
 	end
 end
 
@@ -4882,6 +4887,8 @@ function _M:postUseTalent(ab, ret, silent)
 			game.logSeen(self, "%s talent '%s%s' is disrupted by the mind parasite.", self.name:capitalize(), (t.display_entity and t.display_entity:getDisplayString() or ""), t.name)
 		end
 	end
+	
+	if self.turn_procs.anomalies_checked then self.turn_procs.anomalies_checked = nil end  -- clears out anomaly checks
 
 	return true
 end

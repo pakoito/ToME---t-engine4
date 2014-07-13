@@ -20,44 +20,16 @@
 -- EDGE TODO: Particles, Timed Effect Particles
 
 newTalent{
-	name = "Disentangle",
+	name = "Trim Threads",
 	type = {"chronomancy/fate-threading", 1},
 	require = chrono_req1,
-	points = 5,
-	cooldown = 12,
-	tactical = { PARADOX = 2 },
-	getReduction = function(self, t) return self:combatTalentSpellDamage(t, 20, 80, getParadoxSpellpower(self)) end,
-	getParadoxMulti = function(self, t) return self:combatTalentLimit(t, 2, 0.10, .75) end,
-	anomaly_type = "no-major",
-	no_energy = true,
-	passives = function(self, t, p)
-		self:talentTemporaryValue(p, "anomaly_paradox_recovery", t.getParadoxMulti(self, t))
-	end,
-	action = function(self, t)
-		local reduction = self:spellCrit(t.getReduction(self, t))
-		self:paradoxDoAnomaly(reduction, t.anomaly_type, "forced")
-		return true
-	end,
-	info = function(self, t)
-		local reduction = t.getReduction(self, t)
-		local paradox = 100 * t.getParadoxMulti(self, t)
-		return ([[Disentangle the timeline, reducing your Paradox by %d and creating an anomaly.  This spell will never produce a major anomaly.
-		Additionally you recover %d%% more Paradox from random anomalies (%d%% total).
-		The Paradox reduction will increase with your Spellpower.]]):format(reduction, paradox, paradox + 200)
-	end,
-}
-
-newTalent{
-	name = "Trim Threads",
-	type = {"chronomancy/fate-threading", 2},
-	require = chrono_req2,
 	points = 5,
 	paradox = function (self, t) return getParadoxCost(self, t, 10) end,
 	cooldown = 4,
 	tactical = { ATTACKAREA = { TEMPORAL = 2 } },
 	range = 10,
 	radius = function(self, t) return math.floor(self:combatTalentScale(t, 1.5, 2.5)) end,
-	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 30, 300, getParadoxSpellpower(self)) end,
+	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 25, 290, getParadoxSpellpower(self)) end,
 	getDuration = function(self, t) return math.floor(self:combatTalentScale(t, 6, 10)) end,
 	target = function(self, t)
 		return {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t), talent=t}
@@ -83,7 +55,7 @@ newTalent{
 
 		game.level.map:particleEmitter(x, y, tg.radius, "temporal_flash", {radius=tg.radius})
 
-		game:playSoundNear(self, "talents/teleport")
+		game:playSoundNear(self, "talents/dispel")
 
 		return true
 	end,
@@ -92,6 +64,34 @@ newTalent{
 		local radius = self:getTalentRadius(t)
 		return ([[Deals %0.2f temporal damage over three turns to all targets in a radius of %d.  If the target is hit by an Anomaly the remaining damage will be done instantly.
 		The damage will scale with your Spellpower.]]):format(damDesc(self, DamageType.TEMPORAL, damage), radius)
+	end,
+}
+
+newTalent{
+	name = "Disentangle",
+	type = {"chronomancy/fate-threading", 2},
+	require = chrono_req2,
+	points = 5,
+	cooldown = 12,
+	tactical = { PARADOX = 2 },
+	getReduction = function(self, t) return self:combatTalentSpellDamage(t, 20, 80, getParadoxSpellpower(self)) end,
+	getParadoxMulti = function(self, t) return self:combatTalentLimit(t, 2, 0.10, .75) end,
+	anomaly_type = "no-major",
+	no_energy = true,
+	passives = function(self, t, p)
+		self:talentTemporaryValue(p, "anomaly_paradox_recovery", t.getParadoxMulti(self, t))
+	end,
+	action = function(self, t)
+		local reduction = self:spellCrit(t.getReduction(self, t))
+		self:paradoxDoAnomaly(reduction, t.anomaly_type, "forced")
+		return true
+	end,
+	info = function(self, t)
+		local reduction = t.getReduction(self, t)
+		local paradox = 100 * t.getParadoxMulti(self, t)
+		return ([[Disentangle the timeline, reducing your Paradox by %d and creating an anomaly.  This spell will never produce a major anomaly.
+		Additionally you recover %d%% more Paradox from random anomalies (%d%% total).
+		The Paradox reduction will increase with your Spellpower.]]):format(reduction, paradox, paradox + 200)
 	end,
 }
 
@@ -135,7 +135,7 @@ newTalent{
 	info = function(self, t)
 		local target_chance = t.getTargetChance(self, t)
 		local bias_chance = t.getBiasChance(self, t)
-		local anomaly_recovery = t.getAnomalySpeed(self, t) * 100
+		local anomaly_recovery = (1 - t.getAnomalySpeed(self, t)) * 100
 		return ([[You've learned to focus most anomalies when they occur and may choose the target area with %d%% probability.
 		You also may bias the type of anomaly effects you produce with %d%% probability.
 		Additionally random anomalies only cost you %d%% of a turn rather than a full turn when they occur.

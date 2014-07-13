@@ -111,7 +111,7 @@ All afflicted talents are based on Hate, and many are more effective at higher l
 
 TOOLTIP_PARADOX = [[#GOLD#Paradox#LAST#
 Paradox represents how stable the current timeline is. 
-As your Paradox grows so does your spellpower but you may be shifted to a more stable timeline when you attempt to use your magic.
+As your Paradox grows so does your Spellpower, but you may be shifted to a more stable timeline when you attempt to use your magic.
 When your Paradox is above 600 the shifts will become more violent.
 Your control over chronomancy spells increases with your Willpower.
 ]]

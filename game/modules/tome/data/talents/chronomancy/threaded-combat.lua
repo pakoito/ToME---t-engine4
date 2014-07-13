@@ -178,10 +178,13 @@ newTalent{
 				if t.mode == "sustained" and m:isTalentActive(t.id) then m:forceUseTalent(t.id, {ignore_energy=true, silent=true}) end
 				m.talents[t.id] = nil
 			end
-			game.zone:addEntity(game.level, m, "actor", tx, ty)
+			
 			m.ai_state = { talent_in=2, ally_compassion=10 }	
 			m.generic_damage_penalty = t.getDamagePenalty(self, t)
 			m:setTarget(target or nil)
+			m.remove_from_party_on_death = true
+			
+			game.zone:addEntity(game.level, m, "actor", tx, ty)
 			
 			if game.party:hasMember(self) then
 				game.party:addMember(m, {
@@ -208,8 +211,13 @@ newTalent{
 				if game.level.map:isBound(i, j) and
 					core.fov.distance(x, y, i, j) <= range and -- make sure they're within arrow range
 					core.fov.distance(i, j, self.x, self.y) <= range/2 and -- try to place them close to the caster so enemies dodge less
-					self:canMove(i, j) and self:hasLOS(x, y) then
-					poss[#poss+1] = {i,j}
+					self:canMove(i, j) and self:hasLOS(i, j) then -- try to keep them in LOS
+					-- Make sure our clone can shoot our target, if we have one
+					if target and target:hasLOS(i, j) then
+						poss[#poss+1] = {i,j}
+					elseif not target then
+						poss[#poss+1] = {i,j}
+					end
 				end
 			end
 		end
@@ -228,7 +236,7 @@ newTalent{
 				local t = m:getTalentFromId(tid)
 				if t.remove_on_clone then tids[#tids+1] = t end
 				local tt = self:getTalentFromId(tid)
-				if not tt.type[1]:find("^chronomancy/bow") and not tt.type[1]:find("^chronomancy/threaded") and not tt.type[1]:find("^chronomancy/guardian") then
+				if not tt.type[1]:find("^chronomancy/bow") and not tt.type[1]:find("^chronomancy/threaded") and not tt.type[1]:find("^chronomancy/guardian") and not t.innate then
 					tids[#tids+1] = t 
 				end
 			end
@@ -237,12 +245,13 @@ newTalent{
 				m.talents[t.id] = nil
 			end
 			
-			game.zone:addEntity(game.level, m, "actor", tx, ty)
 			m.ai_state = { talent_in=2, ally_compassion=10 }
 			m.generic_damage_penalty = t.getDamagePenalty(self, t)
-			m.remove_from_party_on_death = true
 			m:attr("archery_pass_friendly", 1)
 			m:setTarget(target or nil)
+			m.remove_from_party_on_death = true
+			
+			game.zone:addEntity(game.level, m, "actor", tx, ty)
 			
 			if game.party:hasMember(self) then
 				game.party:addMember(m, {
