@@ -238,7 +238,7 @@ newTalent{
 		local duration = t.getDuration(self, t)
 		local power = t.getPower(self, t)
 		return([[Enter a sleeping target's dreams for %d turns.  While in the Dreamscape, you'll encounter the target's invulnerable sleeping form as well as dream projections that it will spawn every other turn to defend its mind.
-		Projections inflict 50%% less damage then the original, unless the target has Lucid Dreamer active.
+		Projections inflict 50%% less damage than the original, unless the target has Lucid Dreamer active.
 		When the Dreamscape ends, for each projection destroyed, the target's life will be reduced by 10%% and it will be brainlocked for one turn.
 		In the Dreamscape, your damage will be improved by %d%%.
 		The damage bonus will improve with your Mindpower.]]):format(duration, power)

@@ -2044,7 +2044,7 @@ newEffect{
 newEffect{
 	name = "ARCANE_VORTEX", image = "talents/arcane_vortex.png",
 	desc = "Arcane Vortex",
-	long_desc = function(self, eff) return ("An arcane vortex followes the target. Each turn a manathrust fires from it to a random foe in sight doing %0.2f arcane damage to all. If no foes are found the main target takes 150%% more arcane damage this turn. If the target dies the remaining damage is deal as a radius 2 ball of arcane."):format(eff.dam) end,
+	long_desc = function(self, eff) return ("An arcane vortex followes the target. Each turn a manathrust fires from it to a random foe in sight doing %0.2f arcane damage to all. If no foes are found the main target takes 50%% more arcane damage this turn. If the target dies the remaining damage is deal as a radius 2 ball of arcane."):format(eff.dam) end,
 	type = "magical",
 	subtype = { arcane=true },
 	status = "detrimental",
