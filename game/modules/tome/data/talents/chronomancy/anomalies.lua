@@ -293,7 +293,7 @@ newTalent{
 	no_energy = true, 
 	requires_target = true,
 	target = function(self, t)
-		return {type="ball", range=self:getTalentRange(t), radius=self:getTalentRadius(t), nowarning=true}
+		return {type="hit", range=self:getTalentRange(t), nowarning=true}
 	end,
 	message = "@Source@ transfers damage to a nearby target.",
 	action = function(self, t)

@@ -2078,10 +2078,6 @@ function _M:onTakeHit(value, src, death_note)
 			game.level.map:particleEmitter(self.x, self.y, tg.radius, "sunburst", {radius=tg.radius, grids=grids, tx=self.x, ty=self.y})
 		end
 	end
-
-	if value > 0 and self:isTalentActive(self.T_DISPLACE_DAMAGE) then
-		self:callTalent(self.T_DISPLACE_DAMAGE, "doDisplaceDamage", value)
-	end
 	
 	--Special Flag (currently for Terrasca)
 	if value > 0 and self:attr("speed_resist") then

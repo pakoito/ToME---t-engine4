@@ -249,7 +249,7 @@ newTalent{
 	-- called by _M:onTakeHit function in mod\class\Actor.lua to perform the damage displacment
 	getDisplaceDamage = function(self, t) return self:combatTalentLimit(t, 25, 5, 15)/100 end, -- Limit < 25%
 	range = 10,
-	doDisplaceDamage = function(self, t, value)
+	callbackOnTakeDamage = function(self, t, src, x, y, type, dam, tmp, no_martyr)
 		-- find available targets
 		local tgts = {}
 		local grids = core.fov.circle_grids(self.x, self.y, self:getTalentRange(t), true)
@@ -260,18 +260,16 @@ newTalent{
 			end
 		end end
 
+		-- Displace the damage
 		local a = rng.table(tgts)
 		if a then
-			local displace = value * t.getDisplaceDamage(self, t)
+			local displace = dam * t.getDisplaceDamage(self, t)
 			game:delayedLogMessage(self, a, "displace_damage"..(a.uid or ""), "#PINK##Source# displaces some damage onto #Target#!")
-			game:delayedLogDamage(self, a, displace, ("#PINK#%d displaced#LAST#"):format(displace), false)
-			a:takeHit(displace, self)
-			print("Displace Value", value)
-			value = value - displace
-			print("Displacement Value Final", value, "Displacement Displace", displace)
+			DamageType.defaultProjector(self, a.x, a.y, type, displace, tmp, true)
+			dam = dam - displace
 		end
 		
-		return value
+		return {dam=dam}
 	end,
 	activate = function(self, t)
 		return {}

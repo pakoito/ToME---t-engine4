@@ -615,7 +615,7 @@ function _M:attackTargetWith(target, weapon, damtype, mult, force_dam)
 	end
 
 	-- Temporal cast
-	if hitted and not target.dead and self:knowTalent(self.T_WEAPON_FOLDING) and self:isTalentActive(self.T_WEAPON_FOLDING) then
+	if hitted and self:knowTalent(self.T_WEAPON_FOLDING) and self:isTalentActive(self.T_WEAPON_FOLDING) then
 		local dam = self:callTalent(self.T_WEAPON_FOLDING, "getDamage")
 		local burst_damage = 0
 		local burst_radius = 0
@@ -625,11 +625,11 @@ function _M:attackTargetWith(target, weapon, damtype, mult, force_dam)
 			dam = dam - burst_damage
 			self:project({type="ball", radius=burst_radius, friendlyfire=false}, target.x, target.y, DamageType.TEMPORAL, burst_damage)
 		end
-		if dam > 0 then
+		if dam > 0 and not target.dead then
 			DamageType:get(DamageType.TEMPORAL).projector(self, target.x, target.y, DamageType.TEMPORAL, dam, tmp)
 		end
 	end
-	if hitted and not target.dead and self:knowTalent(self.T_IMPACT) and self:isTalentActive(self.T_IMPACT) then
+	if hitted and self:knowTalent(self.T_IMPACT) and self:isTalentActive(self.T_IMPACT) then
 		local dam = self:callTalent(self.T_IMPACT, "getDamage")
 		local power = self:callTalent(self.T_IMPACT, "getApplyPower")
 		local burst_damage = 0
@@ -640,7 +640,7 @@ function _M:attackTargetWith(target, weapon, damtype, mult, force_dam)
 			dam = dam - burst_damage
 			self:project({type="ball", radius=burst_radius, friendlyfire=false}, target.x, target.y, DamageType.IMPACT, {dam=burst_damage, daze=dam/2, power_check=power})
 		end
-		if dam > 0 then
+		if dam > 0 and not target.dead then
 			DamageType:get(DamageType.IMPACT).projector(self, target.x, target.y, DamageType.IMPACT, {dam=dam, daze=dam/2, power_check=power}, tmp)
 		end
 	end

@@ -73,16 +73,22 @@ newTalent{
 	remove_on_clone = true,
 	callbackOnHit = function(self, t, cb, src)
 		local split = cb.value * t.getSplit(self, t)
-		
 	
+		-- If we already split this turn pass damage to our clone
+		if self.turn_procs.double_edge and self.turn_procs.double_edge ~= self then
+			-- split the damage
+			game:delayedLogDamage(src, self.turn_procs.double_edge, split, ("#PINK#%d displaced#LAST#"):format(split), false)
+			cb.value = cb.value - split
+			self.turn_procs.double_edge:takeHit(split, src)
+		end
+			
 		-- Do our split
 		if self.max_life and cb.value >= self.max_life * t.getLifeTrigger(self, t) * 0.01 and not self.turn_procs.double_edge then
 			-- Look for space first
 			local tx, ty = util.findFreeGrid(self.x, self.y, 5, true, {[Map.ACTOR]=true})
 			if tx and ty then
 				game.level.map:particleEmitter(tx, ty, 1, "temporal_teleport")
-				self.turn_procs.double_edge = true
-				
+								
 				-- clone our caster
 				local m = makeParadoxClone(self, self, t.getDuration(self, t))
 				
@@ -100,11 +106,12 @@ newTalent{
 				-- add our clone
 				game.zone:addEntity(game.level, m, "actor", tx, ty)
 				m.ai_state = { talent_in=2, ally_compassion=10 }
-				m.remove_from_party_on_death = true				
+				m.remove_from_party_on_death = true	
 				
 				-- split the damage
 				game:delayedLogDamage(src, m, split, ("#PINK#%d displaced#LAST#"):format(split), false)
 				cb.value = cb.value - split
+				self.turn_procs.double_edge = m
 				
 				m:takeHit(split, src)
 				m:setTarget(src or nil)
@@ -131,10 +138,9 @@ newTalent{
 		local trigger = t.getLifeTrigger(self, t)
 		local split = t.getSplit(self, t) * 100
 		local duration = t.getDuration(self, t)
-		return ([[When a single hit deals more than %d%% of your maximum life another you from an alternate timeline appears nearby and takes %d%% of the damage.
+		return ([[When a single hit deals more than %d%% of your maximum life another you appears and takes %d%% of the damage as well as %d%% of all other damage you take for the rest of the turn.
 		The clone is out of phase with this reality and deals 50%% less damage but its arrows will pass through friendly targets.  After %d turns it returns to its own timeline.
-		This effect can only occur once per turn.
-		The amount of damage split scales with your Spellpower.]]):format(trigger, split, duration)
+		This effect can only occur once per turn and the amount of damage split scales with your Spellpower.]]):format(trigger, split, split, duration)
 	end,
 }
 
