@@ -116,7 +116,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Your Radiance is so powerful it burns all foes caught in it, doing up to %0.1f light damage (reduced with distance) to all foes caught inside.
-		At level 4 the light is so bright it has %d%% chances to daze them for 3 turns.
+		At level 4 the light is so bright it has %d%% chance to daze them for 3 turns.
 		The damage increases with your Spellpower.]]):
 		format(damDesc(self, DamageType.LIGHT, t.getDamage(self, t)), t.getDaze(self, t))
 	end,

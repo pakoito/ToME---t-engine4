@@ -201,7 +201,7 @@ newTalent{
 	info = function(self, t)
 		return ([[Minions are only tools. You may dispose of them... Violently.
 		Makes the targeted minion explode for %d%% of its maximum life in a radius of %d as blight damage.
-		Beware! Don't get caught in the blast! (unless you know Dark Empthy: %d%% chances to ignore damage)]]):
+		Beware! Don't get caught in the blast! (unless you know Dark Empthy: %d%% chance to ignore damage)]]):
 		format(t.getDamage(self, t),t.radius(self,t), self:getTalentLevelRaw(self.T_DARK_EMPATHY) * 20)
 	end,
 }

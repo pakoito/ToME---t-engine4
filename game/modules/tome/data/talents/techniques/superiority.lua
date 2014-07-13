@@ -36,7 +36,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[Concentrate on the battle, ignoring some of the damage you take.
-		Improves physical damage reduction by %d%% and provides %d%% chances to shrug off critical damage for 20 turns.]]):
+		Improves physical damage reduction by %d%% and provides a %d%% chance to shrug off critical damage for 20 turns.]]):
 		format(t.getResist(self,t), t.critResist(self, t))
 	end,
 }
