@@ -26,7 +26,7 @@ newTalent{
 	cooldown = 3,
 	psi = 10,
 	tactical = { AREAATTACK = { PHYSICAL = 2} },
-	range = function(self,t) return self:combatTalentScale(t, 4, 6) end,
+	range = function(self,t) return math.floor(self:combatTalentScale(t, 4, 6)) end,
 	getDamage = function (self, t)
 		return self:combatTalentMindDamage(t, 10, 240)
 	end,
