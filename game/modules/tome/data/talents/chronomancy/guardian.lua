@@ -62,7 +62,7 @@ newTalent{
 }
 
 newTalent{
-	name = "Double Edge",
+	name = "Guardian Unity",
 	type = {"chronomancy/guardian", 3},
 	require = chrono_req3,
 	points = 5,
@@ -76,6 +76,7 @@ newTalent{
 	
 		-- If we already split this turn pass damage to our clone
 		if self.turn_procs.double_edge and self.turn_procs.double_edge ~= self then
+			split = split/2
 			-- split the damage
 			game:delayedLogDamage(src, self.turn_procs.double_edge, split, ("#PINK#%d displaced#LAST#"):format(split), false)
 			cb.value = cb.value - split
@@ -140,7 +141,7 @@ newTalent{
 		local duration = t.getDuration(self, t)
 		return ([[When a single hit deals more than %d%% of your maximum life another you appears and takes %d%% of the damage as well as %d%% of all other damage you take for the rest of the turn.
 		The clone is out of phase with this reality and deals 50%% less damage but its arrows will pass through friendly targets.  After %d turns it returns to its own timeline.
-		This effect can only occur once per turn and the amount of damage split scales with your Spellpower.]]):format(trigger, split, split, duration)
+		This effect can only occur once per turn and the amount of damage split scales with your Spellpower.]]):format(trigger, split, split/2, duration)
 	end,
 }
 

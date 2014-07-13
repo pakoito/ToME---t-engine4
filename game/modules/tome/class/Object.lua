@@ -42,7 +42,7 @@ _M.logCombat = Combat.logCombat
 
 function _M:getRequirementDesc(who)
 	local base_getRequirementDesc = engine.Object.getRequirementDesc
-	if self.subtype == "shield" and type(self.require) == table and who:knowTalent(who.T_SKIRMISHER_BUCKLER_EXPERTISE) then
+	if self.subtype == "shield" and type(self.require) == "table" and who:knowTalent(who.T_SKIRMISHER_BUCKLER_EXPERTISE) then
 		local oldreq = rawget(self, "require")
 		self.require = table.clone(oldreq, true)
 		if self.require.stat and self.require.stat.str then
@@ -60,7 +60,7 @@ function _M:getRequirementDesc(who)
 		self.require = oldreq
 
 		return desc
-	elseif self.type =="weapon" and type(self.require) == table and who:knowTalent(who.T_STRENGTH_OF_PURPOSE) then
+	elseif self.type =="weapon" and type(self.require) == "table" and who:knowTalent(who.T_STRENGTH_OF_PURPOSE) then
 		local oldreq = rawget(self, "require")
 		self.require = table.clone(oldreq, true)
 		if self.require.stat and self.require.stat.str then
