@@ -72,7 +72,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		local max, chance = t.getMax(self, t), t.getChance(self, t)
-		return ([[Your hunger for souls grows ever more. When you kill a creature you rip away its animus with great force, granting you %d%% chances to gain one more soul.
+		return ([[Your hunger for souls grows ever more. When you kill a creature you rip away its animus with great force, granting you a %d%% chance to gain one additional soul.
 		In addition you are able to store %d more souls.]]):
 		format(chance, max)
 	end,

@@ -2549,7 +2549,7 @@ newEffect{
 newEffect{
 	name = "JUGGERNAUT", image = "talents/juggernaut.png",
 	desc = "Juggernaut",
-	long_desc = function(self, eff) return ("Reduces physical damage received by %d%% and provides %d%% chances to ignore critial hits."):format(eff.power, eff.crits) end,
+	long_desc = function(self, eff) return ("Reduces physical damage received by %d%% and provides a %d%% chance to ignore critial hits."):format(eff.power, eff.crits) end,
 	type = "physical",
 	subtype = { superiority=true },
 	status = "beneficial",

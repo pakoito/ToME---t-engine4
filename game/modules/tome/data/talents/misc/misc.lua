@@ -252,7 +252,7 @@ newTalent{
 		end end end
 	end,
 	info = function(self, t) return ([[You are hunted!.
-		There is %d%% chances each turn that all foes in a %d radius get a glimpse of your position for 30 turns.]]):
+		There is a %d%% chance each turn that all foes in a %d radius get a glimpse of your position for 30 turns.]]):
 		format(1 + self.level / 7, 10 + self.level / 5)
 	end,
 }
