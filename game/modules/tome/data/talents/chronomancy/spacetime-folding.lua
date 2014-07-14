@@ -27,6 +27,7 @@ newTalent{
 	points = 5,
 	mode = "passive",
 	require = chrono_req1,
+	getRange = function(self, t) return math.floor(self:combatTalentScale(t, 5, 10, 0.5, 0, 1)) end,
 	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 20, 200, getParadoxSpellpower(self)) end,
 	getDuration = function(self, t) return math.floor(self:combatTalentScale(t, 6, 10)) end, -- Duration of glyph
 	trapPower = function(self,t) return math.max(1,self:combatScale(self:getTalentLevel(t) * self:getMag(15, true), 0, 0, 75, 75)) end, -- Used to determine detection and disarm power, about 75 at level 50
@@ -45,15 +46,16 @@ newTalent{
 		end
 	end,
 	info = function(self, t)
+		local range = t.getRange(self, t)
 		local damage = t.getDamage(self, t)/2
 		local detect = t.trapPower(self,t)*0.8
 		local disarm = t.trapPower(self,t)
 		local duration = t.getDuration(self, t)
-		return ([[Learn to lay Warp Mines in a radius of 1.
+		return ([[Learn to lay Warp Mines in a radius of 1 out to a range of %d.
 		Warp Mines teleport targets that trigger them either toward you or away from you depending on the type of mine used and inflict %0.2f temporal and %0.2f physical damage.
 		The mines are hidden traps (%d detection and %d disarm power based on your Magic) and last for %d turns.
 		The damage caused by your Warp Mines will improve with your Spellpower.]]):
-		format(damDesc(self, DamageType.TEMPORAL, damage), damDesc(self, DamageType.PHYSICAL, damage), detect, disarm, duration) --I5
+		format(range, damDesc(self, DamageType.TEMPORAL, damage), damDesc(self, DamageType.PHYSICAL, damage), detect, disarm, duration) --I5
 	end,
 }
 
@@ -65,7 +67,7 @@ newTalent{
 	paradox = function (self, t) return getParadoxCost(self, t, 10) end,
 	tactical = { ATTACKAREA = { TEMPORAL = 2 }, CLOSEIN = 2  },
 	requires_target = true,
-	range = 10,
+	range = function(self, t) return self:callTalent(self.T_WARP_MINES, "getRange")end,
 	no_unlearn_last = true,
 	target = function(self, t) return {type="ball", nowarning=true, range=self:getTalentRange(t), radius=1, nolock=true, talent=t} end,	
 	action = function(self, t)
@@ -102,20 +104,22 @@ newTalent{
 				triggered = function(self, x, y, who)
 					self:project({type="hit",x=x,y=y}, x, y, engine.DamageType.MATTER, self.dam)
 					-- Teleport Toward
-					local hit = self.summoner:checkHit(self.power, who:combatSpellResist() + (who:attr("continuum_destabilization") or 0)) and who:canBe("teleport")
-					if not hit then	
-						game.logSeen(who, "%s resists the teleport!", who.name:capitalize())
-					else
-						game.level.map:particleEmitter(who.x, who.y, 1, "temporal_teleport")
-						-- since we're using a precise teleport we'll look for a free grid first
-						local tx, ty = util.findFreeGrid(self.summoner.x, self.summoner.y, 5, true, {[Map.ACTOR]=true})
-						if tx and ty then
+					if not who.dead then
+						local hit = self.summoner:checkHit(self.power, who:combatSpellResist() + (who:attr("continuum_destabilization") or 0)) and who:canBe("teleport")
+						if not hit then	
+							game.logSeen(who, "%s resists the teleport!", who.name:capitalize())
+						else
 							game.level.map:particleEmitter(who.x, who.y, 1, "temporal_teleport")
-							if not who:teleportRandom(self.summoner.x, self.summoner.y, 1, 0) then
-								game.logSeen(self, "The warp fizzles!")
-							else
-								who:setEffect(who.EFF_CONTINUUM_DESTABILIZATION, 100, {power=power*0.3})
+							-- since we're using a precise teleport we'll look for a free grid first
+							local tx, ty = util.findFreeGrid(self.summoner.x, self.summoner.y, 5, true, {[Map.ACTOR]=true})
+							if tx and ty then
 								game.level.map:particleEmitter(who.x, who.y, 1, "temporal_teleport")
+								if not who:teleportRandom(self.summoner.x, self.summoner.y, 1, 0) then
+									game.logSeen(self, "The warp fizzles!")
+								else
+									who:setEffect(who.EFF_CONTINUUM_DESTABILIZATION, 100, {power=power*0.3})
+									game.level.map:particleEmitter(who.x, who.y, 1, "temporal_teleport")
+								end
 							end
 						end
 					end
@@ -173,7 +177,7 @@ newTalent{
 	paradox = function (self, t) return getParadoxCost(self, t, 10) end,
 	tactical = { ATTACKAREA = { TEMPORAL = 2 }, ESCAPE = 2  },
 	requires_target = true,
-	range = 10,
+	range = function(self, t) return self:callTalent(self.T_WARP_MINES, "getRange") end,
 	no_unlearn_last = true,
 	target = function(self, t) return {type="ball", nowarning=true, range=self:getTalentRange(t), radius=1, nolock=true, talent=t} end,	
 	action = function(self, t)
@@ -209,16 +213,18 @@ newTalent{
 				triggered = function(self, x, y, who)
 					self:project({type="hit",x=x,y=y}, x, y, engine.DamageType.MATTER, self.dam)
 					-- Teleport Away
-					local hit = self.summoner:checkHit(self.power, who:combatSpellResist() + (who:attr("continuum_destabilization") or 0)) and who:canBe("teleport")
-					if not hit then	
-						game.logSeen(who, "%s resists the teleport!", who.name:capitalize())
-					else
-						game.level.map:particleEmitter(who.x, who.y, 1, "temporal_teleport")
-						if not who:teleportRandom(self.summoner.x, self.summoner.y, 10, 5) then
-							game.logSeen(self, "The warp fizzles!")
+					if not who.dead then
+						local hit = self.summoner:checkHit(self.power, who:combatSpellResist() + (who:attr("continuum_destabilization") or 0)) and who:canBe("teleport")
+						if not hit then	
+							game.logSeen(who, "%s resists the teleport!", who.name:capitalize())
 						else
-							who:setEffect(who.EFF_CONTINUUM_DESTABILIZATION, 100, {power=power*0.3})
 							game.level.map:particleEmitter(who.x, who.y, 1, "temporal_teleport")
+							if not who:teleportRandom(self.summoner.x, self.summoner.y, 10, 5) then
+								game.logSeen(self, "The warp fizzles!")
+							else
+								who:setEffect(who.EFF_CONTINUUM_DESTABILIZATION, 100, {power=power*0.3})
+								game.level.map:particleEmitter(who.x, who.y, 1, "temporal_teleport")
+							end
 						end
 					end
 			

@@ -189,8 +189,8 @@ newTalent{
 			if game.party:hasMember(self) then
 				game.party:addMember(m, {
 					control="no",
-					type="minion",
-					title="Blade Guardian",
+					type="temporal-clone",
+					title="Blade Warden",
 					orders = {target=true},
 				})
 			end
@@ -256,8 +256,8 @@ newTalent{
 			if game.party:hasMember(self) then
 				game.party:addMember(m, {
 					control="no",
-					type="minion",
-					title="Bow Guardian",
+					type="temporal-clone",
+					title="Bow Warden",
 					orders = {target=true},
 				})
 			end

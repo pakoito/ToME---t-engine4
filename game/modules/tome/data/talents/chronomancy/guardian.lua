@@ -68,7 +68,7 @@ newTalent{
 	points = 5,
 	mode = "passive",
 	getSplit = function(self, t) return math.min(100, self:combatTalentSpellDamage(t, 20, 50, getParadoxSpellpower(self)))/100 end,
-	getDuration = function(self, t) return math.floor(self:combatTalentScale(t, 2, 6)) end,
+	getDuration = function(self, t) return 2 end,
 	getLifeTrigger = function(self, t) return self:combatTalentLimit(t, 10, 40, 24)	end,
 	remove_on_clone = true,
 	callbackOnHit = function(self, t, cb, src)
@@ -122,8 +122,8 @@ newTalent{
 				if game.party:hasMember(self) then
 					game.party:addMember(m, {
 						control="no",
-						type="minion",
-						title="Temporal Clone",
+						type="temporal-clone",
+						title="Guardian",
 						orders = {target=true},
 					})
 				end

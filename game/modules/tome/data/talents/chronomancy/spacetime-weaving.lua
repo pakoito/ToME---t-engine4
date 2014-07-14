@@ -250,23 +250,25 @@ newTalent{
 	getDisplaceDamage = function(self, t) return self:combatTalentLimit(t, 25, 5, 15)/100 end, -- Limit < 25%
 	range = 10,
 	callbackOnTakeDamage = function(self, t, src, x, y, type, dam, tmp, no_martyr)
-		-- find available targets
-		local tgts = {}
-		local grids = core.fov.circle_grids(self.x, self.y, self:getTalentRange(t), true)
-		for x, yy in pairs(grids) do for y, _ in pairs(grids[x]) do
-			local a = game.level.map(x, y, Map.ACTOR)
-			if a and self:reactionToward(a) < 0 then
-				tgts[#tgts+1] = a
-			end
-		end end
+		if dam > 0 and src ~= self then
+			-- find available targets
+			local tgts = {}
+			local grids = core.fov.circle_grids(self.x, self.y, self:getTalentRange(t), true)
+			for x, yy in pairs(grids) do for y, _ in pairs(grids[x]) do
+				local a = game.level.map(x, y, Map.ACTOR)
+				if a and self:reactionToward(a) < 0 then
+					tgts[#tgts+1] = a
+				end
+			end end
 
-		-- Displace the damage
-		local a = rng.table(tgts)
-		if a then
-			local displace = dam * t.getDisplaceDamage(self, t)
-			game:delayedLogMessage(self, a, "displace_damage"..(a.uid or ""), "#PINK##Source# displaces some damage onto #Target#!")
-			DamageType.defaultProjector(self, a.x, a.y, type, displace, tmp, true)
-			dam = dam - displace
+			-- Displace the damage
+			local a = rng.table(tgts)
+			if a then
+				local displace = dam * t.getDisplaceDamage(self, t)
+				game:delayedLogMessage(self, a, "displace_damage"..(a.uid or ""), "#PINK##Source# displaces some damage onto #Target#!")
+				DamageType.defaultProjector(self, a.x, a.y, type, displace, tmp, true)
+				dam = dam - displace
+			end
 		end
 		
 		return {dam=dam}
@@ -279,7 +281,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		local displace = t.getDisplaceDamage(self, t) * 100
-		return ([[You bend space around you, displacing %d%% of any damage you receive onto a random enemy within a range.
+		return ([[You bend space around you, displacing %d%% of any damage you receive onto a random enemy within range.
 		]]):format(displace)
 	end,
 }

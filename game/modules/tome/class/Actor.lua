@@ -4170,8 +4170,8 @@ function _M:paradoxFailChance()
 	if self:getModifiedParadox() > 300 then
 		chance = fatigue_modifier * math.pow(self:getModifiedParadox() / 300, 6)
 	end
-	-- If there's any chance, round it up
-	chance = util.bound(math.ceil(chance), 0, 100)
+	-- If there's any chance, round it down
+	chance = util.bound(math.floor(chance), 0, 100)
 	return chance, chance -- return this twice so we're compatable with older UIs
 end
 

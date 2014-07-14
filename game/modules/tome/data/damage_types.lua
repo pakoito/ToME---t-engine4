@@ -3336,6 +3336,7 @@ newDamageType{
 		if _G.type(dam) == "number" then dam = {dam=dam, daze=dam/2} end
 		DamageType:get(DamageType.PHYSICAL).projector(src, x, y, DamageType.PHYSICAL, dam.dam)
 		local target = game.level.map(x, y, Map.ACTOR)
+		dam.daze = math.min(25, dam.daze) -- 25% daze chance cap
 		if target and dam.daze > 0 and rng.percent(dam.daze) then
 			if target:canBe("stun") then
 				game:onTickEnd(function() target:setEffect(target.EFF_DAZED, 2, {src=src, apply_power=dam.power_check or math.max(src:combatSpellpower(), src:combatMindpower(), src:combatAttack())}) end) -- Do it at the end so we don't break our own daze
