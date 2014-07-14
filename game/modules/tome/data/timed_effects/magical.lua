@@ -2934,7 +2934,7 @@ newEffect{
 newEffect{
 	name = "BRAIDED", image = "talents/braided_blade.png",
 	desc = "Braided",
-	long_desc = function(self, eff) return ("The target is taking %d%% of all damage done to either %s or %s."):format(eff.power, eff.braid_one.name, eff.braid_two.name) end,
+	long_desc = function(self, eff) return ("The target is taking %d%% of all damage dealt to other braided targets."):format(eff.power) end,
 	type = "magical",
 	subtype = { temporal=true },
 	status = "detrimental",
