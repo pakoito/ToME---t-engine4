@@ -246,12 +246,12 @@ return {
 					local stri = "%s (%s %s %s)\n Score %d) - Wave: %d"
 					local i = 1
 					while(scores[i] and scores[i].name) do
-						p = scores[i]
+						local p = scores[i]
 						tmp = stri:format(p.name:capitalize(), p.sex or "???", p.race or "???", p.class or "???", p.score or 0, p.wave or 0)
 						text = text..line(tmp, "#LIGHT_BLUE#")
 						i = i + 1
 					end
-					p = world.arena.lastScore
+					local p = world.arena.lastScore
 					tmp = "\n#YELLOW#LAST SCORE:"..stri:format(p.name:capitalize(), p.sex or "unknown", p.race or "unknown", p.class or "unknown", p.score or 0, p.wave or 0)
 					return text..line(tmp, "#YELLOW#")
 				end

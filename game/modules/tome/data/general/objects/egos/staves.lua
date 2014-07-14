@@ -355,6 +355,8 @@ newEntity{
 
 			local DamageType = require "engine.DamageType"
 			local damtype = combat.element
+			local explosion
+
 			if     damtype == DamageType.FIRE then      explosion = "flame"
 			elseif damtype == DamageType.COLD then      explosion = "freeze"
 			elseif damtype == DamageType.ACID then      explosion = "acid"
@@ -459,6 +461,8 @@ newEntity{
 
 			local DamageType = require "engine.DamageType"
 			local damtype = combat.element
+			local explosion
+			
 			if     damtype == DamageType.FIRE then      explosion = "flame"
 			elseif damtype == DamageType.COLD then      explosion = "freeze"
 			elseif damtype == DamageType.ACID then      explosion = "acid"

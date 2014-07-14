@@ -897,7 +897,7 @@ function _M:getTextualDesc(compare_with, use_actor)
 			end
 		end
 
-		onhit = tstring{}
+		local onhit = tstring{}
 		local found = false
 		local onhit_combat = { on_melee_hit = {} }
 		for i, v in pairs(w.on_melee_hit or {}) do
