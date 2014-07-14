@@ -75,7 +75,7 @@ newTalent{
 		local split = cb.value * t.getSplit(self, t)
 	
 		-- If we already split this turn pass damage to our clone
-		if self.turn_procs.double_edge and self.turn_procs.double_edge ~= self then
+		if self.turn_procs.double_edge and self.turn_procs.double_edge ~= self and not self.turn_procs.double_edge.dead then
 			split = split/2
 			-- split the damage
 			game:delayedLogDamage(src, self.turn_procs.double_edge, split, ("#PINK#%d displaced#LAST#"):format(split), false)
@@ -108,16 +108,13 @@ newTalent{
 				game.zone:addEntity(game.level, m, "actor", tx, ty)
 				m.ai_state = { talent_in=2, ally_compassion=10 }
 				m.remove_from_party_on_death = true	
+				m:attr("archery_pass_friendly", 1)
+				m.generic_damage_penalty = 50
 				
 				-- split the damage
 				game:delayedLogDamage(src, m, split, ("#PINK#%d displaced#LAST#"):format(split), false)
 				cb.value = cb.value - split
 				self.turn_procs.double_edge = m
-				
-				m:takeHit(split, src)
-				m:setTarget(src or nil)
-				m:attr("archery_pass_friendly", 1)
-				m.generic_damage_penalty = 50
 								
 				if game.party:hasMember(self) then
 					game.party:addMember(m, {
@@ -127,7 +124,10 @@ newTalent{
 						orders = {target=true},
 					})
 				end
-								
+				
+				m:takeHit(split, src)
+				m:setTarget(src or nil)
+												
 			else
 				game.logPlayer(self, "Not enough space to summon warden!")
 			end
