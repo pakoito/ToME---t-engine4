@@ -111,11 +111,6 @@ newTalent{
 				m:attr("archery_pass_friendly", 1)
 				m.generic_damage_penalty = 50
 				
-				-- split the damage
-				game:delayedLogDamage(src, m, split, ("#PINK#%d displaced#LAST#"):format(split), false)
-				cb.value = cb.value - split
-				self.turn_procs.double_edge = m
-								
 				if game.party:hasMember(self) then
 					game.party:addMember(m, {
 						control="no",
@@ -124,9 +119,13 @@ newTalent{
 						orders = {target=true},
 					})
 				end
-				
+
+				-- split the damage
+				cb.value = cb.value - split
+				self.turn_procs.double_edge = m
 				m:takeHit(split, src)
 				m:setTarget(src or nil)
+				game:delayedLogDamage(src, m, split, ("#PINK#%d displaced#LAST#"):format(split), false)
 												
 			else
 				game.logPlayer(self, "Not enough space to summon warden!")
