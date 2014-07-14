@@ -212,6 +212,7 @@ on_kyless_encounter = function(self, who)
 end
 
 on_kyless_death = function(self, who, kyless)
+	local Chat = require "engine.Chat"
 	local chat = Chat.new("keepsake-kyless-death", {name="Death of Kyless"}, game.player)
 	chat:invoke()
 
