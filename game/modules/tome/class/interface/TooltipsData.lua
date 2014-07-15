@@ -38,8 +38,8 @@ You may find other ways to save yourself but they are not considered extra lives
 ]]
 
 TOOLTIP_LIFE = [[#GOLD#Life#LAST#
-This is your life force. When you take damage this is reduced more and more.
-If it reaches below zero you die.
+This is your life force, which is reduced each time you take damage.
+Normally, you will die if this drops below zero, though some effects will allow you survive with negative life.
 Death is usually permanent so beware!
 It is increased by Constitution.
 ]]
