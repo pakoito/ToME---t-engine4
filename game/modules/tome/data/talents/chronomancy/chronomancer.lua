@@ -17,23 +17,35 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
--- Paradox Mage SpellsnewTalentType
-newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="chronomancy/age-manipulation", name = "Age Manipulation", description = "Manipulate the age of creatures you encounter." }
-newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="chronomancy/chronomancy", name = "chronomancy", generic = true, description = "Allows you to glimpse the future, or become more aware of the present." }
+-- Class Trees
+newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="chronomancy/blade-threading", name = "Blade Threading", description = "A blend of chronomancy and dual-weapon combat." }
+newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="chronomancy/bow-threading", name = "Bow Threading", description = "A blend of chronomancy and ranged combat." }
+newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="chronomancy/guardian", name = "Temporal Guardian", description = "Warden combat training and techniques." }
+newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="chronomancy/threaded-combat", name = "Threaded Combat", min_lev = 10, description = "A blend of ranged and dual-weapon combat." }
+newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="chronomancy/temporal-hounds", name = "Temporal Hounds", min_lev = 10, description = "Call temporal hounds to aid you in combat." }
+
 newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="chronomancy/energy", name = "energy", generic = true, description = "Manipulate raw energy by addition or subtraction." }
+newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="chronomancy/fate-threading", name = "Fate Threading", description = "Manipulate the threads of fate." }
 newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="chronomancy/gravity", name = "gravity", description = "Call upon the force of gravity to crush, push, and pull your foes." }
 newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="chronomancy/matter", name = "matter", description = "Change and shape matter itself." }
 newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="chronomancy/paradox", name = "paradox", min_lev = 10, description = "Create loopholes in the laws of spacetime." }
 newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="chronomancy/speed-control", name = "Speed Control", description = "Control how fast objects and creatures move through spacetime." }
-newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="chronomancy/temporal-combat", name = "Temporal Combat", description = "A blend of chronomancy and physical combat." }
 newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="chronomancy/timeline-threading", name = "Timeline Threading", min_lev = 10, description = "Examine and alter the timelines that make up the spacetime continuum." }
-newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="chronomancy/timetravel", name = "Time Travel", description = "Travel through time yourself, or send your foes into the future." }
+newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="chronomancy/timetravel", name = "Time Travel", min_lev = 10, description = "Travel through time yourself, or send your foes into the future." }
 newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="chronomancy/spacetime-folding", name = "Spacetime Folding", description = "Mastery of folding points in space." }
-newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="chronomancy/spacetime-weaving", name = "Spacetime Weaving", generic = true, description = "Weave the threads of spacetime and correct the damage you've caused through your meddling." }
 
+-- Generic Chronomancy
+newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="chronomancy/chronomancy", name = "Chronomancy", generic = true, description = "Allows you to glimpse the future, or become more aware of the present." }
+newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="chronomancy/fate-weaving", name = "Fate Weaving", generic = true, description = "Weave the threads of fate." }
+newTalentType{ allow_random=true, no_silence=true, is_spell=true, type="chronomancy/spacetime-weaving", name = "Spacetime Weaving", generic = true, description = "Weave the threads of spacetime." }
 
-newTalentType{ no_silence=true, is_spell=true, type="chronomancy/temporal-archery", name = "Temporal Archery", description = "A blend of chronomancy and ranged combat." }
+-- Misc and Outdated Trees
 newTalentType{ no_silence=true, is_spell=true, type="chronomancy/other", name = "Other", generic = true, description = "Miscellaneous Chronomancy effects." }
+
+newTalentType{ no_silence=true, is_spell=true, type="chronomancy/age-manipulation", name = "Age Manipulation", description = "Manipulate the age of creatures you encounter." }
+newTalentType{ no_silence=true, is_spell=true, type="chronomancy/temporal-archery", name = "Temporal Archery", description = "A blend of chronomancy and ranged combat." }
+newTalentType{ no_silence=true, is_spell=true, type="chronomancy/temporal-combat", name = "Temporal Combat", description = "A blend of chronomancy and physical combat." }
+
 
 
 -- Anomalies are not learnable but can occur instead of an intended spell when paradox gets to high.
@@ -104,47 +116,29 @@ temporal_req5 = {
 	level = function(level) return 16 + (level-1)  end,
 }
 
--- Backfire Function; this does the actual backfire even though the chance is calculated in Actor
-checkBackfire = function(self, x, y)
-	if self:paradoxBackfireChance() and not self:attr("no_paradox_fail") then
-		game.logPlayer(self, "#LIGHT_RED#The fabric of spacetime ripples and your spell backfires!!")
-		game:playSoundNear(self, "talents/echo")
-		return self.x, self.y
-	else
-		return x, y
-	end
-end
-
--- Make sure we don't run concurrent chronoworlds; to prevent lag and possible game breaking bugs or exploits
-checkTimeline = function(self)
-	if game._chronoworlds  == nil then
-		return false
-	else
-		game.logPlayer(self, "The timeline is too fractured right now to use this ability.")
-		return true
-	end
-end
-
--- Paradox modifier.  This controls how much extra effect chronomancy spells have at high paradox.
--- Note that 300 is the optimal balance and going below this number will decrease the effect of chronomancy spells.
-getParadoxModifier = function (self, pm)
-	local pm = math.sqrt((1 + (self:getParadox()/300))/2)
-	return pm
-end
-
 load("/data/talents/chronomancy/age-manipulation.lua")
+load("/data/talents/chronomancy/blade-threading.lua")
+load("/data/talents/chronomancy/bow-threading.lua")
 load("/data/talents/chronomancy/chronomancy.lua")
 load("/data/talents/chronomancy/energy.lua")
+load("/data/talents/chronomancy/fate-threading.lua")
+load("/data/talents/chronomancy/fate-weaving.lua")
 load("/data/talents/chronomancy/gravity.lua")
 load("/data/talents/chronomancy/matter.lua")
 load("/data/talents/chronomancy/paradox.lua")
 load("/data/talents/chronomancy/speed-control.lua")
 load("/data/talents/chronomancy/temporal-archery.lua")
 load("/data/talents/chronomancy/temporal-combat.lua")
+load("/data/talents/chronomancy/guardian.lua")
+load("/data/talents/chronomancy/temporal-hounds.lua")
+load("/data/talents/chronomancy/threaded-combat.lua")
 load("/data/talents/chronomancy/timeline-threading.lua")
 load("/data/talents/chronomancy/timetravel.lua")
 load("/data/talents/chronomancy/spacetime-folding.lua")
 load("/data/talents/chronomancy/spacetime-weaving.lua")
+
+-- Loads many functions and misc. talents
+load("/data/talents/chronomancy/other.lua")
 
 -- Anomalies, not learnable talents that may be cast instead of the intended spell when paradox gets to high
 load("/data/talents/chronomancy/anomalies.lua")

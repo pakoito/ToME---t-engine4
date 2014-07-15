@@ -176,7 +176,7 @@ newEntity{
 		resist_all_on_teleport = resolvers.mbonus_material(20, 5),
 		defense_on_teleport = resolvers.mbonus_material(30, 5),
 		effect_reduction_on_teleport = resolvers.mbonus_material(35, 10),
-		paradox_reduce_fails = resolvers.mbonus_material(30, 20),
+		paradox_reduce_anomalies = resolvers.mbonus_material(15, 10),
 	},
 }
 

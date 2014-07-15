@@ -540,7 +540,7 @@ newEntity{ base = "BASE_STAFF",
 	},
 	wielder = {
 		inc_stats = { [Stats.STAT_WIL] = 7, [Stats.STAT_MAG] = 8 },
-		paradox_reduce_fails = 50,
+		paradox_reduce_anomalies = 25,
 		combat_spellpower = 40,
 		combat_spellcrit = 15,
 		inc_damage = { [DamageType.TEMPORAL] = 40,  },
@@ -549,8 +549,8 @@ newEntity{ base = "BASE_STAFF",
 		talent_cd_reduction = {
 			[Talents.T_PARADOX_CLONE] = 7,
 			[Talents.T_TEMPORAL_CLONE] = 5,
-			[Talents.T_TEMPORAL_REPRIEVE] = 10,
-			[Talents.T_GRAVITY_WELL] = 6,
+			[Talents.T_TIME_STOP] = 5,
+		--	[Talents.T_GRAVITY_WELL] = 6,  -- thematically wrong
 			[Talents.T_BODY_REVERSION] = 2,
 		},
 		talents_types_mastery = {

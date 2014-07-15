@@ -127,7 +127,7 @@ setDefaultProjector(function(src, x, y, type, dam, tmp, no_martyr)
 			dam = t.doForgeShield(type, dam, t, target, src)
 			if lastdam - dam > 0 then game:delayedLogDamage(src, target, 0, ("%s(%d blocked)#LAST#"):format(DamageType:get(type).text_color or "#aaaaaa#", lastdam-dam), false) end
 		end
-
+		
 		-- Increases damage
 		local mind_linked = false
 		if src.inc_damage then
@@ -244,12 +244,14 @@ setDefaultProjector(function(src, x, y, type, dam, tmp, no_martyr)
 		--target.T_STONE_FORTRESS could be checked/applied here (ReduceDamage function in Dwarven Fortress talent)
 
 		-- Damage Smearing
-		if dam > 0 and type ~= DamageType.TEMPORAL and target:hasEffect(target.EFF_DAMAGE_SMEARING) then
-			local smear = dam
+		if dam > 0 and type ~= DamageType.TEMPORAL and target.isTalentActive and target:isTalentActive(target.T_DAMAGE_SMEARING) then
+			local percent = target:callTalent(target.T_DAMAGE_SMEARING, "getPercent")
+			local duration = target:callTalent(target.T_DAMAGE_SMEARING, "getDuration")
+			local smear = dam * percent
 			local type = DamageType.TEMPORAL
-			target:setEffect(target.EFF_SMEARED, 6, {src=src, power=smear/6, no_ct_effect=true})
-			game:delayedLogDamage(src, target, 0, ("%s(%d smeared)#LAST#"):format(DamageType:get(type).text_color or "#aaaaaa#", dam), false)
-			dam = 0
+			target:setEffect(target.EFF_SMEARED, duration, {src=src, power=smear/duration, no_ct_effect=true})
+			game:delayedLogDamage(src, target, 0, ("%s(%d smeared)#LAST#"):format(DamageType:get(type).text_color or "#aaaaaa#", smear), false)
+			dam = dam - smear
 		end
 
 		-- affinity healing, we store it to apply it after damage is resolved
@@ -356,6 +358,10 @@ setDefaultProjector(function(src, x, y, type, dam, tmp, no_martyr)
 			dam = dam - dam * src:attr("numbed") / 100
 			print("[PROJECTOR] numbed dam", dam)
 		end
+		if src:attr("generic_damage_penalty") then
+			dam = dam - dam * src:attr("generic_damage_penalty") / 100
+			print("[PROJECTOR] generic dam", dam)
+		end
 
 		-- Curse of Misfortune: Unfortunate End (chance to increase damage enough to kill)
 		if src and src.hasEffect and src:hasEffect(src.EFF_CURSE_OF_MISFORTUNE) then
@@ -455,6 +461,34 @@ setDefaultProjector(function(src, x, y, type, dam, tmp, no_martyr)
 		if target.attr and target:attr("reflect_damage") and not no_martyr and src.x and src.y then
 			game:delayedLogMessage(target, src, "reflect_damage"..(src.uid or ""), "#CRIMSON##Source# reflects damage back to #Target#!")
 			DamageType.defaultProjector(target, src.x, src.y, type, dam * target.reflect_damage / 100, tmp, true)
+		end
+		-- Braided damage
+		if dam > 0 and target:hasEffect(target.EFF_BRAIDED) then
+			local p = target:hasEffect(target.EFF_BRAIDED)
+			local braid_damage = dam * p.power/ 100
+			if p.braid_one and not p.braid_one.dead and p.braid_one:hasEffect(p.braid_one.EFF_BRAIDED) then
+				game:delayedLogMessage(p.src, p.braid_one, "braided", "#CRIMSON##Source# damages #Target# through the Braid!")
+				game:delayedLogDamage(p.src, p.braid_one, braid_damage, ("#PINK#%d braided #LAST#"):format(braid_damage), false)
+				p.braid_one:takeHit(braid_damage, p.src)
+			end
+			if p.braid_two and not p.braid_two.dead and p.braid_two:hasEffect(p.braid_two.EFF_BRAIDED) then
+				game:delayedLogMessage(p.src, p.braid_two, "braided", "#CRIMSON##Source# damages #Target# through the Braid!")
+				game:delayedLogDamage(p.src, p.braid_two, braid_damage, ("#PINK#%d braided #LAST#"):format(braid_damage), false)
+				p.braid_two:takeHit(braid_damage, p.src)
+			end
+		end
+		
+		if dam > 0 and src ~= target and target.knowTalent and target:knowTalent(target.T_SPIN_FATE) then
+			if target.turn_procs and not target.turn_procs.spin_fate then
+				target:callTalent(target.T_SPIN_FATE, "doSpinFate")
+				if target.hasEffect and target:hasEffect(target.EFF_WEBS_OF_FATE) and not target.turn_procs.webs_of_fate then
+					target.turn_procs.webs_of_fate = true
+				elseif target.hasEffect and target:hasEffect(target.EFF_SEAL_FATE) and not target.turn_procs.seal_fate then
+					target.turn_procs.seal_fate = true
+				else
+					target.turn_procs.spin_fate = true
+				end
+			end
 		end
 
 		if target.knowTalent and target:knowTalent(target.T_RESOLVE) then local t = target:getTalentFromId(target.T_RESOLVE) t.on_absorb(target, t, type, dam) end
@@ -2673,11 +2707,11 @@ newDamageType{
 newDamageType{
 	name = "debilitating temporal", type = "RETHREAD",
 	projector = function(src, x, y, type, dam)
+		DamageType:get(DamageType.TEMPORAL).projector(src, x, y, DamageType.TEMPORAL, dam.dam)
 		local target = game.level.map(x, y, Map.ACTOR)
 		local chance = rng.range(1, 4)
 		-- Pull random effect
 		if target then
-			if src then src:incParadox(-dam.reduction) end
 			if chance == 1 then
 				if target:canBe("stun") then
 					target:setEffect(target.EFF_STUNNED, 3, {apply_power=src:combatSpellpower()})
@@ -2704,8 +2738,6 @@ newDamageType{
 				end
 			end
 		end
-		-- deal damage last so we get paradox from each target
-		DamageType:get(DamageType.TEMPORAL).projector(src, x, y, DamageType.TEMPORAL, dam.dam)
 	end,
 }
 
@@ -3297,3 +3329,20 @@ newDamageType{
 	end,
 }
 
+-- Physical damage + daze chance
+newDamageType{
+	name = "impact", type = "IMPACT",
+	projector = function(src, x, y, type, dam)
+		if _G.type(dam) == "number" then dam = {dam=dam, daze=dam/2} end
+		DamageType:get(DamageType.PHYSICAL).projector(src, x, y, DamageType.PHYSICAL, dam.dam)
+		local target = game.level.map(x, y, Map.ACTOR)
+		dam.daze = math.min(25, dam.daze) -- 25% daze chance cap
+		if target and dam.daze > 0 and rng.percent(dam.daze) then
+			if target:canBe("stun") then
+				game:onTickEnd(function() target:setEffect(target.EFF_DAZED, 2, {src=src, apply_power=dam.power_check or math.max(src:combatSpellpower(), src:combatMindpower(), src:combatAttack())}) end) -- Do it at the end so we don't break our own daze
+			else
+				game.logSeen(target, "%s resists!", target.name:capitalize())
+			end
+		end
+	end,
+}

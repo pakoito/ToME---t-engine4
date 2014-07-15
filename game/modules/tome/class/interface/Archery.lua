@@ -60,6 +60,12 @@ function _M:archeryAcquireTargets(tg, params)
 
 	local tg = tg or {}
 	tg.type = tg.type or weapon.tg_type or ammo.combat.tg_type or tg.type or "bolt"
+	
+	-- Pass friendly actors
+	if self:attr("archery_pass_friendly") then
+		tg.friendlyfire=false	
+		tg.friendlyblock=false
+	end
 
 	if not tg.range then tg.range=math.max(math.min(weapon.range or 6, offweapon and offweapon.range or 40), self:attr("archery_range_override") or 1) end
 	tg.display = tg.display or {display='/'}
@@ -421,11 +427,34 @@ local function archery_projectile(tx, ty, tg, self, tmp)
 	end
 
 	-- Temporal cast
-	if hitted and not target.dead and self:knowTalent(self.T_WEAPON_FOLDING) and self:isTalentActive(self.T_WEAPON_FOLDING) then
-		local t = self:getTalentFromId(self.T_WEAPON_FOLDING)
-		local dam = t.getDamage(self, t) * 2
-		DamageType:get(DamageType.TEMPORAL).projector(self, target.x, target.y, DamageType.TEMPORAL, dam, tmp)
-		self:incParadox(- t.getParadoxReduction(self, t) * 2)
+	if hitted and self:knowTalent(self.T_WEAPON_FOLDING) and self:isTalentActive(self.T_WEAPON_FOLDING) then
+		local dam = self:callTalent(self.T_WEAPON_FOLDING, "getDamage")
+		local burst_damage = 0
+		local burst_radius = 0
+		if self:knowTalent(self.T_FRAYED_THREADS) then
+			burst_damage = dam * self:callTalent(self.T_FRAYED_THREADS, "getPercent")
+			burst_radius = self:callTalent(self.T_FRAYED_THREADS, "getRadius")
+			dam = dam - burst_damage
+			self:project({type="ball", radius=burst_radius, friendlyfire=false}, target.x, target.y, DamageType.TEMPORAL, burst_damage)
+		end
+		if dam > 0 and not target.dead then
+			DamageType:get(DamageType.TEMPORAL).projector(self, target.x, target.y, DamageType.TEMPORAL, dam, tmp)
+		end
+	end
+	if hitted and self:knowTalent(self.T_IMPACT) and self:isTalentActive(self.T_IMPACT) then
+		local dam = self:callTalent(self.T_IMPACT, "getDamage")
+		local power = self:callTalent(self.T_IMPACT, "getApplyPower")
+		local burst_damage = 0
+		local burst_radius = 0
+		if self:knowTalent(self.T_FRAYED_THREADS) then
+			burst_damage = dam * self:callTalent(self.T_FRAYED_THREADS, "getPercent")
+			burst_radius = self:callTalent(self.T_FRAYED_THREADS, "getRadius")
+			dam = dam - burst_damage
+			self:project({type="ball", radius=burst_radius, friendlyfire=false}, target.x, target.y, DamageType.IMPACT, {dam=burst_damage, daze=dam/2, power_check=power})
+		end
+		if dam > 0 and not target.dead then
+			DamageType:get(DamageType.IMPACT).projector(self, target.x, target.y, DamageType.IMPACT, {dam=dam, daze=dam/2, power_check=power}, tmp)
+		end
 	end
 
 	-- Conduit (Psi)
@@ -517,6 +546,12 @@ function _M:archeryShoot(targets, talent, tg, params)
 	local tg = tg or {}
 	tg.type = tg.type or weapon.tg_type or ammo.combat.tg_type or tg.type or "bolt"
 	tg.talent = tg.talent or talent
+	
+	-- Pass friendly actors
+	if self:attr("archery_pass_friendly") then
+		tg.friendlyfire=false	
+		tg.friendlyblock=false
+	end
 
 	params = params or {}
 	self:triggerHook{"Combat:archeryTargetKind", tg=tg, params=params, mode="fire"}
@@ -566,6 +601,46 @@ function _M:hasArcheryWeapon(type)
 	local ammo = self:getInven("QUIVER")[1]
 	if self.inven[self.INVEN_PSIONIC_FOCUS] then
 		local pf_weapon = self:getInven("PSIONIC_FOCUS")[1]
+		if pf_weapon and pf_weapon.archery then
+			weapon = pf_weapon
+		end
+	end
+	if offweapon and not offweapon.archery then offweapon = nil end
+	if not weapon or not weapon.archery then
+		if self:attr("can_offshoot") and offweapon then
+			weapon, offweapon = offweapon, nil
+		else
+			return nil, "no shooter"
+		end
+	end
+	if not ammo then
+		return nil, "no ammo"
+	else
+		if not ammo.archery_ammo or weapon.archery ~= ammo.archery_ammo then
+			return nil, "bad ammo"
+		end
+		if offweapon and (not ammo.archery_ammo or offweapon.archery ~= ammo.archery_ammo) then
+			return nil, "bad ammo"
+		end
+	end
+	if type and weapon.archery_kind ~= type then return nil, "bad type" end
+	if type and offweapon and offweapon.archery_kind ~= type then return nil, "bad type" end
+	return weapon, ammo, offweapon
+end
+
+-- Get the shooter in the quick slot
+function _M:hasArcheryWeaponQS(type)
+	if self:attr("disarmed") then
+		return nil, "disarmed"
+	end
+
+	if not self:getInven("QS_MAINHAND") then return nil, "no shooter" end
+	if not self:getInven("QS_QUIVER") then return nil, "no ammo" end
+	local weapon = self:getInven("QS_MAINHAND")[1]
+	local offweapon = self:getInven("QS_OFFHAND") and self:getInven("QS_OFFHAND")[1]
+	local ammo = self:getInven("QS_QUIVER")[1]
+	if self.inven[self.INVEN_PSIONIC_FOCUS] then
+		local pf_weapon = self:getInven("QS_PSIONIC_FOCUS")[1]
 		if pf_weapon and pf_weapon.archery then
 			weapon = pf_weapon
 		end

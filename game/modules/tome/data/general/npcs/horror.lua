@@ -959,7 +959,7 @@ newEntity{ base = "BASE_NPC_HORROR",
 		[Talents.T_CHARGED_SHIELD]={base=5, every=2, max=9},
 		[Talents.T_KINETIC_LEECH]={base=3, every=3, max=5},
 		--TEMPORAL
-		[Talents.T_STATIC_HISTORY]={base=1, every=4, max=5},
+		[Talents.T_DISENTANGLE]={base=1, every=4, max=5},
 		[Talents.T_QUANTUM_SPIKE]={base=1, every=4, max=5},
 		[Talents.T_WEAPON_FOLDING]={base=1, every=4, max=5},
 		[Talents.T_RETHREAD]={base=2, every=4, max=5},

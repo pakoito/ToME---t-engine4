@@ -404,7 +404,7 @@ There is a cunning air to his hollow skull, and his empty sockets reveal nothing
 	on_move = function(self, x, y, self, force)
 		if not force and rng.percent(10) then
 			local traps = { self.T_BEAR_TRAP, self.T_CATAPULT_TRAP }
-			self:forceUseTalent(rng.table(traps), {ignore_energy=true, ignore_resources=true, ignore_cd=true, force_target=self})
+			self:forceUseTalent(rng.table(traps), {ignore_energy=true, ignore_ressources=true, ignore_cd=true, force_target=self})
 		end
 	end,
 }

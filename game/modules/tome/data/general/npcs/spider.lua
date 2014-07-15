@@ -286,7 +286,7 @@ newEntity{ base = "BASE_NPC_SPIDER",
 		[Talents.T_SPIN_FATE]={base=5, every=6, max=8},
 		[Talents.T_SWAP]={base=5, every=6, max=8},
 		[Talents.T_RETHREAD]={base=5, every=6, max=8},
-		[Talents.T_STATIC_HISTORY]={base=5, every=6, max=8},
+		[Talents.T_DISENTANGLE]={base=5, every=6, max=8},
 	},
 }
 
@@ -320,7 +320,7 @@ newEntity{ base = "BASE_NPC_SPIDER",
 		[Talents.T_SWAP]={base=5, every=6, max=8},
 		[Talents.T_RETHREAD]={base=5, every=6, max=8},
 		[Talents.T_FADE_FROM_TIME]={base=5, every=6, max=8},
-		[Talents.T_STATIC_HISTORY]={base=5, every=6, max=8},
+		[Talents.T_DISENTANGLE]={base=5, every=6, max=8},
 	},
 }
 
@@ -375,7 +375,7 @@ newEntity{ base = "BASE_NPC_SPIDER",
 		[Talents.T_SWAP]={base=7, every=6},
 		[Talents.T_DIMENSIONAL_STEP]={base=7, every=6},
 		[Talents.T_RETHREAD]={base=7, every=6},
-		[Talents.T_STATIC_HISTORY]={base=7, every=6},
+		[Talents.T_DISENTANGLE]={base=7, every=6},
 
 		[Talents.T_SUMMON]=1,
 

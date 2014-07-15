@@ -86,7 +86,15 @@ newEntity{
 
 	resists = { [DamageType.TEMPORAL] = 100, },
 
-	negative_status_effect_immune = 1,
+	no_breath = 1,
+	poison_immune = 1,
+	cut_immune = 1,
+	disease_immune = 1,
+	stun_immune = 1,
+	blind_immune = 1,
+	knockback_immune = 1,
+	confusion_immune = 1,
+	
 	not_power_source = {nature=true},
 }
 

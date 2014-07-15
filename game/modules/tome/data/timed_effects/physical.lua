@@ -2813,3 +2813,34 @@ newEffect {
 		:format(eff.global_speed_add * 100)
 	end,
 }
+
+newEffect{
+	name = "CELERITY", image = "talents/celerity.png",
+	desc = "Celerity",
+	long_desc = function(self, eff) return ("The target is moving is %d%% faster."):format(eff.speed * 100 * eff.stack) end,
+	type = "physical",
+	display_desc = function(self, eff) return eff.stack.." Celerity" end,
+	charges = function(self, eff) return eff.stack end,
+	subtype = { speed=true, temporal=true },
+	status = "beneficial",
+	parameters = {speed=0.1, stack=1, max_stack=3},
+	on_merge = function(self, old_eff, new_eff)
+		-- remove the old value
+		self:removeTemporaryValue("movement_speed", old_eff.tmpid)
+		
+		-- add a charge
+		old_eff.stack = math.min(old_eff.stack + 1, new_eff.max_stack)
+		
+		-- and apply the current values	
+		old_eff.tmpid = self:addTemporaryValue("movement_speed", old_eff.speed * old_eff.stack)
+		
+		old_eff.dur = new_eff.dur
+		return old_eff
+	end,
+	activate = function(self, eff)
+		eff.tmpid = self:addTemporaryValue("movement_speed", eff.speed * eff.stack)
+	end,
+	deactivate = function(self, eff)
+		self:removeTemporaryValue("movement_speed", eff.tmpid)
+	end,
+}

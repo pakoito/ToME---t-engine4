@@ -615,11 +615,34 @@ function _M:attackTargetWith(target, weapon, damtype, mult, force_dam)
 	end
 
 	-- Temporal cast
-	if hitted and not target.dead and self:knowTalent(self.T_WEAPON_FOLDING) and self:isTalentActive(self.T_WEAPON_FOLDING) then
-		local t = self:getTalentFromId(self.T_WEAPON_FOLDING)
-		local dam = t.getDamage(self, t)
-		DamageType:get(DamageType.TEMPORAL).projector(self, target.x, target.y, DamageType.TEMPORAL, dam)
-		self:incParadox(- t.getParadoxReduction(self, t))
+	if hitted and self:knowTalent(self.T_WEAPON_FOLDING) and self:isTalentActive(self.T_WEAPON_FOLDING) then
+		local dam = self:callTalent(self.T_WEAPON_FOLDING, "getDamage")
+		local burst_damage = 0
+		local burst_radius = 0
+		if self:knowTalent(self.T_FRAYED_THREADS) then
+			burst_damage = dam * self:callTalent(self.T_FRAYED_THREADS, "getPercent")
+			burst_radius = self:callTalent(self.T_FRAYED_THREADS, "getRadius")
+			dam = dam - burst_damage
+			self:project({type="ball", radius=burst_radius, friendlyfire=false}, target.x, target.y, DamageType.TEMPORAL, burst_damage)
+		end
+		if dam > 0 and not target.dead then
+			DamageType:get(DamageType.TEMPORAL).projector(self, target.x, target.y, DamageType.TEMPORAL, dam, tmp)
+		end
+	end
+	if hitted and self:knowTalent(self.T_IMPACT) and self:isTalentActive(self.T_IMPACT) then
+		local dam = self:callTalent(self.T_IMPACT, "getDamage")
+		local power = self:callTalent(self.T_IMPACT, "getApplyPower")
+		local burst_damage = 0
+		local burst_radius = 0
+		if self:knowTalent(self.T_FRAYED_THREADS) then
+			burst_damage = dam * self:callTalent(self.T_FRAYED_THREADS, "getPercent")
+			burst_radius = self:callTalent(self.T_FRAYED_THREADS, "getRadius")
+			dam = dam - burst_damage
+			self:project({type="ball", radius=burst_radius, friendlyfire=false}, target.x, target.y, DamageType.IMPACT, {dam=burst_damage, daze=dam/2, power_check=power})
+		end
+		if dam > 0 and not target.dead then
+			DamageType:get(DamageType.IMPACT).projector(self, target.x, target.y, DamageType.IMPACT, {dam=dam, daze=dam/2, power_check=power}, tmp)
+		end
 	end
 
 	-- Ruin
@@ -1020,13 +1043,13 @@ function _M:attackTargetWith(target, weapon, damtype, mult, force_dam)
 end
 
 _M.weapon_talents = {
-	sword =   "T_WEAPONS_MASTERY",
-	axe =     "T_WEAPONS_MASTERY",
-	mace =    "T_WEAPONS_MASTERY",
-	knife =   "T_KNIFE_MASTERY",
+	sword =   {"T_WEAPONS_MASTERY", "T_STRENGTH_OF_PURPOSE"},
+	axe =     {"T_WEAPONS_MASTERY", "T_STRENGTH_OF_PURPOSE"},
+	mace =    {"T_WEAPONS_MASTERY", "T_STRENGTH_OF_PURPOSE"},
+	knife =   {"T_KNIFE_MASTERY", "T_STRENGTH_OF_PURPOSE"},
 	whip  =   "T_EXOTIC_WEAPONS_MASTERY",
 	trident = "T_EXOTIC_WEAPONS_MASTERY",
-	bow =     "T_BOW_MASTERY",
+	bow =     {"T_BOW_MASTERY", "T_STRENGTH_OF_PURPOSE"},
 	sling =   {"T_SLING_MASTERY", "T_SKIRMISHER_SLING_SUPREMACY"},
 	staff =   "T_STAFF_MASTERY",
 	mindstar ="T_PSIBLADES",
@@ -1166,6 +1189,7 @@ end
 -- This is how much % of a blow we can reduce with armor
 function _M:combatArmorHardiness()
 	local add = 0
+	local multi = 1
 	if self:knowTalent(self.T_SKIRMISHER_BUCKLER_EXPERTISE) then
 		add = add + self:callTalent(self.T_SKIRMISHER_BUCKLER_EXPERTISE, "getHardiness")
 	end
@@ -1183,7 +1207,10 @@ function _M:combatArmorHardiness()
 	if self:knowTalent(self.T_ARMOUR_OF_SHADOWS) and not game.level.map.lites(self.x, self.y) then
 		add = add + 50
 	end
-	return util.bound(30 + self.combat_armor_hardiness + add, 0, 100)
+	if self:hasEffect(self.EFF_BREACH) then
+		multi = 0.5
+	end
+	return util.bound(30 + self.combat_armor_hardiness + add, 0, 100) * multi
 end
 
 --- Gets the attack
@@ -1245,6 +1272,9 @@ end
 function _M:combatAPR(weapon)
 	weapon = weapon or self.combat or {}
 	local addapr = 0
+	if self:knowTalent(self.T_WEAPON_FOLDING) and self:isTalentActive(self.T_WEAPON_FOLDING) then
+		addapr = addapr + (self:callTalent(self.T_WEAPON_FOLDING, "getDamage")/2)
+	end
 	return self.combat_apr + (weapon.apr or 0) + addapr
 end
 
@@ -1454,11 +1484,14 @@ function _M:combatDamage(weapon, adddammod)
 
 	local sub_cun_to_str = false
 	if weapon.talented and weapon.talented == "knife" and self:knowTalent(Talents.T_LETHALITY) then sub_cun_to_str = true end
+	local sub_mag_to_str = false
+	if weapon.talented and self:knowTalent(Talents.T_STRENGTH_OF_PURPOSE) then sub_mag_to_str = true end
 
 	local totstat = 0
 	local dammod = weapon.dammod or {str=0.6}
 	for stat, mod in pairs(dammod) do
 		if sub_cun_to_str and stat == "str" then stat = "cun" end
+		if sub_mag_to_str and stat == "str" then stat = "mag" end
 		if self:attr("use_psi_combat") and stat == "str" then stat = "wil" end
 		if self:attr("use_psi_combat") and stat == "dex" then stat = "cun" end
 		totstat = totstat + self:getStat(stat) * mod
@@ -1515,8 +1548,13 @@ function _M:combatPhysicalpower(mod, weapon, add)
 	end
 
 	add = add + 10 * self:combatCheckTraining(weapon)
+	
+	local str = self:getStr()
+	if self:knowTalent(Talents.T_STRENGTH_OF_PURPOSE) then
+		str = self:getMag()
+	end
 
-	local d = math.max(0, self.combat_dam + add) + self:getStr() -- allows strong debuffs to offset strength
+	local d = math.max(0, self.combat_dam + add) + str -- allows strong debuffs to offset strength
 	if self:attr("dazed") then d = d / 2 end
 	if self:attr("scoured") then d = d / 1.2 end
 
@@ -1972,11 +2010,6 @@ end
 -- Called when a Save or Defense is checked
 function _M:checkOnDefenseCall(type)
 	local add = 0
-	if self:knowTalent(self.T_SPIN_FATE) then
-		print("Spin Fate", type)
-		local t = self:getTalentFromId(self.T_SPIN_FATE)
-		t.do_spin_fate(self, t, type)
-	end
 	return add
 end
 
@@ -2198,6 +2231,23 @@ function _M:hasDualWeapon(type)
 	if not self:getInven("MAINHAND") or not self:getInven("OFFHAND") then return end
 	local weapon = self:getInven("MAINHAND")[1]
 	local offweapon = self:getInven("OFFHAND")[1]
+	if not weapon or not offweapon or not weapon.combat or not offweapon.combat then
+		return nil
+	end
+	if type and weapon.combat.talented ~= type then return nil end
+	if type and offweapon.combat.talented ~= type then return nil end
+	return weapon, offweapon
+end
+
+-- Get the weapons in the quick slot
+function _M:hasDualWeaponQS(type)
+	if self:attr("disarmed") then
+		return nil, "disarmed"
+	end
+
+	if not self:getInven("QS_MAINHAND") or not self:getInven("QS_OFFHAND") then return end
+	local weapon = self:getInven("QS_MAINHAND")[1]
+	local offweapon = self:getInven("QS_OFFHAND")[1]
 	if not weapon or not offweapon or not weapon.combat or not offweapon.combat then
 		return nil
 	end

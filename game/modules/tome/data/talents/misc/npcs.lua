@@ -1540,7 +1540,7 @@ newTalent{
 	name = "Speed Sap",
 	type = {"chronomancy/other", 1},
 	points = 5,
-	paradox = 10,
+	paradox = function (self, t) return getParadoxCost(self, t, 10) end,
 	cooldown = 8,
 	tactical = {
 		ATTACK = { TEMPORAL = 10 },
@@ -1550,12 +1550,11 @@ newTalent{
 	direct_hit = true,
 	reflectable = true,
 	requires_target = true,
-	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 20, 220)*getParadoxModifier(self, pm) end,
+	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 20, 220, getParadoxSpellpower(self)) end,
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t), talent=t}
 		local x, y = self:getTarget(tg)
 		if not x or not y then return nil end
-		x, y = checkBackfire(self, x, y)
 		self:project(tg, x, y, DamageType.WASTING, self:spellCrit(t.getDamage(self, t)))
 		local target = game.level.map(x, y, Map.ACTOR)
 		if target then
@@ -1630,7 +1629,7 @@ newTalent{
 	name = "Sever Lifeline",
 	type = {"chronomancy/other", 1},
 	points = 5,
-	paradox = 1,
+	paradox = function (self, t) return getParadoxCost(self, t, 1) end,
 	cooldown = 20,
 	tactical = {
 		ATTACK = 1000,
@@ -1638,7 +1637,7 @@ newTalent{
 	range = 10,
 	direct_hit = true,
 	requires_target = true,
-	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 20, 220) * 10000 *getParadoxModifier(self, pm) end,
+	getDamage = function(self, t) return self:combatTalentSpellDamage(t, 20, 220, getParadoxSpellpower(self)) * 10000 end,
 	action = function(self, t)
 		local tg = {type="hit", range=self:getTalentRange(t), talent=t}
 		local x, y = self:getTarget(tg)

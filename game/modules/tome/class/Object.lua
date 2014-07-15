@@ -42,7 +42,7 @@ _M.logCombat = Combat.logCombat
 
 function _M:getRequirementDesc(who)
 	local base_getRequirementDesc = engine.Object.getRequirementDesc
-	if self.subtype == "shield" and who:knowTalent(who.T_SKIRMISHER_BUCKLER_EXPERTISE) then
+	if self.subtype == "shield" and type(self.require) == "table" and who:knowTalent(who.T_SKIRMISHER_BUCKLER_EXPERTISE) then
 		local oldreq = rawget(self, "require")
 		self.require = table.clone(oldreq, true)
 		if self.require.stat and self.require.stat.str then
@@ -55,6 +55,18 @@ function _M:getRequirementDesc(who)
 			end
 		end end
 
+		local desc = base_getRequirementDesc(self, who)
+
+		self.require = oldreq
+
+		return desc
+	elseif self.type =="weapon" and type(self.require) == "table" and who:knowTalent(who.T_STRENGTH_OF_PURPOSE) then
+		local oldreq = rawget(self, "require")
+		self.require = table.clone(oldreq, true)
+		if self.require.stat and self.require.stat.str then
+			self.require.stat.mag, self.require.stat.str = self.require.stat.str, nil
+		end
+		
 		local desc = base_getRequirementDesc(self, who)
 
 		self.require = oldreq
@@ -537,7 +549,14 @@ function _M:getTextualDesc(compare_with, use_actor)
 		compare_with = compare_with or {}
 		local dm = {}
 		for stat, i in pairs(combat.dammod or {}) do
-			dm[#dm+1] = ("%d%% %s"):format((i + (add_table.dammod[stat] or 0)) * 100, Stats.stats_def[stat].short_name:capitalize())
+			local name = Stats.stats_def[stat].short_name:capitalize()
+			if use_actor:knowTalent(use_actor.T_STRENGTH_OF_PURPOSE) then
+				if name == "Str" then name = "Mag" end
+			end
+			if self.subtype == "dagger" and use_actor:knowTalent(use_actor.T_LETHALITY) then
+				if name == "Str" then name = "Cun" end
+			end
+			dm[#dm+1] = ("%d%% %s"):format((i + (add_table.dammod[stat] or 0)) * 100, name)
 		end
 		if #dm > 0 or combat.dam then
 			local power_diff = ""
@@ -1304,7 +1323,7 @@ function _M:getTextualDesc(compare_with, use_actor)
 
 		compare_fields(w, compare_with, field, "slow_projectiles", "%+d%%", "Slows Projectiles: ")
 
-		compare_fields(w, compare_with, field, "paradox_reduce_fails", "%+d", "Reduces paradox failures(equivalent to willpower): ")
+		compare_fields(w, compare_with, field, "paradox_reduce_anomalies", "%+d", "Reduces paradox failures(equivalent to willpower): ")
 
 		compare_fields(w, compare_with, field, "damage_backfire", "%+d%%", "Damage Backlash: ", nil, true)
 

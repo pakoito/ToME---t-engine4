@@ -230,7 +230,7 @@ newEntity{
 	cost = 40,
 	wielder = {
 		inc_stats = {
-			[Stats.STAT_WIL] = resolvers.mbonus_material(6, 1),
+			[Stats.STAT_MAG] = resolvers.mbonus_material(6, 1),
 		},
 		resists_pen = {
 			[DamageType.TEMPORAL] = resolvers.mbonus_material(5, 5),
@@ -241,7 +241,7 @@ newEntity{
 			[DamageType.PHYSICAL] = resolvers.mbonus_material(10, 5),
 		},
 		talents_types_mastery = {
-			["chronomancy/temporal-combat"] = resolvers.mbonus_material(1, 1, function(e, v) v=v/10 return 0, v end),
+			["chronomancy/bow-threading"] = resolvers.mbonus_material(1, 1, function(e, v) v=v/10 return 0, v end),
 		},
 		ammo_reload_speed = resolvers.mbonus_material(4, 1),
 		quick_weapon_swap = 1,

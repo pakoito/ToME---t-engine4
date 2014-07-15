@@ -1211,8 +1211,8 @@ newEntity{ base = "BASE_CLOTH_ARMOR", define_as = "SET_TEMPORAL_ROBE",
 		resists_pen = { [DamageType.TEMPORAL] = 20 },
 		on_melee_hit={[DamageType.TEMPORAL] = 10},
 	},
-	max_power = 25, power_regen = 1,
-	use_talent = { id = Talents.T_DAMAGE_SMEARING, level = 1, power = 25 },
+	max_power = 50, power_regen = 1,
+	use_talent = { id = Talents.T_TEMPORAL_REPRIEVE, level = 1, power = 50 },
 
 	set_list = { {"define_as", "SET_TEMPORAL_FEZ"} },
 	on_set_complete = function(self, who)
@@ -1240,7 +1240,7 @@ newEntity{ base = "BASE_WIZARD_HAT", define_as = "SET_TEMPORAL_FEZ",
 		combat_spellpower = 8,
 		combat_mindpower = 8,
 		inc_stats = { [Stats.STAT_WIL] = 4, [Stats.STAT_CUN] = 8, },
-		paradox_reduce_fails = 10,
+		paradox_reduce_anomalies = 5,
 		resists = {
 			[DamageType.TEMPORAL] = 20,
 		},
@@ -1254,7 +1254,7 @@ newEntity{ base = "BASE_WIZARD_HAT", define_as = "SET_TEMPORAL_FEZ",
 	set_list = { {"define_as", "SET_TEMPORAL_ROBE"} },
 	on_set_complete = function(self, who)
 		game.logPlayer(who, "#STEEL_BLUE#A time vortex briefly appears in front of you.")
-		self:specialSetAdd({"wielder","paradox_reduce_fails"}, 40)
+		self:specialSetAdd({"wielder","paradox_reduce_anomalies"}, 20)
 		self:specialSetAdd({"wielder","confusion_immune"}, 0.4)
 		self:specialSetAdd({"wielder","combat_spellspeed"}, 0.1)
 		self:specialSetAdd({"wielder","inc_damage"}, { [engine.DamageType.TEMPORAL] = 10 })
@@ -1686,7 +1686,7 @@ newEntity{ base = "BASE_LONGSWORD", define_as = "ART_PAIR_TWSWORD",
 	desc = [[Legend has it this blade is one of a pair: twin blades forged in the earliest of days of the Wardens. To an untrained wielder it is less than perfect; to a Warden, it represents the untapped potential of time.]],
 	level_range = {20, 30},
 	rarity = 250,
-	require = { stat = { str=24, mag=24 }, },
+	require = { stat = { dex=24, mag=24 }, },
 	cost = 300,
 	material_level = 3,
 	combat = {
@@ -1709,6 +1709,10 @@ newEntity{ base = "BASE_LONGSWORD", define_as = "ART_PAIR_TWSWORD",
 		resist_all_on_teleport = 5,
 		defense_on_teleport = 10,
 		effect_reduction_on_teleport = 15,
+		talents_types_mastery = {
+			["chronomancy/blade-threading"] = 0.1,
+			["chronomancy/guardian"] = 0.1,
+		}
 	},
 	set_list = { {"define_as","ART_PAIR_TWDAG"} },
 	on_set_complete = function(self, who)
@@ -1757,6 +1761,10 @@ newEntity{ base = "BASE_KNIFE", define_as = "ART_PAIR_TWDAG",
 		resist_all_on_teleport = 5,
 		defense_on_teleport = 10,
 		effect_reduction_on_teleport = 15,
+		talents_types_mastery = {
+			["chronomancy/blade-threading"] = 0.1,
+			["chronomancy/guardian"] = 0.1,
+		}
 	},
 	set_list = { {"define_as","ART_PAIR_TWSWORD"} },
 	on_set_complete = function(self, who)
@@ -5988,7 +5996,7 @@ In the case of opponents who weren't alone, he had to improvise.]],
 	material_level = 5,
 	wielder = {
 		combat_spellpower = 10,
-		paradox_reduce_fails = 20,
+		paradox_reduce_anomalies = 10,
 		talent_cd_reduction={
 			[Talents.T_TIME_SKIP]=1,
 		},
