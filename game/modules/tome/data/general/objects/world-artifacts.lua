@@ -6254,15 +6254,13 @@ newEntity{ base = "BASE_GREATMAUL",
 					self.talent_on_spell = nil
 					
 					self.material_level=gem.material_level
-					local scalingFactor = self.material_level 
-					
-					self.combat = {
-						dam = 8 + (12 * scalingFactor),
-						apr = (3 * scalingFactor),
-						physcrit = 4 + (2 * scalingFactor),
-						dammod = {str=1.2, mag=0.1},
-						damrange = 1.3,
-					}
+					local scalingFactor = self.material_level
+
+					self.combat.dam = 8 + (12 * scalingFactor)
+					self.combat.apr = (3 * scalingFactor)
+					self.combat.physcrit = 4 + (2 * scalingFactor)
+					self.combat.dammod = {str=1.2, mag=0.1}
+					self.combat.damrange = 1.3
 							
 					self.wielder = {
 						inc_stats = {[Stats.STAT_MAG] = (2 * scalingFactor), [Stats.STAT_CUN] = (2 * scalingFactor), [Stats.STAT_DEX] = (2 * scalingFactor),},
