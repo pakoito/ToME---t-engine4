@@ -3531,6 +3531,107 @@ function _M:updateModdableTile()
 	if self.x and game.level then game.level.map:updateMap(self.x, self.y) end
 end
 
+-- Go through all sustained talents and turn them off if pre_use fails
+function _M:actorCheckSustains()
+	for tid, _ in pairs(self.talents) do
+		local t = self:getTalentFromId(tid)
+		if t and t.mode == "sustained" and self:isTalentActive(t.id) then
+			-- handles unarmed
+			if t.is_unarmed and (self:hasMassiveArmor() or not self:isUnarmed()) then
+				self:forceUseTalent(tid, {ignore_energy=true})
+			end
+			-- handles pre_use checks
+			if t.on_pre_use and not t.on_pre_use(self, t, silent, fake) then
+				self:forceUseTalent(tid, {ignore_energy=true})
+			end
+		end
+	end
+end
+
+-- Quick Switch Weapons
+function _M:quickSwitchWeapons(free_swap, message)
+	if self.no_inventory_access then return end
+	local mh1, mh2 = self.inven[self.INVEN_MAINHAND], self.inven[self.INVEN_QS_MAINHAND]
+	local oh1, oh2 = self.inven[self.INVEN_OFFHAND], self.inven[self.INVEN_QS_OFFHAND]
+	local pf1, pf2 = self.inven[self.INVEN_PSIONIC_FOCUS], self.inven[self.INVEN_QS_PSIONIC_FOCUS]
+	local qv1, qv2 = self.inven[self.INVEN_QUIVER], self.inven[self.INVEN_QS_QUIVER]
+
+	if not mh1 or not mh2 or not oh1 or not oh2 then return end
+
+	-- Do not reset power of switched items
+	self.no_power_reset_on_wear = true
+
+	-- Check for free weapon swaps
+	local free_swap = free_swap or false
+	if self:attr("quick_weapon_swap") then free_swap = true end
+
+	local mhset1, mhset2 = {}, {}
+	local ohset1, ohset2 = {}, {}
+	local pfset1, pfset2 = {}, {}
+	local qvset1, qvset2 = {}, {}
+	-- Remove them all
+	for i = #mh1, 1, -1 do mhset1[#mhset1+1] = self:removeObject(mh1, i, true) end
+	for i = #mh2, 1, -1 do mhset2[#mhset2+1] = self:removeObject(mh2, i, true) end
+	for i = #oh1, 1, -1 do ohset1[#ohset1+1] = self:removeObject(oh1, i, true) end
+	for i = #oh2, 1, -1 do ohset2[#ohset2+1] = self:removeObject(oh2, i, true) end
+	if pf1 and pf2 then
+		for i = #pf1, 1, -1 do pfset1[#pfset1+1] = self:removeObject(pf1, i, true) end
+		for i = #pf2, 1, -1 do pfset2[#pfset2+1] = self:removeObject(pf2, i, true) end
+	end
+	if qv1 and qv2 then
+		for i = #qv1, 1, -1 do qvset1[#qvset1+1] = self:removeObject(qv1, i, true) end
+		for i = #qv2, 1, -1 do qvset2[#qvset2+1] = self:removeObject(qv2, i, true) end
+	end
+	-- Put them all back
+	for i = 1, #mhset1 do self:addObject(mh2, mhset1[i]) end
+	for i = 1, #mhset2 do self:addObject(mh1, mhset2[i]) end
+	for i = 1, #ohset1 do self:addObject(oh2, ohset1[i]) end
+	for i = 1, #ohset2 do self:addObject(oh1, ohset2[i]) end
+	if pf1 and pf2 then
+		for i = 1, #pfset1 do self:addObject(pf2, pfset1[i]) end
+		for i = 1, #pfset2 do self:addObject(pf1, pfset2[i]) end
+	end
+	if qv1 and qv2 then
+		for i = 1, #qvset1 do self:addObject(qv2, qvset1[i]) end
+		for i = 1, #qvset2 do self:addObject(qv1, qvset2[i]) end
+	end
+	if free_swap == false then self:useEnergy() end
+	local names = ""
+	if pf1 and pf2 then
+		if not pf1[1] then
+			if mh1[1] and oh1[1] then names = mh1[1]:getName{do_color=true}.." and "..oh1[1]:getName{do_color=true}
+			elseif mh1[1] and not oh1[1] then names = mh1[1]:getName{do_color=true}
+			elseif not mh1[1] and oh1[1] then names = oh1[1]:getName{do_color=true}
+			end
+		else
+			if mh1[1] and oh1[1] then names = mh1[1]:getName{do_color=true}.." and "..oh1[1]:getName{do_color=true}.." and "..pf1[1]:getName{do_color=true}
+			elseif mh1[1] and not oh1[1] then names = mh1[1]:getName{do_color=true}.." and "..pf1[1]:getName{do_color=true}
+			elseif not mh1[1] and oh1[1] then names = oh1[1]:getName{do_color=true}.." and "..pf1[1]:getName{do_color=true}
+			end
+		end
+	else
+		if mh1[1] and oh1[1] then names = mh1[1]:getName{do_color=true}.." and "..oh1[1]:getName{do_color=true}
+		elseif mh1[1] and not oh1[1] then names = mh1[1]:getName{do_color=true}
+		elseif not mh1[1] and oh1[1] then names = oh1[1]:getName{do_color=true}
+		end
+	end
+
+	self.no_power_reset_on_wear = nil
+
+	-- Make sure sustains are still active
+	self:actorCheckSustains()
+
+	-- Special Messages
+	if message == "warden" then
+		game.logPlayer(self, "You teleport %s into your hands.", names)
+	else
+		game.logPlayer(self, "You switch your weapons to: %s.", names)
+	end
+	
+	self.off_weapon_slots = not self.off_weapon_slots
+	self.changed = true
+end
+
 --- Call when an object is worn
 -- This doesnt call the base interface onWear, it copies the code because we need some tricky stuff
 function _M:onWear(o, inven_id, bypass_set)
@@ -5812,7 +5913,7 @@ function _M:doWear(inven, item, o, dst)
 		dst:addObject(inven, o)
 	end
 	dst:sortInven()
-	if self.playerCheckSustains then self:playerCheckSustains() end
+	self:actorCheckSustains()
 	self.changed = true
 end
 
@@ -5827,7 +5928,7 @@ function _M:doTakeoff(inven, item, o, simple, dst)
 		if not self:attr("quick_wear_takeoff") or self:attr("quick_wear_takeoff_disable") then self:useEnergy() end
 		if self:attr("quick_wear_takeoff") then self:setEffect(self.EFF_SWIFT_HANDS_CD, 1, {}) self.tmp[self.EFF_SWIFT_HANDS_CD].dur = 0 end
 	end
-	if self.playerCheckSustains then self:playerCheckSustains() end
+	self:actorCheckSustains()
 	self.changed = true
 end
 
