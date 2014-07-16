@@ -64,10 +64,17 @@ function _M:generateGuardian(guardian)
 		local x, y = nil, nil
 
 		if self.guardian_spot then
-			local spot = self.level:pickSpot(self.guardian_spot)
+			local spot
+			if self.guardian_spot == "default_up" then
+				spot = self.level.default_up
+			elseif self.guardian_spot == "default_down" then
+				spot = self.level.default_down
+			else
+				spot = self.level:pickSpot(self.guardian_spot)
+			end
 			if spot then
-				x, y = spot.x, spot.y
-				print("Selecting guardian spot", x, y)
+				x, y = util.findFreeGrid(spot.x, spot.y, 3, true, {[Map.ACTOR]=true})
+				print("Selecting guardian spot", x, y, "from", spot.x, spot.y)
 			end
 		end
 

@@ -467,6 +467,7 @@ newEntity{ base = "BASE_MACE",
 	rarity = 340,
 	require = { stat = { str=42 } },
 	cost = 350,
+	metallic = false,
 	material_level = 3,
 	combat = {
 		dam = 40,

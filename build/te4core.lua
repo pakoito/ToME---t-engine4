@@ -120,6 +120,7 @@ project "TEngine"
 	configuration "linux"
 		libdirs {"/opt/SDL-2.0/lib/"}
 		links { "dl", "SDL2", "SDL2_ttf", "SDL2_image", "png", "openal", "vorbisfile", "GL", "GLU", "m", "pthread" }
+		linkoptions { "-Wl,-E" }
 		defines { [[TENGINE_HOME_PATH='".t-engine"']], 'SELFEXE_LINUX' }
 		if steamlin64 then steamlin64() end
 

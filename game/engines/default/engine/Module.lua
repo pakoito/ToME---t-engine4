@@ -422,7 +422,7 @@ function _M:loadAddons(mod, saveuse)
 						if saveuse then
 							-- The savefile requires it, but we couldnt activate it, abord
 							core.game.setRebootMessage(([[The savefile requires the #YELLOW#%s#WHITE# addon.
-Some of its features require being online and could not be enabled. To prevent damaging the savefile loading was aborded.
+Some of its features require being online and could not be enabled. To prevent damaging the savefile loading was aborted.
 
 You may try to force loading if you are sure the savefile does not use that addon, at your own risk, by checking the "Ignore unloadable addons" checkbox on the load game screen..]]):format(add.long_name))
 							util.showMainMenu(nil, nil, nil, nil, nil, nil, "show_ignore_addons_not_loading=true")
