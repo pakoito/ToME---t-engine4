@@ -890,11 +890,14 @@ newEffect{
 newEffect{
 	name = "HEROISM", image = "talents/infusion__heroism.png",
 	desc = "Heroism",
-	long_desc = function(self, eff) return ("Increases your three highest stats by %d."):format(eff.power) end,
+	long_desc = function(self, eff)
+		local xs = eff.die_at > 0 and (" and keeps you from dying even if your life drops to %+d"):format(-eff.die_at) or ""
+		return ("Increases your three highest stats by %d%s."):format(eff.power, xs) 
+	end,
 	type = "physical",
 	subtype = { nature=true },
 	status = "beneficial",
-	parameters = { power=1 },
+	parameters = { power=1, die_at = 0 },
 	activate = function(self, eff)
 		local l = { {Stats.STAT_STR, self:getStat("str")}, {Stats.STAT_DEX, self:getStat("dex")}, {Stats.STAT_CON, self:getStat("con")}, {Stats.STAT_MAG, self:getStat("mag")}, {Stats.STAT_WIL, self:getStat("wil")}, {Stats.STAT_CUN, self:getStat("cun")}, }
 		table.sort(l, function(a,b) return a[2] > b[2] end)
