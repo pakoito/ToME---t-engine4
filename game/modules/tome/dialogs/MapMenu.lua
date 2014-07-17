@@ -130,6 +130,7 @@ function _M:generateList()
 	local t = game.level.map(self.tmx, self.tmy, Map.TRAP)
 	local o = game.level.map(self.tmx, self.tmy, Map.OBJECT)
 	local a = game.level.map(self.tmx, self.tmy, Map.ACTOR)
+	local p = game.level.map(self.tmx, self.tmy, Map.PROJECTILE)
 
 	-- Generic actions
 	if g and g.change_level and self.on_player then list[#list+1] = {name="Change level", action="change_level", color=colors.simple(colors.VIOLET)} end
@@ -140,6 +141,7 @@ function _M:generateList()
 	if a and not self.on_player and config.settings.cheat then list[#list+1] = {name="Target player", action="target-player", color=colors.simple(colors.RED), actor=a} end
 	if a and config.settings.cheat then list[#list+1] = {name="Lua inspect [Actor]", action="debug-inspect", color=colors.simple(colors.LIGHT_BLUE), actor=a} end
 	if g and config.settings.cheat then list[#list+1] = {name="Lua inspect [Terrain]", action="debug-inspect", color=colors.simple(colors.LIGHT_BLUE), actor=g} end
+	if p and config.settings.cheat then list[#list+1] = {name="Lua inspect [Projectile]", action="debug-inspect", color=colors.simple(colors.LIGHT_BLUE), actor=p} end
 	if a and config.settings.cheat then list[#list+1] = {name="Show inventory", action="debug-inventory", color=colors.simple(colors.YELLOW), actor=a} end
 	if self.on_player then list[#list+1] = {name="Rest a while", action="rest", color=colors.simple(colors.ANTIQUE_WHITE)} end
 	if self.on_player then list[#list+1] = {name="Auto-explore", action="autoexplore", color=colors.simple(colors.ANTIQUE_WHITE)} end

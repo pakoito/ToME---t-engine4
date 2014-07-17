@@ -70,6 +70,7 @@ function _M:loaded()
 		if t.toback then self.toback = true end
 		if t.sub_particle then sub_particle = t.sub_particle end
 		if t.sub_particle_args then sub_particle_args = t.sub_particle_args end
+		if t.can_shift then self.can_shift = true end
 	else error("unsupported particle type: "..type(self.def))
 	end
 
@@ -126,4 +127,14 @@ function _M:dieDisplay()
 	if not self.ps then return end
 	self.ps:die()
 	self.ps = nil
+end
+
+function _M:shift(map, mo)
+	if not self.can_shift then return end
+
+	local adx, ady = mo:getMoveAnimRaw(map._map)
+	if self._adx then
+		self.ps:shift(self._adx - adx, self._ady - ady)
+	end					
+	self._adx, self._ady = adx, ady
 end

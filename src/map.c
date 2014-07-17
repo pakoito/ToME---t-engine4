@@ -315,6 +315,9 @@ static int map_object_set_move_anim(lua_State *L)
 	obj->move_blur = lua_tonumber(L, 7); // defaults to 0
 	obj->move_twitch_dir = lua_tonumber(L, 8); // defaults to 0 (which is equivalent to up or 8)
 	obj->move_twitch = lua_tonumber(L, 9); // defaults to 0
+	obj->animdx = obj->animdx - ((float)obj->cur_x - obj->oldx);
+	obj->animdy = obj->animdy - ((float)obj->cur_y - obj->oldy);
+
 	return 0;
 }
 
@@ -352,8 +355,19 @@ static int map_object_get_move_anim(lua_State *L)
 static int map_object_get_move_anim_raw(lua_State *L)
 {
 	map_object *obj = (map_object*)auxiliar_checkclass(L, "core{mapobj}", 1);
-	lua_pushnumber(L, obj->animdx);
-	lua_pushnumber(L, obj->animdy);
+	map_type *map = (map_type*)auxiliar_checkclass(L, "core{map}", 2);
+
+	float offx = 0;
+	float offy = 0;
+
+	if (obj->oldrawdx != obj->cur_x) offx = obj->cur_x - obj->oldrawdx;
+	obj->oldrawdx = obj->cur_x;
+
+	if (obj->oldrawdy != obj->cur_y) offy = obj->cur_y - obj->oldrawdy;
+	obj->oldrawdy = obj->cur_y;
+
+	lua_pushnumber(L, (obj->animdx + obj->cur_x + offx) * map->tile_w);
+	lua_pushnumber(L, (obj->animdy + obj->cur_y + offy) * map->tile_h);
 	return 2;
 }
 

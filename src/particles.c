@@ -161,6 +161,7 @@ static int particles_new(lua_State *L)
 	ps->shader = s;
 	ps->fboalter = fboalter;
 	ps->sub = NULL;
+	ps->recompile = FALSE;
 
 	thread_add(ps);
 	return 1;
@@ -172,6 +173,44 @@ static int particles_set_sub(lua_State *L)
 	particles_type *subps = (particles_type*)auxiliar_checkclass(L, "core{particles}", 2);
 
 	ps->sub = subps;
+
+	return 0;
+}
+
+static void do_shift(particles_type *ps, float sx, float sy) {
+	SDL_mutexP(ps->lock);
+
+	int w;
+	for (w = 0; w < ps->nb; w++)
+	{
+		particle_type *p = &ps->particles[w];
+
+		if (p->life > 0)
+		{
+			p->x += sx;
+			p->ox += sx;
+			p->y += sy;
+			p->oy += sy;
+		}
+	}
+
+	ps->recompile = TRUE;
+
+	SDL_mutexV(ps->lock);
+
+	if (ps->sub) do_shift(ps->sub, sx, sy);
+}
+
+// Runs into main thread
+static int particles_shift(lua_State *L)
+{
+	particles_type *ps = (particles_type*)auxiliar_checkclass(L, "core{particles}", 1);
+	float sx = lua_tonumber(L, 2) / ps->zoom;
+	float sy = lua_tonumber(L, 3) / ps->zoom;
+	if (!sx && !sy) return 0;
+//	printf("shift, %fx%f, zoom %f\n", sx, sy, ps->zoom);
+
+	do_shift(ps, sx, sy);
 
 	return 0;
 }
@@ -220,118 +259,8 @@ static int particles_die(lua_State *L)
 	return 1;
 }
 
-// Runs into main thread
-static void particles_draw(particles_type *ps, float x, float y, float zoom) 
-{
-	if (!ps->alive || !ps->vertices || !ps->colors || !ps->texcoords) return;
-	GLfloat *vertices = ps->vertices;
-	GLfloat *colors = ps->colors;
-	GLshort *texcoords = ps->texcoords;
-
-	if (x < -10000) x = -10000;
-	if (x > 10000) x = 10000;
-	if (y < -10000) y = -10000;
-	if (y > 10000) y = 10000;
-
-	SDL_mutexP(ps->lock);
-
-	if (ps->blend_mode == BLEND_SHINY) glBlendFunc(GL_SRC_ALPHA,GL_ONE);
-	else if (ps->blend_mode == BLEND_ADDITIVE) glBlendFunc(GL_ONE, GL_ONE);
-	else if (ps->blend_mode == BLEND_MIXED) glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
-
-	if (multitexture_active) tglActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, ps->texture);
-	if (multitexture_active && main_fbo) {
-		tglActiveTexture(GL_TEXTURE1);
-		glBindTexture(GL_TEXTURE_2D, main_fbo->texture);
-	}
-	glTexCoordPointer(2, GL_SHORT, 0, texcoords);
-	glColorPointer(4, GL_FLOAT, 0, colors);
-	glVertexPointer(2, GL_FLOAT, 0, vertices);
-
-	glTranslatef(x, y, 0);
-	glPushMatrix();
-	glScalef(ps->zoom * zoom, ps->zoom * zoom, ps->zoom * zoom);
-	glRotatef(ps->rotate, 0, 0, 1);
-
-	if (ps->shader) useShader(ps->shader, 1, 1, main_fbo ? main_fbo->w : 1, main_fbo ? main_fbo->h : 1, 1, 1, 1, 1);
-
-	int remaining = ps->batch_nb;
-	while (remaining >= PARTICLES_PER_ARRAY)
-	{
-		glDrawArrays(GL_QUADS, remaining - PARTICLES_PER_ARRAY, PARTICLES_PER_ARRAY);
-		remaining -= PARTICLES_PER_ARRAY;
-	}
-	if (remaining) glDrawArrays(GL_QUADS, 0, remaining);
-
-	if (ps->shader) tglUseProgramObject(0);
-
-	glPopMatrix();
-	glTranslatef(-x, -y, 0);
-
-	if (ps->blend_mode) glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
-
-	if (multitexture_active && main_fbo) {
-		tglActiveTexture(GL_TEXTURE0);
-	}
-
-	SDL_mutexV(ps->lock);
-}
-
-// Runs into main thread
-static int particles_to_screen(lua_State *L)
-{
-	particles_type *ps = (particles_type*)auxiliar_checkclass(L, "core{particles}", 1);
-	float x = luaL_checknumber(L, 2);
-	float y = luaL_checknumber(L, 3);
-	bool show = lua_toboolean(L, 4);
-	float zoom = lua_isnumber(L, 5) ? lua_tonumber(L, 5) : 1;
-	if (!show || !ps->init) return 0;
-	if (!ps->texture) return 0;
-
-	if (ps->fboalter) {
-		particle_draw_last *pdl = malloc(sizeof(particle_draw_last));
-		pdl->ps = ps;
-		pdl->x = x;
-		pdl->y = y;
-		pdl->zoom = zoom;
-		pdl->next = pdls_head;
-		pdls_head = pdl;
-		return 0;
-	}
-	particles_draw(ps, x, y, zoom);
-
-	if (ps->sub) {
-		ps = ps->sub;
-		if (ps->fboalter) {
-			particle_draw_last *pdl = malloc(sizeof(particle_draw_last));
-			pdl->ps = ps;
-			pdl->x = x;
-			pdl->y = y;
-			pdl->zoom = zoom;
-			pdl->next = pdls_head;
-			pdls_head = pdl;
-		}
-		else particles_draw(ps, x, y, zoom);
-	}
-	return 0;
-}
-
-// Runs into main thread
-static int particles_draw_last(lua_State *L)
-{
-	if (!pdls_head) return 0;
-	while (pdls_head) {
-		particle_draw_last *pdl = pdls_head;
-		particles_draw(pdl->ps, pdl->x, pdl->y, pdl->zoom);
-		pdls_head = pdls_head->next;
-		free(pdl);
-	}
-	return 0;
-}
-
 // Runs into particles thread
-static void particles_update(lua_State *L, particles_type *ps, bool last)
+static void particles_update(particles_type *ps, bool last, bool no_update)
 {
 	int w = 0;
 	bool alive = FALSE;
@@ -345,11 +274,13 @@ static void particles_update(lua_State *L, particles_type *ps, bool last)
 
 	if (last) SDL_mutexP(ps->lock);
 
+	ps->recompile = FALSE;
+
 	GLfloat *vertices = ps->vertices;
 	GLfloat *colors = ps->colors;
 	GLshort *texcoords = ps->texcoords;
 
-	ps->rotate += ps->rotate_v;
+	if (!no_update) ps->rotate += ps->rotate_v;
 
 	for (w = 0; w < ps->nb; w++)
 	{
@@ -357,39 +288,41 @@ static void particles_update(lua_State *L, particles_type *ps, bool last)
 
 		if (p->life > 0)
 		{
-			alive = TRUE;
+			if (!no_update) {
+				alive = TRUE;
 
-			if (p->life != PARTICLE_ETERNAL) p->life--;
+				if (p->life != PARTICLE_ETERNAL) p->life--;
 
-			p->ox = p->x;
-			p->oy = p->y;
+				p->ox = p->x;
+				p->oy = p->y;
 
-			p->x += p->xv;
-			p->y += p->yv;
+				p->x += p->xv;
+				p->y += p->yv;
 
-			if (p->vel)
-			{
-				p->x += cos(p->dir) * p->vel;
-				p->y += sin(p->dir) * p->vel;
+				if (p->vel)
+				{
+					p->x += cos(p->dir) * p->vel;
+					p->y += sin(p->dir) * p->vel;
+				}
+
+				p->dir += p->dirv;
+				p->vel += p->velv;
+				p->r += p->rv;
+				p->g += p->gv;
+				p->b += p->bv;
+				p->a += p->av;
+				p->size += p->sizev;
+
+				p->xv += p->xa;
+				p->yv += p->ya;
+				p->dirv += p->dira;
+				p->velv += p->vela;
+				p->rv += p->ra;
+				p->gv += p->ga;
+				p->bv += p->ba;
+				p->av += p->aa;
+				p->sizev += p->sizea;
 			}
-
-			p->dir += p->dirv;
-			p->vel += p->velv;
-			p->r += p->rv;
-			p->g += p->gv;
-			p->b += p->bv;
-			p->a += p->av;
-			p->size += p->sizev;
-
-			p->xv += p->xa;
-			p->yv += p->ya;
-			p->dirv += p->dira;
-			p->velv += p->vela;
-			p->rv += p->ra;
-			p->gv += p->ga;
-			p->bv += p->ba;
-			p->av += p->aa;
-			p->sizev += p->sizea;
 
 			if (last)
 			{
@@ -471,10 +404,122 @@ static void particles_update(lua_State *L, particles_type *ps, bool last)
 	if (last)
 	{
 		ps->batch_nb = vert_idx / 2;
-		ps->alive = alive || ps->no_stop;
+		if (!no_update) ps->alive = alive || ps->no_stop;
 
 		SDL_mutexV(ps->lock);
 	}
+}
+
+// Runs into main thread
+static void particles_draw(particles_type *ps, float x, float y, float zoom) 
+{
+	if (!ps->alive || !ps->vertices || !ps->colors || !ps->texcoords) return;
+	GLfloat *vertices = ps->vertices;
+	GLfloat *colors = ps->colors;
+	GLshort *texcoords = ps->texcoords;
+
+	if (x < -10000) x = -10000;
+	if (x > 10000) x = 10000;
+	if (y < -10000) y = -10000;
+	if (y > 10000) y = 10000;
+
+	SDL_mutexP(ps->lock);
+
+	if (ps->blend_mode == BLEND_SHINY) glBlendFunc(GL_SRC_ALPHA,GL_ONE);
+	else if (ps->blend_mode == BLEND_ADDITIVE) glBlendFunc(GL_ONE, GL_ONE);
+	else if (ps->blend_mode == BLEND_MIXED) glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+
+	if (multitexture_active) tglActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, ps->texture);
+	if (multitexture_active && main_fbo) {
+		tglActiveTexture(GL_TEXTURE1);
+		glBindTexture(GL_TEXTURE_2D, main_fbo->texture);
+	}
+	glTexCoordPointer(2, GL_SHORT, 0, texcoords);
+	glColorPointer(4, GL_FLOAT, 0, colors);
+	glVertexPointer(2, GL_FLOAT, 0, vertices);
+
+	glTranslatef(x, y, 0);
+	glPushMatrix();
+	glScalef(ps->zoom * zoom, ps->zoom * zoom, ps->zoom * zoom);
+	glRotatef(ps->rotate, 0, 0, 1);
+
+	if (ps->shader) useShader(ps->shader, 1, 1, main_fbo ? main_fbo->w : 1, main_fbo ? main_fbo->h : 1, 1, 1, 1, 1);
+
+	int remaining = ps->batch_nb;
+	while (remaining >= PARTICLES_PER_ARRAY)
+	{
+		glDrawArrays(GL_QUADS, remaining - PARTICLES_PER_ARRAY, PARTICLES_PER_ARRAY);
+		remaining -= PARTICLES_PER_ARRAY;
+	}
+	if (remaining) glDrawArrays(GL_QUADS, 0, remaining);
+
+	if (ps->shader) tglUseProgramObject(0);
+
+	glPopMatrix();
+	glTranslatef(-x, -y, 0);
+
+	if (ps->blend_mode) glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
+
+	if (multitexture_active && main_fbo) {
+		tglActiveTexture(GL_TEXTURE0);
+	}
+
+	SDL_mutexV(ps->lock);
+}
+
+// Runs into main thread
+static int particles_to_screen(lua_State *L)
+{
+	particles_type *ps = (particles_type*)auxiliar_checkclass(L, "core{particles}", 1);
+	float x = luaL_checknumber(L, 2);
+	float y = luaL_checknumber(L, 3);
+	bool show = lua_toboolean(L, 4);
+	float zoom = lua_isnumber(L, 5) ? lua_tonumber(L, 5) : 1;
+	if (!show || !ps->init) return 0;
+	if (!ps->texture) return 0;
+
+	if (ps->recompile) particles_update(ps, TRUE, TRUE);
+
+	if (ps->fboalter) {
+		particle_draw_last *pdl = malloc(sizeof(particle_draw_last));
+		pdl->ps = ps;
+		pdl->x = x;
+		pdl->y = y;
+		pdl->zoom = zoom;
+		pdl->next = pdls_head;
+		pdls_head = pdl;
+		return 0;
+	}
+	particles_draw(ps, x, y, zoom);
+
+	if (ps->sub) {
+		ps = ps->sub;
+		if (ps->fboalter) {
+			particle_draw_last *pdl = malloc(sizeof(particle_draw_last));
+			pdl->ps = ps;
+			pdl->x = x;
+			pdl->y = y;
+			pdl->zoom = zoom;
+			pdl->next = pdls_head;
+			pdls_head = pdl;
+		}
+		else particles_draw(ps, x, y, zoom);
+	}
+	return 0;
+}
+
+// Runs into main thread
+static int particles_draw_last(lua_State *L)
+{
+	if (!pdls_head) return 0;
+	while (pdls_head) {
+		particle_draw_last *pdl = pdls_head;
+		particles_draw(pdl->ps, pdl->x, pdl->y, pdl->zoom);
+		pdls_head = pdls_head->next;
+		free(pdl);
+	}
+	return 0;
 }
 
 // Runs into particles thread
@@ -630,6 +675,7 @@ static const struct luaL_Reg particles_reg[] =
 	{"toScreen", particles_to_screen},
 	{"isAlive", particles_is_alive},
 	{"setSub", particles_set_sub},
+	{"shift", particles_shift},
 	{"die", particles_die},
 	{NULL, NULL},
 };
@@ -716,7 +762,7 @@ void thread_particle_run(particle_thread *pt, plist *l)
 		}
 		lua_pop(L, 1); // global table
 
-		particles_update(L, ps, TRUE);
+		particles_update(ps, TRUE, FALSE);
 	} else {
 		// We panic'ed! This particule is borked and needs to die
 		ps->i_want_to_die = TRUE;

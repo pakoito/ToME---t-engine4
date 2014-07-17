@@ -17,9 +17,10 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
+can_shift = true
 base_size = 32
 
-return { generator = function()
+return { blend_mode=core.particles.BLEND_SHINY, generator = function()
 	local ad = rng.range(0, 360)
 	local a = math.rad(ad)
 	local dir = math.rad(90)
@@ -29,9 +30,9 @@ return { generator = function()
 	local y = 16 - math.abs(math.sin(x / 16) * 8)
 
 	return {
-		trail = 1,
+		trail = 0,
 		life = rng.range(10, 18),
-		size = rng.range(2, 3), sizev = 0, sizea = 0.005,
+		size = rng.range(2, 4), sizev = 0, sizea = 0.003,
 
 		x = x, xv = 0, xa = 0,
 		y = y, yv = 0, ya = -0.2,
@@ -41,10 +42,10 @@ return { generator = function()
 		r = rng.range(30, 220)/255, rv = rng.range(0, 10)/100, ra = 0,
 		g = 0,   gv = 0, ga = 0,
 		b = rng.range(170, 255)/255, bv = rng.range(0, 10)/100, ba = 0,
-		a = rng.range(70, 255)/255,   av = 0, aa = 0,
+		a = rng.range(70, 255)/255,   av = -0.03, aa = 0,
 	}
 end, },
 function(self)
-	self.ps:emit(4)
+	self.ps:emit(8)
 end,
-40
+40, "particles_images/transpcircle"

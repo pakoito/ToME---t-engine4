@@ -62,6 +62,7 @@ struct s_particles_type {
 	bool alive;
 	bool i_want_to_die;
 	bool init;
+	bool recompile;
 
 	// R/W only by thread
 	int base;

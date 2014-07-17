@@ -106,12 +106,17 @@ function _M:defineDisplayCallback()
 	local f_neutral = nil
 
 	local function particles(x, y, w, h)
+		local self = weak[1]
+		if not self or not self._mo then return end
+
 		local e
 		for i = 1, #ps do
 			e = ps[i]
 			e:checkDisplay()
-			if e.ps:isAlive() then e.ps:toScreen(x + w / 2, y + h / 2, true, w / game.level.map.tile_w)
-			elseif weak[1] then weak[1]:removeParticles(e)
+			if e.ps:isAlive() then
+				if game.level and game.level.map then e:shift(game.level.map, self._mo) end
+				e.ps:toScreen(x + w / 2, y + dy + h / 2, true, w / (game.level and game.level.map.tile_w or w))
+			else self:removeParticles(e)
 			end
 		end
 	end

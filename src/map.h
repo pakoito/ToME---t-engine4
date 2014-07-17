@@ -35,6 +35,7 @@ struct s_map_object {
 	int cur_x, cur_y;
 	float dx, dy, scale;
 	float animdx, animdy;
+	float oldrawdx, oldrawdy;
 	float dw, dh;
 	float tint_r;
 	float tint_g;

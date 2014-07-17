@@ -17,6 +17,8 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
+can_shift = true
+
 return { generator = function()
 	local radius = 0
 	local sradius = (radius + 0.5) * (engine.Map.tile_w + engine.Map.tile_h) / 2
