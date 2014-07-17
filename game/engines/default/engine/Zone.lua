@@ -605,7 +605,7 @@ function _M:finishEntity(level, type, e, ego_filter)
 	end
 
 	e:resolve(nil, true)
-
+	e:check("finish", e, self, level)
 	return e
 end
 

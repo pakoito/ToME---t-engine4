@@ -34,22 +34,31 @@ function resolvers.calc.equip(t, e)
 --	print("Equipment resolver for", e.name)
 	-- Iterate of object requests, try to create them and equip them
 	for i, filter in ipairs(t[1]) do
---		print("Equipment resolver", e.name, filter.type, filter.subtype, filter.defined)
+--		print("Equipment resolver", e.name, filter.type, filter.subtype, filter.defined, filter.random_art_replace)
 		local o
-		if not filter.defined then
-			o = game.zone:makeEntity(game.level, "object", filter, nil, true)
-		else
-			local forced
-			o, forced = game.zone:makeEntityByName(game.level, "object", filter.defined, filter.random_art_replace and true or false)
-			-- If we forced the generation this means it was already found
-			if forced then
---				print("Serving unique "..o.name.." but forcing replacement drop")
-				filter.random_art_replace.chance = 100
+		local tries = 0
+		repeat
+			local ok = true
+			tries = tries + 1
+			if not filter.defined then
+				o = game.zone:makeEntity(game.level, "object", filter, nil, true)
+			else
+				local forced
+				o, forced = game.zone:makeEntityByName(game.level, "object", filter.defined, filter.random_art_replace and true or false)
+				-- If we forced the generation this means it was already found
+				if forced then
+--					print("Serving unique "..o.name.." but forcing replacement drop")
+					filter.random_art_replace.chance = 100
+				end
 			end
-		end
+--if o then print("Equipment resolver for", e.name, "forbid_power_source:", filter.forbid_power_source and table.concat(table.keys(filter.forbid_power_source, ","))) end
+			if o and o.power_source and (o.power_source.antimagic and e:attr("has_arcane_knowledge") or o.power_source.arcane and e:attr("forbid_arcane")) then
+				ok = false
+				print("  Equipment resolver for ", e.name ," -- incompatible equipment ", o.name, "retrying", tries, "forbid ps:", filter.forbid_power_source and table.concat(table.keys(filter.forbid_power_source, ",")))
+			end
+		until ok or tries > 4
 		if o then
---			print("Zone made us an equipment according to filter!", o:getName())
-
+---		print("Zone made us an equipment according to filter!", o:getName())
 			-- curse (done here to ensure object attributes get applied correctly)
 			if e:knowTalent(e.T_DEFILING_TOUCH) then
 				local t = e:getTalentFromId(e.T_DEFILING_TOUCH)
@@ -614,6 +623,104 @@ function resolvers.calc.tactic(t, e)
 	elseif t[1] == "survivor" then return {type="survivor", disable=2, escape=5, closein=0, defend=3, protect=0, heal=6, safe_range=8}
 	end
 	return {}
+end
+
+--- ***Still in development***
+--- Resolve tactical ai weights based on talents heavy wieght for randbosses
+--	method (optional) = function to apply to 2nd level or deeper tactical information to build up tactical table
+function resolvers.talented_ai_tactic(method, tactic_total, weight_power)
+	local method = method or "simple_recursive"
+	return {__resolver="talented_ai_tactic", method, tactic_total, weight_power, __resolve_last=true}
+end
+-- Extra recursive methods not handled yet
+function resolvers.calc.talented_ai_tactic(t, e)
+	local tactic_total = t[2] or t.tactic_total or 10 --want tactic weights to total 10
+	local weight_power = t[3] or t.weight_power or 0.5 --smooth out tactical weights
+	local tacs_offense = {attack=1, attackarea=1, disable=0.5}
+	local tacs_close = {closein=1, go_melee=1}
+	local tacs_defense = {escape=1, defend=1, heal=1, protect=1, disable = 0.5}
+	local tac_types = {type="melee",type = "ranged", type="tank", type="survivor"}
+	local tactic, tactical = {}, {total = 0} 
+	local count = {talents = 0, atk_count = 0, atk_value = 0, atk_melee = 0, atk_range = 0, total_range = 0,
+		close_count = 0, def_count = 0, def_value = 0, disable=0}
+	local do_count, val
+	local tac_count = #table.keys(tacs_offense) + #table.keys(tacs_close) + #table.keys(tacs_defense)
+	-- go through all talents, adding up all the tactical weights from the tactical tables weighted by talent level
+	for tid, tl in pairs(e.talents) do
+		local tal = e:getTalentFromId(tid)
+		local range = e:getTalentRange(tal) + e:getTalentRadius(tal)*2/3
+		if tal and tal.tactical then
+			do_count = false
+			for tt, wt in pairs(tal.tactical) do
+				val = 0
+				if type(wt) == "number" then val = wt
+				elseif type(wt) == "table" then
+					for _, n in pairs(wt) do
+						if type(n) == "number" then val = val + n end
+					end
+				end
+				tactical[tt] = (tactical[tt] or 0) + val -- sum up all the input weights
+				if tacs_offense[tt] then
+					do_count = true
+					count.atk_count = count.atk_count + 1
+					count.atk_value = count.atk_value + tacs_offense[tt] * val
+					count.total_range = count.total_range + range
+					if range >= 2 then
+						count.atk_range = count.atk_range + 1
+					else
+						count.atk_melee = count.atk_melee + 1
+					end
+				end
+				if tacs_defense[tt] then
+					do_count = true
+					count.def_count = count.def_count + 1
+					count.def_value = count.def_value + tacs_defense[tt] * val
+				end
+				if tacs_close[tt] then
+					do_count = true
+					count.close_count = count.close_count + 1
+				end
+				if do_count then
+					count.talents = count.talents + 1
+					tactical.total = tactical.total + val
+					tactic[tt] = (tactic[tt] or 0) + val -- sum up only relevant weights
+				end
+			end
+		end
+	end
+	-- collapse tactics ATTACK, ATTACKAREA by range
+	-- compute tactical weights{disable=3, escape=0, closein=2, defend=2, protect=2, heal=3, go_melee=1} based on weights
+	local ttype = "test"
+	-- normalize weights
+	count.avg_attack_range = count.total_range/count.atk_count
+	local norm_total = 0
+	for tt, wt in pairs(tactic) do
+--		tactic[tt] = (tactic[tt]/count.talents)
+--		tactic[tt] = (tactic[tt]/tactical.total) - count.talents
+		local ave_weight = (tactic[tt]+count.talents)/count.talents
+		local ave_xweight = ave_weight^weight_power - 1
+		if ave_xweight > 1/tac_count then
+			tactic[tt] = ave_weight
+			norm_total = norm_total + ave_weight
+		else
+			tactic[tt] = nil -- defaults to a weight of 1 in the tactical ai
+		end
+	end
+	for tt, _ in pairs(tactic) do
+		tactic[tt] = tactic[tt]*tactic_total/norm_total
+		if tactic[tt] < 1 then tactic[tt] = nil end -- defaults to a weight of 1 in the tactical ai
+	end
+	
+	-- Minimum range?
+	if count.atk_range > count.atk_melee and (count.atk_range - count.close_count)/(count.atk_melee + 1) > 2 then
+		tactic.safe_range = math.max(2, math.ceil(count.avg_attack_range/2)) --only for ranged/survivor
+	end
+	
+	-- compute "tank"/"survivor" based on "escape","defend", and "heal" weights
+	tactic.tactical_sum=tactical tactic.count = count
+	tactic.type = ttype
+	tactic.tac_count = tac_count
+	return tactic
 end
 
 --- Racial Talents resolver

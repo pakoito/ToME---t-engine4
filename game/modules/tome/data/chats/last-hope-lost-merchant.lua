@@ -160,7 +160,7 @@ local maker_list = function()
 								game.log("#CRIMSON#Your timetravel has no effect on pre-determined outcomes such as this.")
 								game._chronoworlds = nil
 							end
-							game:saveGame()
+							if not config.settings.cheat then game:saveGame() end
 
 							newChat{ id="naming",
 								text = "Do you want to name your item?\n"..tostring(art:getTextualDesc()),
