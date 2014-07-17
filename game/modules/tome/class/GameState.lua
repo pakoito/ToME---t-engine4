@@ -269,21 +269,38 @@ _M.forbid_themes = {arcane = {'antimagic'},
 }
 --]]
 
---- Check power_source compatibility between two entities
---	compares .power_source and .not_power_source or .forbid_power_source for each
-function _M:power_compatible(e1, e2)
+--- Checks power_source compatibility between two entities
+--	returns true if e2 is compatible with e1
+--	compares .power_source to either .not_power_source or .forbid_power_source for each entity and returns false if there is a match
+--	if require_power is true, it will also check that e2.power_source (if present) has a match in e1.power_source
+function _M:check_power_source(e1, e2, require_power)
 	if not e1 or not e2 then return true end
-print("Comparing power sources",e1.name, e2.name)
+	local ok = true
+--print("Comparing power sources",e1.name, e2.name)
 --	local not_ps = e2.forbid_power_source or {}
+	-- check for excluded power sources first
 	local not_ps = e2.not_power_source or e2.forbid_power_source or {}
 	for ps, _ in pairs(e1.power_source or {}) do
 		if not_ps[ps] then return false end
+--		if not_ps[ps] then ok = false; break end
 	end
 --	not_ps = e1.forbid_power_source or {}
 	not_ps = e1.not_power_source or e1.forbid_power_source or {}
 	for ps, _ in pairs(e2.power_source or {}) do
 		if not_ps[ps] then return false end
+--		if not_ps[ps] then ok = false; break end
 	end
+	-- check for required power_sources
+--	if ok and require_power and e1.power_source and e2.power_source then
+	if require_power and e1.power_source and e2.power_source then
+		ok = false
+		for yes_ps, _ in pairs(e1.power_source)	do
+--			if (e2.power_source and e2.power_source[yes_ps]) then ok = true; break end
+			if (e2.power_source and e2.power_source[yes_ps]) then return true end
+		end
+		return false
+	end
+--	return ok
 	return true
 end
 
@@ -390,7 +407,7 @@ local unided_names = {"glowing","scintillating","rune-covered","unblemished","je
 -- data.forbid_power_source = disallowed power type(s) for egos
 -- 	eg:{arcane = true, psionic = true, technique = true, nature = true, antimagic = true}
 --		note some objects always have a power source by default (i.e. wands are always arcane powered)
--- data.power_source = allowed power type(s) for egos <all allowed>
+-- data.power_source = allowed power type(s) for egos <all allowed> themes <random> can add allowed power_sources
 -- data.namescheme = parameters to be passed to the NameGenerator <local randart_name_rules table>
 -- data.add_pool if true, adds the randart to the world artifact pool <nil>
 -- data.post = function(o) to be applied to the randart after all egos and powers have been added and resolved
@@ -535,7 +552,6 @@ print(" * post update themes:", table.concat(table.keys(themes), ','))
 		local legos = {}
 		local been_greater = 0
 		-- merge all egos into one list to correctly calculate rarities
-		-- try to balance prefix/suffix combinations
 		table.append(legos, game.level:getEntitiesList("object/"..o.egos..":prefix") or {})
 		table.append(legos, game.level:getEntitiesList("object/"..o.egos..":suffix") or {})
 		table.append(legos, game.level:getEntitiesList("object/"..o.egos..":") or {})
@@ -577,6 +593,9 @@ print(" * post update themes:", table.concat(table.keys(themes), ','))
 				if ignore_filter then return true end
 				if not ef.special or ef.special(e) then
 					if gr_ego and not e.greater_ego then return false end
+			-- power compatibility
+					return game.state:check_power_source(ef, e, true)
+--[[
 					local eps = e.power_source or {}
 					local fps = ef.forbid_power_source
 					local ps = ef.power_source
@@ -592,6 +611,7 @@ print(" * post update themes:", table.concat(table.keys(themes), ','))
 						return false
 					end
 					return true
+--]]
 				end
 			end
 
@@ -599,7 +619,7 @@ print(" * post update themes:", table.concat(table.keys(themes), ','))
 			local ego = game.zone:pickEntity(pick_egos)
 			if ego then
 				table.insert(picked_egos, ego)
-				print(" ** selected ego", ego.name, (ego.greater_ego and "(greater)" or "(normal)"))
+				print(" ** selected ego", ego.name, (ego.greater_ego and "(greater)" or "(normal)"), ego.power_source and table.concat(table.keys(ego.power_source), ","))
 				ego = ego:clone()
 				if ego.greater_ego then been_greater = been_greater + 1 end
 				if ego.instant_resolve then ego:resolve(nil, nil, o) end -- Don't allow resolvers.generic here (conflict)
@@ -1539,7 +1559,7 @@ function _M:entityFilterPost(zone, level, type, e, filter)
 				end
 				return true
 				
-				return self:power_compatible(e, c)
+				return self:check_power_source(e, c)
 			end
 --]]
 			e = self:createRandomBoss(e, filter.random_boss)
@@ -1573,7 +1593,7 @@ function _M:entityFilterPost(zone, level, type, e, filter)
 --					end
 --					return true
 --					
---					return self:power_compatible(e, c)
+--					return self:check_power_source(e, c)
 --				end,
 
 				level = lev,
@@ -2034,7 +2054,7 @@ function _M:applyRandomClass(b, data, instant)
 
 		-- update power source parameters with the new class
 		b.not_power_source, b.power_source = self:update_power_source(b.not_power_source, b.power_source)
-print("power restrictions: not_power_source =", table.concat(table.keys(b.not_power_source),","), "power_source =", table.concat(table.keys(b.power_source),","))
+print("   power types: not_power_source =", table.concat(table.keys(b.not_power_source),","), "power_source =", table.concat(table.keys(b.power_source),","))
 
 		-- Add stats
 		if b.auto_stats then
@@ -2075,9 +2095,6 @@ print("power restrictions: not_power_source =", table.concat(table.keys(b.not_po
 		end
 		for k, resolver in pairs(mclass.copy or {}) do apply_resolvers(k, resolver) end
 		for k, resolver in pairs(class.copy or {}) do apply_resolvers(k, resolver) end
-
---update.resolver ai_tactic = resolvers.tactic"melee", ?
---weighted average of tactical weights
 
 		-- Starting talents are autoleveling
 		local tres = nil
@@ -2146,7 +2163,7 @@ print("power restrictions: not_power_source =", table.concat(table.keys(b.not_po
 	while to_apply > 0 do
 		local c = rng.tableRemove(list)
 		if not c then break end --repeat attempts until list is exhausted
-		if data.no_class_restrictions or self:power_compatible(b, c) then  -- recheck power restricts here to account for any previously picked classes
+		if data.no_class_restrictions or self:check_power_source(b, c) then  -- recheck power restricts here to account for any previously picked classes
 			if apply_class(table.clone(c, true)) then to_apply = to_apply - 1 end
 		else
 			print("  class", c.name, " rejected due to power source")
