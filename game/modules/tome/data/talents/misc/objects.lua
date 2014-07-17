@@ -510,14 +510,17 @@ newTalent{
 	equilibrium = 20,
 	cooldown = 50,
 	range = 10,
+	fixed_cooldown = true,
 	tactical = { BUFF = 2 },
 	action = function(self, t)
 		local nb = 3
 		local tids = {}
 		for tid, _ in pairs(self.talents_cd) do
 			local tt = self:getTalentFromId(tid)
-			if tt.type[1]:find("^wild%-gift/") or tt.type[1]:find("psionic/") or tt.type[1]:find("cursed/") then
-				tids[#tids+1] = tid
+			if not tt.fixed_cooldown then
+				if tt.type[1]:find("^wild%-gift/") or tt.type[1]:find("psionic/") or tt.type[1]:find("cursed/") then
+					tids[#tids+1] = tid
+				end
 			end
 		end
 		for i = 1, nb do
