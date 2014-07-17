@@ -58,7 +58,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		local dam = t.getDamage(self, t)
-		return ([[Focus energies into a beam to lash enemies with physical force, doing %d Physical damage and knocking them off balance for 2 turns (-15%% global speed).
+		return ([[Focus energies into a beam to lash all creatures in a line with physical force, doing %d Physical damage and knocking them off balance for 2 turns (-15%% global speed).
 		The damage will scale with your Mindpower.]]):
 		format(damDesc(self, DamageType.PHYSICAL, dam))
 	end,
