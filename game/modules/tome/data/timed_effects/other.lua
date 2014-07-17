@@ -2260,7 +2260,14 @@ newEffect{
 		self:effectTemporaryValue(eff, "status_effect_immune", 1)
 		self.energy.value = 0
 	end,
-	deactivate = function(self, eff)
+	deactivate = function(self, eff) --wake up vaulted npcs in LOS
+	  self:computeFOV(5, nil, 
+		function(x, y, dx, dy, sqdist)
+			local act = game.level.map(x, y, Map.ACTOR)
+			if act then
+				act:removeEffect(act.EFF_VAULTED, true, true)
+			end
+		end, true, false, false)
 	end,
 }
 
