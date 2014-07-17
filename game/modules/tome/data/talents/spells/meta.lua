@@ -166,8 +166,10 @@ newTalent{
 		local tids = {}
 		for tid, _ in pairs(self.talents_cd) do
 			local tt = self:getTalentFromId(tid)
-			if tt.type[2] <= t.getMaxLevel(self, t) and tt.is_spell and not tt.fixed_cooldown then
-				tids[#tids+1] = tid
+			if not tt.fixed_cooldown then
+				if tt.type[2] <= t.getMaxLevel(self, t) and tt.is_spell then
+					tids[#tids+1] = tid
+				end
 			end
 		end
 		for i = 1, t.getTalentCount(self, t) do
