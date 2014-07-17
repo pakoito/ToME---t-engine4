@@ -1766,9 +1766,10 @@ newDamageType{
 
 -- Name:  item - theme - debuff/effect
 
--- Log entries are pretty limited currently because it can be quite spammy with the default messages already
+-- Log entries are included with the damage line as "<#color#..effect ...%chance>" to minimize spam, where the % indicates the chance for the special effect to occur (not its strength) as applicable
 newDamageType{
 	name = "item mind gloom", type = "ITEM_MIND_GLOOM",
+	text_color = "#YELLOW#",
 	tdesc = function(dam, oldDam)
 		parens = ""
 		dam = dam or 0
@@ -1780,12 +1781,14 @@ newDamageType{
 				parens = (" (#RED#%d%%#LAST#)"):format(diff)
 			end
 		end
-		return ("* #LIGHT_GREEN#%d%%#LAST# chance to cause #YELLOW#random insanity#LAST#%s")
+		return ("* #LIGHT_GREEN#%d%%#LAST# chance to cause #YELLOW#random gloom#LAST#%s")
 			:format(dam, parens)
 	end,
 	projector = function(src, x, y, type, dam)
 		local target = game.level.map(x, y, Map.ACTOR)
-		if target and rng.percent(dam) then
+		if target then
+			game:delayedLogDamage(src, target, 0, ("%s<%d%%%% gloom chance>#LAST#"):format(DamageType:get(type).text_color or "#aaaaaa#", dam), false)
+			if rng.percent(dam) then
 			local check = math.max(src:combatAttack(), src:combatSpellpower(), src:combatMindpower())
 			if not src:checkHit(check, target:combatMentalResist()) then return end
 			local effect = rng.range(1, 3)
@@ -1806,11 +1809,13 @@ newDamageType{
 				end
 			end
 		end
+		end
 	end,
 }
 
 newDamageType{
 	name = "item darkness numbing", type = "ITEM_DARKNESS_NUMBING",
+	text_color = "#GREY#",
 	tdesc = function(dam, oldDam)
 		parens = ""
 		dam = dam or 0
@@ -1827,16 +1832,20 @@ newDamageType{
 	end,
 	projector = function(src, x, y, type, dam)
 		local target = game.level.map(x, y, Map.ACTOR)
-		if target and rng.percent(dam) then
+		if target then
+			game:delayedLogDamage(src, target, 0, ("%s<%d%%%% dark numbing chance>#LAST#"):format(DamageType:get(type).text_color or "#aaaaaa#", dam), false)
+			if rng.percent(dam) then
 				local check = math.max(src:combatAttack(), src:combatSpellpower(), src:combatMindpower())
 				local reduction = 15
 				target:setEffect(target.EFF_ITEM_NUMBING_DARKNESS, 4, {reduce = reduction, apply_power=check, no_ct_effect=true})
+		end
 		end
 	end,
 }
 
 newDamageType{
 	name = "item temporal energize", type = "ITEM_TEMPORAL_ENERGIZE",
+	text_color = "#LIGHT_STEEL_BLUE#",
 	tdesc = function(dam, oldDam)
 		parens = ""
 		dam = dam or 0
@@ -1881,21 +1890,25 @@ newDamageType{
 				parens = (" (#RED#%d%%#LAST#)"):format(diff)
 			end
 		end
-		return ("* #LIGHT_GREEN#%d%%#LAST# chance to #GREEN#corrode armor#LAST#%s")
+		return ("* #LIGHT_GREEN#%d%%#LAST# chance to #GREEN#corrode armour#LAST#%s")
 			:format(dam, parens)
 	end,
 	projector = function(src, x, y, type, dam)
 		local target = game.level.map(x, y, Map.ACTOR)
-		if target and rng.percent(dam) then
+		if target then
+			game:delayedLogDamage(src, target, 0, ("%s<%d%%%% corrode armour chance>#LAST#"):format(DamageType:get(type).text_color or "#aaaaaa#", dam), false)
+			if rng.percent(dam) then
 			local check = math.max(src:combatAttack(), src:combatSpellpower(), src:combatMindpower())
 			--local param = { atk=dam/3, armor=dam/3, defense=dam/3, src=src, apply_power = check, no_ct_effect=true }
 			target:setEffect(target.EFF_ITEM_ACID_CORRODE, 5, {pct = 0.3, no_ct_effect = true, apply_power = check})
+		end
 		end
 	end,
 }
 
 newDamageType{
 	name = "item light blind", type = "ITEM_LIGHT_BLIND",
+	text_color = "#YELLOW#",
 	tdesc = function(dam, oldDam)
 		parens = ""
 		dam = dam or 0
@@ -1912,7 +1925,9 @@ newDamageType{
 	end,
 	projector = function(src, x, y, type, dam)
 		local target = game.level.map(x, y, Map.ACTOR)
-		if target and rng.percent(dam) then
+		if target then
+			game:delayedLogDamage(src, target, 0, ("%s<%d%%%% blind chance>#LAST#"):format(DamageType:get(type).text_color or "#aaaaaa#", dam), false)
+			if rng.percent(dam) then
 			if target:canBe("blind") then
 				local check = math.max(src:combatAttack(), src:combatSpellpower(), src:combatMindpower())
 				target:setEffect(target.EFF_BLINDED, 4, {apply_power=(check), no_ct_effect=true})
@@ -1920,11 +1935,13 @@ newDamageType{
 				--game.logSeen(target, "%s resists the blinding light!", target.name:capitalize())
 			end
 		end
+		end
 	end,
 }
 
 newDamageType{
 	name = "item lightning daze", type = "ITEM_LIGHTNING_DAZE",
+	text_color = "#ROYAL_BLUE#",
 	tdesc = function(dam, oldDam)
 		parens = ""
 		dam = dam or 0
@@ -1941,14 +1958,14 @@ newDamageType{
 	end,
 	projector = function(src, x, y, type, dam)
 		local target = game.level.map(x, y, Map.ACTOR)
-		if target and rng.percent(dam) then
+		if target then
+			game:delayedLogDamage(src, target, 0, ("%s<%d%%%% daze chance>#LAST#"):format(DamageType:get(type).text_color or "#aaaaaa#", dam), false)
+			if rng.percent(dam) then
 			if target:canBe("stun") then
 				local check = math.max(src:combatAttack(), src:combatSpellpower(), src:combatMindpower())
-				--game:onTickEnd(function() target:setEffect(target.EFF_DAZED, 3, {src=src, apply_power=dam.power_check or math.max(src:combatSpellpower(), src:combatMindpower(), src:combatAttack())}) end) -- Do it at the end so we don't break our own daze
-				game:onTickEnd(function() target:setEffect(target.EFF_DAZED, 4, {apply_power=check, no_ct_effect=true}) end)
-			else
-				--game.logSeen(target, "%s resists the daze!", target.name:capitalize())
+					game:onTickEnd(function() target:setEffect(target.EFF_DAZED, 4, {apply_power=check, no_ct_effect=true}) end) --onTickEnd to avoid breaking the daze
 			end
+		end
 		end
 	end,
 }
@@ -1971,10 +1988,13 @@ newDamageType{
 	end,
 	projector = function(src, x, y, type, dam)
 		local target = game.level.map(x, y, Map.ACTOR)
-		if target and  rng.percent(dam) and target:canBe("disease") then
+		if target then
+			game:delayedLogDamage(src, target, 0, ("%s<%d%%%% disease chance>#LAST#"):format(DamageType:get(type).text_color or "#aaaaaa#", dam), false)
+			if rng.percent(dam) and target:canBe("disease") then
 			local check = math.max(src:combatSpellpower(), src:combatMindpower(), src:combatAttack())
 			local disease_power = math.min(30, dam / 2)
 			target:setEffect(target.EFF_ITEM_BLIGHT_ILLNESS, 5, {reduce = disease_power})
+		end
 		end
 	end,
 }
@@ -2025,7 +2045,7 @@ newDamageType{
 	name = "item nature slow", type = "ITEM_NATURE_SLOW", text_color = "#LIGHT_GREEN#",
 	tdesc = function(dam, oldDam)
 		parens = ""
-		dam = dam or 0
+		dam = math.min(60, dam or 0)
 		if oldDam then
 			diff = dam - oldDam
 			if diff > 0 then
@@ -2040,7 +2060,9 @@ newDamageType{
 	projector = function(src, x, y, type, dam)
 		local target = game.level.map(x, y, Map.ACTOR)
 		if target then
-			target:setEffect(target.EFF_SLOW, 3, {power= math.min(0.6, dam / 100), no_ct_effect=true})
+			game:delayedLogDamage(src, target, 0, ("%s(slow %d%%%%)#LAST#"):format(DamageType:get(type).text_color or "#aaaaaa#", dam), false)
+			target:setEffect(target.EFF_SLOW, 3, {power= math.min(60, dam / 100), no_ct_effect=true})
+--			target:setEffect(target.EFF_SLOW, 3, {power= math.min(0.6, dam / 100), no_ct_effect=true})
 		end
 	end,
 }
@@ -2065,12 +2087,13 @@ newDamageType{
 	projector = function(src, x, y, type, dam)
 		local target = game.level.map(x, y, Map.ACTOR)
 		if target then
+			game:delayedLogDamage(src, target, 0, ("%s<%d%%%% scour chance>#LAST#"):format(DamageType:get(type).text_color or "#aaaaaa#", dam), false)
+			if rng.percent(dam) then
 			target:setEffect(target.EFF_ITEM_ANTIMAGIC_SCOURED, 3, {pct = 0.2, no_ct_effect=true})
+		end
 		end
 	end,
 }
-
-
 
 
 ------------------------------------------------------------------------------------
@@ -2388,7 +2411,6 @@ newDamageType{
 		dam = dam - dam / 12
 		local target = game.level.map(x, y, Map.ACTOR)
 		if target and target:canBe("cut") then
-			-- Set on fire!
 			target:setEffect(target.EFF_CUT, 5, {src=src, power=dam / 11, no_ct_effect=true})
 		end
 	end,
@@ -2503,7 +2525,7 @@ newDamageType{
 			if target:canBe("pin") and rng.percent(dam.pin) then
 				target:setEffect(target.EFF_PINNED, 4, {apply_power=src:combatMindpower()}, true)
 			else
-				game.logSeen(target, "%s resists!", target.name:capitalize())
+				game.logSeen(target, "%s resists the pinning!", target.name:capitalize())
 			end
 		end
 	end,
@@ -2540,7 +2562,7 @@ newDamageType{
 			if target:canBe("confusion") and rng.percent(dam.chance) then
 				target:setEffect(target.EFF_CONFUSED, 2, {apply_power=src:combatMindpower(), power=dam.power}, true)
 			else
-				game.logSeen(target, "%s resists!", target.name:capitalize())
+				game.logSeen(target, "%s resists the confusion!", target.name:capitalize())
 			end
 		end
 	end,
@@ -2557,7 +2579,7 @@ newDamageType{
 			elseif target:canBe("silence") then
 				target:setEffect(target.EFF_SILENCED, 2, {apply_power=src:combatSpellpower(), min_dur=1}, true)
 			else
-				game.logSeen(target, "%s resists!", target.name:capitalize())
+				game.logSeen(target, "%s resists the silence!", target.name:capitalize())
 			end
 		end
 	end,
@@ -2636,7 +2658,7 @@ newDamageType{
 			if target:canBe("stun") then
 				target:setEffect(target.EFF_FROZEN, dam, {hp=70 + src:combatMindpower() * 10, apply_power=src:combatMindpower()})
 			else
-				game.logSeen(target, "%s resists!", target.name:capitalize())
+				game.logSeen(target, "%s resists the freezing!", target.name:capitalize())
 			end
 		end
 	end,
@@ -2809,7 +2831,7 @@ newDamageType{
 			if target:canBe("pin") then
 				target:setEffect(target.EFF_PINNED, 5, {no_ct_effect=true})
 			else
-				game.logSeen(target, "%s resists!", target.name:capitalize())
+				game.logSeen(target, "%s resists entanglement!", target.name:capitalize())
 			end
 		end
 	end,
@@ -2827,7 +2849,7 @@ newDamageType{
 				target:setEffect(target.EFF_MANAWORM, 5, {power=dam * 5, src=src, no_ct_effect=true})
 				src:disappear(src)
 			else
-				game.logSeen(target, "%s is unaffected.", target.name:capitalize())
+				game.logSeen(target, "%s has no mana to burn.", target.name:capitalize())
 			end
 		end
 		return realdam
@@ -2860,7 +2882,7 @@ newDamageType{
 			if target:canBe(what) then
 				target:setEffect(what == "blind" and target.EFF_BANE_BLINDED or target.EFF_BANE_CONFUSED, math.ceil(dam.dur), {src=src, power=50, dam=dam.dam, apply_power=src:combatSpellpower()})
 			else
-				game.logSeen(target, "%s resists the bane!", target.name:capitalize())
+				game.logSeen(target, "%s resists the baneful energy!", target.name:capitalize())
 			end
 		end
 	end,
@@ -2904,12 +2926,13 @@ newDamageType{
 
 newDamageType{
 	name = "% chance to summon an orc spirit", type = "GARKUL_INVOKE",
+	text_color = "#SALMON#",
 	projector = function(src, x, y, type, dam)
-		if not rng.percent(dam) then return end
 		local target = game.level.map(x, y, engine.Map.ACTOR)
 		if not target then return end
-
 		if game.party:hasMember(src) and game.party:findMember{type="garkul spirit"} then return end
+		game:delayedLogDamage(src, target, 0, ("%s<%d%%%% orc summon chance>#LAST#"):format(DamageType:get(type).text_color or "#aaaaaa#", dam), false)
+		if not rng.percent(dam) then return end
 
 		-- Find space
 		local x, y = util.findFreeGrid(src.x, src.y, 5, true, {[engine.Map.ACTOR]=true})
@@ -3199,7 +3222,7 @@ newDamageType{
 			if target:canBe("disarm") then
 				target:setEffect(target.EFF_DISARMED, dam.dur or 3, {src=src, apply_power=src:combatMindpower()})
 			else
-				game.logSeen(target, "%s resists!", target.name:capitalize())
+				game.logSeen(target, "%s resists disarming!", target.name:capitalize())
 			end
 		end
 		return realdam
@@ -3279,17 +3302,23 @@ newDamageType{
 	projector = function(src, x, y, type, dam)
 		local target = game.level.map(x, y, Map.ACTOR)
 		if target then
-			target:knockback(src.x, src.y, dam.push, nil, function(g, x, y)
-				if game.level.map:checkEntity(x, y, Map.TERRAIN, "block_move", target) then
-					DamageType:get(DamageType.PHYSICAL).projector(src, target.x, target.y, DamageType.PHYSICAL, dam.dam)
-					if target:canBe("pin") then
-						target:setEffect(target.EFF_PINNED, dam.dur, {apply_power=src:combatMindpower()})
-					else
-						game.logSeen(src, "%s resists!", target.name:capitalize())
+			if target:canBe("knockback") then
+				target:knockback(src.x, src.y, dam.push, nil, function(g, x, y)
+					if game.level.map:checkEntity(x, y, Map.TERRAIN, "block_move", target) then
+						DamageType:get(DamageType.PHYSICAL).projector(src, target.x, target.y, DamageType.PHYSICAL, dam.dam)
+						if target:canBe("pin") then
+							target:setEffect(target.EFF_PINNED, dam.dur, {apply_power=src:combatMindpower()})
+						else
+							game.logSeen(src, "%s resists pinning!", target.name:capitalize())
+						end
 					end
-				end
-			end)
-			return dam.dam
+				end)
+				return dam.dam
+			else
+				DamageType:get(DamageType.PHYSICAL).projector(src, target.x, target.y, DamageType.PHYSICAL, dam.dam)
+				game.logSeen(src, "%s resists the shove!", target.name:capitalize())
+				return dam.dam
+			end
 		end
 	end,
 }
