@@ -124,13 +124,9 @@ newTalent{
 		return tostring(math.ceil(val)), fnt
 	end,
 	activate = function(self, t)
-		local d = require("mod.dialogs.talents.ChronomancyContingency").new(self)
-		game:registerDialog(d)
-		local co = coroutine.running()
-		d.unload = function() coroutine.resume(co, d.contingecy_talent) end
-		if not coroutine.yield() then return nil end
-		local talent = d.contingecy_talent
-				
+		local talent = self:talentDialog(require("mod.dialogs.talents.ChronomancyContingency").new(self))
+		if not talent then return nil end
+
 		return {
 			talent = talent, rest_count = 0
 		}
