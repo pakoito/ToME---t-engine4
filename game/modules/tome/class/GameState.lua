@@ -407,7 +407,7 @@ local unided_names = {"glowing","scintillating","rune-covered","unblemished","je
 -- data.forbid_power_source = disallowed power type(s) for egos
 -- 	eg:{arcane = true, psionic = true, technique = true, nature = true, antimagic = true}
 --		note some objects always have a power source by default (i.e. wands are always arcane powered)
--- data.power_source = allowed power type(s) for egos <all allowed> themes <random> can add allowed power_sources
+-- data.power_source = allowed power type(s) for egos <all allowed> themes random or forced can add allowed power_sources
 -- data.namescheme = parameters to be passed to the NameGenerator <local randart_name_rules table>
 -- data.add_pool if true, adds the randart to the world artifact pool <nil>
 -- data.post = function(o) to be applied to the randart after all egos and powers have been added and resolved
@@ -445,13 +445,13 @@ o.baseobj = base:cloneFull() -- debugging code
 	-- update allowed power source and themes lists
 	local psource
 	if o.power_source then -- adjust parameters to the base object if needed
-print(" * adjusting parameters to base object", o.name, table.concat(table.keys(o.power_source), ','))
+--print(" * adjusting parameters to base object", o.name, table.concat(table.keys(o.power_source), ','))
 		psource = table.clone(o.power_source)
 		if data.power_source then table.merge(psource, data.power_source) end
 		-- forbid power sources that conflict with existing power source
 		data.forbid_power_source, psource = self:update_power_source(data.forbid_power_source, psource)
 		if data.power_source then data.power_source = psource end
-print(" * adjusted forbid powers:", table.concat(table.keys(data.forbid_power_source), ','))
+--print(" * adjusted forbid powers:", table.concat(table.keys(data.forbid_power_source), ','))
 	end
 --	data.forbid_power_source, data.power_source = self:update_power_source(data.forbid_power_source, data.power_source or {}, table.keys(themes))
 --	data.forbid_power_source, data.power_source, allthemes = self:update_power_source(data.forbid_power_source, data.power_source, nb_themes, data.force_themes)
@@ -502,7 +502,6 @@ print(" * post update themes:", table.concat(table.keys(themes), ','))
 	local gr_egos = data.greater_egos_bias or math.floor(nb_egos*2/3) -- 2/3 greater egos by default
 	local powers = {}
 	print("Randart generation:", "level = ", lev, "egos =", nb_egos,"gr egos =", gr_egos, "rand themes = ", nb_themes, "points = ", points, "nb_powers = ",nb_powers)
---	print("   ---", "rand themes = ", nb_themes, "points = ", points, "nb_powers = ",nb_powers)
 	if data.force_themes and #data.force_themes > 0 then print(" * forcing themes:",table.concat(data.force_themes,",")) end
 	local force_egos = table.clone(data.force_egos)
 	if force_egos then print(" * forcing egos:", table.concat(force_egos, ',')) end
@@ -538,15 +537,6 @@ print(" * post update themes:", table.concat(table.keys(themes), ','))
 	-----------------------------------------------------------
 	-- Add ego properties (modified by power_source restrictions)
 	-----------------------------------------------------------
---[[
-	local force_egos = table.clone(data.force_egos)
-	if force_egos then print(" * forcing egos:", table.concat(force_egos, ',')) end
-	if data.forbid_power_source and next(data.forbid_power_source) then print(" * forbid power sources:", table.concat(table.keys(data.forbid_power_source), ',')) end
-	if data.power_source and next(data.power_source) then print(" * allowed power sources:", table.concat(table.keys(data.power_source), ',')) end
---]]
---[[
-	local gr_egos = data.greater_egos_bias or math.floor(nb_egos*2/3) -- 2/3 greater egos by default
---]]
 	if o.egos and nb_egos > 0 then
 		local picked_egos = {}
 		local legos = {}
@@ -593,8 +583,7 @@ print(" * post update themes:", table.concat(table.keys(themes), ','))
 				if ignore_filter then return true end
 				if not ef.special or ef.special(e) then
 					if gr_ego and not e.greater_ego then return false end
-			-- power compatibility
-					return game.state:check_power_source(ef, e, true)
+					return game.state:check_power_source(ef, e, true) -- power_source compatibility
 --[[
 					local eps = e.power_source or {}
 					local fps = ef.forbid_power_source
