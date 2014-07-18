@@ -381,6 +381,11 @@ function _M:unregisterDialog(d)
 	if last.on_recover_focus then last:on_recover_focus() end
 end
 
+--- Do we have a specific dialog
+function _M:hasDialog(d)
+	return self.dialogs[d] and true or false
+end
+
 --- Do we have a dialog running
 function _M:hasDialogUp(nb)
 	nb = nb or 0
