@@ -800,6 +800,7 @@ newEntity{ base = "BASE_NPC_HORROR", define_as = "DREAM_SEED",
 	},
 
 	resolvers.sustains_at_birth(),
+	power_source = {psionic=true},
 
 	-- Remove ourselves from the dream seed limit
 	on_die = function(self)

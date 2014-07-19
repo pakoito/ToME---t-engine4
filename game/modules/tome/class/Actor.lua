@@ -5160,6 +5160,7 @@ function _M:getTalentFullDescription(t, addlevel, config, fake_mastery)
 		if t.is_spell then is_a[#is_a+1] = "a spell" end
 		if t.is_mind then is_a[#is_a+1] = "a mind power" end
 		if t.is_nature then is_a[#is_a+1] = "a nature gift" end
+		if t.is_antimagic then is_a[#is_a+1] = "an antimagic ability" end
 		if t.is_summon then is_a[#is_a+1] = " a summon power" end
 		if #is_a > 0 then
 			d:add({"color",0x6f,0xff,0x83}, "Is: ", {"color",0xFF,0xFF,0xFF}, table.concatNice(is_a, ", ", " and "), true)

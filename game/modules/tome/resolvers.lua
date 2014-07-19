@@ -51,7 +51,6 @@ function resolvers.calc.equip(t, e)
 					filter.random_art_replace.chance = 100
 				end
 			end
---if o then print("Equipment resolver for", e.name, "forbid_power_source:", filter.forbid_power_source and table.concat(table.keys(filter.forbid_power_source, ","))) end
 			if o and o.power_source and (o.power_source.antimagic and e:attr("has_arcane_knowledge") or o.power_source.arcane and e:attr("forbid_arcane")) then
 				ok = false
 				print("  Equipment resolver for ", e.name ," -- incompatible equipment ", o.name, "retrying", tries, "forbid ps:", filter.forbid_power_source and table.concat(table.keys(filter.forbid_power_source, ",")))
