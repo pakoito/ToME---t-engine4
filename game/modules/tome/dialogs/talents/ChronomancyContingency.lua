@@ -83,7 +83,7 @@ end
 
 function _M:use(item)
 	if not item or not item.talent then return end
-	self.contingecy_talent = item.talent
+	self.actor:talentDialogReturn(item.talent)
 	game:unregisterDialog(self)
 end
 

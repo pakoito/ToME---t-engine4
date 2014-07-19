@@ -1549,7 +1549,7 @@ end
 
 function _M:displayParty(scale, bx, by)
 	if game.player.changed and next(self.party) then
-		for a, d in pairs(self.party) do if not game.party:hasMember(a) then game.mouse:unregisterZone(d[2]) print("==UNREG part ", d[1].name, d[2]) end end
+		for a, d in pairs(self.party) do if not game.party:hasMember(a) then game.mouse:unregisterZone(d[2]) end end
 		self.party = {}
 	end
 

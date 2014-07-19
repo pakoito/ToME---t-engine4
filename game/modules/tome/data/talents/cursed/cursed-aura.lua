@@ -378,22 +378,10 @@ newTalent{
 		if game.level.map(x, y, Map.ACTOR) or game.level.map:checkEntity(x, y, game.level.map.TERRAIN, "block_move") then return nil end
 
 		-- select the item
-		local d = self:showInventory("Which weapon will be your sentry?", inven,
-			function(o)
-				return o.type == "weapon"
-			end, nil)
-				d.action = function(o, item)
-				d.used_talent = true
-				d.selected_object = o
-				d.selected_item = item
-
-				return false
-			end
-
-		local co = coroutine.running()
-		d.unload = function(self) coroutine.resume(co, self.used_talent, self.selected_object, d.selected_item) end
-		local used_talent, o, item = coroutine.yield()
-		if not used_talent then return nil end
+		local d = self:showInventory("Which weapon will be your sentry?", inven, function(o) return o.type == "weapon" end, nil)
+		d.action = function(o, item) self:talentDialogReturn(true, o, item) return false end
+		local ret, o, item = self:talentDialog(d)
+		if not ret then return nil end
 
 		local result = self:removeObject(inven, item)
 

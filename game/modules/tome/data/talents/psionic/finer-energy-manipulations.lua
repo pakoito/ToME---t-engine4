@@ -101,7 +101,7 @@ newTalent{
 		return math.floor(self:combatTalentMindDamage(t, 2, 10))
 	end,
 	action = function(self, t)
-		local d d = self:showInventory("Reshape which weapon or armor?", self:getInven("INVEN"),
+		local ret = self:talentDialog(self:showInventory("Reshape which weapon or armor?", self:getInven("INVEN"),
 			function(o)
 				return not o.quest and (o.type == "weapon" and o.subtype ~= "mindstar") or (o.type == "armor" and (o.slot == "BODY" or o.slot == "OFFHAND" )) and not o.fully_reshaped --Exclude fully reshaped?
 			end
@@ -125,7 +125,7 @@ newTalent{
 					game.logPlayer(self, "You reshape your %s.", o:getName{do_colour=true, no_count=true})
 					o.special = true
 					o.been_reshaped = "reshaped("..tostring(atk_boost)..","..tostring(dam_boost)..") "
-					d.used_talent = true
+					self:talentDialogReturn(true)
 				else
 					game.logPlayer(self, "You cannot reshape your %s any further.", o:getName{do_colour=true, no_count=true})
 				end
@@ -152,15 +152,13 @@ newTalent{
 					o.special = true
 					if o.orig_name then o.name = o.orig_name end --Fix name for items affected by older versions of this talent
 					o.been_reshaped = "reshaped["..tostring(armour)..","..tostring(o.wielder.fatigue-o.orig_fat).."%] "
-					d.used_talent = true
+					self:talentDialogReturn(true)
 				else
 					game.logPlayer(self, "You cannot reshape your %s any further.", o:getName{do_colour=true, no_count=true})
 				end
 			end
-		end)
-		local co = coroutine.running()
-		d.unload = function(self) coroutine.resume(co, self.used_talent) end
-		if not coroutine.yield() then return nil end
+		end))
+		if not ret then return nil end
 		return true
 	end,
 	info = function(self, t)
@@ -186,18 +184,15 @@ newTalent{
 		return self:combatTalentMindDamage(t, 10, 40)
 	end,
 	action = function(self, t)
-		local d d = self:showInventory("Use which gem?", self:getInven("INVEN"), function(gem) return gem.type == "gem" and gem.material_level and not gem.unique end, function(gem, gem_item)
+		local ret = self:talentDialog(self:showInventory("Use which gem?", self:getInven("INVEN"), function(gem) return gem.type == "gem" and gem.material_level and not gem.unique end, function(gem, gem_item)
 			self:removeObject(self:getInven("INVEN"), gem_item)
 			local amt = t.energy_per_turn(self, t)
 			local dur = 3 + 2*(gem.material_level or 0)
 			self:setEffect(self.EFF_PSI_REGEN, dur, {power=amt})
-			self.changed = true
-			d.used_talent = true
-			self:setEffect(self.EFF_CRYSTAL_BUFF, dur, {name=gem.name, effects=gem.wielder})
-		end)
-		local co = coroutine.running()
-		d.unload = function(self) coroutine.resume(co, self.used_talent) end
-		if not coroutine.yield() then return nil end
+			self:setEffect(self.EFF_CRYSTAL_BUFF, dur, {name=gem.name, gem=gem.define_as, effects=gem.wielder})
+			self:talentDialogReturn(true)
+		end))
+		if not ret then return nil end
 		return true
 	end,
 	info = function(self, t)
