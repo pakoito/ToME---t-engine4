@@ -1901,7 +1901,7 @@ end
 --	data.nb_classes = additional random classes to add <2>
 -- 	data.class_filter = function(cdata) that must return true for any class picked.
 --		(cdata = subclass definition in engine.Birther.birth_descriptor_def.subclass)
---	data.no_class_restrictions set true to skip class compatibilty checks <nil>
+--	data.no_class_restrictions set true to skip class compatibility checks <nil>
 --	data.add_trees = {["talent tree name 1"]=true, ["talent tree name 2"]=true, ..} additional talent trees to learn
 --	data.check_talents_level set true to enforce talent level restrictions <nil>
 --	data.auto_sustain  set true to activate sustained talents at birth <nil>
