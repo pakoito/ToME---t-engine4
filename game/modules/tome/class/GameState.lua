@@ -2084,7 +2084,9 @@ end
 --	data.level = minimum level range for actor generation <1>
 --	data.rank = rank <3.5-4>
 --	data.life_rating <1.7 * base.life_rating + 4-9>
---	data.ai <"tactical" for rank>3 or base.ai>
+--	data.resources_boost = multiplier for maximum resource pool sizes <3>
+--	data.talent_cds_factor = multiplier for all talent cooldowns <1>
+--	data.ai <"tactical" if rank>3 or base.ai>
 --	data.no_loot_randart set true to not drop a randart <nil>
 --	data.on_die set true to run base.rng_boss_on_die and base.rng_boss_on_die_custom on death <nil>
 --	data.name_scheme <randart_name_rules.default>
