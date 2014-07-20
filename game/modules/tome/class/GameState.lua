@@ -267,30 +267,23 @@ function _M:check_power_source(e1, e2, require_power)
 	if not e1 or not e2 then return true end
 	local ok = true
 --print("Comparing power sources",e1.name, e2.name)
---	local not_ps = e2.forbid_power_source or {}
 	-- check for excluded power sources first
 	local not_ps = e2.not_power_source or e2.forbid_power_source or {}
 	for ps, _ in pairs(e1.power_source or {}) do
 		if not_ps[ps] then return false end
---		if not_ps[ps] then ok = false; break end
 	end
---	not_ps = e1.forbid_power_source or {}
 	not_ps = e1.not_power_source or e1.forbid_power_source or {}
 	for ps, _ in pairs(e2.power_source or {}) do
 		if not_ps[ps] then return false end
---		if not_ps[ps] then ok = false; break end
 	end
 	-- check for required power_sources
---	if ok and require_power and e1.power_source and e2.power_source then
 	if require_power and e1.power_source and e2.power_source then
 		ok = false
 		for yes_ps, _ in pairs(e1.power_source)	do
---			if (e2.power_source and e2.power_source[yes_ps]) then ok = true; break end
 			if (e2.power_source and e2.power_source[yes_ps]) then return true end
 		end
 		return false
 	end
---	return ok
 	return true
 end
 
@@ -298,7 +291,8 @@ end
 -- forbid_ps = {arcane = true, technique = true, ...} forbidden power sources <none>
 -- allow_ps = {arcane = true, technique = true, ...} allowed power sources <all allowed>
 -- randthemes = number of themes to pick randomly from the global pool <0>
--- force_themes = requested themes {"attack", "antimagic", ...} applied first (optional)
+-- force_themes = themes to always include {"attack", "antimagic", ...} applied last (optional)
+-- themes included can add to forbid_ps and allow_ps
 -- precedence is: forbid_ps > allow_ps > force_themes
 -- returns forbid_ps, allow_ps, themes (made consistent)
 function _M:update_power_source(forbid_ps, allow_ps, randthemes, force_themes)
@@ -387,7 +381,7 @@ end
 -- data.forbid_power_source = disallowed power type(s) for egos
 -- 	eg:{arcane = true, psionic = true, technique = true, nature = true, antimagic = true}
 --		note some objects always have a power source by default (i.e. wands are always arcane powered)
--- data.power_source = allowed power type(s) <all allowed> if specified, only egos matching at least one of the 	power types will be added.  themes (random or forced) can add allowed power_sources
+-- data.power_source = allowed power type(s) <all allowed> if specified, only egos matching at least one of the power types will be added.  themes (random or forced) can add allowed power_sources
 -- data.namescheme = parameters to be passed to the NameGenerator <local randart_name_rules table>
 -- data.add_pool if true, adds the randart to the world artifact pool <nil>
 -- data.post = function(o) to be applied to the randart after all egos and powers have been added and resolved
@@ -446,9 +440,9 @@ o.gendata = table.clone(data, true)
 	
 	themes = table.map(function(k, v) return k, true end, table.keys_to_values(themes))
 --	print(" * allowed themes", table.concat(allthemes, ','))
-print(" * post update forbid_power_sources:", table.concat(table.keys(data.forbid_power_source), ','))
-print(" * post update power_sources:", table.concat(table.keys(psource), ','))
-print(" * post update themes:", table.concat(table.keys(themes), ','))
+--print(" * post update forbid_power_sources:", table.concat(table.keys(data.forbid_power_source), ','))
+--print(" * post update power_sources:", table.concat(table.keys(psource), ','))
+--print(" * post update themes:", table.concat(table.keys(themes), ','))
 
 	-----------------------------------------------------------
 	-- Determine power
@@ -467,9 +461,10 @@ print(" * post update themes:", table.concat(table.keys(themes), ','))
 	if data.forbid_power_source and next(data.forbid_power_source) then print(" * forbid power sources:", table.concat(table.keys(data.forbid_power_source), ',')) end
 	if data.power_source and next(data.power_source) then print(" * allowed power sources:", table.concat(table.keys(data.power_source), ',')) end
 	o.cost = o.cost + points * 7
+	local use_themes = next(themes) and true or false
 	-- Select some powers
 	local themes_fct = function(e)
-		if nb_themes > 0 then
+		if use_themes then
 			for theme, _ in pairs(e.theme) do if themes[theme] then return true end end
 			return false
 		end
@@ -486,11 +481,10 @@ print(" * post update themes:", table.concat(table.keys(themes), ','))
 		local p = game.zone:pickEntity(lst)
 		if p then
 			for t, _ in pairs(p.theme) do if themes[t] and randart_name_rules[t] then power_themes[t] = (power_themes[t] or 0) + 1 end end
-			powers[p.name] = p:clone()
-			powers[#powers+1] = powers[p.name]
+			powers[#powers+1] = p:clone()
 		end
 	end
---	print("Selected powers:") table.print(powers)
+--	print("Selected powers:") for i, p in ipairs(powers) do print(" * ",p.name, table.concat(table.keys(p.theme or {}), ",")) end
 	power_themes = table.listify(power_themes)
 	table.sort(power_themes, function(a, b) return a[2] < b[2] end)
 
@@ -669,7 +663,7 @@ print(" * post update themes:", table.concat(table.keys(themes), ','))
 			fails = fails + 1
 		end
 	end
-	o:resolve() o:resolve(nil, true)
+--	o:resolve() o:resolve(nil, true)
 
 	-- Bias towards a shortened list of powers
 	local bias_powers = {}
@@ -684,6 +678,7 @@ print(" * post update themes:", table.concat(table.keys(themes), ','))
 		local p = bias_powers[i] and bias_powers[i]
 		if p and p.points <= hpoints * 2 then
 			local scaleup = math.max(1,(lev/(p.level_range[2] or 50))^0.5) -- Adjust scaleup factor for each power based on lev and level_range max
+--			print(" * adding bias power: "..p.name.."("..p.points.." points)")
 			if p.wielder then
 				o.wielder = o.wielder or {}
 				merger(o.wielder, p.wielder, scaleup)
@@ -697,7 +692,6 @@ print(" * post update themes:", table.concat(table.keys(themes), ','))
 				merger(o.special_combat, p.special_combat, scaleup)
 			end
 			if p.copy then merger(o, p.copy, scaleup) end
---			print(" * adding bias power: "..p.name.."("..p.points.." points)")
 			hpoints = hpoints - p.points
 			p.points = p.points * 1.5 --increased cost (=diminishing returns) on extra applications of the same power
 		else
