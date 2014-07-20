@@ -372,11 +372,12 @@ function _M:update_power_source(forbid_ps, allow_ps, randthemes, force_themes)
 end
 
 --- Generate randarts for this state with optional parameters:
--- data.base = base object to add powers to (base.randart_able must be defined)
+-- data.base = base object to add powers to (base.randart_able must be defined) <random object>
 -- data.base_filter = filter passed to makeEntity when making base object
 -- data.lev = character level to generate for (affects point budget, #themes and #powers) <12-50>
 -- data.power_points_factor = lev based power points multiplier <1>
 -- data.nb_points_add = #extra budget points to spend on random powers <0>
+-- data.powers_special = function(p) that must return true on each random power to add (from base.randart_able)
 -- data.nb_themes = #power themes (power groups) for random powers to use <scales to 5 with lev>
 -- data.force_themes = additional power theme(s) to use for random powers = {"attack", "arcane", ...}
 -- data.egos = total #egos to include (forced + random) <3>
@@ -411,8 +412,14 @@ o.baseobj = base:cloneFull() -- debugging code
 o.gendata = table.clone(data, true)
 
 	-- Load possible random powers
-	local powers_list = engine.Object:loadList(o.randart_able, nil, nil, function(e) if e.rarity then e.rarity = math.ceil(e.rarity / 5) end end)
---print(" * loaded powers list")
+	local powers_list = engine.Object:loadList(o.randart_able, nil, nil,
+		function(e)
+			if data.powers_special and not data.powers_special(e) then e.rarity = nil end
+			if e.rarity then
+				e.rarity = math.ceil(e.rarity / 5)
+			end
+		end)
+	--print(" * loaded powers list:")
 	o.randart_able = nil
 	
 	-----------------------------------------------------------
@@ -470,7 +477,11 @@ print(" * post update themes:", table.concat(table.keys(themes), ','))
 	end
 	local power_themes = {}
 	local lst = game.zone:computeRarities("powers", powers_list, game.level, themes_fct) --Note: probabilities diminish as level exceeds 50 (limited to ~1000 by mod.class.zone:adjustComputeRaritiesLevel(level, type, lev))
-	
+--[[		print("   * final powers list:")
+		for _, p in ipairs(lst) do
+			print("   *", p.genprob, p.e and p.e.name)
+		end --]]
+
 	for i = 1, nb_powers do
 		local p = game.zone:pickEntity(lst)
 		if p then
@@ -576,16 +587,16 @@ print(" * post update themes:", table.concat(table.keys(themes), ','))
 
 				ego.name = nil
 				ego.unided_name = nil
-
-				-- consider converting to a non-recursive structure here with better fault handling
 				-- OMFG this is ugly, there is a very rare combination that can result in a crash there, so we .. well, ignore it :/
 				-- Sorry.
+				-- Fixed against overflow
 				local ok, err = pcall(table.mergeAddAppendArray, o, ego, true)
 				if not ok then
-					print("table.mergeAddAppendArray failed at creating a randart, retrying")
+					data.fails = (data.fails or 0) + 1
+					print("table.mergeAddAppendArray failed at creating a randart, retrying", data.fails)
 					game.level.level = oldlev
 					resolvers.current_level = oldclev
-					return self:generateRandart(data)
+					if data.fails < 4 then return self:generateRandart(data) else return end
 				end
 			else -- no ego found: increase budget for random powers to compensate
 				local xpoints = gr_ego and 8 or 5
