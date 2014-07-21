@@ -333,7 +333,7 @@ function _M:update_power_source(forbid_ps, allow_ps, randthemes, force_themes)
 	local theme_count = (randthemes or 0) + #force_themes
 	for n = 1, theme_count do
 		local v = nil
-		if #force_themes > 0 then -- always add forced_themes
+		if #force_themes > 0 then -- always add forced_themes if possible
 			v = rng.tableRemove(force_themes)
 			table.removeFromList(allthemes, v)
 		end
