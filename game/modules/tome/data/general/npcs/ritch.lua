@@ -83,7 +83,7 @@ newEntity{ base = "BASE_NPC_RITCH",
 }
 
 newEntity{ base = "BASE_NPC_RITCH",
-	name = "ritch hive mother", color=colors.light_RED,
+	name = "ritch hive mother", color=colors.LIGHT_RED,
 	level_range = {32, nil}, exp_worth = 1,
 	rarity = 4,
 	max_life = 250,
