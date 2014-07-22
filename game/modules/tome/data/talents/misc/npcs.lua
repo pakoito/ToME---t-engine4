@@ -2569,22 +2569,22 @@ newTalent{
 		
 		if target:canBe("knockback") or rng.percent(t.getKBResistPen(self, t)) then
 			self:project({type="hit", range=tg.range}, target.x, target.y, DamageType.PHYSICAL, dam) --Direct Damage
-			
-		local tx, ty = util.findFreeGrid(x, y, 5, true, {[Map.ACTOR]=true})
-		if tx and ty then
-			local ox, oy = target.x, target.y
-			target:move(tx, ty, true)
-			if config.settings.tome.smooth_move > 0 then
-				target:resetMoveAnim()
-				target:setMoveAnim(ox, oy, 8, 5)
+			local tx, ty = util.findFreeGrid(x, y, 5, true, {[Map.ACTOR]=true})
+			if tx and ty then
+				local ox, oy = target.x, target.y
+				target:move(tx, ty, true)
+				if config.settings.tome.smooth_move > 0 then
+					target:resetMoveAnim()
+					target:setMoveAnim(ox, oy, 8, 5)
+				end
 			end
-		end
-		self:project(tg, target.x, target.y, DamageType.SPELLKNOCKBACK, dam/2) --AOE damage
-		if target:canBe("stun") then
-			target:setEffect(target.EFF_STUNNED, 4, {apply_power=self:combatMindpower()})
-		else
-			game.logSeen(target, "%s resists the stun!", target.name:capitalize())
-		end
+			tg.act_exclude = {[target.uid]=true} -- Don't hit primary target with AOE
+			self:project(tg, target.x, target.y, DamageType.SPELLKNOCKBACK, dam/2) --AOE damage
+			if target:canBe("stun") then
+				target:setEffect(target.EFF_STUNNED, 4, {apply_power=self:combatMindpower()})
+			else
+				game.logSeen(target, "%s resists the stun!", target.name:capitalize())
+			end
 		else --If the target resists the knockback, do half damage to it.
 			target:logCombat(self, "#YELLOW##Source# resists #Target#'s throw!")
 			self:project({type="hit", range=tg.range}, target.x, target.y, DamageType.PHYSICAL, dam/2)

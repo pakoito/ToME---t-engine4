@@ -387,6 +387,10 @@ end
 -- Cone: hits everything in a cone in the direction<br/>
 -- @param t.radius The radius of the ball/cone AoE
 -- @param t.cone_angle The angle for the cone AoE (default 55°)
+-- @param t.grid_exclude = {[x1][y1]=true,...[x2][y2]=true...} Grids to exclude - for making holes in the AOE
+-- @param t.act_exclude = {[uid] = true,...} exclude grids containing actor(s) with the matching uid(s)
+-- @param t.selffire = boolean or % chance to project against grids with self
+-- @param t.friendlyfire = boolean or % chance to project against grids with friendly Actors (based on 			Actor:reactionToward(target)>0)
 -- @param t.no_restrict Boolean that removes all restrictions in the t.type defined block functions.
 -- @param t.stop_block Boolean that stops the target on the first tile that has an entity that blocks move.
 -- @param t.range The range the target can be from the origin.
