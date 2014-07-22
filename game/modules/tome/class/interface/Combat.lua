@@ -680,11 +680,8 @@ function _M:attackTargetWith(target, weapon, damtype, mult, force_dam)
 	-- Shattering Impact
 	if hitted and self:attr("shattering_impact") and (not self.shattering_impact_last_turn or self.shattering_impact_last_turn < game.turn) then
 		local dam = dam * self.shattering_impact
-		local invuln = target.invulnerable
 		game.logSeen(target, "The shattering blow creates a shockwave!")
-		target.invulnerable = 1 -- Target already hit, don't damage it twice
-		self:project({type="ball", radius=1, selffire=false}, target.x, target.y, DamageType.PHYSICAL, dam)
-		target.invulnerable = invuln
+		self:project({type="ball", radius=1, selffire=false, act_exclude={[target.uid]=true}}, target.x, target.y, DamageType.PHYSICAL, dam)  -- don't hit target with the AOE
 		self:incStamina(-8)
 		self.shattering_impact_last_turn = game.turn
 	end
