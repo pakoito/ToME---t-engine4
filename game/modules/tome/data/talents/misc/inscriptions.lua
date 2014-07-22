@@ -182,7 +182,7 @@ newInscription{
 	info = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
 		local what = table.keys(data.what)
-	local what_string = ""
+		local what_string = ""
 		if #what > 1 then
 			local first_effects = {}
 			for i=1, #what-1 do
@@ -272,7 +272,7 @@ newInscription{
 			local first_effects = {}
 			for i=1, #what-1 do
 				table.insert(first_effects, what[i])
-		end
+			end
 			what_string = what_string .. table.concat(first_effects, ", ") .. " or " .. what[#what]
 		else
 			what_string = what[1]
