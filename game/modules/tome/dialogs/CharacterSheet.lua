@@ -965,23 +965,95 @@ function _M:drawDialog(kind, actor_to_compare)
 		h = 0
 		w = 0
 
-		local list = {}
-		for j, t in pairs(player.talents_def) do
-			if player:knowTalent(t.id) and (not t.hide or t.hide ~= "always") then
-				local lvl = player:getTalentLevelRaw(t)
-				list[#list+1] = {
-					name = ("%s (%d)"):format(t.name, lvl),
-					desc = player:getTalentFullDescription(t):toString(),
-				}
+		local talents = {}
+
+		-- Get the group/display name for a given talent type
+		local function get_group(tt)
+			if tt.type:match("inscriptions/.*") then
+				return "Inscriptions"
+			elseif tt.type:match("uber/.*") then
+				return "Prodigies"
+			elseif tt.type:match(".*/objects") then
+				return "Item Talents"
+			end
+
+			local cat = tt.type:gsub("/.*", ""):bookCapitalize()
+			return cat.."/"..(tt.name or ""):bookCapitalize()
+		end
+		-- The color used to display it
+		local function get_talent_color(t)
+			if t.mode == "activated" then
+				local no_energy = util.getval(t.no_energy, player, t)
+				if no_energy == true then
+					return "#00c91b##{italic}#"--return "#E56F48#"
+				else
+					return "#00c91b#"
+				end
+			elseif t.mode == "passive" then
+				return "#LIGHT_STEEL_BLUE#"--return "#486FE5#"
+			else --Sustains
+				return "#C49600#"--return "#E5D848#"
 			end
 		end
 
-		table.sort(list, function(a,b) return a.name < b.name end)
+		-- Process the talents
+		for j, t in pairs(player.talents_def) do
+			if player:knowTalent(t.id) and (not t.hide or t.hide ~= "always") then
+				local lvl = player:getTalentLevelRaw(t)
+				local tt = player:getTalentTypeFrom(t.type[1])
+				local group_name = get_group(tt)
+				if not talents[group_name] then talents[group_name] = {type_name = group_name, talent_type=tt, talents={}} end
 
-		for i, t in ipairs(list) do
-			self:mouseTooltip(t.desc, s:drawColorStringBlended(self.font, ("#LIGHT_GREEN#%s"):format(t.name), w, h, 255, 255, 255, true)) h = h + self.font_h
+				local data = {type_name = tt,
+					talent = t,
+					name = ("%s (%d)"):format(t.name, lvl),
+					desc = player:getTalentFullDescription(t):toString(),
+				}
+				table.insert(talents[group_name]["talents"], data)
+			end
+		end
 
-			if h + self.font_h >= self.c_desc.h then h = 0 w = w + self.c_desc.w / 6 end
+		-- Sorting of talent groups, Racial/infusions first, then alphabetical order
+		local sort_rank = {"race/.*", "Inscriptions", "Prodigies", "Item Talents"} -- Relies on the groups
+		local function sort_tt(a, b)
+			a, b = a["type_name"], b["type_name"]
+			for i, v in ipairs(sort_rank) do
+				local rank_a, rank_b
+				rank_a = a:match(v)
+				if not rank_a then
+					rank_b = b:match(v)
+					if rank_b then return false end
+				else
+					return true
+				end
+			end
+			return a < b
+		end
+
+		-- Sort the talent type stuff
+		local sorted = {}
+		for k, v in pairs(talents) do
+			sorted[#sorted+1] = v
+		end
+
+		table.sort(sorted, sort_tt)
+
+		-- Now display it!
+		for ts, tt in pairs(sorted) do
+			-- Display talent type
+			local tt_name = tt["type_name"]
+			local talent_type = tt["talent_type"]
+			local talents = tt["talents"]
+			self:mouseTooltip(talent_type.description or tt_name, s:drawColorStringBlended(self.font, ("#{bold}##KHAKI#%s#{normal}#"):format(tt_name), w, h, 255, 255, 255, true)) h = h + self.font_h
+
+			-- Display the talents in the talent type
+			for _, t in ipairs(talents) do
+				self:mouseTooltip(t.desc, s:drawColorStringBlended(self.font, (get_talent_color(t.talent).."%s".."#{normal}#"):format(t.name), w, h, 255, 255, 255, true)) h = h + self.font_h
+
+				if h + self.font_h >= self.c_desc.h then h = 0 w = w + self.c_desc.w / 6 end
+			end
+		-- Add extra space to seperate categories
+		h = h + self.font_h
 		end
 	end
 
