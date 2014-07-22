@@ -229,7 +229,7 @@ newEntity{
 	},
 	charm_power = resolvers.mbonus_material(70, 30),
 	charm_power_def = {add=15, max=50, floor=true},
-	resolvers.charm("teleports you randomly (rad %d)", 15, function(self, who)
+	resolvers.charm("teleport you randomly (rad %d)", 15, function(self, who)
 		game.level.map:particleEmitter(who.x, who.y, 1, "teleport")
 		who:teleportRandom(who.x, who.y, self:getCharmPower(who))
 		game.level.map:particleEmitter(who.x, who.y, 1, "teleport")
