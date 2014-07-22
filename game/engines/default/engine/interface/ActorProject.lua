@@ -188,7 +188,6 @@ function _M:project(t, x, y, damtype, dam, particles)
 			end
 		end
 	end
-	game.debug.grid_check = table.clone(grids)
 	
 	self:check("on_project_grids", grids)
 
