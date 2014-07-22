@@ -211,6 +211,7 @@ newTalent{
 	require = racial_req4,
 	points = 5,
 	no_energy = true,
+	fixed_cooldown = true,
 	cooldown = function(self, t) return math.ceil(self:combatTalentLimit(t, 20, 47, 35)) end, -- Limit to >20
 	getEffectGood = function(self, t) return math.floor(self:combatTalentScale(t, 1, 5, "log")) end,
 	getEffectBad = function(self, t) return math.floor(self:combatTalentScale(t, 2.9, 10.01, "log")) end,
@@ -253,7 +254,7 @@ newTalent{
 		local tids = {}
 		for tid, lev in pairs(self.talents) do
 			local t = self:getTalentFromId(tid)
-			if t and self.talents_cd[tid] then tids[#tids+1] = t end
+			if t and self.talents_cd[tid] and not t.fixed_cooldown then tids[#tids+1] = t end
 		end
 		while #tids > 0 do
 			local tt = rng.tableRemove(tids)
@@ -267,7 +268,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		return ([[The world grows old as you stand through the ages. To you, time is different.
-		Reduces the time remaining on detrimental effects by %d, cooling down talents by %d, and increases the time remaining on beneficial effects by %d (up to 2 times the current duration).]]):
+		Reduces the time remaining on detrimental effects by %d, most cooling down talents by %d, and increases the time remaining on beneficial effects by %d (up to 2 times the current duration).]]):
 		format(t.getEffectBad(self, t), t.getEffectGood(self, t), t.getEffectGood(self, t))
 	end,
 }
