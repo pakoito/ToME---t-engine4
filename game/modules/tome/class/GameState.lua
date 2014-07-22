@@ -258,21 +258,34 @@ _M.power_themes = {
 --- defined power sources, used for equipment generation, defined in class descriptors
 _M.power_sources = table.map(function(k, v) return k, true end, table.keys_to_values({'technique','technique_ranged','nature','arcane','psionic','antimagic'}))
 
+--- map attributes to power restrictions for an entity
+--	returns an updated list of forbidden power types including attributes
+function _M:attrPowers(e, not_ps)
+	not_ps = table.clone(not_ps or e.not_power_source or e.forbid_power_source) or {}
+	if e.attr then
+		if e:attr("has_arcane_knowledge") then not_ps.antimagic = true end
+		if e:attr("undead") then not_ps.nature = true not_ps.antimagic = true end
+		if e:attr("forbid_arcane") then not_ps.arcane = true end
+		if e:attr("forbid_nature") then not_ps.nature = true end
+	end
+	return not_ps
+end
+
 --- Checks power_source compatibility between two entities
 --	returns true if e2 is compatible with e1, false otherwise
 --	by default, only checks .power_source vs. .forbid_power_source between entities
 --	if require_power is true, it will also check that e2.power_source (if present) has a match in e1.power_source
---	use update_power_source to resolve conflicts.
-function _M:check_power_source(e1, e2, require_power)
+--	use updatePowers to resolve conflicts.
+function _M:checkPowers(e1, e2, require_power)
 	if not e1 or not e2 then return true end
 	local ok = true
 --print("Comparing power sources",e1.name, e2.name)
 	-- check for excluded power sources first
-	local not_ps = e2.not_power_source or e2.forbid_power_source or {}
+	local not_ps = self:attrPowers(e2)
 	for ps, _ in pairs(e1.power_source or {}) do
 		if not_ps[ps] then return false end
 	end
-	not_ps = e1.not_power_source or e1.forbid_power_source or {}
+	not_ps = self:attrPowers(e1)
 	for ps, _ in pairs(e2.power_source or {}) do
 		if not_ps[ps] then return false end
 	end
@@ -295,7 +308,7 @@ end
 -- themes included can add to forbid_ps and allow_ps
 -- precedence is: forbid_ps > allow_ps > force_themes
 -- returns forbid_ps, allow_ps, themes (made consistent)
-function _M:update_power_source(forbid_ps, allow_ps, randthemes, force_themes)
+function _M:updatePowers(forbid_ps, allow_ps, randthemes, force_themes)
 	local spec_powers = allow_ps and next(allow_ps)
 	local yes_ps = spec_powers and table.clone(allow_ps) or table.clone(self.power_sources)
 	local not_ps = forbid_ps and table.clone(forbid_ps) or {}
@@ -403,7 +416,7 @@ function _M:generateRandart(data)
 	local o = base:cloneFull()
 
 o.baseobj = base:cloneFull() -- debugging code
-o.gendata = table.clone(data, true)
+o.gendata = table.clone(data, true) -- debugging code
 
 	-- Load possible random powers
 	local powers_list = engine.Object:loadList(o.randart_able, nil, nil,
@@ -430,12 +443,12 @@ o.gendata = table.clone(data, true)
 		psource = table.clone(o.power_source)
 		if data.power_source then table.merge(psource, data.power_source) end
 		-- forbid power sources that conflict with existing power source
-		data.forbid_power_source, psource = self:update_power_source(data.forbid_power_source, psource)
+		data.forbid_power_source, psource = self:updatePowers(data.forbid_power_source, psource)
 		if data.power_source then data.power_source = psource end
 	end
 	-- resolve any power/theme conflicts with input data
 	local themes
-	data.forbid_power_source, psource, themes = self:update_power_source(data.forbid_power_source, data.power_source, nb_themes, data.force_themes)
+	data.forbid_power_source, psource, themes = self:updatePowers(data.forbid_power_source, data.power_source, nb_themes, data.force_themes)
 	if data.power_source then data.power_source = psource end
 	
 	themes = table.map(function(k, v) return k, true end, table.keys_to_values(themes))
@@ -564,7 +577,7 @@ o.gendata = table.clone(data, true)
 				if ignore_filter then return true end
 				if not ef.special or ef.special(e) then
 					if gr_ego and not e.greater_ego then return false end
-					return game.state:check_power_source(ef, e, true) -- check power_source compatibility
+					return game.state:checkPowers(ef, e, true) -- check power_source compatibility
 				end
 			end
 
@@ -746,7 +759,6 @@ o.gendata = table.clone(data, true)
 		end
 		o.combat.damtype = pickDamtype(themes)
 	end
---	if o and o.combat and not (o.subtype and o.subtype == "staff") and not (o.subtype and o.subtype == "mindstar") then o.combat.damtype = pickDamtype(themes) end
 
 	if data.post then
 		data.post(o)
@@ -760,9 +772,8 @@ o.gendata = table.clone(data, true)
 end
 
 --- Adds randart properties (egos and random powers) to an existing object
--- o is the object to be updated
+-- o is the object to be updated (o.egos and o.randart_able should be defined as needed)
 -- data is the table of randart parameters passed to generateRandart
--- o.egos and o.randart_able should be defined as needed
 -- usable powers and set properties are not overwritten if present
 function _M:addRandartProperties(o, data)
 	print(" ** adding randart properties to ", o.name, o.uid)
@@ -1909,12 +1920,11 @@ end
 --	data.no_class_restrictions set true to skip class compatibility checks <nil>
 --	data.add_trees = {["talent tree name 1"]=true, ["talent tree name 2"]=true, ..} additional talent trees to learn
 --	data.check_talents_level set true to enforce talent level restrictions <nil>
---	data.auto_sustain  set true to activate sustained talents at birth <nil>
+--	data.auto_sustain set true to activate sustained talents at birth <nil>
 --	data.forbid_equip set true for no equipment <nil>
 --	data.loot_quality = drop table to use <"boss">
 --	data.drop_equipment set true to force dropping of equipment <nil>
 --	instant set true to force instant learning of talents and generating golem <nil>
---	returns true if the class was successfully added
 function _M:applyRandomClass(b, data, instant)
 	if not data.level then data.level = b.level end
 
@@ -1944,13 +1954,8 @@ function _M:applyRandomClass(b, data, instant)
 		-- b.forbid_power_source --> b.not_power_source used for classes
 		b.power_source = table.merge(b.power_source or {}, class.power_source or {})
 		b.not_power_source = table.merge(b.not_power_source or {}, class.not_power_source or {})
-		if b:attr("has_arcane_knowledge") or b:attr("undead") then b.not_power_source.antimagic = true end
-		if b:attr("undead") then b.not_power_source.nature = true end
-		if b:attr("forbid_arcane") then b.not_power_source.arcane = true end
-		if b:attr("forbid_nature") then b.not_power_source.nature = true end
-
 		-- update power source parameters with the new class
-		b.not_power_source, b.power_source = self:update_power_source(b.not_power_source, b.power_source)
+		b.not_power_source, b.power_source = self:updatePowers(self:attrPowers(b, b.not_power_source), b.power_source)
 print("   power types: not_power_source =", table.concat(table.keys(b.not_power_source),","), "power_source =", table.concat(table.keys(b.power_source),","))
 
 		-- Add stats
@@ -2019,7 +2024,6 @@ print("   power types: not_power_source =", table.concat(table.keys(b.not_power_
 						ok = false
 					end
 				end
-
 				if ok then list[t.id] = true end
 			end
 		end
@@ -2060,7 +2064,7 @@ print("   power types: not_power_source =", table.concat(table.keys(b.not_power_
 	while to_apply > 0 do
 		local c = rng.tableRemove(list)
 		if not c then break end --repeat attempts until list is exhausted
-		if data.no_class_restrictions or self:check_power_source(b, c) then  -- recheck power restricts here to account for any previously picked classes
+		if data.no_class_restrictions or self:checkPowers(b, c) then  -- recheck power restricts here to account for any previously picked classes
 			if apply_class(table.clone(c, true)) then to_apply = to_apply - 1 end
 		else
 			print("  class", c.name, " rejected due to power source")
@@ -2080,7 +2084,8 @@ end
 --	data.life_rating <1.7 * base.life_rating + 4-9>
 --	data.resources_boost = multiplier for maximum resource pool sizes <3>
 --	data.talent_cds_factor = multiplier for all talent cooldowns <1>
---	data.ai <"tactical" if rank>3 or base.ai>
+--	data.ai = ai_type <"tactical" if rank>3 or base.ai>
+--	data.ai_tactic = tactical weights table for the tactical ai <nil>
 --	data.no_loot_randart set true to not drop a randart <nil>
 --	data.on_die set true to run base.rng_boss_on_die and base.rng_boss_on_die_custom on death <nil>
 --	data.name_scheme <randart_name_rules.default>
@@ -2107,6 +2112,7 @@ function _M:createRandomBoss(base, data)
 		b.name = name.." the "..b.name
 	end
 	print("Creating random boss ", b.name, data.level, "level", data.nb_classes, "classes")
+	if data.force_classes then print("  * forcing classes:",table.concat(table.keys(data.force_classes),",")) end
 	b.unique = b.name
 	b.randboss = true
 	local boss_id = "RND_BOSS_"..b.name:upper():gsub("[^A-Z]", "_")
@@ -2151,7 +2157,6 @@ function _M:createRandomBoss(base, data)
 	else b.ai = (b.rank > 3) and "tactical" or b.ai
 	end
 	b.ai_state = { talent_in=1, ai_move=data.ai_move or "move_astar" }
-	b.ai_tactic = resolvers.talented_ai_tactic()
 
 	-- Remove default equipment, if any
 	local todel = {}
@@ -2213,8 +2218,8 @@ function _M:createRandomBoss(base, data)
 		self:resetToFull()
 	end
 
---	resolve ai tactical weights here?
---	b.ai_tactic = resolvers.talented_ai_tactic()
+--	b.ai_tactic = data.ai_tactic or resolvers.talented_ai_tactic() --Update tactics based on talents
+--	b:resolve(nil, true)
 	-- Anything else
 	if data.post then data.post(b, data) end
 
