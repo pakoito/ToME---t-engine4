@@ -6261,8 +6261,8 @@ newEntity{ base = "BASE_GREATMAUL",
 					
 					self.talent_on_spell = nil
 
-                    local scalingFactor = gem.material_level
-                    local combatFactor = math.max(scalingFactor, 2) -- Prevent tier 1 gems from degrading the maul
+					local scalingFactor = gem.material_level
+					local combatFactor = math.max(scalingFactor, 2) -- Prevent tier 1 gems from degrading the maul
 
 					self.material_level=combatFactor
 
