@@ -381,7 +381,7 @@ newInscription{
 	end,
 	info = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
-		return ([[Activate the infusion to spit a bolt of poison doing %0.2f nature damage per turns for 7 turns, and reducing the target's healing received by %d%%.
+		return ([[Activate the infusion to spit a bolt of poison doing %0.2f nature damage per turn for 7 turns, and reducing the target's healing received by %d%%.
 		The sudden stream of natural forces also strips you of one random detrimental magical effect.]]):format(damDesc(self, DamageType.NATURE, data.power + data.inc_stat) / 7, data.heal_factor)
 	end,
 	short_info = function(self, t)

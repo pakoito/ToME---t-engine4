@@ -880,7 +880,7 @@ function _M:getTextualDesc(compare_with, use_actor)
 
 		compare_fields(w, compare_with, field, "fatigue", "%+d%%", "Fatigue: ", 1, true, true)
 
-		compare_fields(w, compare_with, field, "ammo_reload_speed", "%+d", "Ammo reloads per turns: ")
+		compare_fields(w, compare_with, field, "ammo_reload_speed", "%+d", "Ammo reloads per turn: ")
 
 
 		local dt_string = tstring{}
