@@ -181,8 +181,19 @@ newInscription{
 	end,
 	info = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
-		local what = table.concat(table.keys(data.what), ", ")
-		return ([[Activate the infusion to cure yourself of %s effects and reduce all damage taken by %d%% for %d turns.]]):format(what, data.power+data.inc_stat, data.dur)
+		local what = table.keys(data.what)
+	local what_string = ""
+		if #what > 1 then
+			local first_effects = {}
+			for i=1, #what-1 do
+				table.insert(first_effects, what[i])
+			end
+			what_string = what_string .. table.concat(first_effects, ", ") .. " or " .. what[#what]
+		else
+			what_string = what[1]
+		end
+
+		return ([[Activate the infusion to cure yourself of one random %s effect and reduce all damage taken by %d%% for %d turns.]]):format(what_string, data.power+data.inc_stat, data.dur)
 	end,
 	short_info = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
@@ -255,8 +266,19 @@ newInscription{
 	end,
 	info = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
-		local what = table.concat(table.keys(data.what), ", ")
-		return ([[Activate the infusion to cure yourself of %s effects and increase affinity for all damage by %d%% for %d turns.]]):format(what, data.power+data.inc_stat, data.dur)
+		local what = table.keys(data.what)
+		local what_string = ""
+		if #what > 1 then
+			local first_effects = {}
+			for i=1, #what-1 do
+				table.insert(first_effects, what[i])
+		end
+			what_string = what_string .. table.concat(first_effects, ", ") .. " or " .. what[#what]
+		else
+			what_string = what[1]
+		end
+
+		return ([[Activate the infusion to cure yourself of one random %s effect and increase affinity for all damage by %d%% for %d turns.]]):format(what_string, data.power+data.inc_stat, data.dur)
 	end,
 	short_info = function(self, t)
 		local data = self:getInscriptionData(t.short_name)
