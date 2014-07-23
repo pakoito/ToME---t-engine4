@@ -77,7 +77,7 @@ newTalent{
 		if core.fov.distance(self.x, self.y, x, y) > 1 then return nil end
 		local dam = self:mindCrit(t.getDamage(self, t))
 				
-		if self:reactionToward(target) < 0 then
+		if target ~= self then
 			local tg = self:getTalentTarget(t)
 			local x, y = self:getTarget(tg)
 			if not x or not y then return nil end
@@ -94,6 +94,7 @@ newTalent{
 						target:setMoveAnim(ox, oy, 8, 5)
 					end
 				end
+				tg.act_exclude = {[target.uid]=true} -- Don't hit primary target with AOE
 				self:project(tg, target.x, target.y, DamageType.SPELLKNOCKBACK, dam/2) --AOE damage
 				if target:canBe("stun") then
 					target:setEffect(target.EFF_STUNNED, math.floor(self:getTalentRange(t) / 2), {apply_power=self:combatMindpower()})
@@ -109,7 +110,6 @@ newTalent{
 			local x, y = self:getTarget(tg)
 			if not x or not y then return nil end
 			if core.fov.distance(self.x, self.y, x, y) > tg.range then return nil end
-
 			for i = 1, math.floor(self:getTalentRange(t) / 2) do
 				self:project(tg, x, y, DamageType.DIG, 1)
 			end
@@ -117,7 +117,6 @@ newTalent{
 			local _ _, x, y = self:canProject(tg, x, y)
 			game.level.map:particleEmitter(self.x, self.y, tg.radius, "flamebeam", {tx=x-self.x, ty=y-self.y})
 			game:playSoundNear(self, "talents/lightning")
-
 			local block_actor = function(_, bx, by) return game.level.map:checkEntity(bx, by, engine.Map.TERRAIN, "block_move", self) end
 			local l = self:lineFOV(x, y, block_actor)
 			local lx, ly, is_corner_blocked = l:step()
@@ -127,10 +126,9 @@ newTalent{
 				tx, ty = lx, ly
 				lx, ly, is_corner_blocked = l:step()
 			end
-
 			--self:move(tx, ty, true)
 			local fx, fy = util.findFreeGrid(tx, ty, 5, true, {[Map.ACTOR]=true})
-			if not fx then
+			if fx then
 				self:move(fx, fy, true)
 			end
 			return true

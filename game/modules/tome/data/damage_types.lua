@@ -17,6 +17,9 @@
 -- Nicolas Casalini "DarkGod"
 -- darkgod@te4.org
 
+local print = print
+if config.settings.cheat then print = function() end end
+
 -- The basic stuff used to damage a grid
 setDefaultProjector(function(src, x, y, type, dam, tmp, no_martyr)
 	if not game.level.map:isBound(x, y) then return 0 end

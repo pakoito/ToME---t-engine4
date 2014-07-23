@@ -18,6 +18,7 @@
 -- darkgod@te4.org
 
 require "engine.class"
+local tween = require "tween"
 local Map = require "engine.Map"
 local Shader = require "engine.Shader"
 
@@ -30,14 +31,21 @@ function _M:init(font, size)
 end
 
 function _M:say(time, txt, ...)
-	self:saySimple(time, txt, ...)
+	return self:sayEasing(time, nil, txt, ...)
+end
+
+function _M:sayEasing(time, easing, txt, ...)
+	self:saySimple(time, easing, txt, ...)
 	game.logPlayer(game.player, "%s", txt:toString())
 end
 
 function _M:saySimple(time, txt, ...)
+	return self:sayEasingSimple(time, nil, txt, ...)
+end
+
+function _M:sayEasingSimple(time, easing, txt, ...)
 	txt = txt:format(...)
-	self.time = time or 60
-	self.max_time = self.time
+	self.max_time = time or 60
 	self.list, self.max_lines, self.max_w = self.font:draw(txt:toString(), math.floor(game.w * 0.8), 255, 255, 255)
 
 	self.list_x = (- self.max_w) / 2
@@ -48,6 +56,10 @@ function _M:saySimple(time, txt, ...)
 
 	if game.player.stopRun then game.player:stopRun("important news") end
 	if game.player.stopRest then game.player:stopRest("important news") end
+
+	self.scale = 1
+	if self.tweenid then tween.stop(self.tweenid) end
+	self.tweenid = tween(self.max_time, self, {scale=0}, easing or "inQuint", function() self.list = nil end)
 end
 
 function _M:display(nb_keyframes)
@@ -56,8 +68,7 @@ function _M:display(nb_keyframes)
 	local shader = Shader.default.textoutline and Shader.default.textoutline.shad
 
 	core.display.glTranslate(self.center_x, self.center_y, 0)
-	local scale = util.bound(1-math.log10(self.time / self.max_time)^2, 0, 1)
-	core.display.glScale(scale, scale, scale)
+	core.display.glScale(self.scale, self.scale, self.scale)
 
 	local x = self.list_x
 	local y = self.list_y
@@ -78,12 +89,6 @@ function _M:display(nb_keyframes)
 		item._tex:toScreenFull(x, y, item.w, item.h, item._tex_w, item._tex_h)
 		if self.text_shadow and shader then shader:use(false) end
 		y = y + item.h
-	end
-
-	self.time = self.time - nb_keyframes
-	if self.time < 0 then
-		self.time = nil
-		self.list = nil
 	end
 
 	core.display.glScale()

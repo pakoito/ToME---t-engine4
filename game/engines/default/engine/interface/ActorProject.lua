@@ -34,7 +34,7 @@ end
 -- @param t a type table describing the attack, passed to engine.Target:getType() for interpretation
 -- @param x target coords
 -- @param y target coords
--- @param damtype a damage type ID from the DamageType class
+-- @param damtype a damage type ID from the DamageType class or a function to be called as damtype(px, py, t, self) on each grid
 -- @param dam damage to be done
 -- @param particles particles effect configuration, or nil
 function _M:project(t, x, y, damtype, dam, particles)
@@ -178,6 +178,17 @@ function _M:project(t, x, y, damtype, dam, particles)
 		return
 	end
 
+	--Remove any excluded grids
+	if typ.grid_exclude then
+		for px, ys in pairs(typ.grid_exclude) do
+			if grids[px] then
+				for py, _ in pairs(ys) do
+					grids[px][py]=nil
+				end
+			end
+		end
+	end
+	
 	self:check("on_project_grids", grids)
 
 	-- Now project on each grid, one type
@@ -188,9 +199,9 @@ function _M:project(t, x, y, damtype, dam, particles)
 		for py, _ in pairs(ys) do
 			-- Call the projected method of the target grid if possible
 			if not game.level.map:checkAllEntities(px, py, "projected", self, t, px, py, damtype, dam, particles) then
-				-- Check self- and friendly-fire, and if the projection "misses"
+				-- Check self- and friendly-fire, excluded Actors, and if the projection "misses"
 				local act = game.level.map(px, py, engine.Map.ACTOR)
-				if act and act == self and not ((type(typ.selffire) == "number" and rng.percent(typ.selffire)) or (type(typ.selffire) ~= "number" and typ.selffire)) then
+				if act and (typ.act_exclude and typ.act_exclude[act.uid]) or act == self and not ((type(typ.selffire) == "number" and rng.percent(typ.selffire)) or (type(typ.selffire) ~= "number" and typ.selffire)) then
 				elseif act and self.reactionToward and (self:reactionToward(act) >= 0) and not ((type(typ.friendlyfire) == "number" and rng.percent(typ.friendlyfire)) or (type(typ.friendlyfire) ~= "number" and typ.friendlyfire)) then
 				-- Otherwise hit
 				else

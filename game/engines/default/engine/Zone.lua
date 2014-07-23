@@ -654,6 +654,7 @@ end
 --- If we are loaded we need a new uid
 function _M:loaded()
 	__zone_store[self] = true
+	self._tmp_data = {}
 
 	if type(self.reload_lists) ~= "boolean" or self.reload_lists then
 		self:loadBaseLists()
