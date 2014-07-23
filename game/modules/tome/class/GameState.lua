@@ -260,13 +260,14 @@ _M.power_sources = table.map(function(k, v) return k, true end, table.keys_to_va
 
 --- map attributes to power restrictions for an entity
 --	returns an updated list of forbidden power types including attributes
+--	used for checking for compatible equipment and npc randboss classes
 function _M:attrPowers(e, not_ps)
 	not_ps = table.clone(not_ps or e.not_power_source or e.forbid_power_source) or {}
 	if e.attr then
 		if e:attr("has_arcane_knowledge") then not_ps.antimagic = true end
-		if e:attr("undead") then not_ps.nature = true not_ps.antimagic = true end
+		if e:attr("undead") then not_ps.antimagic = true end
 		if e:attr("forbid_arcane") then not_ps.arcane = true end
-		if e:attr("forbid_nature") then not_ps.nature = true end
+--		if e:attr("forbid_nature") then not_ps.nature = true end
 	end
 	return not_ps
 end
@@ -274,7 +275,7 @@ end
 --- Checks power_source compatibility between two entities
 --	returns true if e2 is compatible with e1, false otherwise
 --	by default, only checks .power_source vs. .forbid_power_source between entities
---	if require_power is true, it will also check that e2.power_source (if present) has a match in e1.power_source
+--	@param require_power if true, will also check that e2.power_source (if present) has a match in e1.power_source
 --	use updatePowers to resolve conflicts.
 function _M:checkPowers(e1, e2, require_power)
 	if not e1 or not e2 then return true end
@@ -301,11 +302,11 @@ function _M:checkPowers(e1, e2, require_power)
 end
 
 --- Adjusts power source parameters and themes to remove conflicts
--- forbid_ps = {arcane = true, technique = true, ...} forbidden power sources <none>
--- allow_ps = {arcane = true, technique = true, ...} allowed power sources <all allowed>
--- randthemes = number of themes to pick randomly from the global pool <0>
--- force_themes = themes to always include {"attack", "antimagic", ...} applied last (optional)
--- themes included can add to forbid_ps and allow_ps
+-- @param forbid_ps = {arcane = true, technique = true, ...} forbidden power sources <none>
+-- @param allow_ps = {arcane = true, technique = true, ...} allowed power sources <all allowed>
+-- @param randthemes = number of themes to pick randomly from the global pool <0>
+-- @param force_themes = themes to always include {"attack", "antimagic", ...} applied last (optional)
+-- 	themes included can add to forbid_ps and allow_ps
 -- precedence is: forbid_ps > allow_ps > force_themes
 -- returns forbid_ps, allow_ps, themes (made consistent)
 function _M:updatePowers(forbid_ps, allow_ps, randthemes, force_themes)
@@ -379,25 +380,25 @@ function _M:updatePowers(forbid_ps, allow_ps, randthemes, force_themes)
 end
 
 --- Generate randarts for this state with optional parameters:
--- data.base = base object to add powers to (base.randart_able must be defined) <random object>
--- data.base_filter = filter passed to makeEntity when making base object
--- data.lev = character level to generate for (affects point budget, #themes and #powers) <12-50>
--- data.power_points_factor = lev based power points multiplier <1>
--- data.nb_points_add = #extra budget points to spend on random powers <0>
--- data.powers_special = function(p) that must return true on each random power to add (from base.randart_able)
--- data.nb_themes = #power themes (power groups) for random powers to use <scales to 5 with lev>
--- data.force_themes = additional power theme(s) to use for random powers = {"attack", "arcane", ...}
--- data.egos = total #egos to include (forced + random) <3>
--- data.greater_egos_bias = #egos that should be greater egos <2/3 * data.egos>
--- data.force_egos = list of egos ("egoname1", "egoname2", ...) to add first (overrides restrictions)
--- data.ego_special = function(e) on ego table that must return true for allowed egos
--- data.forbid_power_source = disallowed power type(s) for egos
+-- @param data.base = base object to add powers to (base.randart_able must be defined) <random object>
+-- @param data.base_filter = filter passed to makeEntity when making base object
+-- @param data.lev = character level to generate for (affects point budget, #themes and #powers) <12-50>
+-- @param data.power_points_factor = lev based power points multiplier <1>
+-- @param data.nb_points_add = #extra budget points to spend on random powers <0>
+-- @param data.powers_special = function(p) that must return true on each random power to add (from base.randart_able)
+-- @param data.nb_themes = #power themes (power groups) for random powers to use <scales to 5 with lev>
+-- @param data.force_themes = additional power theme(s) to use for random powers = {"attack", "arcane", ...}
+-- @param data.egos = total #egos to include (forced + random) <3>
+-- @param data.greater_egos_bias = #egos that should be greater egos <2/3 * data.egos>
+-- @param data.force_egos = list of egos ("egoname1", "egoname2", ...) to add first (overrides restrictions)
+-- @param data.ego_special = function(e) on ego table that must return true for allowed egos
+-- @param data.forbid_power_source = disallowed power type(s) for egos
 -- 	eg:{arcane = true, psionic = true, technique = true, nature = true, antimagic = true}
 --		note some objects always have a power source by default (i.e. wands are always arcane powered)
--- data.power_source = allowed power type(s) <all allowed> if specified, only egos matching at least one of the power types will be added.  themes (random or forced) can add allowed power_sources
--- data.namescheme = parameters to be passed to the NameGenerator <local randart_name_rules table>
--- data.add_pool if true, adds the randart to the world artifact pool <nil>
--- data.post = function(o) to be applied to the randart after all egos and powers have been added and resolved
+-- @param data.power_source = allowed power type(s) <all allowed> if specified, only egos matching at least one of the power types will be added.  themes (random or forced) can add allowed power_sources
+-- @param data.namescheme = parameters to be passed to the NameGenerator <local randart_name_rules table>
+-- @param data.add_pool if true, adds the randart to the world artifact pool <nil>
+-- @param data.post = function(o) to be applied to the randart after all egos and powers have been added and resolved
 function _M:generateRandart(data)
 	-- Setup basic parameters and override global variables to match data
 	data = data or {}
@@ -772,8 +773,8 @@ o.gendata = table.clone(data, true) -- debugging code
 end
 
 --- Adds randart properties (egos and random powers) to an existing object
--- o is the object to be updated (o.egos and o.randart_able should be defined as needed)
--- data is the table of randart parameters passed to generateRandart
+-- @param o is the object to be updated (o.egos and o.randart_able should be defined as needed)
+-- @param data is the table of randart parameters passed to generateRandart
 -- usable powers and set properties are not overwritten if present
 function _M:addRandartProperties(o, data)
 	print(" ** adding randart properties to ", o.name, o.uid)
@@ -1505,7 +1506,6 @@ function _M:entityFilterPost(zone, level, type, e, filter)
 			if _G.type(filter.random_boss) == "boolean" then filter.random_boss = {}
 			else filter.random_boss = table.clone(filter.random_boss, true) end
 			filter.random_boss.level = filter.random_boss.level or zone:level_adjust_level(level, zone, type)
---			filter.random_boss.class_filter = filter.random_boss.class_filter
 			e = self:createRandomBoss(e, filter.random_boss)
 		elseif filter.random_elite and not e.unique then
 			if _G.type(filter.random_elite) == "boolean" then filter.random_elite = {}
@@ -1911,20 +1911,20 @@ function _M:createRandomZone(zbase)
 end
 
 --- Add character classes to an actor updating stats, talents, and equipment
---	b = actor(boss) to update
---	data = optional parameters
---	data.force_classes = specific classes to add {Corruptor = true, Bulwark = true, ...} ignores restrictions
---	data.nb_classes = additional random classes to add <2>
--- 	data.class_filter = function(cdata) that must return true for any class picked.
+--	@param b = actor(boss) to update
+--	@param data = optional parameters
+--	@param data.force_classes = specific classes to add {Corruptor = true, Bulwark = true, ...} ignores restrictions
+--	@param data.nb_classes = additional random classes to add <2>
+-- 	@param data.class_filter = function(cdata) that must return true for any class picked.
 --		(cdata = subclass definition in engine.Birther.birth_descriptor_def.subclass)
---	data.no_class_restrictions set true to skip class compatibility checks <nil>
---	data.add_trees = {["talent tree name 1"]=true, ["talent tree name 2"]=true, ..} additional talent trees to learn
---	data.check_talents_level set true to enforce talent level restrictions <nil>
---	data.auto_sustain set true to activate sustained talents at birth <nil>
---	data.forbid_equip set true for no equipment <nil>
---	data.loot_quality = drop table to use <"boss">
---	data.drop_equipment set true to force dropping of equipment <nil>
---	instant set true to force instant learning of talents and generating golem <nil>
+--	@param data.no_class_restrictions set true to skip class compatibility checks <nil>
+--	@param data.add_trees = {["talent tree name 1"]=true, ["talent tree name 2"]=true, ..} additional talent trees to learn
+--	@param data.check_talents_level set true to enforce talent level restrictions <nil>
+--	@param data.auto_sustain set true to activate sustained talents at birth <nil>
+--	@param data.forbid_equip set true for no equipment <nil>
+--	@param data.loot_quality = drop table to use <"boss">
+--	@param data.drop_equipment set true to force dropping of equipment <nil>
+--	@param instant set true to force instant learning of talents and generating golem <nil>
 function _M:applyRandomClass(b, data, instant)
 	if not data.level then data.level = b.level end
 
@@ -2051,7 +2051,7 @@ print("   power types: not_power_source =", table.concat(table.keys(b.not_power_
 		return true
 	end
 
-	-- Select two classes
+	-- Select classes
 	local classes = Birther.birth_descriptor_def.subclass
 	local list = {}
 	local force_classes = data.force_classes and table.clone(data.force_classes)
@@ -2075,21 +2075,21 @@ end
 --note: function _M:entityFilterPost(zone, level, type, e, filter) calls this
 
 --- Creates a random Boss (or elite) actor
---	b = base actor to add classes/talents to
+--	@param b = base actor to add classes/talents to
 --	calls _M:applyRandomClass(b, data, instant) to add classes, talents, and equipment based on class descriptors
 --		handles data.nb_classes, data.force_classes, data.class_filter, ...
 --	optional parameters:
---	data.level = minimum level range for actor generation <1>
---	data.rank = rank <3.5-4>
---	data.life_rating <1.7 * base.life_rating + 4-9>
---	data.resources_boost = multiplier for maximum resource pool sizes <3>
---	data.talent_cds_factor = multiplier for all talent cooldowns <1>
---	data.ai = ai_type <"tactical" if rank>3 or base.ai>
---	data.ai_tactic = tactical weights table for the tactical ai <nil>
---	data.no_loot_randart set true to not drop a randart <nil>
---	data.on_die set true to run base.rng_boss_on_die and base.rng_boss_on_die_custom on death <nil>
---	data.name_scheme <randart_name_rules.default>
---	data.post = function(b, data) to run last to finish generation
+--	@param data.level = minimum level range for actor generation <1>
+--	@param data.rank = rank <3.5-4>
+--	@param data.life_rating <1.7 * base.life_rating + 4-9>
+--	@param data.resources_boost = multiplier for maximum resource pool sizes <3>
+--	@param data.talent_cds_factor = multiplier for all talent cooldowns <1>
+--	@param data.ai = ai_type <"tactical" if rank>3 or base.ai>
+--	@param data.ai_tactic = tactical weights table for the tactical ai <nil>
+--	@param data.no_loot_randart set true to not drop a randart <nil>
+--	@param data.on_die set true to run base.rng_boss_on_die and base.rng_boss_on_die_custom on death <nil>
+--	@param data.name_scheme <randart_name_rules.default>
+--	@param data.post = function(b, data) to run last to finish generation
 function _M:createRandomBoss(base, data)
 	local b = base:clone()
 	data = data or {level=1}
@@ -2152,12 +2152,6 @@ function _M:createRandomBoss(base, data)
 	b.autolevel = "random_boss"
 	b.auto_stats = {}
 
-	-- Always smart
-	if data.ai then b.ai = data.ai
-	else b.ai = (b.rank > 3) and "tactical" or b.ai
-	end
-	b.ai_state = { talent_in=1, ai_move=data.ai_move or "move_astar" }
-
 	-- Remove default equipment, if any
 	local todel = {}
 	for k, resolver in pairs(b) do if type(resolver) == "table" and resolver.__resolver and (resolver.__resolver == "equip" or resolver.__resolver == "drops") then todel[#todel+1] = k end end
@@ -2209,7 +2203,7 @@ function _M:createRandomBoss(base, data)
 			end
 		end
 
-		-- Cheat a bit with ressources
+		-- Cheat a bit with resources
 		self.max_mana = self.max_mana * (self._rndboss_resources_boost or 3) self.mana_regen = self.mana_regen + 1
 		self.max_vim = self.max_vim * (self._rndboss_resources_boost or 3) self.vim_regen = self.vim_regen + 1
 		self.max_stamina = self.max_stamina * (self._rndboss_resources_boost or 3) self.stamina_regen = self.stamina_regen + 1
@@ -2218,8 +2212,17 @@ function _M:createRandomBoss(base, data)
 		self:resetToFull()
 	end
 
---	b.ai_tactic = data.ai_tactic or resolvers.talented_ai_tactic() --Update tactics based on talents
---	b:resolve(nil, true)
+	-- Update AI
+	if data.ai then b.ai = data.ai
+	else b.ai = (b.rank > 3) and "tactical" or b.ai
+	end
+	b.ai_state = { talent_in=1, ai_move=data.ai_move or "move_astar" }
+	if data.ai_tactic then
+		b.ai_tactic = data.ai_tactic
+	else
+--		b[#b+1] = resolvers.talented_ai_tactic() --tactics based on talents
+	end
+
 	-- Anything else
 	if data.post then data.post(b, data) end
 
