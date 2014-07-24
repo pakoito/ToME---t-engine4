@@ -473,7 +473,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		local stat = t.getStatBonus(self, t)
-		return ([[Forge a defender wielding a sword and shield from your thoughts.  The solider learns Armor Rraining, Weapon Mastery, Combat Accuracy, Shield Pummel, and Shield Wall as it levels up, and has +%d Strength, +%d Dexterity, and +%d Constitution.
+		return ([[Forge a defender wielding a sword and shield from your thoughts.  The solider learns Armor Training, Weapon Mastery, Combat Accuracy, Shield Pummel, and Shield Wall as it levels up, and has +%d Strength, +%d Dexterity, and +%d Constitution.
 		Activating this talent will put all other thought-forms on cooldown.
 		The stat bonuses will improve with your Mindpower.]]):format(stat/2, stat/2, stat)
 	end,
