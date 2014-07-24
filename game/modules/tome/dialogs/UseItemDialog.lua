@@ -88,6 +88,28 @@ function _M:use(item)
 	elseif act == "takeoff" then
 		self.actor:doTakeoff(self.inven, self.item, self.object, nil, self.dst_actor)
 		self.onuse(self.inven, self.item, self.object, false)
+	elseif act == "tinker-remove" then
+		self.actor:doTakeoffTinker(self.inven[self.item], self.object)
+		self.actor:sortInven()
+		self.onuse(self.inven, self.item, self.object, false)
+	elseif act == "tinker-add" then
+		local list = {}
+		for inven_idx, inven in pairs(self.actor.inven) do if inven.worn then
+			for item_idx, o in ipairs(inven) do
+				if o:canAttachTinker(self.object, true) then list[#list+1] = {name=o:getName{do_color=true}, inven=inven, item=item_idx, o=o} end
+			end
+		end end
+		local doit = function(w)
+			self.actor:doWearTinker(self.inven, self.item, self.object, w.inven, w.item, w.o, true)
+			self.actor:sortInven()
+			self.onuse(self.inven, self.item, self.object, false)
+		end
+		if #list == 1 then doit(list[1])
+		elseif #list == 0 then
+			self:simplePopup("Attach tinker", "You do not have any equiped items that it can be attached to.")
+		else
+			self:listPopup("Attach tinker", "Select which item to attach it to:", list, 300, 400, doit)
+		end
 	elseif act == "transfer" then
 		game:registerDialog(PartySendItem.new(self.actor, self.object, self.inven, self.item, function()
 			self.onuse(self.inven, self.item, self.object, false)
@@ -136,6 +158,8 @@ function _M:generateList()
 	if not self.dst_actor and not self.object.__transmo and not self.no_use_allowed then if self.object:canUseObject() then list[#list+1] = {name="Use", action="use"} end end
 	if self.inven == self.actor.INVEN_INVEN and self.object:wornInven() and self.actor:getInven(self.object:wornInven()) then list[#list+1] = {name="Wield/Wear", action="wear"} end
 	if not self.object.__transmo then if self.inven ~= self.actor.INVEN_INVEN and self.object:wornInven() then list[#list+1] = {name="Take off", action="takeoff"} end end
+	if not self.object.__transmo then if self.inven ~= self.actor.INVEN_INVEN and self.object.is_tinker and self.object.tinkered then list[#list+1] = {name="Remove Tinker", action="tinker-remove"} end end
+	if not self.object.__transmo then if self.inven == self.actor.INVEN_INVEN and self.object.is_tinker and not self.object.tinkered then list[#list+1] = {name="Attach Tinker", action="tinker-add"} end end
 	if not self.dst_actor and not self.object.__tagged and self.inven == self.actor.INVEN_INVEN then list[#list+1] = {name="Drop", action="drop"} end
 	if not self.dst_actor and self.inven == self.actor.INVEN_INVEN and game.party:countInventoryAble() >= 2 then list[#list+1] = {name="Transfer to party", action="transfer"} end
 	if not self.dst_actor and not self.object.__tagged and self.inven == self.actor.INVEN_INVEN and transmo_chest and self.actor:transmoFilter(self.object) then list[#list+1] = {name=self.actor:transmoGetWord():capitalize().." now", action="transmo"} end
