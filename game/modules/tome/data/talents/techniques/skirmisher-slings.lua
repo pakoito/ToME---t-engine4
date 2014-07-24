@@ -111,6 +111,7 @@ newTalent {
 	require = techs_dex_req3,
 	points = 5,
 	no_energy = "fake",
+	speed = "archery",
 	random_ego = "attack",
 	tactical = {ATTACKALL = {weapon = 3}},
 	range = 0,
