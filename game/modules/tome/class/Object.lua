@@ -1921,3 +1921,15 @@ function _M:addedToLevel(level, x, y)
 		self.__price_level_mod = util.getval(level.data.objects_cost_modifier, self)
 	end
 end
+
+function _M:getTinker()
+	return self.tinker
+end
+
+function _M:canAttachTinker(tinker, override)
+	if not tinker.is_tinker then return end
+	if tinker.on_type and tinker.on_type ~= rawget(self, "type") then return end
+	if tinker.on_slot and tinker.on_slot ~= self.slot then return end
+	if self.tinker and not override then return end
+	return true
+end
