@@ -307,6 +307,52 @@ end
 function _M:runStop() end
 function _M:restStop() end
 
+function _M:getSpeed(speed_type)
+	if type(speed_type) == "number" then return speed_type end
+
+	local speed
+
+	if speed_type == "weapon" or speed_type == "mainhand" or
+		speed_type == "offhand" or speed_type == "combat"
+	then
+		if (speed_type == "weapon" or speed_type == "mainhand") and
+			self:getInven(self.INVEN_MAINHAND)
+		then
+			local o = self:getInven(self.INVEN_MAINHAND)[1]
+			speed = self:combatSpeed(self:getObjectCombat(o, "mainhand"))
+		end
+
+		if (speed_type == "weapon" or speed_type == "offhand") and
+			self:getInven(self.INVEN_OFFHAND)
+		then
+			local o = self:getInven(self.INVEN_OFFHAND)[1]
+			speed = math.max(speed or 0, self:combatSpeed(self:getObjectCombat(o, "offhand")))
+		end
+
+		if (speed_type == "combat" or speed_type == "weapon") and not speed then
+			speed = self:combatSpeed()
+		end
+
+	elseif speed_type == "spell" then speed = self:combatSpellSpeed()
+	elseif speed_type == "summon" then speed = self:combatSummonSpeed()
+	elseif speed_type == "mind" then speed = self:combatMindSpeed()
+	elseif speed_type == "movement" then speed = self:combatMovementSpeed()
+	elseif speed_type == "standard" then speed = 1
+	end
+
+	local hd = {"Actor:getSpeed", speed_type = speed_type, speed = speed,}
+	if self:triggerHook(hd) then speed = hd.speed end
+
+	return speed or 1
+end
+
+function _M:useEnergyType(speed_type, mult)
+	mult = mult or 1
+	local energy = game.energy_to_act * self:getSpeed(speed_type) * mult
+	self:useEnergy(energy)
+	return energy
+end
+
 function _M:useEnergy(val)
 	engine.Actor.useEnergy(self, val)
 
@@ -467,7 +513,7 @@ function _M:actBase()
 
 	if self:knowTalent(self.T_GESTURE_OF_GUARDING) then self:setEffect(self.EFF_GESTURE_OF_GUARDING,1,{}) end
 	if self:knowTalent(self.T_DUAL_WEAPON_DEFENSE) then self:setEffect(self.EFF_DUAL_WEAPON_DEFENSE,1,{}) end
-	if self:knowTalent(self.T_COUNTER_ATTACK) then self:setEffect(self.EFF_COUNTER_ATTACKING,1,{}) end 
+	if self:knowTalent(self.T_COUNTER_ATTACK) then self:setEffect(self.EFF_COUNTER_ATTACKING,1,{}) end
 	if self:knowTalent(self.T_DEFENSIVE_THROW) then self:setEffect(self.EFF_DEFENSIVE_GRAPPLING,1,{}) end
 
 	-- Compute timed effects
@@ -551,7 +597,7 @@ function _M:actBase()
 			local t, p = self:getTalentFromId(self.T_DREAMFORGE), self:isTalentActive(self.T_DREAMFORGE)
 			t.doForgeStrike(self, t, p)
 		end
-		
+
 		if self:isTalentActive(self.T_TIME_DILATION) then
 			local t, p = self:getTalentFromId(self.T_TIME_DILATION), self:isTalentActive(self.T_TIME_DILATION)
 			t.doTimeDilation(self, t, p)
@@ -572,7 +618,7 @@ function _M:actBase()
 				t.do_chargedaura(self, t)
 			end
 		end
-			
+
 		if self:isTalentActive(self.T_BEYOND_THE_FLESH) then
 			local t = self:getTalentFromId(self.T_BEYOND_THE_FLESH)
 			t.do_tkautoattack(self, t)
@@ -581,7 +627,7 @@ function _M:actBase()
 			local t = self:getTalentFromId(self.T_MASTERFUL_TELEKINETIC_ARCHERY)
 			t.do_tkautoshoot(self, t)
 		end
-		
+
 		self:triggerHook{"Actor:actBase:Effects"}
 
 		self:fireTalentCheck("callbackOnActBase")
@@ -1313,7 +1359,7 @@ function _M:move(x, y, force)
 		if not force and moved and (self.x ~= ox or self.y ~= oy) and not self.did_energy then
 			local eff = self:hasEffect(self.EFF_CURSE_OF_SHROUDS)
 			if eff then eff.moved = true end
-			
+
 			if self:knowTalent(self.T_CELERITY) then
 				self:callTalent(self.T_CELERITY, "doCelerity")
 			end
@@ -1378,7 +1424,7 @@ function _M:move(x, y, force)
 	if moved and self:isTalentActive(self.T_BODY_OF_STONE) and not self:attr("preserve_body_of_stone") then
 		self:forceUseTalent(self.T_BODY_OF_STONE, {ignore_energy=true})
 	end
-	
+
 	-- Chronomancy auras
 
 
@@ -1772,15 +1818,15 @@ function _M:tooltip(x, y, seen_by)
 	end
 	--ts:add(("Stats: %d / %d / %d / %d / %d / %d"):format(self:getStr(), self:getDex(), self:getCon(), self:getMag(), self:getWil(), self:getCun()), true)
 	--if #resists > 0 then ts:add("Resists: ", table.concat(resists, ','), true) end
-	
+
 	local resists = tstring{}
 	ts:add({"color", "ANTIQUE_WHITE"}, "Resists: ")
 	for t, v in pairs(self.resists) do
-		if t == "all" then 
+		if t == "all" then
 			ts:add({"color", "LIGHT_BLUE"}, tostring(math.floor(v)) .. "%", " ", {"color", "LAST"}, "all, ")
 		elseif type(t) == "string" and math.abs(v) >= 20 then
 			local res = tostring ( math.floor(self:combatGetResist(t)) ) .. "%"
-			if v > 0 then  
+			if v > 0 then
 				ts:add({"color", "LIGHT_GREEN"}, res, " ", {"color", "LAST"}, DamageType:get(t).name, ", ")
 			else
 				ts:add({"color", "LIGHT_RED"}, res, " ", {"color", "LAST"}, DamageType:get(t).name, ", ")
@@ -1803,7 +1849,7 @@ function _M:tooltip(x, y, seen_by)
 	ts:add("#FFD700#M. power#FFFFFF#: ", self:colorStats("combatMindpower"), "  ")
 	ts:add("#0080FF#M. save#FFFFFF#:  ", self:colorStats("combatMentalResist"), true)
 	ts:add({"color", "WHITE"})
-	
+
 	if (150 + (self.combat_critical_power or 0) ) > 150 then
 		ts:add("Critical Mult: ", ("%d%%"):format(150 + (self.combat_critical_power or 0) ), true )
 	end
@@ -1880,7 +1926,7 @@ function _M:tooltip(x, y, seen_by)
 				effother:add(true, "- ", {"color", "ORCHID"}, (e.decrease > 0) and ("%s(%d)"):format(e.desc,dur) or e.desc, {"color", "WHITE"} )
 			else
 				ts:add(true, "- ", {"color", "LIGHT_RED"}, (e.decrease > 0) and ("%s(%d)"):format(e.desc,dur) or e.desc, {"color", "WHITE"} )
-			end		
+			end
 		else
 			effbeneficial:add(true, "- ", {"color", "LIGHT_GREEN"}, (e.decrease > 0) and ("%s(%d)"):format(e.desc,dur) or e.desc, {"color", "WHITE"} )
 		end
@@ -2078,7 +2124,7 @@ function _M:onTakeHit(value, src, death_note)
 			game.level.map:particleEmitter(self.x, self.y, tg.radius, "sunburst", {radius=tg.radius, grids=grids, tx=self.x, ty=self.y})
 		end
 	end
-	
+
 	--Special Flag (currently for Terrasca)
 	if value > 0 and self:attr("speed_resist") then
 		value = value * (util.bound(self.global_speed * self.movement_speed, 0.3, 1))
@@ -2089,7 +2135,7 @@ function _M:onTakeHit(value, src, death_note)
 		value = value * (100-self:attr("incoming_reduce")) / 100
 		print("[onTakeHit] After Trained Reactions effect reduction ", value)
 	end
-	
+
 	if self:knowTalent(self.T_SKIRMISHER_TRAINED_REACTIONS) then
 		local t = self:getTalentFromId(self.T_SKIRMISHER_TRAINED_REACTIONS)
 		if self:isTalentActive(t.id) then
@@ -2097,7 +2143,7 @@ function _M:onTakeHit(value, src, death_note)
 			print("[onTakeHit] After Trained Reactions life% trigger ", value)
 		end
 	end
-  
+
 	if value > 0 and self:knowTalent(self.T_MITOSIS) and self:isTalentActive(self.T_MITOSIS) then
 		local t = self:getTalentFromId(self.T_MITOSIS)
 		local chance = t.getChance(self, t)
@@ -3627,7 +3673,7 @@ function _M:quickSwitchWeapons(free_swap, message)
 	else
 		game.logPlayer(self, "You switch your weapons to: %s.", names)
 	end
-	
+
 	self.off_weapon_slots = not self.off_weapon_slots
 	self.changed = true
 end
@@ -4285,15 +4331,15 @@ function _M:paradoxDoAnomaly(reduction, anomaly_type, chance, target, silent)
 	local anomaly_type = anomaly_type or "random"
 	local forced = false
 	local chance = chance or self:paradoxFailChance()
-	if chance == "forced" then 
+	if chance == "forced" then
 		forced = true
 		chance = 100
 	end
-	
+
 	-- See if we create an anomaly
 	if not game.zone.no_anomalies and not self:attr("no_paradox_fail") and not self.turn_procs.anomalies_checked then
 		self.turn_procs.anomalies_checked = true -- This is so players can't chain cancel out of targeting to trigger anomalies on purpose, we clear it out in postUse
-		
+
 		-- return true if we roll an anomly
 		if rng.percent(chance) then
 			-- If our Paradox is over 600 do a major anomaly
@@ -4305,7 +4351,7 @@ function _M:paradoxDoAnomaly(reduction, anomaly_type, chance, target, silent)
 					anomaly_type = self.anomaly_bias.type
 				end
 			end
-			
+
 			-- Now pick anomalies filtered by type
 			local ts = {}
 			for id, t in pairs(self.talents_def) do
@@ -4315,8 +4361,8 @@ function _M:paradoxDoAnomaly(reduction, anomaly_type, chance, target, silent)
 					if t.type[1] == "chronomancy/anomalies" and t.anomaly_type and t.anomaly_type ~= "major" then ts[#ts+1] = id end
 				end
 			end
-			
-			-- Did we find anomalies? 		
+
+			-- Did we find anomalies?
 			if ts[1] then
 				-- Do we have a target?  If not we pass to anomaly targeting
 				-- The ignore energy calls here allow anomalies to be cast even when it's not the players turn (i.e. Preserve Pattern)
@@ -4326,11 +4372,11 @@ function _M:paradoxDoAnomaly(reduction, anomaly_type, chance, target, silent)
 					self:forceUseTalent(rng.table(ts), {ignore_cooldown=true, ignore_energy=true})
 				end
 				-- Drop some game messages
-				if not silent then 
+				if not silent then
 					if forced then
 						game.logPlayer(self, "#STEEL_BLUE#You've moved to another time thread.")
 					else
-						game.logPlayer(self, "#LIGHT_RED#You lose control and unleash an anomaly!")	
+						game.logPlayer(self, "#LIGHT_RED#You lose control and unleash an anomaly!")
 					end
 				end
 				-- Reduce Paradox
@@ -4338,7 +4384,7 @@ function _M:paradoxDoAnomaly(reduction, anomaly_type, chance, target, silent)
 					self:incParadox(-reduction)
 				end
 			end
-			
+
 			return true
 		end
 	end
@@ -4509,7 +4555,7 @@ function _M:preUseTalent(ab, silent, fake)
 			return false
 		end
 	end
-	
+
 	if not self:enoughEnergy() and not fake then return false end
 
 	if ab.mode == "sustained" then
@@ -4732,6 +4778,22 @@ function _M:fireTalentCheck(event, ...)
 	return ret
 end
 
+function _M:getTalentSpeedType(t)
+	if t.speed then
+		return util.getval(t.speed, self, t)
+	elseif t.is_spell then
+		return "spell"
+	elseif t.is_summon then
+		return "summon"
+	elseif t.type[1]:find("^technique/") then
+		return "weapon"
+	elseif t.is_mind then
+		return "mind"
+	else
+		return "standard"
+	end
+end
+
 --- Called after a talent is used
 -- Check if it must use a turn, mana, stamina, ...
 -- @param ab the talent (not the id, the table)
@@ -4762,25 +4824,7 @@ function _M:postUseTalent(ab, ret, silent)
 	end)
 
 	if not util.getval(ab.no_energy, self, ab) then
-		if ab.is_spell then
-			self:useEnergy(game.energy_to_act * self:combatSpellSpeed())
-		elseif ab.is_summon then
-			self:useEnergy(game.energy_to_act * self:combatSummonSpeed())
-		elseif ab.type[1]:find("^technique/") then
-			local combat = self.combat
-			if self:getInven(self.INVEN_MAINHAND) then
-				local o = self:getInven(self.INVEN_MAINHAND)[1]
-				combat = self:getObjectCombat(o, "mainhand")
-			elseif self:getInven(self.INVEN_OFFHAND) then
-				local o = self:getInven(self.INVEN_OFFHAND)[1]
-				combat = self:getObjectCombat(o, "offhand")
-			end
-			self:useEnergy(game.energy_to_act * self:combatSpeed(combat))
-		elseif ab.is_mind then
-			self:useEnergy(game.energy_to_act * self:combatMindSpeed())
-		else
-			self:useEnergy()
-		end
+		self:useEnergyType(self:getTalentSpeedType(ab))
 
 		-- Free melee blow
 		if ab.is_spell and ab.mode ~= "sustained" and self:knowTalent(self.T_CORRUPTED_STRENGTH) and not self:attr("forbid_corrupted_strength_blow") and not self.turn_procs.corrupted_strength then
@@ -4984,7 +5028,7 @@ function _M:postUseTalent(ab, ret, silent)
 			game.logSeen(self, "%s talent '%s%s' is disrupted by the mind parasite.", self.name:capitalize(), (t.display_entity and t.display_entity:getDisplayString() or ""), t.name)
 		end
 	end
-	
+
 	if self.turn_procs.anomalies_checked then self.turn_procs.anomalies_checked = nil end  -- clears out anomaly checks
 
 	return true
@@ -5146,9 +5190,22 @@ function _M:getTalentFullDescription(t, addlevel, config, fake_mastery)
 		else d:add({"color",0x6f,0xff,0x83}, "Travel Speed: ", {"color",0xFF,0xFF,0xFF}, "instantaneous", true)
 		end
 		if not config.ignore_use_time then
-			local uspeed = "1 turn"
+			local uspeed = "Full Turn"
 			local no_energy = util.getval(t.no_energy, self, t)
-			if no_energy and type(no_energy) == "boolean" and no_energy == true then uspeed = "instant" end
+			if no_energy and type(no_energy) == "boolean" and no_energy == true then
+				uspeed = "Instant (#LIGHT_GREEN#0%#LAST# of a turn)"
+			else
+				local speed =
+					util.getval(t.display_speed, self, t) or
+					util.getval(t.speed, self, t) or
+					self:getTalentSpeedType(t)
+				if type(speed) == "string" then
+					uspeed = speed:capitalize().." (#LIGHT_GREEN#%d%%#LAST# of a turn)"
+				else
+					uspeed = "%s"
+				end
+				uspeed = uspeed:format(self:getSpeed(speed) * 100)
+			end
 			d:add({"color",0x6f,0xff,0x83}, "Usage Speed: ", {"color",0xFF,0xFF,0xFF}, uspeed, true)
 		end
 		local is_a = {}
@@ -5269,7 +5326,7 @@ function _M:checkSetTalentAuto(tid, v, opt)
 	end
 end
 
-	
+
 
 -- Classifications for actor resist/damage
 -- Thanks to grayswandir for this really neat code structure
@@ -5280,7 +5337,7 @@ _M.classifications = {
 	natural = function(self) return not self:checkClassification('unnatural') end,
 	summoned = function(self) return (self.summoner ~= nil) end
 ,}
- 
+
 --- Check if the actor is a certain type or in an arbitrary set of classifications
 -- @param string representing the classification to check
 -- @return whether the actor is in this classification
