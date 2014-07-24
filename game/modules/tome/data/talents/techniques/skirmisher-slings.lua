@@ -72,6 +72,11 @@ newTalent {
 			self.talents_cd[t.id] = math.max(cooldown - 1, 0)
 		end
 	end,
+	speed = function(self, t) return self:getSpeed('archery') * 0.5 end,
+	display_speed = function(self, t)
+		return ("Double Archery (#LIGHT_GREEN#%d%%#LAST# of a turn)"):
+			format(self:getSpeed('archery') * 50)
+	end,
 	action = function(self, t)
 		local old_speed = self.combat_physspeed
 		self.combat_physspeed = old_speed * 2

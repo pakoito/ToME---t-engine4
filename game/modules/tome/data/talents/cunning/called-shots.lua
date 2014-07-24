@@ -114,6 +114,7 @@ newTalent {
 	damage_multiplier = function(self, t)
 		return self:combatTalentWeaponDamage(t, 1.5, 1.9)
 	end,
+	speed = "archery",
 	action = fire_shot,
 	info = function(self, t)
 		return ([[Strike your opponent in the knee (or other critical point in an ambulatory appendage) for %d%% weapon damage, knocking them down (%d turn pin) and slowing their movement by %d%% for %d turns afterwards.
@@ -159,6 +160,7 @@ newTalent {
 		pen_off(self, t, target, x, y)
 	end,
 	archery_target_parameters = {one_shot = true},
+	speed = "archery",
 	action = function(self, t)
 		local tg = {type = "hit"}
 
@@ -173,7 +175,7 @@ newTalent {
 		local target = game.level.map(targets[1].x, targets[1].y, engine.Map.ACTOR)
 		if not target then return end
 		game:delayedLogMessage(self, target, "kill_shot", "#DARK_ORCHID##Source# snipes #Target# (%+d%%%%%%%% weapon bonus for range)!#LAST#", distbonus*100)
-		
+
 		local params = {mult = damage + distbonus}
 		if bonuses.crit_chance then params.crit_chance = bonuses.crit_chance end
 		if bonuses.crit_power then params.crit_power = bonuses.crit_power end
@@ -181,7 +183,7 @@ newTalent {
 		self:archeryShoot(targets, t, {type = "hit", speed = 200}, params)
 
 		return true
-	end, 
+	end,
 	info = function(self, t)
 		local range = self:getTalentRange(t)
 		return ([[Employ a specialized sniping shot at a target.
@@ -220,6 +222,7 @@ newTalent {
 		pen_off(self, t, target, x, y)
 	end,
 	archery_target_parameters = {limit_shots = 1, multishots = 3},
+	speed = "archery",
 	action = fire_shot,
 	info = function(self, t)
 		return ([[Fire three shots in quick succession at a vulnerable point on the target (usually the head).

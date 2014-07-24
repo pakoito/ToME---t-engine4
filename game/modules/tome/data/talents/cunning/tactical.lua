@@ -60,7 +60,7 @@ newTalent{
 	end,
 }
 
--- Limit counter attacks/turn for balance using a buff (warns attacking players of the talent)	
+-- Limit counter attacks/turn for balance using a buff (warns attacking players of the talent)
 -- Talent effect is implemented in _M:attackTargetWith function in mod\class\interface\Combat.lua (includes adjacency check)
 -- The Effect EFF_COUNTER_ATTACKING is defined in mod.data.timed_effects.physical.lua
 -- and is refreshed each turn in mod.class.Actor.lua _M:actBase
@@ -105,6 +105,7 @@ newTalent{
 	getPower = function(self, t) return 5 + self:combatTalentStatDamage(t, "cun", 1, 25) end,
 	getDuration = function(self, t) return math.floor(self:combatTalentScale(t, 3, 7)) end,
 	getDefense = function(self, t) return 5 + self:combatTalentStatDamage(t, "cun", 1, 50) end,
+	speed = "combat",
 	action = function(self, t)
 		self:setEffect(self.EFF_DEFENSIVE_MANEUVER, t.getDuration(self, t), {power=t.getDefense(self, t)})
 		return true
@@ -128,6 +129,7 @@ newTalent{
 	cooldown = 30,
 	sustain_stamina = 30,
 	tactical = { BUFF = 2 },
+	speed = "combat",
 	getReductionMax = function(self, t) return 5 * math.floor(self:combatTalentLimit(t, 20, 1.4, 7.1)) end, -- Limit to 95%
 	do_weakness = function(self, t, target)
 		target:setEffect(target.EFF_WEAKENED_DEFENSES, 3, {inc = - 5, max = - t.getReductionMax(self, t)})

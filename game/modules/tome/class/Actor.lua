@@ -333,6 +333,23 @@ function _M:getSpeed(speed_type)
 			speed = self:combatSpeed()
 		end
 
+	elseif speed_type == "archery" then
+		if self:getInven(self.INVEN_MAINHAND) then
+			local o = self:getInven(self.INVEN_MAINHAND)[1]
+			if o and o.archery then
+				speed = self:combatSpeed(self:getObjectCombat(o, "mainhand"))
+			end
+		end
+
+		if self:getInven(self.INVEN_OFFHAND) then
+			local o = self:getInven(self.INVEN_OFFHAND)[1]
+			if o and o.archery then
+				speed = math.max(speed or 0, self:combatSpeed(self:getObjectCombat(o, "offhand")))
+			end
+		end
+
+		if not speed then speed = self:combatSpeed() end
+
 	elseif speed_type == "spell" then speed = self:combatSpellSpeed()
 	elseif speed_type == "summon" then speed = self:combatSummonSpeed()
 	elseif speed_type == "mind" then speed = self:combatMindSpeed()
@@ -4785,6 +4802,8 @@ function _M:getTalentSpeedType(t)
 		return "spell"
 	elseif t.is_summon then
 		return "summon"
+	elseif t.type[1]:find("^technique/archery") then
+		return "archery"
 	elseif t.type[1]:find("^technique/") then
 		return "weapon"
 	elseif t.is_mind then
@@ -5192,13 +5211,13 @@ function _M:getTalentFullDescription(t, addlevel, config, fake_mastery)
 		if not config.ignore_use_time then
 			local uspeed = "Full Turn"
 			local no_energy = util.getval(t.no_energy, self, t)
-			if no_energy and type(no_energy) == "boolean" and no_energy == true then
+			local display_speed = util.getval(t.display_speed, self, t)
+			if display_speed then
+				uspeed = display_speed
+			elseif no_energy and type(no_energy) == "boolean" and no_energy == true then
 				uspeed = "Instant (#LIGHT_GREEN#0%#LAST# of a turn)"
 			else
-				local speed =
-					util.getval(t.display_speed, self, t) or
-					util.getval(t.speed, self, t) or
-					self:getTalentSpeedType(t)
+				local speed = util.getval(t.speed, self, t) or self:getTalentSpeedType(t)
 				if type(speed) == "string" then
 					uspeed = speed:capitalize().." (#LIGHT_GREEN#%d%%#LAST# of a turn)"
 				else
