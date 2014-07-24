@@ -91,6 +91,7 @@ newTalent{
 	no_npc_use = true,
 	range = function(self, t) return math.floor(self:combatTalentScale(t, 6, 11)) end,
 	getDuration = function(self,t) return math.floor(self:combatTalentScale(t, 5, 9, 0.5, 0, 0, true)) end,
+	speed = "combat",
 	action = function(self, t)
 		local tg = {type="bolt", nowarning=true, range=self:getTalentRange(t), nolock=true, simple_dir_request=true, talent=t}
 		local tx, ty, target = self:getTarget(tg)
@@ -153,7 +154,7 @@ newTalent{
 	end,
 	info = function(self, t)
 		local t2 = self:getTalentFromId(self.T_TAUNT)
-		local rad = t2.radius(self, t)	
+		local rad = t2.radius(self, t)
 		return ([[Project a noisy lure for %d turns that attracts all creatures in a radius %d to it.
 		At level 5, when the lure is destroyed, it will trigger some traps in a radius of 2 around it (check individual traps to see if they are triggered).
 		Use of this talent will not break stealth.]]):format(t.getDuration(self,t), rad)
@@ -171,6 +172,7 @@ newTalent{
 	proj_speed = 10,
 	requires_target = true,
 	range = 10,
+	speed = "combat",
 	radius = function(self, t) return math.max(0,math.floor(self:combatTalentScale(t, 0.5, 2.5))) end,
 	getSightLoss = function(self, t) return math.floor(self:combatTalentScale(t,1, 6, "log", 0, 4)) end, -- 1@1 6@5
 	tactical = { DISABLE = { blind = 2 } },
@@ -258,6 +260,7 @@ newTalent{
 	no_break_stealth = trap_stealth,
 	tactical = { ATTACKAREA = { FIRE = 2 } },
 	no_unlearn_last = true,
+	speed = "combat",
 	getDamage = function(self, t) return 30 + self:combatStatScale("cun", 8, 80) * self:callTalent(self.T_TRAP_MASTERY, "getTrapMastery")/20 end,
 	action = function(self, t)
 		local tg = {type="bolt", nowarning=true, range=self:getTalentRange(t), nolock=true, simple_dir_request=true, talent=t}
@@ -307,6 +310,7 @@ newTalent{
 	no_break_stealth = trap_stealth,
 	no_unlearn_last = true,
 	getDamage = function(self, t) return (40 + self:combatStatScale("cun", 10, 100) * self:callTalent(self.T_TRAP_MASTERY, "getTrapMastery")/20)/5 end,
+	speed = "combat",
 	action = function(self, t)
 		local tg = {type="bolt", nowarning=true, range=self:getTalentRange(t), nolock=true, simple_dir_request=true, talent=t}
 		local x, y, target = self:getTarget(tg)
@@ -359,6 +363,7 @@ newTalent{
 	no_break_stealth = trap_stealth,
 	no_unlearn_last = true,
 	getDistance = function(self, t) return math.floor(self:combatTalentScale(self:getTalentLevel(self.T_TRAP_MASTERY), 3, 7)) end,
+	speed = "combat",
 	action = function(self, t)
 		local tg = {type="bolt", nowarning=true, range=self:getTalentRange(t), nolock=true, simple_dir_request=true, talent=t}
 		local x, y, target = self:getTarget(tg)
@@ -419,6 +424,7 @@ newTalent{
 	no_unlearn_last = true,
 	getDamage = function(self, t) return 60 + self:combatStatScale("cun", 9, 90) * self:callTalent(self.T_TRAP_MASTERY,"getTrapMastery")/20 end,
 	getDuration = function(self, t) return math.floor(self:combatTalentScale(self:getTalentLevel(self.T_TRAP_MASTERY), 2.1, 4.43)) end,
+	speed = "combat",
 	action = function(self, t)
 		local tg = {type="bolt", nowarning=true, range=self:getTalentRange(t), nolock=true, simple_dir_request=true, talent=t}
 		local x, y, target = self:getTarget(tg)
@@ -472,6 +478,7 @@ newTalent{
 	no_break_stealth = trap_stealth,
 	no_unlearn_last = true,
 	getDamage = function(self, t) return 20 + self:combatStatScale("cun", 10, 100) * self:callTalent(self.T_TRAP_MASTERY,"getTrapMastery")/20 end,
+	speed = "combat",
 	action = function(self, t)
 		local tg = {type="bolt", nowarning=true, range=self:getTalentRange(t), nolock=true, simple_dir_request=true, talent=t}
 		local x, y, target = self:getTarget(tg)
@@ -523,6 +530,7 @@ newTalent{
 	no_unlearn_last = true,
 	getDuration = function(self, t) return math.floor(self:combatTalentScale(self:getTalentLevel(self.T_TRAP_MASTERY), 2.5, 4.5)) end,
 	getDamage = function(self, t) return 20 + self:combatStatScale("cun", 5, 50) * self:callTalent(self.T_TRAP_MASTERY,"getTrapMastery") / 30 end,
+	speed = "combat",
 	action = function(self, t)
 		local tg = {type="bolt", nowarning=true, range=self:getTalentRange(t), nolock=true, simple_dir_request=true, talent=t}
 		local x, y, target = self:getTarget(tg)
@@ -587,6 +595,7 @@ newTalent{
 	no_break_stealth = trap_stealth,
 	no_unlearn_last = true,
 	getDamage = function(self, t) return 20 + self:combatStatScale("cun", 5, 50) * self:callTalent(self.T_TRAP_MASTERY,"getTrapMastery")/20 end,
+	speed = "combat",
 	action = function(self, t)
 		local tg = {type="bolt", nowarning=true, range=self:getTalentRange(t), nolock=true, simple_dir_request=true, talent=t}
 		local x, y, target = self:getTarget(tg)
@@ -647,6 +656,7 @@ newTalent{
 	no_break_stealth = trap_stealth,
 	no_unlearn_last = true,
 	getDamage = function(self, t) return 20 + self:combatStatScale("cun", 5, 50) * self:callTalent(self.T_TRAP_MASTERY,"getTrapMastery") / 40 end,
+	speed = "combat",
 	action = function(self, t)
 		local tg = {type="bolt", nowarning=true, range=self:getTalentRange(t), nolock=true, simple_dir_request=true, talent=t}
 		local x, y, target = self:getTarget(tg)
@@ -675,7 +685,7 @@ newTalent{
 						tgts[target] = true
 						local ox, oy = target.x, target.y
 						engine.DamageType:get(engine.DamageType.TEMPORAL).projector(self.summoner, target.x, target.y, engine.DamageType.TEMPORAL, self.dam)
-						if target:canBe("knockback") then 
+						if target:canBe("knockback") then
 							target:pull(self.x, self.y, 1)
 							if target.x ~= ox or target.y ~= oy then
 								self.summoner:logCombat(target, "#Target# is pulled towards #Source#'s gravity trap!")

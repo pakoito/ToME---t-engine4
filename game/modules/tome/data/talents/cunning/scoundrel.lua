@@ -51,7 +51,7 @@ newTalent{
 	mode = "passive",
 	points = 5,
 	getDuration = function(self, t) return math.ceil(self:combatTalentScale(t, 3.3, 5.3)) end,
-	-- _M:physicalCrit function in mod\class\interface\Combat.lua handles crit penalty 
+	-- _M:physicalCrit function in mod\class\interface\Combat.lua handles crit penalty
 	getCritPenalty = function(self,t) return self:combatTalentScale(t, 10, 30) end,
 	disableChance = function(self,t) return self:combatTalentLimit(t, 100, 8, 20) end, -- Limit <100%
 	getMovePenalty = function(self, t) return self:combatLimit(self:combatTalentStatDamage(t, "cun", 10, 30), 1, 0.05, 0, 0.274, 22.4) end, -- Limit <100%
@@ -94,6 +94,7 @@ newTalent{
 	tactical = { CLOSEIN = 3 },
 	requires_target = true,
 	range = function(self, t) return math.floor(self:combatTalentScale(t, 6.8, 8.6)) end,
+	speed = "movement",
 	action = function(self, t)
 		if self:attr("never_move") then game.logPlayer(self, "You can not do that currently.") return end
 

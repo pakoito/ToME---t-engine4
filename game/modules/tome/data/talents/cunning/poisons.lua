@@ -102,6 +102,7 @@ newTalent{
 		end
 		tg.archery.mult = self:combatTalentWeaponDamage(t, 0.5 + nb * 0.6, 0.9 + nb * 1)
 	end,
+	speed = "weapon",
 	action = function(self, t)
 		if not self:hasArcheryWeapon() then
 			local tg = {type="hit", range=self:getTalentRange(t)}
@@ -442,4 +443,3 @@ newTalent{
 		format(damDesc(self, DamageType.NATURE, t.getDOT(self, t)), t.getDuration(self, t), t.getEffect(self, t))
 	end,
 }
-
