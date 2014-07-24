@@ -18,7 +18,7 @@
 -- darkgod@te4.org
 
 local print = print
-if config.settings.cheat then print = function() end end
+if not config.settings.cheat then print = function() end end
 
 -- The basic stuff used to damage a grid
 setDefaultProjector(function(src, x, y, type, dam, tmp, no_martyr)

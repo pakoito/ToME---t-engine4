@@ -22,14 +22,16 @@ local Entity = require "engine.Entity"
 
 local oldNewTalent = Talents.newTalent
 Talents.newTalent = function(self, t)
-	assert(engine.interface.ActorTalents.talents_types_def[t.type[1]], "No talent category "..tostring(t.type[1]).." for talent "..t.name)
-	if engine.interface.ActorTalents.talents_types_def[t.type[1]].generic then t.generic = true end
-	if engine.interface.ActorTalents.talents_types_def[t.type[1]].no_silence then t.no_silence = true end
-	if engine.interface.ActorTalents.talents_types_def[t.type[1]].is_spell then t.is_spell = true end
-	if engine.interface.ActorTalents.talents_types_def[t.type[1]].is_mind then t.is_mind = true end
-	if engine.interface.ActorTalents.talents_types_def[t.type[1]].is_nature then t.is_nature = true end
-	if engine.interface.ActorTalents.talents_types_def[t.type[1]].is_unarmed then t.is_unarmed = true end
-	if engine.interface.ActorTalents.talents_types_def[t.type[1]].autolearn_mindslayer then t.autolearn_mindslayer = true end
+	local tt = engine.interface.ActorTalents.talents_types_def[t.type[1]]
+	assert(tt, "No talent category "..tostring(t.type[1]).." for talent "..t.name)
+	if tt.generic then t.generic = true end
+	if tt.no_silence then t.no_silence = true end
+	if tt.is_spell then t.is_spell = true end
+	if tt.is_mind then t.is_mind = true end
+	if tt.is_nature then t.is_nature = true end
+	if tt.is_unarmed then t.is_unarmed = true end
+	if tt.autolearn_mindslayer then t.autolearn_mindslayer = true end
+	if tt.speed and not t.speed then t.speed = tt.speed end
 
 	if t.tactical then
 		local tacts = {}
