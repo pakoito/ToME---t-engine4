@@ -31,19 +31,19 @@ function _M:init(font, size)
 end
 
 function _M:say(time, txt, ...)
-	return self:sayEasing(time, nil, txt, ...)
+	return self:easing(time, nil, txt, ...)
 end
 
-function _M:sayEasing(time, easing, txt, ...)
-	self:saySimple(time, easing, txt, ...)
+function _M:easing(time, easing, txt, ...)
+	self:easingSimple(time, easing, txt, ...)
 	game.logPlayer(game.player, "%s", txt:toString())
 end
 
 function _M:saySimple(time, txt, ...)
-	return self:sayEasingSimple(time, nil, txt, ...)
+	return self:easingSimple(time, nil, txt, ...)
 end
 
-function _M:sayEasingSimple(time, easing, txt, ...)
+function _M:easingSimple(time, easing, txt, ...)
 	txt = txt:format(...)
 	self.max_time = time or 60
 	self.list, self.max_lines, self.max_w = self.font:draw(txt:toString(), math.floor(game.w * 0.8), 255, 255, 255)

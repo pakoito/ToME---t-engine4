@@ -111,6 +111,7 @@ newTalent{
 	fixed_cooldown = true,
 	getTalentCount = function(self, t) return math.floor(self:combatTalentScale(t, 2, 7, "log")) end,
 	getMaxLevel = function(self, t) return self:getTalentLevel(t) end,
+	speed = "combat",
 	action = function(self, t)
 		local tids = {}
 		for tid, _ in pairs(self.talents_cd) do
@@ -136,4 +137,3 @@ newTalent{
 		format(talentcount, maxlevel)
 	end,
 }
-

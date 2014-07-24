@@ -44,7 +44,7 @@ newTalent{
 	require = cuns_req2,
 	mode = "passive",
 	points = 5,
-	cdReduc = function(tl) 
+	cdReduc = function(tl)
 		if tl <=0 then return 0 end
 		return math.floor(100*tl/(tl+7.5)) --I5 Limit < 100%
 	end,
@@ -65,8 +65,8 @@ newTalent{
 	require = cuns_req3,
 	mode = "passive",
 	points = 5,
-	--  called by functions _M:combatSeeStealth and _M:combatSeeInvisible functions mod\class\interface\Combat.lua	
-	seePower = function(self, t) return self:combatScale(self:getCun(15, true)*self:getTalentLevel(t), 5, 0, 80, 75) end, --I5 
+	--  called by functions _M:combatSeeStealth and _M:combatSeeInvisible functions mod\class\interface\Combat.lua
+	seePower = function(self, t) return self:combatScale(self:getCun(15, true)*self:getTalentLevel(t), 5, 0, 80, 75) end, --I5
 	info = function(self, t)
 		return ([[You look at your surroundings with more intensity than most people, allowing you to see stealthed or invisible creatures.
 		Increases stealth detection by %d and invisibility detection by %d.
@@ -90,6 +90,7 @@ newTalent{
 		self:combatScale(self:getTalentLevel(t) * (self:getCun(25, true) + self:getDex(25, true)), 0, 0, 55, 250, 0.75)
 		-- Limit evasion chance < 50%, defense bonus ~= 55 at level 50
 	end,
+	speed = "combat",
 	action = function(self, t)
 		local dur = t.getDur(self)
 		local chance, def = t.getChanceDef(self,t)
