@@ -700,15 +700,15 @@ function _M:act()
 		local auras = self:isTalentActive(self.T_CONDUIT)
 		if auras.k_aura_on then
 			local t_kinetic_aura = self:getTalentFromId(self.T_KINETIC_AURA)
-			self.talents_cd[self.T_KINETIC_AURA] = t_kinetic_aura.cooldown(self, t)
+			self:startTalentCooldown(self.T_KINETIC_AURA, t_kinetic_aura.cooldown(self, t))
 		end
 		if auras.t_aura_on then
 			local t_thermal_aura = self:getTalentFromId(self.T_THERMAL_AURA)
-			self.talents_cd[self.T_THERMAL_AURA] = t_thermal_aura.cooldown(self, t)
+			self:startTalentCooldown(self.T_THERMAL_AURA, t_thermal_aura.cooldown(self, t))
 		end
 		if auras.c_aura_on then
 			local t_charged_aura = self:getTalentFromId(self.T_CHARGED_AURA)
-			self.talents_cd[self.T_CHARGED_AURA] = t_charged_aura.cooldown(self, t)
+			self:startTalentCooldown(self.T_CHARGED_AURA, t_charged_aura.cooldown(self, t))
 		end
 	end
 
@@ -1470,7 +1470,7 @@ function _M:move(x, y, force)
 		end
 	end
 
-	self:fireTalentCheck("callbackOnMove", moved, force, ox, oy)
+	self:fireTalentCheck("callbackOnMove", moved, force, ox, oy, x, y)
 
 	self:triggerHook{"Actor:move", moved=moved, force=force, ox=ox, oy=oy}
 
@@ -2679,11 +2679,10 @@ function _M:onTakeHit(value, src, death_note)
 	if self:attr("reduce_spell_cooldown_on_hit") and value >= self.max_life * self:attr("reduce_spell_cooldown_on_hit") / 100 then
 		local alt = {}
 		for tid, cd in pairs(self.talents_cd) do
-			if rng.percent(self:attr("reduce_spell_cooldown_on_hit_chance")) then alt[tid] = cd - 1 end
+			if rng.percent(self:attr("reduce_spell_cooldown_on_hit_chance")) then alt[tid] = true end
 		end
 		for tid, cd in pairs(alt) do
-			if cd <= 0 then self.talents_cd[tid] = nil
-			else self.talents_cd[tid] = cd end
+			self:alterTalentCoolingdown(tid, -1)
 		end
 	end
 
@@ -3055,8 +3054,7 @@ function _M:die(src, death_note)
 
 	if src and self.reset_rush_on_death and self.reset_rush_on_death == src then
 		game:onTickEnd(function()
-			src.talents_cd[src.T_RUSH] = nil
-			src.changed = true
+			src:alterTalentCoolingdown(src.T_RUSH, -1000)
 		end)
 	end
 
@@ -5043,7 +5041,7 @@ function _M:postUseTalent(ab, ret, silent)
 		for i = 1, self:attr("random_talent_cooldown_on_use_nb") do
 			local t = rng.tableRemove(tids)
 			if not t then break end
-			self.talents_cd[t.id] = self:attr("random_talent_cooldown_on_use_turns")
+			self:startTalentCooldown(t.id, self:attr("random_talent_cooldown_on_use_turns"))
 			game.logSeen(self, "%s talent '%s%s' is disrupted by the mind parasite.", self.name:capitalize(), (t.display_entity and t.display_entity:getDisplayString() or ""), t.name)
 		end
 	end
@@ -5296,12 +5294,31 @@ end
 
 --- Starts a talent cooldown; overloaded from the default to handle talent cooldown reduction
 -- @param t the talent to cooldown
-function _M:startTalentCooldown(t)
+-- @param v override the normal cooldown that that, nil to get the normal effect
+function _M:startTalentCooldown(t, v)
 	t = self:getTalentFromId(t)
-	if not t.cooldown then return end
-	self.talents_cd[t.id] = self:getTalentCooldown(t)
+	if t.cooldown_override then t = self:getTalentFromId(t.cooldown_override) end
+	if v then
+		self.talents_cd[t.id] = math.max(v, self.talents_cd[t.id] or 0)
+	else
+		if not t.cooldown then return end
+		self.talents_cd[t.id] = self:getTalentCooldown(t)
+	end
 	if self.talents_cd[t.id] <= 0 then self.talents_cd[t.id] = nil end
 	self.changed = true
+	if t.cooldownStart then t.cooldownStart(self, t) end
+end
+
+--- Alter the remanining cooldown of a talent
+-- @param t the talent affect cooldown
+-- @param v the value to add/remove to the cooldown
+function _M:alterTalentCoolingdown(t, v)
+	t = self:getTalentFromId(t)
+	if t.cooldown_override then t = self:getTalentFromId(t.cooldown_override) end
+	if not self.talents_cd[t.id] then return nil end
+	self.talents_cd[t.id] = self.talents_cd[t.id] + v
+	if self.talents_cd[t.id] <= 0 then self.talents_cd[t.id] = nil end
+	return self.talents_cd[t.id]
 end
 
 --- Setup the talent as autocast
@@ -5460,16 +5477,7 @@ function _M:talentCooldownFilter(t, change, nb, duplicate)
 		local t = talents[i]
 		local removed = false
 
-		---[[ Change the cooldown to the reduced value or mark it as off cooldown
-		t[2] = t[2] - change
-		if t[2] <= 0 then
-			self.talents_cd[ t[1] ] = nil
-			table.remove(talents, i)
-			removed = true
-		else
-			self.talents_cd[ t[1] ] = t[2]
-		end
-		--]]
+		self:alterTalentCoolingdown(t[1], -change)
 
 		if not duplicate then
 			if not removed then table.remove(talents, i) end -- only remove if it hasn't already been removed

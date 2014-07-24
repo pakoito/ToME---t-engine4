@@ -325,7 +325,7 @@ function _M:learnTalent(t_id, force, nb)
 
 	if not self.talents[t_id] then
 		-- Auto assign to hotkey
-		if t.mode ~= "passive" and self.hotkey then
+		if t.mode ~= "passive" and not t.no_auto_hotkey and self.hotkey then
 			local position
 
 			if self.player then
@@ -700,10 +700,12 @@ end
 
 --- Starts a talent cooldown
 -- @param t the talent to cooldown
-function _M:startTalentCooldown(t)
+-- @param v override the normal cooldown that that, nil to get the normal effect
+function _M:startTalentCooldown(t, v)
 	t = self:getTalentFromId(t)
-	if not t.cooldown then return end
 	local cd = t.cooldown
+	if v then cd = math.max(v, self.talents_cd[t.id] or 0) end
+	if not cd then return end
 	if type(cd) == "function" then cd = cd(self, t) end
 	self.talents_cd[t.id] = cd
 	self.changed = true

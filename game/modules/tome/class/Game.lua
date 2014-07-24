@@ -1581,6 +1581,8 @@ function _M:setupCommands()
 			print("===============")
 		end end,
 		[{"_g","ctrl"}] = function() if config.settings.cheat then
+			self.player:setEffect("EFF_STUNNED", 10, {})
+do return end
 			local o = game.zone:makeEntity(game.level, "object", {subtype="staff", random_object=true}, nil, true)
 			if o then
 				o:identify(true)
