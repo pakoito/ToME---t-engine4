@@ -123,13 +123,34 @@ function _M:generateEquipDollFrames()
 		if inven then
 			for item, def in ipairs(v) do
 				if item > inven.max then break end
-				local frame = EquipDollFrame.new{actor=self.actor, inven=inven, name_pos=def.text, item=item, w=doll.w, h=doll.h, iw=doll.iw, ih=doll.ih, ix=doll.ix, iy=doll.iy, bg=doll.itemframe, bg_sel=doll.itemframe_sel, bg_empty=self.actor.inven_def[inven.name].infos and self.actor.inven_def[inven.name].infos.equipdoll_back, drag_enable=self.drag_enable, subobject=self.subobject}
+
+				local frame = EquipDollFrame.new{actor=self.actor, inven=inven, name_pos=def.text, item=item, w=doll.w, h=doll.h, iw=doll.iw, ih=doll.ih, ix=doll.ix, iy=doll.iy, bg=doll.itemframe, bg_sel=doll.itemframe_sel, bg_empty=self.actor.inven_def[inven.name].infos and self.actor.inven_def[inven.name].infos.equipdoll_back, drag_enable=self.drag_enable}
 				frame.doll_select = true
 				frame.actorWear = function(_, ...) if self.actorWear then self.actorWear(frame, ...) end end
 				frame.fct=function(button, event) if frame:getItem() and self.fct then self.fct({inven=inven, item=item, object=frame:getItem()}, button, event) end end
 				frame.filter = self.filter
 				frame.on_focus_change=function(status) local ui = self.focus_ui if self.on_select and ui then self.on_select(ui, ui.ui.inven, ui.ui.item, ui.ui:getItem()) end end
 				uis[#uis+1] = {x=def.x, y=def.y, ui=frame, _weight=def.weight}
+				
+				if self.subobject then
+					local frame = EquipDollFrame.new{actor=self.actor, inven=inven, name_pos=def.text, item=item, w=math.ceil(doll.w/2), h=math.ceil(doll.h/2), iw=math.ceil(doll.iw/2), ih=math.ceil(doll.ih/2), ix=math.floor(doll.ix/2), iy=math.floor(doll.iy/2), bg=doll.itemframe, bg_sel=doll.itemframe_sel, bg_empty=self.actor.inven_def[inven.name].infos and self.actor.inven_def[inven.name].infos.equipdoll_back, drag_enable=self.drag_enable, subobject=self.subobject}
+					frame.doll_select = true
+					frame.secondary = true
+					frame.no_name = true
+					frame.actorWear = function(_, ...) if self.actorWear then self.actorWear(frame, ...) end end
+					frame.fct=function(button, event) if frame:getItem() and self.fct then self.fct({inven=inven, item=item, object=frame:getItem()}, button, event) end end
+					frame.filter = self.filter
+					frame.on_focus_change=function(status) local ui = self.focus_ui if self.on_select and ui then self.on_select(ui, ui.ui.inven, ui.ui.item, ui.ui:getItem()) end end
+
+					local dsx, dsy = doll.w + 3, 0
+					if def.subshift == "up" then dsx, dsy = 0, -math.ceil(doll.h/2) - 3
+					elseif def.subshift == "bottom" then dsx, dsy = 0, doll.h + 3
+					elseif def.subshift == "left" then dsx, dsy = -math.ceil(doll.w/2) - 3, 0
+					end
+
+					uis[#uis+1] = {x=def.x + dsx, y=def.y + dsy, ui=frame, _weight=def.weight}
+				end
+
 				max_w = math.max(def.x, max_w)
 				max_h = math.max(def.y, max_h)
 			end
