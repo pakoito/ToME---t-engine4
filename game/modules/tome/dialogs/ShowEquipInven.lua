@@ -299,22 +299,5 @@ function _M:generateList()
 end
 
 function _M:findTinkerSpot(tinker)
-	local possible = {}
-	self.equip_actor:inventoryApplyAll(function(inven, item, o)
-		if not inven.worn then return end
-		if o:canAttachTinker(tinker, true) then
-			possible[#possible+1] = {inven=inven, item=item, free=o.tinker and 1 or 0}
-		end
-	end)
-	if #possible == 0 then return end
-
-	-- Find one that has no atatchement if possible, if not replace one
-	table.sort(possible, function(a, b)
-		if a.free ~= b.free then return a.free < b.free
-		elseif a.inven.id ~= b.inven.id then return a.inven.id < b.inven.id
-		else return a.item < b.item
-		end
-	end)
-	table.print(possible)
-	return possible[1].inven, possible[1].item
+	return self.equip_actor:findTinkerSpot(tinker)
 end

@@ -88,6 +88,60 @@ function resolvers.calc.equip(t, e)
 	return nil
 end
 
+
+--- Resolves equipment creation for an actor
+function resolvers.attachtinker(t)
+	return {__resolver="attachtinker", __resolve_last=true, t}
+end
+function resolvers.attachtinkerbirth(t)
+	for i, filter in ipairs(t) do
+		filter.ignore_material_restriction = true
+	end
+	return {__resolver="attachtinker", __resolve_last=true, t}
+end
+--- Actually resolve the equipment creation
+function resolvers.calc.attachtinker(t, e)
+	print("Tinker resolver for", e.name)
+	-- Iterate of object requests, try to create them and equip them
+	for i, filter in ipairs(t[1]) do
+		print("Tinker resolver", e.name, filter.type, filter.subtype, filter.defined)
+		local o
+		if not filter.defined then
+			o = game.zone:makeEntity(game.level, "object", filter, nil, true)
+		else
+			local forced
+			o, forced = game.zone:makeEntityByName(game.level, "object", filter.defined, filter.random_art_replace and true or false)
+			-- If we forced the generation this means it was already found
+			if forced then
+--				print("Serving unique "..o.name.." but forcing replacement drop")
+				filter.random_art_replace.chance = 100
+			end
+		end
+		if o then
+			print("Zone made us an Tinker according to filter!", o:getName())
+			-- Auto alloc some stats to be able to wear it
+			if filter.autoreq and rawget(o, "require") and rawget(o, "require").stat then
+--				print("Autorequire stats")
+				for s, v in pairs(rawget(o, "require").stat) do
+					if e:getStat(s) < v then
+						e.unused_stats = e.unused_stats - (v - e:getStat(s))
+						e:incStat(s, v - e:getStat(s))
+					end
+				end
+			end
+
+			local base_inven, base_item = e:findTinkerSpot(o)
+			if base_inven and base_item then
+				local base_o = base_inven[base_item]
+				e:doWearTinker(nil, nil, o, base_inven, base_item, base_o, true)
+				if t[1].id then o:identify(t[1].id) end
+			end
+		end
+	end
+	-- Delete the origin field
+	return nil
+end
+
 --- Resolves inventory creation for an actor
 function resolvers.inventory(t)
 	return {__resolver="inventory", __resolve_last=true, t}
