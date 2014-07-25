@@ -1448,8 +1448,11 @@ function _M:getTextualDesc(compare_with, use_actor)
 		desc_wielder(self, compare_with, "carrier")
 	end
 
-	if self.object_tinker then
-		if self.object_tinker.wielder then
+	if self.is_tinker then
+		if self.on_type then desc:add("Attach on item of type '", {"color","ORANGE"}, self.on_type, {"color", "LAST"}, "'", true) end
+		if self.on_slot then desc:add("Attach on item worn on slot '", {"color","ORANGE"}, self.on_slot:lower():gsub('_', ' '), {"color", "LAST"}, "'", true) end
+
+		if self.object_tinker and self.object_tinker.wielder then
 			desc:add({"color","YELLOW"}, "When attach to an other item:", {"color", "LAST"}, true)
 			desc_wielder(self.object_tinker, compare_with, "wielder")
 		end
