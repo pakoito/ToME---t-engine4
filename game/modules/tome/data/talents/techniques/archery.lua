@@ -22,6 +22,7 @@ newTalent{
 	name = "Shoot",
 	type = {"technique/archery-base", 1},
 	no_energy = "fake",
+	speed = 'archery',
 	hide = true,
 	innate = true,
 	points = 1,
@@ -112,7 +113,7 @@ newTalent{
 		local q = self:hasAmmo()
 		if not q then if not silent then game.logPlayer(self, "You must have a quiver or pouch equipped.") end return false end
 		if q.combat.shots_left >= q.combat.capacity then return false end
-		return true 
+		return true
 	end,
 	no_unlearn_last = true,
 	action = function(self, t)
