@@ -363,13 +363,6 @@ function _M:getSpeed(speed_type)
 	return speed or 1
 end
 
-function _M:useEnergyType(speed_type, mult)
-	mult = mult or 1
-	local energy = game.energy_to_act * self:getSpeed(speed_type) * mult
-	self:useEnergy(energy)
-	return energy
-end
-
 function _M:useEnergy(val)
 	engine.Actor.useEnergy(self, val)
 
@@ -4816,6 +4809,18 @@ function _M:getTalentSpeedType(t)
 	end
 end
 
+function _M:getTalentSpeed(t)
+	local speed_type = self:getTalentSpeedType(t)
+	local speed = self:getSpeed(speed_type)
+
+	-- EDGE: Put Quicken Here?
+
+	local hd = {"Actor:getTalentSpeed", talent = t, speed_type = speed_type, speed = speed,}
+	if self:triggerHook(hd) then speed = hd.speed end
+
+	return speed
+end
+
 --- Called after a talent is used
 -- Check if it must use a turn, mana, stamina, ...
 -- @param ab the talent (not the id, the table)
@@ -4846,7 +4851,7 @@ function _M:postUseTalent(ab, ret, silent)
 	end)
 
 	if not util.getval(ab.no_energy, self, ab) then
-		self:useEnergyType(self:getTalentSpeedType(ab))
+		self:useEnergy(self:getTalentSpeed(ab) * game.energy_to_act)
 
 		-- Free melee blow
 		if ab.is_spell and ab.mode ~= "sustained" and self:knowTalent(self.T_CORRUPTED_STRENGTH) and not self:attr("forbid_corrupted_strength_blow") and not self.turn_procs.corrupted_strength then
@@ -5220,13 +5225,14 @@ function _M:getTalentFullDescription(t, addlevel, config, fake_mastery)
 			elseif no_energy and type(no_energy) == "boolean" and no_energy == true then
 				uspeed = "Instant (#LIGHT_GREEN#0%#LAST# of a turn)"
 			else
-				local speed = util.getval(t.speed, self, t) or self:getTalentSpeedType(t)
-				if type(speed) == "string" then
-					uspeed = speed:capitalize().." (#LIGHT_GREEN#%d%%#LAST# of a turn)"
+				local speed = self:getTalentSpeed(t)
+				local speed_type = self:getTalentSpeedType(t)
+				if type(speed_type) == "string" then
+					speed_type = speed_type:capitalize()
 				else
-					uspeed = "%s"
+					speed_type = 'Special'
 				end
-				uspeed = uspeed:format(self:getSpeed(speed) * 100)
+				uspeed = ("%s (#LIGHT_GREEN#%d%%#LAST# of a turn)"):format(speed_type, speed * 100)
 			end
 			d:add({"color",0x6f,0xff,0x83}, "Usage Speed: ", {"color",0xFF,0xFF,0xFF}, uspeed, true)
 		end
