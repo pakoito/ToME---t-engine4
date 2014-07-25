@@ -6830,3 +6830,73 @@ newEntity{
 	},
 }
 ]=]
+
+-- Semi-random Artifacts
+newEntity{ base = "BASE_LEATHER_CAP", define_as = "DECAYED_VISAGE",
+	power_source = {arcane=true},
+	unique = true,
+	name = "Decayed Visage",
+	unided_name = "mask of mummified skin", image = "object/artifact/bone_runed_skull.png",
+	level_range = {24, 32},
+	color=colors.GRAY,
+	rarity = 200,
+	desc = [[A desiccated mask of human skin, all that remains of a necromancer from the Age of Pyre who failed to achieve lichdom.  The transformative process partially succeeded, leaving him unable to die as his body slowly rotted from the inside out over several years.  Now his spirit resides within this last bit of mummified flesh, still hungering for eternal life.]],
+	cost = 200,
+	material_level=3,
+	encumber = 1,
+	require = { stat = { mag=25, wil=20 }, },
+	wielder = {
+		on_melee_hit = {[DamageType.DRAIN_VIM]=10},
+		max_vim = 25,
+	},
+	max_power = 45, power_regen = 1,
+	use_talent = { id = Talents.T_VIMSENSE, level = 2, power = 25 },
+	finish = function(self, zone, level) -- add the blood magic ego, another arcane or psionic powered ego, and some random powers (at level 25)
+		game.state:addRandartProperties(self, {lev = 25, egos = 2,
+			force_egos = {"of blood magic"},
+--			forbid_power_source = {antimagic=true}, power_source = {arcane = true, psionic=true},
+			power_source = {arcane = true, psionic=true},
+			force_themes = {"dark", "arcane", "blight"}})
+	end,
+}
+
+newEntity{ base = "BASE_GREATMAUL", define_as = "DREAM_MALLEUS",
+	power_source = {technique=true, psionic=true},
+	unique = true,
+	name = "Dream Malleus", color = colors.UMBER, image = "object/artifact/unstoppable_mauler.png",
+	unided_name = "keening hammer",
+	desc = [[A large shimmering maul that seems to produce a ringing in your ears.  It is both as malleable as thought and as hard as the strongest steel.]],
+	level_range = {25, 40},
+	rarity = 300,
+	require = { stat = { str=25, wil=25 }, },
+	cost = 250,
+	material_level = 4,
+	combat = {
+		dam = 56,
+		apr = 5,
+		dammod = {str=1.1, wil=1.2},
+		melee_project={[DamageType.MIND] = 10}
+	},
+	wielder = {
+		combat_mindpower = 15,
+		combat_mindcrit = 5,
+		psi_regen = 0.1,
+		inc_damage={
+			[DamageType.MIND] = 10,
+			[DamageType.PHYSICAL] = 10,
+			},
+		learn_talent = {[Talents.T_DREAM_HAMMER] = 3, [Talents.T_HAMMER_TOSS] = 3},
+		talent_cd_reduction={[Talents.T_HAMMER_TOSS]=2},
+	},
+	finish = function(self, zone, level) -- add the projection and thought-forged egos, plus another possibly physical or mental themed ego, and 25 points of physical or mental themed random powers
+		game.state:addRandartProperties(self, {lev = 0, nb_points_add=25, egos = 3,
+			force_egos = {"of projection", "thought-forged"},
+			force_themes = {'physical', 'mental'},
+			ego_special = function(e) -- reject egos (charms) that could overwrite the ability of the projection ego
+				for i, r in ipairs(e) do
+					if r.__resolver == "charm" then return false end
+				end
+				return true
+			end})
+	end,
+}

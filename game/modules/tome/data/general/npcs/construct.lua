@@ -52,6 +52,7 @@ newEntity{
 		[Talents.T_ARMOUR_TRAINING]={base=2, every=10, max=5},
 	},
 	not_power_source = {nature=true},
+	power_source = {arcane=true},
 }
 
 newEntity{ base = "BASE_NPC_CONSTRUCT",

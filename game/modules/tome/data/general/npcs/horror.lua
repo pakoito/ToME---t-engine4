@@ -433,6 +433,7 @@ newEntity{ base = "BASE_NPC_HORROR",
 		{type="horror", subtype="eldritch", name="luminous horror", number=2, no_subescort=true},
 	},
 	ingredient_on_death = "LUMINOUS_HORROR_DUST",
+	power_source = {arcane=true},
 }
 
 newEntity{ base = "BASE_NPC_HORROR",
@@ -468,6 +469,7 @@ newEntity{ base = "BASE_NPC_HORROR",
 	},
 
 	resolvers.sustains_at_birth(),
+	power_source = {arcane=true},
 
 	make_escort = {
 		{type="horror", subtype="eldritch", name="luminous horror", number=1, no_subescort=true},
@@ -598,6 +600,7 @@ newEntity{ base = "BASE_NPC_HORROR",
 			[Talents.T_SLIME_WAVE]={base=2, every=8, max=7},
 			[Talents.T_TENTACLE_GRAB]={base=2, every=7, max=6},
 	},
+	power_source = {antimagic=true},
 }
 
 newEntity{ base = "BASE_NPC_HORROR",
@@ -704,7 +707,7 @@ With each slow breath it takes reality distorts around it.  Blue twirls into red
 	},
 
 	resolvers.inscriptions(2, {"regeneration infusion", "phase door rune"}, nil, true),  -- Really has a phase door rune :P
-
+	power_source = {psionic=true},
 	resolvers.sustains_at_birth(),
 
 	-- Used to track if he's awake or spawning projections
@@ -797,6 +800,7 @@ newEntity{ base = "BASE_NPC_HORROR", define_as = "DREAM_SEED",
 	},
 
 	resolvers.sustains_at_birth(),
+	power_source = {psionic=true},
 
 	-- Remove ourselves from the dream seed limit
 	on_die = function(self)

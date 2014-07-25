@@ -34,7 +34,7 @@ newEntity{
 	rank = 2,
 	size_category = 3,
 	levitation = 1,
-
+	power_source = {arcane=true},
 
 	autolevel = "dexmage",
 	ai = "dumb_talented_simple", ai_state = { ai_move="move_complex", talent_in=2, },

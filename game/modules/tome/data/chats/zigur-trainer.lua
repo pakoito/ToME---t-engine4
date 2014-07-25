@@ -48,6 +48,7 @@ local remove_magic = function(npc, player)
 		end
 	end
 	player:attr("forbid_arcane", 1)
+	player:attr("zigur_follower", 1)
 	player.changed = true
 end
 
