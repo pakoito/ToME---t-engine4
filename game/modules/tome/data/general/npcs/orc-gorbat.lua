@@ -172,4 +172,5 @@ newEntity{ base = "BASE_NPC_ORC_GORBAT",
 		[Talents.T_MANA_CLASH]={base=4, every=5, max=9},
 	},
 	resolvers.racial(),
+	power_source = {antimagic=true},
 }

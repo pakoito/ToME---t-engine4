@@ -20,7 +20,7 @@
 -- Wild Gifts
 newTalentType{ allow_random=true, is_mind=true, is_nature=true, type="wild-gift/call", name = "call of the wild", generic = true, description = "Be at one with nature." }
 newTalentType{ allow_random=true, is_mind=true, is_nature=true, type="wild-gift/harmony", name = "harmony", generic = true, description = "Nature heals and cleans you." }
-newTalentType{ allow_random=true, is_mind=true, is_nature=true, type="wild-gift/antimagic", name = "antimagic", generic = true, description = "The way to combat magic, or even nullify it." }
+newTalentType{ allow_random=true, is_mind=true, is_nature=true, is_antimagic=true, type="wild-gift/antimagic", name = "antimagic", generic = true, description = "The way to combat magic, or even nullify it." }
 newTalentType{ allow_random=true, is_mind=true, is_nature=true, type="wild-gift/summon-melee", name = "summoning (melee)", description = "The art of calling creatures adept in melee combat to your aid." }
 newTalentType{ allow_random=true, is_mind=true, is_nature=true, type="wild-gift/summon-distance", name = "summoning (distance)", description = "The art of calling creatures adept in elemental destruction to your aid." }
 newTalentType{ allow_random=true, is_mind=true, is_nature=true, type="wild-gift/summon-utility", name = "summoning (utility)", description = "The art of calling versatile creatures to your aid." }
@@ -41,7 +41,7 @@ newTalentType{ allow_random=true, is_mind=true, is_nature=true, type="wild-gift/
 newTalentType{ allow_random=true, is_mind=true, is_nature=true, type="wild-gift/malleable-body", name = "malleable body", description = "Your body's anatomy is starting to blur." }
 newTalentType{ allow_random=true, is_mind=true, is_nature=true, type="wild-gift/oozing-blades", name = "oozing blades", description = "You channel ooze through your psiblades." }
 newTalentType{ allow_random=true, is_mind=true, is_nature=true, type="wild-gift/corrosive-blades", name = "corrosive blades", description = "You channel acid through your psiblades." }
-newTalentType{ allow_random=true, is_mind=true, is_nature=true, type="wild-gift/eyals-fury", name = "eyal's fury", description = "Unleash nature's fury against foes around you." }
+newTalentType{ allow_random=true, is_mind=true, is_nature=true, is_antimagic=true, type="wild-gift/eyals-fury", name = "eyal's fury", description = "Unleash nature's fury against foes around you." }
 
 -- Generic requires for gifts based on talent level
 gifts_req1 = {

@@ -80,6 +80,7 @@ local function makeGolem(self)
 			["golem/arcane"] = 0.3,
 		},
 		forbid_nature = 1,
+		power_source = {arcane = true},
 		inscription_restrictions = { ["inscriptions/runes"] = true, },
 		resolvers.inscription("RUNE:_SHIELDING", {cooldown=14, dur=5, power=100}),
 

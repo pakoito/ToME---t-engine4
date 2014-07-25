@@ -176,7 +176,7 @@ newBirthDescriptor{
 		"#LIGHT_BLUE# * +0 Magic, +5 Willpower, +4 Cunning",
 		"#GOLD#Life per level:#LIGHT_BLUE# -3",
 	},
-	power_source = {nature=true},
+	power_source = {nature=true, antimagic=true},
 	random_rarity = 3,
 	getStatDesc = function(stat, actor)
 		if stat == actor.STAT_CUN then

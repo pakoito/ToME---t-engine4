@@ -182,4 +182,5 @@ newEntity{ base = "BASE_NPC_THIEF", define_as = "THIEF_ASSASSIN",
 
 	resolvers.sustains_at_birth(),
 	autolevel = "rogue",
+	power_source = {technique=true, arcane=true},
 }

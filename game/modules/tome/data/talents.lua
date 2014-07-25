@@ -29,6 +29,7 @@ Talents.newTalent = function(self, t)
 	if tt.is_spell then t.is_spell = true end
 	if tt.is_mind then t.is_mind = true end
 	if tt.is_nature then t.is_nature = true end
+	if tt.is_antimagic then t.is_antimagic = true end
 	if tt.is_unarmed then t.is_unarmed = true end
 	if tt.autolearn_mindslayer then t.autolearn_mindslayer = true end
 	if tt.speed and not t.speed then t.speed = tt.speed end

@@ -1911,6 +1911,9 @@ function _M:tooltip(x, y, seen_by)
 	if retal > 0 then ts:add("Melee Retaliation: ", {"color", "RED"}, tostring(math.floor(retal)), {"color", "WHITE"}, true ) end
 
 	if self.desc then ts:add(self.desc, true) end
+	if config.settings.cheat and self.descriptor and self.descriptor.classes then
+		ts:add("Classes:", table.concat(self.descriptor.classes or {}, ","), true)
+	end
 	if self.faction and Faction.factions[self.faction] then ts:add("Faction: ") ts:merge(factcolor:toTString()) ts:add(("%s (%s, %d)"):format(Faction.factions[self.faction].name, factstate, factlevel), {"color", "WHITE"}, true) end
 	if game.player ~= self then ts:add("Personal reaction: ") ts:merge(pfactcolor:toTString()) ts:add(("%s, %d"):format(pfactstate, pfactlevel), {"color", "WHITE"} ) end
 
@@ -4100,6 +4103,7 @@ function _M:learnTalent(t_id, force, nb, extra)
 	end
 
 	if t.is_spell then self:attr("has_arcane_knowledge", nb or 1) end
+	if t.is_antimagic then self:attr("forbid_arcane", nb or 1) end
 
 	if t.dont_provide_pool then return true end
 
@@ -4282,6 +4286,7 @@ function _M:unlearnTalent(t_id, nb, no_unsustain, extra)
 	self:recomputeRegenResources()
 
 	if t.is_spell then self:attr("has_arcane_knowledge", -nb) end
+	if t.is_antimagic then self:attr("forbid_arcane", -nb) end
 
 	-- If we learn mindslayer things we learn telekinetic grasp & beyond the flesh
 	if t.autolearn_mindslayer then
@@ -5229,6 +5234,7 @@ function _M:getTalentFullDescription(t, addlevel, config, fake_mastery)
 		if t.is_spell then is_a[#is_a+1] = "a spell" end
 		if t.is_mind then is_a[#is_a+1] = "a mind power" end
 		if t.is_nature then is_a[#is_a+1] = "a nature gift" end
+		if t.is_antimagic then is_a[#is_a+1] = "an antimagic ability" end
 		if t.is_summon then is_a[#is_a+1] = " a summon power" end
 		if #is_a > 0 then
 			d:add({"color",0x6f,0xff,0x83}, "Is: ", {"color",0xFF,0xFF,0xFF}, table.concatNice(is_a, ", ", " and "), true)

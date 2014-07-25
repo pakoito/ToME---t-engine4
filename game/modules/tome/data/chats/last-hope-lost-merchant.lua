@@ -123,12 +123,8 @@ local maker_list = function()
 				local dname = nil
 				if type(name) == "table" then name, dname = name[1], name[2] end
 				local not_ps, force_themes
-				if player:attr("forbid_arcane") then -- no magic gear for antimatic characters
-					not_ps = {arcane=true}
-					force_themes = {'antimagic'}
-				else -- no antimagic gear for characters with arcane-powered classes or undeads
-					if player:attr("has_arcane_knowledge") or player:attr("undead") then not_ps = {antimagic=true} end
-				end
+				not_ps = game.state:attrPowers(player) -- make sure randart is compatible with player
+				if not_ps.arcane then force_themes = {'antimagic'} end
 				
 				local o, ok
 				local tries = 100
@@ -160,7 +156,7 @@ local maker_list = function()
 								game.log("#CRIMSON#Your timetravel has no effect on pre-determined outcomes such as this.")
 								game._chronoworlds = nil
 							end
-							game:saveGame()
+							if not config.settings.cheat then game:saveGame() end
 
 							newChat{ id="naming",
 								text = "Do you want to name your item?\n"..tostring(art:getTextualDesc()),
