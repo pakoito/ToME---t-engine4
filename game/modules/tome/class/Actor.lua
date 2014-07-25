@@ -6084,3 +6084,76 @@ end
 function _M:transmoGetWord()
 	return "transmogrify"
 end
+
+function _M:doTakeoffTinker(base_o, oldo)
+	if base_o.tinker ~= oldo then return end
+
+	local mustwear = base_o.wielded
+	if mustwear then self:onTakeoff(base_o, true) end
+	base_o.tinker = nil
+	local forbid = oldo:check("on_untinker", base_o, self)
+	if oldo.tinkered then
+		for k, id in pairs(oldo.tinkered) do
+			if type(id) == "table" then base_o:removeTemporaryValue(id[1], id[2])
+			else base_o:removeTemporaryValue(k, id)
+			end
+		end
+	end
+	oldo.tinkered = nil
+	if mustwear then self:onWear(base_o, true) end
+
+	self:addObject(self.INVEN_INVEN, oldo)
+	game.logPlayer(self, "You detach %s from your %s.", oldo:getName{do_color=true}, base_o:getName{do_color=true})
+
+	return true
+end
+
+function _M:doWearTinker(wear_inven, wear_item, wear_o, base_inven, base_item, base_o, can_remove)
+	if not base_o then
+		game.logPlayer(self, "You can not use a tinker without the corresponding item.")
+		return
+	end
+	if not wear_o.is_tinker then
+		game.logPlayer(self, "This item is not a tinker.")
+		return
+	end
+	if wear_o.on_type and wear_o.on_type ~= rawget(base_o, "type") then
+		game.logPlayer(self, "This tinker can not be applied to this item.")
+		return
+	end
+	if wear_o.on_slot and wear_o.on_slot ~= base_o.slot then
+		game.logPlayer(self, "This tinker can not be applied to this item.")
+		return
+	end
+	if base_o.tinker then
+		if not can_remove then
+			game.logPlayer(self, "You already have a tinker on this item.")
+			return
+		else
+			self:doTakeoffTinker(base_o, base_o.tinker)
+		end
+	end
+
+	local mustwear = base_o.wielded
+	if mustwear then self:onTakeoff(base_o, true) end
+
+	wear_o.tinkered = {}
+	local forbid = wear_o:check("on_tinker", base_o, self)
+	if wear_o.object_tinker then
+		for k, e in pairs(wear_o.object_tinker) do
+			table.print(e)
+			wear_o.tinkered[k] = base_o:addTemporaryValue(k, e)
+		end
+	end
+
+	if mustwear then self:onWear(base_o, true) end
+
+	if not forbid then
+		base_o.tinker = wear_o
+		game.logPlayer(self, "You attach %s to your %s.", wear_o:getName{do_color=true}, base_o:getName{do_color=true})
+
+		self:removeObject(wear_inven, wear_item)
+	else
+		game.logPlayer(self, "You fail to attach %s to %s.", wear_o:getName{do_color=true}, base_o:getName{do_color=true})
+	end
+end

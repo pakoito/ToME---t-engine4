@@ -130,7 +130,7 @@ setDefaultProjector(function(src, x, y, type, dam, tmp, no_martyr)
 			dam = t.doForgeShield(type, dam, t, target, src)
 			if lastdam - dam > 0 then game:delayedLogDamage(src, target, 0, ("%s(%d blocked)#LAST#"):format(DamageType:get(type).text_color or "#aaaaaa#", lastdam-dam), false) end
 		end
-		
+
 		-- Increases damage
 		local mind_linked = false
 		if src.inc_damage then
@@ -480,7 +480,7 @@ setDefaultProjector(function(src, x, y, type, dam, tmp, no_martyr)
 				p.braid_two:takeHit(braid_damage, p.src)
 			end
 		end
-		
+
 		if dam > 0 and src ~= target and target.knowTalent and target:knowTalent(target.T_SPIN_FATE) then
 			if target.turn_procs and not target.turn_procs.spin_fate then
 				target:callTalent(target.T_SPIN_FATE, "doSpinFate")
@@ -696,10 +696,11 @@ newDamageType{
 				return dam
 			end
 		end
+		local a = game.level.map(x, y, Map.ACTOR)
+		local acheive = a and src.player and not a.training_dummy and a ~= src
 		local realdam = DamageType.defaultProjector(src, x, y, type, dam)
-		if realdam > 0 then
-			local a = game.level.map(x, y, Map.ACTOR)
-			if src.player and a and not a.training_dummy then world:gainAchievement("PYROMANCER", src, realdam) end
+		if realdam > 0 and acheive then
+			world:gainAchievement("PYROMANCER", src, realdam)
 		end
 		return realdam
 	end,
@@ -709,10 +710,11 @@ newDamageType{
 	name = "cold", type = "COLD", text_color = "#1133F3#",
 	antimagic_resolve = true,
 	projector = function(src, x, y, type, dam)
+		local a = game.level.map(x, y, Map.ACTOR)
+		local acheive = a and src.player and not a.training_dummy and a ~= src
 		local realdam = DamageType.defaultProjector(src, x, y, type, dam)
-		if realdam > 0 then
-			local a = game.level.map(x, y, Map.ACTOR)
-			if src.player and a and not a.training_dummy then world:gainAchievement("CRYOMANCER", src, realdam) end
+		if realdam > 0 and acheive then
+			world:gainAchievement("CRYOMANCER", src, realdam)
 		end
 		if realdam > 0 and src:attr("cold_freezes") and rng.percent(src.cold_freezes) then
 			DamageType:get(DamageType.FREEZE).projector(src, x, y, DamageType.FREEZE, {dur=2, hp=70+dam*1.5})
@@ -3337,7 +3339,7 @@ newDamageType{
 			else
 				game.logSeen(target, "%s resists the mind attack!", target.name:capitalize())
 			end
-			
+
 			if src:hasEffect(src.EFF_TRANSCENDENT_TELEKINESIS) then
 				if target:canBe("blind") then
 					target:setEffect(target.EFF_BLINDED, 4, {apply_power=src:combatMindpower()})

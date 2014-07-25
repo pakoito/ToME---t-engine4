@@ -221,7 +221,7 @@ newTalent{
 		local insightdam = t.getFireDamageInSight(self, t)
 		local res = t.getResistance(self, t)
 		local manadrain = t.getManaDrain(self, t)
-		return ([[Turn your body into pure flame, increasing your fire resistance by %d%%, burning any creatures attacking you for %0.2f fire damage, and projecting %d random slow-moving fire bolts per turns at targets in sight, doing %0.2f fire damage with each bolt.
+		return ([[Turn your body into pure flame, increasing your fire resistance by %d%%, burning any creatures attacking you for %0.2f fire damage, and projecting %d random slow-moving fire bolts per turn at targets in sight, doing %0.2f fire damage with each bolt.
 		The projectiles safely go through your friends without harming them.
 		This powerful spell drains %0.2f mana while active.
 		The damage and resistance will increase with your Spellpower.]]):

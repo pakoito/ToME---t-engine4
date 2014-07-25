@@ -880,7 +880,7 @@ function _M:getTextualDesc(compare_with, use_actor)
 
 		compare_fields(w, compare_with, field, "fatigue", "%+d%%", "Fatigue: ", 1, true, true)
 
-		compare_fields(w, compare_with, field, "ammo_reload_speed", "%+d", "Ammo reloads per turns: ")
+		compare_fields(w, compare_with, field, "ammo_reload_speed", "%+d", "Ammo reloads per turn: ")
 
 
 		local dt_string = tstring{}
@@ -1920,4 +1920,16 @@ function _M:addedToLevel(level, x, y)
 	if level and level.data and level.data.objects_cost_modifier then
 		self.__price_level_mod = util.getval(level.data.objects_cost_modifier, self)
 	end
+end
+
+function _M:getTinker()
+	return self.tinker
+end
+
+function _M:canAttachTinker(tinker, override)
+	if not tinker.is_tinker then return end
+	if tinker.on_type and tinker.on_type ~= rawget(self, "type") then return end
+	if tinker.on_slot and tinker.on_slot ~= self.slot then return end
+	if self.tinker and not override then return end
+	return true
 end

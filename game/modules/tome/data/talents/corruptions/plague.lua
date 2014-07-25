@@ -63,7 +63,7 @@ newTalent{
 		return true
 	end,
 	info = function(self, t)
-		return ([[Fires a bolt of pure filth, diseasing your target with a disease doing %0.2f blight damage per turns for 6 turns, and reducing one of its physical stats (strength, constitution, dexterity) by %d. The three diseases can stack.
+		return ([[Fires a bolt of pure filth, diseasing your target with a disease doing %0.2f blight damage per turn for 6 turns, and reducing one of its physical stats (strength, constitution, dexterity) by %d. The three diseases can stack.
 		Virulent Disease will always try to apply a disease the target does not currently have, and also one that will have the most debilitating effect for the target.
 		The effect will increase with your Spellpower.]]):
 		format(damDesc(self, DamageType.BLIGHT, 7 + self:combatTalentSpellDamage(t, 6, 65)), self:combatTalentSpellDamage(t, 5, 35))
