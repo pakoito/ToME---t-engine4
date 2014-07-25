@@ -1429,6 +1429,13 @@ function _M:getTextualDesc(compare_with, use_actor)
 		desc_wielder(self, compare_with, "carrier")
 	end
 
+	if self.object_tinker then
+		if self.object_tinker.wielder then
+			desc:add({"color","YELLOW"}, "When attach to an other item:", {"color", "LAST"}, true)
+			desc_wielder(self.object_tinker, compare_with, "wielder")
+		end
+	end
+
 	if self.special_desc then
 		local d = self:special_desc()
 		desc:add({"color", "ROYAL_BLUE"})

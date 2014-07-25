@@ -5886,6 +5886,7 @@ function _M:doTakeoffTinker(base_o, oldo)
 end
 
 function _M:doWearTinker(wear_inven, wear_item, wear_o, base_inven, base_item, base_o, can_remove)
+	if not base_o and base_inven and base_item then base_o = base_inven[base_item] end
 	if not base_o then
 		game.logPlayer(self, "You can not use a tinker without the corresponding item.")
 		return
@@ -5953,5 +5954,5 @@ function _M:findTinkerSpot(tinker)
 		else return a.item < b.item
 		end
 	end)
-	return possible[1].inven, possible[1].item
+	return possible[1].inven, possible[1].item, possible[1].free == 0
 end
