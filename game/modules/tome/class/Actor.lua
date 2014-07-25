@@ -5862,6 +5862,13 @@ function _M:transmoGetWord()
 	return "transmogrify"
 end
 
+function _M:canUseTinker(tinker)
+	if not tinker.is_tinker then return nil, "not an attachable item" end
+	if not self.can_tinker then return nil, "can not use attachements" end
+	if not self.can_tinker[tinker.is_tinker] then return nil, "can not use attachements of this type" end
+	return true
+end
+
 function _M:doTakeoffTinker(base_o, oldo)
 	if base_o.tinker ~= oldo then return end
 
@@ -5891,8 +5898,9 @@ function _M:doWearTinker(wear_inven, wear_item, wear_o, base_inven, base_item, b
 		game.logPlayer(self, "You can not use a tinker without the corresponding item.")
 		return
 	end
-	if not wear_o.is_tinker then
-		game.logPlayer(self, "This item is not a tinker.")
+	local ok, err = self:canUseTinker(wear_o)
+	if not ok then
+		game.logPlayer(self, "This item is not usable: %s.", err)
 		return
 	end
 	if wear_o.on_type and wear_o.on_type ~= rawget(base_o, "type") then
