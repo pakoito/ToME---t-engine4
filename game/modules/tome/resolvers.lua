@@ -32,7 +32,7 @@ end
 --- Actually resolve the equipment creation
 function resolvers.calc.equip(t, e)
 --	print("Equipment resolver for", e.name)
-	-- Iterate of object requests, try to create them and equip them
+	-- Iterate over object requests, try to create them and equip them
 	for i, filter in ipairs(t[1]) do
 --		print("Equipment resolver", e.name, filter.type, filter.subtype, filter.defined, filter.random_art_replace)
 		local o
@@ -51,10 +51,10 @@ function resolvers.calc.equip(t, e)
 					filter.random_art_replace.chance = 100
 				end
 			end
---			if o and o.power_source and (o.power_source.antimagic and e:attr("has_arcane_knowledge") or o.power_source.arcane and e:attr("forbid_arcane")) then
-			if o and not filter.no_power_restrictions and not game.state:checkPowers(e, o) then -- Check power restrictions
+			if o and o.power_source and (o.power_source.antimagic and e:attr("has_arcane_knowledge") or o.power_source.arcane and e:attr("forbid_arcane")) then -- check antimagic restrictions
+--			if o and not filter.no_power_restrictions and not game.state:checkPowers(e, o) then -- Check power restrictions
 				ok = false
-				print("  Equipment resolver for ", e.name ," -- incompatible equipment ", o.name, "retrying", tries, "forbid ps:", filter.forbid_power_source and table.concat(table.keys(filter.forbid_power_source, ",")), "vs ps", o.power_source and table.concat(table.keys(o.power_source, ",")))
+				print("  Equipment resolver for ", e.name ," -- incompatible equipment ", o.name, "retrying", tries, "forbid ps:", filter.forbid_power_source and table.concat(table.keys(filter.forbid_power_source, ",")), "vs ps", o.power_source and table.concat(table.keys(o.power_source), ","))
 			end
 		until ok or tries > 4
 		if o then
@@ -625,28 +625,16 @@ function resolvers.calc.tactic(t, e)
 	return {}
 end
 
---- ***Still in development***
--- could include in resolvers.tactic as a special case
---- Resolve tactical ai weights based on talents heavy wieght for randbosses
+--- Resolve tactical ai weights based on talents known
+--	mostly to make sure randbosses have sensible ai_tactic tables
 --	this tends to make npc's slightly more aggressive/defensive depending on their talents
---	method (optional) = function to apply to 2nd level or deeper tactical information to build up tactical table
+--	@param method = function to be applied to generating the ai_tactic table <not implemented>
+-- 	@param tactic_total = total tactical weights desired <10>
+--	@param weight_power = smoothing factor to balance out weights <0.5>
+--	applied with "on_added_to_level"
 function resolvers.talented_ai_tactic(method, tactic_total, weight_power)
 	local method = method or "simple_recursive"
 	return {__resolver="talented_ai_tactic", method, tactic_total, weight_power, __resolve_last=true,
-		get_weight = function(self, wt, e)
-			local val = 0
-			if type(wt) == "function" then
-				wt = wt(e, tal, e) -- target self for effectiveness
-			end
-			if type(wt) == "number" then return wt
-			elseif type(wt) == "table" then
-				for _, n in pairs(wt) do
-					val = math.max(val, self:get_weight(n, e))
-				end
-				if val == 0 then val = 2 end
-			end
-			return tonumber(val) or 0
-		end,
 	}
 end
 
@@ -655,19 +643,22 @@ function resolvers.calc.talented_ai_tactic(t, e)
 	local old_on_added_to_level = e.on_added_to_level
 	e.on_added_to_level = function(self, level, x, y)
 		if old_on_added_to_level then old_on_added_to_level(self, level, x, y) end
-		print("  # talented_ai_tactic resolver function for", e.name, "level=", e.level)
+		print("  # talented_ai_tactic resolver function for", e.name, "level=", e.level, e.uid)
 		local tactic_total = t[2] or t.tactic_total or 10 --want tactic weights to total 10
 		local weight_power = t[3] or t.weight_power or 0.5 --smooth out tactical weights
 		local tacs_offense = {attack=1, attackarea=1}
 		local tacs_close = {closein=1, go_melee=1}
 		local tacs_defense = {escape=1, defend=1, heal=1, protect=1, disable = 1}
-		local tac_types = {type="melee",type = "ranged", type="tank", type="survivor"}
+--		local tac_types = {type="melee",type = "ranged", type="tank", type="survivor"}
 		local tactic, tactical = {}, {total = 0} 
-		local count = {talents = 0, atk_count = 0, atk_value = 0, total_range = 0,
-			atk_melee = 0, melee_value = 0, range_value = 0, atk_range = 0, 
-			escape = 0, close = 0, def_count = 0, def_value = 0, disable=0}
-		local do_count, val
+--		local count = {talents = 0, atk_count = 0, atk_value = 0, total_range = 0,
+--			atk_melee = 0, melee_value = 0, range_value = 0, atk_range = 0, 
+--			escape = 0, close = 0, def_count = 0, def_value = 0, disable=0}
+		local do_count, counted, count_talent, val
 		local tac_count = #table.keys(tacs_offense) + #table.keys(tacs_close) + #table.keys(tacs_defense)
+		local count = {tal_count = 0, atk_count = 0, total_range = 0,
+			atk_melee = 0, melee_value = 0, range_value = 0, atk_range = 0, 
+			escape = 0, close = 0, tac_count = tac_count}
 		-- go through all talents, adding up all the tactical weights from the tactical tables
 		local tal
 		local function get_weight(wt)
@@ -687,58 +678,61 @@ function resolvers.calc.talented_ai_tactic(t, e)
 		
 		for tid, tl in pairs(e.talents) do
 			tal = e:getTalentFromId(tid)
-			local range = e:getTalentRange(tal)
-			if range > 0 then range = range + e:getTalentRadius(tal)*2/3 end
+			local range, radius = e:getTalentRange(tal), e:getTalentRadius(tal)
+--			if range > 0 then range = range + radius*2/3 end
+			count_talent = false, false
 			if tal and tal.tactical then
-	print("  # tactical table for talent", tal.name, "range", range)
-	table.print(tal.tactical)
+	print("   #- tactical table for talent", tal.name, "range", range, "radius", radius)
+--	table.print(tal.tactical)
 				do_count = false
 				for tt, wt in pairs(tal.tactical) do
 					val = get_weight(wt, e)
-	print("   # ", tt, "wt=", val)
+	print("   --- ", tt, "wt=", val)
 					tactical[tt] = (tactical[tt] or 0) + val -- sum up all the input weights
 					if tacs_offense[tt] then
 						do_count = true
 						count.atk_count = count.atk_count + 1
 						val = val * tacs_offense[tt]
-						count.atk_value = count.atk_value + val
-						count.total_range = count.total_range + range
-						if range >= 2 then
+--						count.atk_value = count.atk_value + val
+						if range >= 2 or radius > 2 then
 							count.atk_range = count.atk_range + 1
 							count.range_value = count.range_value + val
 						else
 							count.atk_melee = count.atk_melee + 1
 							count.melee_value = count.melee_value + val
 						end
+						count.total_range = count.total_range + range + radius*2/3
 					end
 					if tacs_defense[tt] then
 						do_count = true
-						count.def_count = count.def_count + 1
-						count.def_value = count.def_value + tacs_defense[tt] * val
 						if tt == "escape" then count.escape = count.escape + 1 end
+						if tt == "disable" then -- for range average only
+							count.atk_count = count.atk_count + 1
+							count.total_range = count.total_range + range + radius*2/3
+						end
 					end
 					if tacs_close[tt] then
 						do_count = true
 						count.close = count.close + 1
 					end
-					if do_count then
-						count.talents = count.talents + 1
-						tactical.total = tactical.total + val
-						tactic[tt] = (tactic[tt] or 0) + val -- sum up only relevant weights
+					if do_count then -- sum up only relevant weights
+						count_talent = true
+--						tactical.total = tactical.total + val
+						tactic[tt] = (tactic[tt] or 0) + val
 					end
+				end
+				if count_talent then
+					count.tal_count = count.tal_count + 1
+--					table.print(count, "--")
 				end
 			end
 		end
-		-- collapse tactics ATTACK, ATTACKAREA by range
-		-- compute tactical weights{disable=3, escape=0, closein=2, defend=2, protect=2, heal=3, go_melee=1} based on weights
-		local ttype = "test"
+
 		-- normalize weights
 		count.avg_attack_range = count.total_range/count.atk_count
 		local norm_total = 0
 		for tt, wt in pairs(tactic) do
-	--		tactic[tt] = (tactic[tt]/count.talents)
-	--		tactic[tt] = (tactic[tt]/tactical.total) - count.talents
-			local ave_weight = (tactic[tt]+count.talents)/count.talents
+			local ave_weight = (tactic[tt]+count.tal_count)/count.tal_count
 			local ave_xweight = ave_weight^weight_power - 1
 			if ave_xweight > 1/tac_count then
 				tactic[tt] = ave_weight
@@ -752,18 +746,17 @@ function resolvers.calc.talented_ai_tactic(t, e)
 			if tactic[tt] < 1 then tactic[tt] = nil end -- defaults to a weight of 1 in the tactical ai
 		end
 		
-		-- Minimum range?
+		-- NPC's with predominantly ranged attacks will want to stay at range.
 		if count.atk_range + count.escape > count.atk_melee + count.close and count.range_value /(count.melee_value + 1) > 1.5 then
-			tactic.safe_range = math.max(2, math.ceil(count.avg_attack_range/2)) --only for ranged/survivor
+			tactic.safe_range = math.max(2, math.ceil(count.avg_attack_range/2))
 		end
 		
-		-- compute "tank"/"survivor" based on "escape","defend", and "heal" weights
-		tactic.tactical_sum=tactical tactic.count = count
-		tactic.type = ttype
-		tactic.tac_count = tac_count
+		tactic.tactical_sum=tactical
+		tactic.count = count
 		tactic.level = e.level
-		for tac, wt in pairs(tactic) do print("  ##", tac, wt) end
-		self.ai_tactic_resolved = true
+		tactic.type = "computed"
+print("  ### ai_tactic table:")
+for tac, wt in pairs(tactic) do print("    ##", tac, wt) end
 		self.ai_tactic = tactic
 --		self.on_added_to_level = nil
 		return tactic
