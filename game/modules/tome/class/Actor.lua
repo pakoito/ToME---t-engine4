@@ -5929,8 +5929,29 @@ function _M:doWearTinker(wear_inven, wear_item, wear_o, base_inven, base_item, b
 		base_o.tinker = wear_o
 		game.logPlayer(self, "You attach %s to your %s.", wear_o:getName{do_color=true}, base_o:getName{do_color=true})
 
-		self:removeObject(wear_inven, wear_item)
+		if wear_inven and wear_item then self:removeObject(wear_inven, wear_item) end
+		return true
 	else
 		game.logPlayer(self, "You fail to attach %s to %s.", wear_o:getName{do_color=true}, base_o:getName{do_color=true})
 	end
+end
+
+function _M:findTinkerSpot(tinker)
+	local possible = {}
+	self:inventoryApplyAll(function(inven, item, o)
+		if not inven.worn then return end
+		if o:canAttachTinker(tinker, true) then
+			possible[#possible+1] = {inven=inven, item=item, free=o.tinker and 1 or 0}
+		end
+	end)
+	if #possible == 0 then return end
+
+	-- Find one that has no atatchement if possible, if not replace one
+	table.sort(possible, function(a, b)
+		if a.free ~= b.free then return a.free < b.free
+		elseif a.inven.id ~= b.inven.id then return a.inven.id < b.inven.id
+		else return a.item < b.item
+		end
+	end)
+	return possible[1].inven, possible[1].item
 end
