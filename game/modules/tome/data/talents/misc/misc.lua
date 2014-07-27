@@ -48,6 +48,7 @@ newTalent{
 	tactical = { ATTACK = { PHYSICAL = 1 } },
 	no_unlearn_last = true,
 	ignored_by_hotkeyautotalents = true,
+	speed = 'weapon',
 	action = function(self, t)
 		local tg = self:getTalentTarget(t)
 		local x, y = self:getTarget(tg)
@@ -311,7 +312,7 @@ newTalent{
 		-- Check for visible monsters, only see LOS actors, so telepathy wont prevent it
 		core.fov.calc_circle(self.x, self.y, game.level.map.w, game.level.map.h, 20, function(_, x, y) return game.level.map:opaque(x, y) end, function(_, x, y)
 			local actor = game.level.map(x, y, game.level.map.ACTOR)
-			if actor and actor ~= self then 
+			if actor and actor ~= self then
 				if actor.summoner and actor.summoner == self then
 					seen = false
 				else
