@@ -403,6 +403,7 @@ function _M:attackTargetWith(target, weapon, damtype, mult, force_dam)
 	local hitted = false
 	local crit = false
 	local evaded = false
+	local old_target_life = target.life
 
 	if target:knowTalent(target.T_SKIRMISHER_BUCKLER_EXPERTISE) then
 		local t = target:getTalentFromId(target.T_SKIRMISHER_BUCKLER_EXPERTISE)
@@ -667,8 +668,8 @@ function _M:attackTargetWith(target, weapon, damtype, mult, force_dam)
 	end
 
 	-- Damage Backlash
-	if dam > 0 and self.attr and self:attr("damage_backfire") then
-		local hurt = math.min(dam, target.life) * self.damage_backfire / 100
+	if dam > 0 and self:attr("damage_backfire") then
+		local hurt = math.min(dam, old_target_life) * self.damage_backfire / 100
 		if hurt > 0 then
 			self:takeHit(hurt, self)
 		end
@@ -854,6 +855,7 @@ function _M:attackTargetWith(target, weapon, damtype, mult, force_dam)
 	if hitted and not target.dead and target:attr("equilibrium_regen_when_hit") then target:incEquilibrium(-target.equilibrium_regen_when_hit) end
 	if hitted and not target.dead and target:attr("psi_regen_when_hit") then target:incPsi(target.psi_regen_when_hit) end
 	if hitted and not target.dead and target:attr("hate_regen_when_hit") then target:incHate(target.hate_regen_when_hit) end
+	if hitted and not target.dead and target:attr("vim_regen_when_hit") then target:incVim(target.vim_regen_when_hit) end
 
 	-- Resource regen on hit
 	if hitted and self:attr("stamina_regen_on_hit") then self:incStamina(self.stamina_regen_on_hit) end

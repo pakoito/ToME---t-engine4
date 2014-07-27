@@ -843,13 +843,13 @@ function _M:checkDonation(back_insert)
 
 	-- Total playtime must be over a few hours
 	local total = profile.generic.modules_played and profile.generic.modules_played.tome or 0
-	if total + (os.time() - game.real_starttime) < 7 * 60 * 60 then
+	if total + (os.time() - game.real_starttime) < 4 * 60 * 60 then
 		print("Donation check: total time too low")
 		return
 	end
 
 	-- Dont ask low level characters, they are probably still pissed to not have progressed further
-	if game.player.level < 15 then
+	if game.player.level < 10 then
 		print("Donation check: too low level")
 		return
 	end
