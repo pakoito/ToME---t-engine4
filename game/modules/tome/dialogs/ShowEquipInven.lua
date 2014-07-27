@@ -52,7 +52,10 @@ function _M:init(title, equip_actor, filter, action, on_select, inven_actor)
 		end
 	end
 
-	self.c_doll = EquipDoll.new{subobject=equip_actor:attr("can_tinker") and "getTinker" or nil, actor=equip_actor, drag_enable=true, filter=filter,
+	self.c_doll = EquipDoll.new{
+		subobject=equip_actor:attr("can_tinker") and "getTinker" or nil,
+		subobject_restrict_slots=equip_actor.tinker_restrict_slots,
+		actor=equip_actor, drag_enable=true, filter=filter,
 		fct = function(item, button, event) self:use(item, button, event) end,
 		on_select = function(ui, inven, item, o) if ui.ui.last_display_x then self:select{last_display_x=ui.ui.last_display_x+ui.ui.w, last_display_y=ui.ui.last_display_y, object=o} end end,
 		actorWear = function(ui, wear_inven, wear_item, wear_o)

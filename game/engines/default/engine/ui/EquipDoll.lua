@@ -33,6 +33,7 @@ function _M:init(t)
 	self.actorWear = t.actorWear
 	self.filter = t.filter
 	self.subobject = t.subobject
+	self.subobject_restrict_slots = t.subobject_restrict_slots
 	self.focus_ui = nil
 
 	Base.init(self, t)
@@ -132,7 +133,7 @@ function _M:generateEquipDollFrames()
 				frame.on_focus_change=function(status) local ui = self.focus_ui if self.on_select and ui then self.on_select(ui, ui.ui.inven, ui.ui.item, ui.ui:getItem()) end end
 				uis[#uis+1] = {x=def.x, y=def.y, ui=frame, _weight=def.weight}
 				
-				if self.subobject then
+				if self.subobject and (not self.subobject_restrict_slots or self.subobject_restrict_slots[inven.name]) then
 					local frame = EquipDollFrame.new{actor=self.actor, inven=inven, name_pos=def.text, item=item, w=math.ceil(doll.w/2), h=math.ceil(doll.h/2), iw=math.ceil(doll.iw/2), ih=math.ceil(doll.ih/2), ix=math.floor(doll.ix/2), iy=math.floor(doll.iy/2), bg=doll.itemframe, bg_sel=doll.itemframe_sel, bg_empty=self.actor.inven_def[inven.name].infos and self.actor.inven_def[inven.name].infos.equipdoll_back, drag_enable=self.drag_enable, subobject=self.subobject}
 					frame.doll_select = true
 					frame.secondary = true
