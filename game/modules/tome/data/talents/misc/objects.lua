@@ -187,6 +187,7 @@ newTalent{
 	cooldown = function(self, t)
 		return 8 - util.bound(self:getTalentLevelRaw(t), 1, 5)
 	end,
+	speed = 'shield',
 	points = 5,
 	hard_cap = 5,
 	range = 1,

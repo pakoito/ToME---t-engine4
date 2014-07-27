@@ -350,6 +350,23 @@ function _M:getSpeed(speed_type)
 
 		if not speed then speed = self:combatSpeed() end
 
+	elseif speed_type == "shield" then
+		if self:getInven(self.INVEN_OFFHAND) then
+			local o = self:getInven(self.INVEN_OFFHAND)[1]
+			if o and o.special_combat then
+				speed = self:combatSpeed(o.special_combat)
+			end
+		end
+
+		if self:getInven(self.INVEN_MAINHAND) then
+			local o = self:getInven(self.INVEN_MAINHAND)[1]
+			if o and o.special_combat then
+				speed = math.max(speed or 0, self:combatSpeed(o.special_combat))
+			end
+		end
+
+		if not speed then speed = self:combatSpeed() end
+
 	elseif speed_type == "spell" then speed = self:combatSpellSpeed()
 	elseif speed_type == "summon" then speed = self:combatSummonSpeed()
 	elseif speed_type == "mind" then speed = self:combatMindSpeed()
