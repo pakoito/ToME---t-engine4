@@ -22,8 +22,8 @@ newTalentType{ allow_random=true, type="technique/2hweapon-assault", name = "two
 newTalentType{ allow_random=true, type="technique/strength-of-the-berserker", name = "berserker's strength", description = "Fear nothing!" }
 newTalentType{ allow_random=true, type="technique/2hweapon-offense", name = "two-handed weapons", description = "Specialized two-handed techniques." }
 newTalentType{ allow_random=true, type="technique/2hweapon-cripple", name = "two-handed maiming", description = "Specialized two-handed techniques." }
-newTalentType{ allow_random=true, type="technique/shield-offense", name = "shield offense", description = "Specialized weapon and shield techniques." }
-newTalentType{ allow_random=true, type="technique/shield-defense", name = "shield defense", description = "Specialized weapon and shield techniques." }
+newTalentType{ allow_random=true, type="technique/shield-offense", name = "shield offense", speed = "shield", description = "Specialized weapon and shield techniques." }
+newTalentType{ allow_random=true, type="technique/shield-defense", name = "shield defense", speed = "shield", description = "Specialized weapon and shield techniques." }
 newTalentType{ allow_random=true, type="technique/dualweapon-training", name = "dual weapons", description = "Specialized dual wielding techniques." }
 newTalentType{ allow_random=true, type="technique/dualweapon-attack", name = "dual techniques", description = "Specialized dual wielding techniques." }
 newTalentType{ allow_random=true, type="technique/archery-base", name = "archery - base", description = "Ability to shoot." }
