@@ -1670,9 +1670,9 @@ function _M:getDesc(name_param, compare_with, never_compare, use_actor)
 	if self.encumber then
 		desc:add({"color",0x67,0xAD,0x00}, ("%0.2f Encumbrance."):format(self.encumber), {"color", "LAST"})
 	end
-	if self.ego_bonus_mult then
-		desc:add(true, {"color",0x67,0xAD,0x00}, ("%0.2f Ego Multiplier."):format(1 + self.ego_bonus_mult), {"color", "LAST"})
-	end
+	-- if self.ego_bonus_mult then
+	-- 	desc:add(true, {"color",0x67,0xAD,0x00}, ("%0.2f Ego Multiplier."):format(1 + self.ego_bonus_mult), {"color", "LAST"})
+	-- end
 
 	local could_compare = false
 	if not name_param.force_compare and not core.key.modState("ctrl") then
