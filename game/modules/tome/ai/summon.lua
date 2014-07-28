@@ -26,6 +26,7 @@ newAI("summoned", function(self)
 				game.logPlayer(self.summoner, "#PINK#Your summoned %s disappears.", self.name)
 			end
 			self:die()
+			self.dead_by_unsummon = true
 		end
 	end
 

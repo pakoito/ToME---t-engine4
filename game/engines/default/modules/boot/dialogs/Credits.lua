@@ -101,6 +101,7 @@ local credits = {
 	{"Lore Creation and Writing", title=2},
 	{"Burb Lulls"},
 	{"Darren Grey"},
+	{"David 'Hogulus' Mott"},
 	{"Gwai"},
 	{"Nicolas 'DarkGod' Casalini"},
 	{"Ron Billingsley"},

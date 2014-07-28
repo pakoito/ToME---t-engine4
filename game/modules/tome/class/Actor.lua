@@ -6195,7 +6195,7 @@ function _M:findTinkerSpot(tinker)
 	local possible = {}
 	self:inventoryApplyAll(function(inven, item, o)
 		if not inven.worn then return end
-		if self.tinker_restrict_slots and not self.tinker_restrict_slots[inven.name] then return end
+		if self.tinker_restrict_slots and (not self.tinker_restrict_slots[inven.name] or self.tinker_restrict_slots[inven.name] < item) then return end
 		if o:canAttachTinker(tinker, true) then
 			possible[#possible+1] = {inven=inven, item=item, free=o.tinker and 1 or 0}
 		end
