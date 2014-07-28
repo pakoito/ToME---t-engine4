@@ -23,6 +23,7 @@ uberTalent{
 	no_energy = true,
 	requires_target = true,
 	range = 10,
+	fixed_cooldown = true,
 	tactical = { BUFF = 2 },
 	action = function(self, t)
 		self:setEffect(self.EFF_DRACONIC_WILL, 5, {})
