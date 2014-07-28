@@ -60,8 +60,8 @@ function _M:listPopup(title, text, list, w, h, fct)
 		{left = 3, top = 3 + desc.h + 3, ui=require("engine.ui.Separator").new{dir="vertical", size=w - 12}},
 		{left = 3, bottom = 3, ui=l},
 	}
-	d.key:addBind("EXIT", function() game:unregisterDialog(d) if fct then fct() end end)
-	d.key:addBind("ACCEPT", function() game:unregisterDialog(d) if list[l.sel].fct then list[l.sel].fct(list[l.sel]) return end if fct then fct(list[l.sel]) end end)
+	d.key:addBind("EXIT", function() if fct then fct() end game:unregisterDialog(d) end)
+	d.key:addBind("ACCEPT", function() if list[l.sel].fct then list[l.sel].fct(list[l.sel]) return end if fct then fct(list[l.sel]) end game:unregisterDialog(d) end)
 	d:setFocus(l)
 	d:setupUI(true, true)
 	game:registerDialog(d)
