@@ -268,7 +268,7 @@ function _M:newGame()
 			self.paused = true
 			print("[PLAYER BIRTH] resolved!")
 			local birthend = function()
-				local d = require("engine.dialogs.ShowText").new("Welcome to ToME", "intro-"..self.player.starting_intro, {name=self.player.name}, nil, nil, function()
+				local d = require("engine.dialogs.ShowText").new("Welcome to #LIGHT_BLUE#Tales of Maj'Eyal", "intro-"..self.player.starting_intro, {name=self.player.name}, nil, nil, function()
 					self.player:resetToFull()
 					self.player:registerCharacterPlayed()
 					self.player:onBirth(birth)

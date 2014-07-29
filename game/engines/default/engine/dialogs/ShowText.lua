@@ -51,7 +51,8 @@ end
 function _M:generateList(file, replace)
 	local f, err = loadfile("/data/texts/"..file..".lua")
 	if not f and err then error(err) end
-	setfenv(f, setmetatable({}, {__index=_G}))
+	local env = setmetatable({}, {__index=_G})
+	setfenv(f, env)
 	local str = f()
 
 	str = str:gsub("@([^@]+)@", function(what)
@@ -60,5 +61,10 @@ function _M:generateList(file, replace)
 	end)
 
 	self.text = str
+
+	if env.title then
+		self.title = env.title
+	end
+
 	return true
 end
