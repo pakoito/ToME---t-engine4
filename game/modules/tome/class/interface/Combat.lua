@@ -119,8 +119,8 @@ function _M:attackTarget(target, damtype, mult, noenergy, force_unharmed)
 		local ret = target:callTalent(target.T_INTUITIVE_SHOTS, "proc", self)
 		if ret then return false end
 	end
-	
-	if not target.turn_procs.warding_weapon and target:knowTalent(target.T_WARDING_WEAPON) and target:getTalentLevelRaw(target.T_WARDING_WEAPON) >= 5 
+
+	if not target.turn_procs.warding_weapon and target:knowTalent(target.T_WARDING_WEAPON) and target:getTalentLevelRaw(target.T_WARDING_WEAPON) >= 5
 		and rng.percent(target:callTalent(target.T_WARDING_WEAPON, "getChance")) and target:getPsi() >= 15 then
 		target:setEffect(target.EFF_WEAPON_WARDING, 1, {})
 		target.turn_procs.warding_weapon = true
@@ -793,7 +793,7 @@ function _M:attackTargetWith(target, weapon, damtype, mult, force_dam)
 			t.do_combat(self, t, target)
 		end
 	end
-	
+
 	-- Static dis-Charge
 	if hitted and not target.dead and self:hasEffect(self.EFF_STATIC_CHARGE) then
 		local eff = self:hasEffect(self.EFF_STATIC_CHARGE)
@@ -1547,13 +1547,13 @@ function _M:combatPhysicalpower(mod, weapon, add)
 	end
 
 	add = add + 10 * self:combatCheckTraining(weapon)
-	
+
 	local str = self:getStr()
 	if self:knowTalent(Talents.T_STRENGTH_OF_PURPOSE) then
 		str = self:getMag()
 	end
 
-	local d = math.max(0, self.combat_dam + add) + str -- allows strong debuffs to offset strength
+	local d = math.max(0, (self.combat_dam or 0) + add + str) -- allows strong debuffs to offset strength
 	if self:attr("dazed") then d = d / 2 end
 	if self:attr("scoured") then d = d / 1.2 end
 
@@ -1585,7 +1585,7 @@ function _M:combatSpellpower(mod, add)
 	local am = 1
 	if self:attr("spellpower_reduction") then am = 1 / (1 + self:attr("spellpower_reduction")) end
 
-	local d = (self.combat_spellpower > 0 and self.combat_spellpower or 0) + add + self:getMag()
+	local d = math.max(0, (self.combat_spellpower or 0) + add + self:getMag())
 	if self:attr("dazed") then d = d / 2 end
 	if self:attr("scoured") then d = d / 1.2 end
 
@@ -1731,7 +1731,7 @@ function _M:physicalCrit(dam, weapon, target, atk, def, add_chance, crit_power_a
 	if self:attr("stealth") and self:knowTalent(self.T_SHADOWSTRIKE) and not target:canSee(self) then -- bug fix
 		chance = 100
 		self.turn_procs.shadowstrike_crit = self:callTalent(self.T_SHADOWSTRIKE,"getMultiplier")
-		crit_power_add = crit_power_add + self.turn_procs.shadowstrike_crit 
+		crit_power_add = crit_power_add + self.turn_procs.shadowstrike_crit
 	end
 
 	if self:isAccuracyEffect(weapon, "axe") then
@@ -1879,7 +1879,8 @@ function _M:combatMindpower(mod, add)
 		add = add + self:attr("psychometry_power")
 	end
 
-	local d = (self.combat_mindpower > 0 and self.combat_mindpower or 0) + add + self:getWil() * 0.7 + self:getCun() * 0.4
+	local d = math.max(0, (self.combat_mindpower or 0) + add + self:getWil() * 0.7 + self:getCun() * 0.4)
+
 	if self:attr("dazed") then d = d / 2 end
 	if self:attr("scoured") then d = d / 1.2 end
 
