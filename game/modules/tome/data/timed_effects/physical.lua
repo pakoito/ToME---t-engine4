@@ -2057,6 +2057,9 @@ newEffect{
 					game.logSeen(src, "%s resists the disarming attempt!", src.name:capitalize())
 				end
 			end
+			if eff.properties.on_cs then
+				eff.properties.on_cs(self, eff, dam, type, src)
+			end
 		end-- specify duration here to avoid stacking for high speed attackers
 		return amt
 	end,
