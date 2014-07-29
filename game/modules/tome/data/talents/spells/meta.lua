@@ -119,7 +119,7 @@ newTalent{
 		local chance = t.getChance(self, t)
 		return ([[You learn to finely craft and tune your offensive spells.
 		You try to carve a hole in spells that affect an area to avoid damaging yourself.  The chance of success is %d%%.
-		In addition, you hone your damaging spells to spellshock their targets. This talent gives a bonus of %d to Spellpower solely for the purposes of overcoming the target's Spell Save. Spellshocked targets suffer a temporary 20%% penalty to damage resistances.]]):
+		In addition, you hone your damaging spells to spellshock their targets. Whenever you deal damage with a spell you attempt to spellshock them with %d more Spellpower than normal. Spellshocked targets suffer a temporary 20%% penalty to damage resistances.]]):
 		format(chance, self:combatTalentSpellDamage(t, 10, 320) / 4)
 	end,
 }

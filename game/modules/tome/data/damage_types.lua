@@ -546,8 +546,9 @@ setDefaultProjector(function(src, x, y, type, dam, tmp, no_martyr)
 		if dam > 0 and source_talent then
 			local t = source_talent
 
-			if src:attr("spellshock_on_damage") and target:checkHit(src:combatSpellpower(), target:combatPhysicalResist(), 0, 95, 15) and not target:hasEffect(target.EFF_SPELLSHOCKED) then
-				target:crossTierEffect(target.EFF_SPELLSHOCKED, src:combatSpellpower())
+			local spellshock = src:attr("spellshock_on_damage")
+			if spellshock and t.is_spell and target:checkHit(src:combatSpellpower(1, spellshock), target:combatSpellResist(), 0, 95, 15) and not target:hasEffect(target.EFF_SPELLSHOCKED) then
+				target:crossTierEffect(target.EFF_SPELLSHOCKED, src:combatSpellpower(1, spellshock))
 			end
 
 			if src.__projecting_for then
