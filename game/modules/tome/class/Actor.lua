@@ -4787,6 +4787,7 @@ local sustainCallbackCheck = {
 	callbackOnWear = "talents_on_wear",
 	callbackOnTakeoff = "talents_on_takeoff",
 	callbackOnTalentPost = "talents_on_talent_post",
+	callbackOnTemporaryEffect = "talents_on_tmp",
 }
 _M.sustainCallbackCheck = sustainCallbackCheck
 
@@ -5797,6 +5798,8 @@ function _M:on_set_temporary_effect(eff_id, e, p)
 	if p.dur > 0 and not e.subtype["cross tier"] and e.status == "detrimental" and e.type == "physical" and self:knowTalent(self.T_SPINE_OF_THE_WORLD) then
 		self:triggerTalent(self.T_SPINE_OF_THE_WORLD)
 	end
+
+	self:fireTalentCheck("callbackOnTemporaryEffect", eff_id, e, p)
 
 	if self.player and not self.tmp[eff_id] then
 		p.__set_time = core.game.getTime()
