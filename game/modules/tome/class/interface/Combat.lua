@@ -350,6 +350,10 @@ function _M:attackTargetWith(target, weapon, damtype, mult, force_dam)
 	damtype = damtype or (weapon and weapon.damtype) or DamageType.PHYSICAL
 	mult = mult or 1
 
+	if self:attr("force_melee_damtype") then
+		damtype = self.force_melee_damtype
+	end
+
 	--Life Steal
 	if weapon and weapon.lifesteal then
 		self:attr("lifesteal", weapon.lifesteal)

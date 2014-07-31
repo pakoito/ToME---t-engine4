@@ -91,6 +91,7 @@ _M.temporary_values_conf.force_use_resist = "last"
 _M.temporary_values_conf.force_use_resist_percent = "last"
 _M.temporary_values_conf.all_damage_convert = "last"
 _M.temporary_values_conf.all_damage_convert_percent = "last"
+_M.temporary_values_conf.force_melee_damtype = "last"
 
 -- AI
 _M.temporary_values_conf.ai_move = "last"
