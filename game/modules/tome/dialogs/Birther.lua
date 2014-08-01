@@ -1110,8 +1110,12 @@ function _M:setTile(f, w, h, last)
 	end
 end
 
+local to_reset_cosmetic = {}
 function _M:applyCosmeticActor(last)
-	self.actor.is_redhaed = nil -- Booh this is ugly
+	for i, d in ipairs(to_reset_cosmetic) do
+		d.reset(self.actor)
+	end
+	to_reset_cosmetic = {}
 
 	local list = {}
 	for i, d in ipairs(self.cosmetic_unlocks) do
@@ -1120,6 +1124,9 @@ function _M:applyCosmeticActor(last)
 	table.sort(list, function(a,b) return a.priority < b.priority end)
 	for i, d in ipairs(list) do
 		d.on_actor(self.actor, self, last)
+		if not last and d.reset then
+			to_reset_cosmetic[#to_reset_cosmetic+1] = d
+		end
 	end
 end
 
