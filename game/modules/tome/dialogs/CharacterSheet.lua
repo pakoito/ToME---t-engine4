@@ -42,19 +42,24 @@ function _M:init(actor)
 	self.font = core.display.newFont("/data/font/DroidSansMono.ttf", 12)
 	self.font_h = self.font:lineSkip()
 
-	self.talent_sorting = 1 --TODO: Load from settings
+	self.talent_sorting = config.settings.tome.charsheet_talent_sorting or 1
 
 	self.c_general = Tab.new{title="General", default=true, fct=function() end, on_change=function(s) if s then self:switchTo("general") end end}
 	self.c_attack = Tab.new{title="Attack", default=false, fct=function() end, on_change=function(s) if s then self:switchTo("attack") end end}
 	self.c_defence = Tab.new{title="Defense", default=false, fct=function() end, on_change=function(s) if s then self:switchTo("defence") end end}
 	self.c_talents = Tab.new{title="Talents", default=false, fct=function() end, on_change=function(s) if s then self:switchTo("talents") end end }
-	self.b_talents_sorting = Button.new{text="Sort: ".."Groups", hide=true, fct=function()
+	self.b_talents_sorting = Button.new{text="Sort: "..({"Groups", "Name", "Type"})[self.talent_sorting], hide=true, width=100, fct=function()
 		self.talent_sorting = self.talent_sorting + 1
 		if self.talent_sorting > 3 then self.talent_sorting = 1 end
-		self.b_talents_sorting.text = ({"Groups", "Alphabetically", "Type"})[self.talent_sorting]
+
+		--Save to config
+		config.settings.tome.charsheet_talent_sorting = self.talent_sorting
+		game:saveSettings("tome.charsheet_talent_sorting", ("tome.charsheet_talent_sorting = %d\n"):format(self.talent_sorting))
+
+		self.b_talents_sorting.text = "Sort: "..({"Groups", "Name", "Type"})[self.talent_sorting]
 		self.b_talents_sorting:generate()
 		self:switchTo("talents") -- Force a redraw
-	end} --TODO If the sort method is saved to profile, we have to make sure we get the correct text on init too.
+	end}
 
 
 	local tw, th = self.font_bold:size(self.title)
@@ -1029,8 +1034,11 @@ function _M:drawDialog(kind, actor_to_compare)
 						desc = player:getTalentFullDescription(t):toString(),
 					}
 
-					if self.sort_talents == 2 then
-						table.insert(talents, data)
+					if self.talent_sorting == 2 then
+						if not talents["All"] then
+							talents["All"] = {type_name = "All", talent_type=nil, talents={} }
+						end
+						table.insert(talents["All"]["talents"], data)
 					else
 						local group_name = get_group(t, tt)
 
@@ -1065,8 +1073,7 @@ function _M:drawDialog(kind, actor_to_compare)
 			elseif self.talent_sorting == 2 then
 				-- Only care about alphabetically sorting
 				sort_tt = function(a, b)
-					game.log(a["talent"], b["talent"])
-					return a["talent"] < b["talent"] end
+					return a.name < b.name end
 			else
 				-- instant > activated > sustained > passive > alphabetically
 				local sort_rank = {"Instant", "Activated", "Sustained", "Passive" }
@@ -1088,8 +1095,7 @@ function _M:drawDialog(kind, actor_to_compare)
 			-- Sort the talent type stuff
 			local sorted = {}
 			if self.talent_sorting == 2 then
-				table.print(talents)
-				table.sort(talents, sort_tt)
+				table.sort(talents["All"]["talents"], sort_tt)
 				return talents
 			end
 			for k, v in pairs(talents) do
@@ -1129,10 +1135,10 @@ function _M:drawDialog(kind, actor_to_compare)
 		for ts, tt in pairs(sorted) do
 			-- Display talent type
 			local tt_name = tt["type_name"]
-			local talent_type = tt["talent_type"]
+			local talent_type_name = tt["talent_type"] and tt["talent_type"].description or tt_name or ""
 			local talents = tt["talents"]
 			if tt_name then
-				self:mouseTooltip(talent_type.description or tt_name, s:drawColorStringBlended(self.font, ("#{bold}##KHAKI#%s#{normal}#"):format(tt_name), w, h, 255, 255, 255, true)) h = h + self.font_h
+				self:mouseTooltip(talent_type_name, s:drawColorStringBlended(self.font, ("#{bold}##KHAKI#%s#{normal}#"):format(tt_name), w, h, 255, 255, 255, true)) h = h + self.font_h
 			end
 
 			-- Display the talents in the talent type
