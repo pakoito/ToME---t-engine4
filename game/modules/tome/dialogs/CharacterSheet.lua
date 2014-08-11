@@ -23,6 +23,7 @@ local Dialog = require "engine.ui.Dialog"
 local DamageType = require "engine.DamageType"
 local Talents = require "engine.interface.ActorTalents"
 local Tab = require "engine.ui.Tab"
+local Button = require "engine.ui.Button"
 local SurfaceZone = require "engine.ui.SurfaceZone"
 local Separator = require "engine.ui.Separator"
 local Stats = require "engine.interface.ActorStats"
@@ -41,10 +42,25 @@ function _M:init(actor)
 	self.font = core.display.newFont("/data/font/DroidSansMono.ttf", 12)
 	self.font_h = self.font:lineSkip()
 
+	self.talent_sorting = config.settings.tome.charsheet_talent_sorting or 1
+
 	self.c_general = Tab.new{title="General", default=true, fct=function() end, on_change=function(s) if s then self:switchTo("general") end end}
 	self.c_attack = Tab.new{title="Attack", default=false, fct=function() end, on_change=function(s) if s then self:switchTo("attack") end end}
 	self.c_defence = Tab.new{title="Defense", default=false, fct=function() end, on_change=function(s) if s then self:switchTo("defence") end end}
-	self.c_talents = Tab.new{title="Talents", default=false, fct=function() end, on_change=function(s) if s then self:switchTo("talents") end end}
+	self.c_talents = Tab.new{title="Talents", default=false, fct=function() end, on_change=function(s) if s then self:switchTo("talents") end end }
+	self.b_talents_sorting = Button.new{text="Sort: "..({"Groups", "Name", "Type"})[self.talent_sorting], hide=true, width=100, fct=function()
+		self.talent_sorting = self.talent_sorting + 1
+		if self.talent_sorting > 3 then self.talent_sorting = 1 end
+
+		--Save to config
+		config.settings.tome.charsheet_talent_sorting = self.talent_sorting
+		game:saveSettings("tome.charsheet_talent_sorting", ("tome.charsheet_talent_sorting = %d\n"):format(self.talent_sorting))
+
+		self.b_talents_sorting.text = "Sort: "..({"Groups", "Name", "Type"})[self.talent_sorting]
+		self.b_talents_sorting:generate()
+		self:switchTo("talents") -- Force a redraw
+	end}
+
 
 	local tw, th = self.font_bold:size(self.title)
 
@@ -102,6 +118,7 @@ Mouse: Hover over stat for info
 		{left=15+self.c_general.w+self.c_attack.w, top=self.c_tut.h, ui=self.c_defence},
 		{left=15+self.c_general.w+self.c_attack.w+self.c_defence.w, top=self.c_tut.h, ui=self.c_talents},
 		{left=0, top=self.c_tut.h + self.c_general.h, ui=self.vs},
+		{right=0, bottom=0, ui=self.b_talents_sorting},
 
 		{left=0, top=self.c_tut.h + self.c_general.h + 5 + self.vs.h, ui=self.c_desc},
 	}
@@ -118,11 +135,14 @@ function _M:innerDisplay(x, y, nb_keyframes)
 end
 
 function _M:switchTo(kind)
+	self.b_talents_sorting.hide = true
 	self:drawDialog(kind, _M.cs_player_dup)
 	if kind == "general" then self.c_attack.selected = false self.c_defence.selected = false self.c_talents.selected = false
 	elseif kind == "attack" then self.c_general.selected = false self.c_defence.selected = false self.c_talents.selected = false
 	elseif kind == "defence" then self.c_attack.selected = false self.c_general.selected = false self.c_talents.selected = false
-	elseif kind == "talents" then self.c_attack.selected = false self.c_general.selected = false self.c_defence.selected = false
+	elseif kind == "talents" then
+		self.b_talents_sorting.hide = false
+		self.c_attack.selected = false self.c_general.selected = false self.c_defence.selected = false
 	end
 	self:updateKeys()
 end
@@ -965,21 +985,136 @@ function _M:drawDialog(kind, actor_to_compare)
 		h = 0
 		w = 0
 
-		local talents = {}
 
-		-- Get the group/display name for a given talent type
-		local function get_group(tt)
-			if tt.type:match("inscriptions/.*") then
-				return "Inscriptions"
-			elseif tt.type:match("uber/.*") then
-				return "Prodigies"
-			elseif tt.type:match(".*/objects") then
-				return "Item Talents"
+		local function sort_talents()
+
+			local talents = {}
+
+			local get_group
+			if self.talent_sorting == 1 then
+				-- Get the group/display name for a given talent type
+				get_group = function(t, tt)
+					if tt.type:match("inscriptions/.*") then
+						return "Inscriptions"
+					elseif tt.type:match("uber/.*") then
+						return "Prodigies"
+					elseif tt.type:match(".*/objects") then
+						return "Item Talents"
+					end
+
+					local cat = tt.type:gsub("/.*", ""):bookCapitalize()
+					return cat.."/"..(tt.name or ""):bookCapitalize()
+				end
+			elseif self.talent_sorting == 2 then
+				-- Alphabetically, so no groups at all.
+				get_group = function(t, tt)
+					return "Talents"
+				end
+			else
+				-- Sort by usage type/speed
+				get_group = function(t, tt)
+					if t.mode == "activated" then
+						local no_energy = util.getval(t.no_energy, player, t)
+						return no_energy and "Instant" or "Activated"
+					else
+						return t.mode:bookCapitalize()
+					end
+				end
 			end
 
-			local cat = tt.type:gsub("/.*", ""):bookCapitalize()
-			return cat.."/"..(tt.name or ""):bookCapitalize()
+			-- Process the talents
+			for j, t in pairs(player.talents_def) do
+				if player:knowTalent(t.id) and (not t.hide or t.hide ~= "always") then
+					local lvl = player:getTalentLevelRaw(t)
+					local tt = player:getTalentTypeFrom(t.type[1])
+
+					local data = {type_name = tt,
+						talent = t,
+						name = ("%s (%d)"):format(t.name, lvl),
+						desc = player:getTalentFullDescription(t):toString(),
+					}
+
+					if self.talent_sorting == 2 then
+						if not talents["All"] then
+							talents["All"] = {type_name = "All", talent_type=nil, talents={} }
+						end
+						table.insert(talents["All"]["talents"], data)
+					else
+						local group_name = get_group(t, tt)
+
+						if not talents[group_name] then
+							talents[group_name] = {type_name = group_name, talent_type=tt, talents={}}
+						end
+						table.insert(talents[group_name]["talents"], data)
+					end
+				end
+			end
+
+			local sort_tt
+
+			-- Decide what sorting method do use
+			if self.talent_sorting == 1 then
+				-- Sorting of talent groups, Racial/infusions first, then alphabetical order
+				local sort_rank = {"race/.*", "Inscriptions", "Prodigies", "Item Talents"} -- Relies on the groups
+				sort_tt = function(a, b)
+					a, b = a["type_name"], b["type_name"]
+					for i, v in ipairs(sort_rank) do
+						local rank_a, rank_b
+						rank_a = a:match(v)
+						if not rank_a then
+							rank_b = b:match(v)
+							if rank_b then return false end
+						else
+							return true
+						end
+					end
+					return a < b
+				end
+			elseif self.talent_sorting == 2 then
+				-- Only care about alphabetically sorting
+				sort_tt = function(a, b)
+					return a.name < b.name end
+			else
+				-- instant > activated > sustained > passive > alphabetically
+				local sort_rank = {"Instant", "Activated", "Sustained", "Passive" }
+				sort_tt = function(a, b)
+					a, b = a["type_name"], b["type_name"]
+					for i, v in ipairs(sort_rank) do
+						local rank_a, rank_b
+						rank_a = a:match(v)
+						if not rank_a then
+							rank_b = b:match(v)
+							if rank_b then return false end
+						else
+							return true
+						end
+					end
+					return a < b
+				end
+			end
+			-- Sort the talent type stuff
+			local sorted = {}
+			if self.talent_sorting == 2 then
+				table.sort(talents["All"]["talents"], sort_tt)
+				return talents
+			end
+			for k, v in pairs(talents) do
+				sorted[#sorted+1] = v
+			end
+
+			if self.talent_sorting == 2 then
+				table.sort(sorted[1], sort_tt)
+				return sorted
+			else
+				table.sort(sorted, sort_tt)
+			end
+
+			return sorted
+
 		end
+
+		local sorted = sort_talents()
+
 		-- The color used to display it
 		local function get_talent_color(t)
 			if t.mode == "activated" then
@@ -996,55 +1131,15 @@ function _M:drawDialog(kind, actor_to_compare)
 			end
 		end
 
-		-- Process the talents
-		for j, t in pairs(player.talents_def) do
-			if player:knowTalent(t.id) and (not t.hide or t.hide ~= "always") then
-				local lvl = player:getTalentLevelRaw(t)
-				local tt = player:getTalentTypeFrom(t.type[1])
-				local group_name = get_group(tt)
-				if not talents[group_name] then talents[group_name] = {type_name = group_name, talent_type=tt, talents={}} end
-
-				local data = {type_name = tt,
-					talent = t,
-					name = ("%s (%d)"):format(t.name, lvl),
-					desc = player:getTalentFullDescription(t):toString(),
-				}
-				table.insert(talents[group_name]["talents"], data)
-			end
-		end
-
-		-- Sorting of talent groups, Racial/infusions first, then alphabetical order
-		local sort_rank = {"race/.*", "Inscriptions", "Prodigies", "Item Talents"} -- Relies on the groups
-		local function sort_tt(a, b)
-			a, b = a["type_name"], b["type_name"]
-			for i, v in ipairs(sort_rank) do
-				local rank_a, rank_b
-				rank_a = a:match(v)
-				if not rank_a then
-					rank_b = b:match(v)
-					if rank_b then return false end
-				else
-					return true
-				end
-			end
-			return a < b
-		end
-
-		-- Sort the talent type stuff
-		local sorted = {}
-		for k, v in pairs(talents) do
-			sorted[#sorted+1] = v
-		end
-
-		table.sort(sorted, sort_tt)
-
 		-- Now display it!
 		for ts, tt in pairs(sorted) do
 			-- Display talent type
 			local tt_name = tt["type_name"]
-			local talent_type = tt["talent_type"]
+			local talent_type_name = tt["talent_type"] and tt["talent_type"].description or tt_name or ""
 			local talents = tt["talents"]
-			self:mouseTooltip(talent_type.description or tt_name, s:drawColorStringBlended(self.font, ("#{bold}##KHAKI#%s#{normal}#"):format(tt_name), w, h, 255, 255, 255, true)) h = h + self.font_h
+			if tt_name then
+				self:mouseTooltip(talent_type_name, s:drawColorStringBlended(self.font, ("#{bold}##KHAKI#%s#{normal}#"):format(tt_name), w, h, 255, 255, 255, true)) h = h + self.font_h
+			end
 
 			-- Display the talents in the talent type
 			for _, t in ipairs(talents) do
@@ -1423,3 +1518,4 @@ function _M:dump()
 
 	Dialog:simplePopup("Character dump complete", "File: "..fs.getRealPath(file))
 end
+
