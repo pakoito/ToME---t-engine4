@@ -988,6 +988,20 @@ function core.display.loadImage(path)
 	return oldloadimage(path)
 end
 
+function fs.iterate(path, filter)
+	local list = fs.list(path)
+	if filter then
+		for i = #list, 1, -1 do if not filter(list[i]) then
+			table.remove(list, i)
+		end end
+	end
+	local i = 0
+	return function()
+		i = i + 1
+		return list[i]
+	end
+end
+
 local oldfsexists = fs.exists
 function fs.exists(path)
 	if virtualimages[path] then return true end

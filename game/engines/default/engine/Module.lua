@@ -289,7 +289,7 @@ end
 --- List all available addons
 function _M:listAddons(mod, ignore_compat)
 	local adds = {}
-	local load = function(dir, teaa)
+	local load = function(dir, teaa, teaac)
 		local add_def = loadfile(dir.."/init.lua")
 		if add_def then
 			local add = {}
@@ -299,6 +299,7 @@ function _M:listAddons(mod, ignore_compat)
 			if (ignore_compat or engine.version_nearly_same(mod.version, add.version)) and add.for_module == mod.short_name then
 				add.dir = dir
 				add.teaa = teaa
+				add.teaac = teaac
 				add.natural_compatible = engine.version_nearly_same(mod.version, add.version)
 				add.version_txt = ("%d.%d.%d"):format(add.version[1], add.version[2], add.version[3])
 				if add.dlc and not profile:isDonator(add.dlc) then add.dlc = "no" end
@@ -309,7 +310,7 @@ function _M:listAddons(mod, ignore_compat)
 	end
 
 	local parse = function(basedir)
-		for i, short_name in ipairs(fs.list(basedir)) do if short_name:find("^"..mod.short_name.."%-") then
+		for i, short_name in ipairs(fs.list(basedir)) do if short_name:find("^"..mod.short_name.."%-") or short_name:find(".teaac$") then
 			local dir = basedir..short_name
 			print("Checking addon", short_name, ":: (as dir)", fs.exists(dir.."/init.lua"), ":: (as teaa)", short_name:find(".teaa$"), "")
 			if fs.exists(dir.."/init.lua") then
@@ -319,6 +320,16 @@ function _M:listAddons(mod, ignore_compat)
 				local mod
 				if fs.exists("/testload/init.lua") then
 					load("/testload", dir)
+				end
+				fs.umount(fs.getRealPath(dir))
+			elseif short_name:find(".teaac$") then
+				fs.mount(fs.getRealPath(dir), "/testload", false)
+				for sdir in fs.iterate("/testload", function(p) return p:find("%-") end) do
+					print(" * Addon collection subaddon", sdir)
+					local mod
+					if fs.exists("/testload/"..sdir.."/init.lua") then
+						load("/testload/"..sdir, dir, sdir)
+					end
 				end
 				fs.umount(fs.getRealPath(dir))
 			end
@@ -454,13 +465,15 @@ You may try to force loading if you are sure the savefile does not use that addo
 
 		if add.data then
 			print(" * with data")
-			if add.teaa then fs.mount("subdir:/data/|"..fs.getRealPath(add.teaa), "/data-"..add.short_name, true)
+			if add.teaac then fs.mount("subdir:/"..add.teaac.."/data/|"..fs.getRealPath(add.teaa), "/data-"..add.short_name, true)
+			elseif add.teaa then fs.mount("subdir:/data/|"..fs.getRealPath(add.teaa), "/data-"..add.short_name, true)
 			else fs.mount(base.."/data", "/data-"..add.short_name, true)
 			end
 		end
 		if add.superload then 
 			print(" * with superload")
-			if add.teaa then fs.mount("subdir:/superload/|"..fs.getRealPath(add.teaa), "/mod/addons/"..add.short_name.."/superload", true)
+			if add.teaac then fs.mount("subdir:/"..add.teaac.."/superload/|"..fs.getRealPath(add.teaa), "/mod/addons/"..add.short_name.."/superload", true)
+			elseif add.teaa then fs.mount("subdir:/superload/|"..fs.getRealPath(add.teaa), "/mod/addons/"..add.short_name.."/superload", true)
 			else fs.mount(base.."/superload", "/mod/addons/"..add.short_name.."/superload", true)
 			end
 			
@@ -468,12 +481,14 @@ You may try to force loading if you are sure the savefile does not use that addo
 		end
 		if add.overload then
 			print(" * with overload")
-			if add.teaa then fs.mount("subdir:/overload/|"..fs.getRealPath(add.teaa), "/", false)
+			if add.teaac then fs.mount("subdir:/"..add.teaac.."/overload/|"..fs.getRealPath(add.teaa), "/", false)
+			elseif add.teaa then fs.mount("subdir:/overload/|"..fs.getRealPath(add.teaa), "/", false)
 			else fs.mount(base.."/overload", "/", false)
 			end
 		end
 		if add.hooks then
-			if add.teaa then fs.mount("subdir:/hooks/|"..fs.getRealPath(add.teaa), "/hooks/"..add.short_name, true)
+			if add.teaac then fs.mount("subdir:/"..add.teaac.."/hooks/|"..fs.getRealPath(add.teaa), "/hooks/"..add.short_name, true)
+			elseif add.teaa then fs.mount("subdir:/hooks/|"..fs.getRealPath(add.teaa), "/hooks/"..add.short_name, true)
 			else fs.mount(base.."/hooks", "/hooks/"..add.short_name, true)
 			end
 
