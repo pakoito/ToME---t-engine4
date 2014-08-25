@@ -1061,6 +1061,10 @@ _M.weapon_talents = {
 }
 
 --- Static!
+-- Training Talents can have the following fields:
+-- getMasteryPriority(self, t, kind) - Only the talent with the highest is used. Defaults to the talent level.
+-- getDamage(self, t, kind) - Extra physical power granted. Defaults to level * 10.
+-- getPercentInc(self, t, kind) - Percentage increase to damage overall. Defaults to sqrt(level / 5) / 2.
 function _M:addCombatTraining(kind, tid)
 	local wt = _M.weapon_talents
 	if not wt[kind] then wt[kind] = tid return end
@@ -1079,35 +1083,44 @@ function _M:combatGetTraining(weapon)
 	if not weapon.talented then return nil end
 	if not _M.weapon_talents[weapon.talented] then return nil end
 	if type(_M.weapon_talents[weapon.talented]) == "table" then
-		local ktid, max = _M.weapon_talents[weapon.talented][1], self:getTalentLevel(_M.weapon_talents[weapon.talented][1])
-		for i, tid in ipairs(_M.weapon_talents[weapon.talented]) do
+		game.log('table training')
+		local get_priority = function(tid)
+			local t = self:getTalentFromId(tid)
+			if t.getMasteryPriority then return util.getval(t.getMasteryPriority, self, t, weapon.talented) end
+			return self:getTalentLevel(t)
+		end
+		local max_tid -- = _M.weapon_talents[weapon.talented][1]
+		local max_priority = -math.huge -- get_priority(max_tid)
+		for _, tid in ipairs(_M.weapon_talents[weapon.talented]) do
 			if self:knowTalent(tid) then
-				if self:getTalentLevel(tid) > max then
-					ktid = tid
-					max = self:getTalentLevel(tid)
+				local priority = get_priority(tid)
+				game.log('%s - %s', tid, priority)
+				if priority > max_priority then
+					max_tid = tid
+					max_priority = priority
 				end
 			end
 		end
-		return self:getTalentFromId(ktid)
+		return self:getTalentFromId(max_tid)
 	else
 		return self:getTalentFromId(_M.weapon_talents[weapon.talented])
 	end
 end
 
---- Checks weapon training
-function _M:combatCheckTraining(weapon)
-	if not weapon then return 0 end
-	if not weapon.talented then return 0 end
-	if not _M.weapon_talents[weapon.talented] then return 0 end
-	if type(_M.weapon_talents[weapon.talented]) == "table" then
-		local max = 0
-		for i, tid in ipairs(_M.weapon_talents[weapon.talented]) do
-			max = math.max(max, self:getTalentLevel(tid))
-		end
-		return max
-	else
-		return self:getTalentLevel(_M.weapon_talents[weapon.talented])
-	end
+-- Gets the added damage for a weapon based on training.
+function _M:combatTrainingDamage(weapon)
+	local t = self:combatGetTraining(weapon)
+	if not t then return 0 end
+	if t.getDamage then return util.getval(t.getDamage, self, t, weapon.talented) end
+	return self:getTalentLevel(t) * 10
+end
+
+-- Gets the percent increase for a weapon based on training.
+function _M:combatTrainingPercentInc(weapon)
+	local t = self:combatGetTraining(weapon)
+	if not t then return 0 end
+	if t.getPercentInc then return util.getval(t.getPercentInc, self, t, weapon.talented) end
+	return math.sqrt(self:getTalentLevel(t) / 5) / 2
 end
 
 --- Gets the defense
@@ -1517,7 +1530,7 @@ function _M:combatDamage(weapon, adddammod)
 		totstat = totstat + self:getStat("mag") * 0.5
 	end
 
-	local talented_mod = math.sqrt(self:combatCheckTraining(weapon) / 5) / 2 + 1
+	local talented_mod = 1 + self:combatTrainingPercentInc(weapon)
 
 	local power = math.max((weapon.dam or 1), 1)
 	power = (math.sqrt(power / 10) - 1) * 0.5 + 1
@@ -1550,7 +1563,7 @@ function _M:combatPhysicalpower(mod, weapon, add)
 		if inven and inven[1] then weapon = self:getObjectCombat(inven[1], "mainhand") else weapon = self.combat end
 	end
 
-	add = add + 10 * self:combatCheckTraining(weapon)
+	add = add + self:combatTrainingDamage(weapon)
 
 	local str = self:getStr()
 	if self:knowTalent(Talents.T_STRENGTH_OF_PURPOSE) then
