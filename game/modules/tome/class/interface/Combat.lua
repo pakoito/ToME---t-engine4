@@ -1083,7 +1083,6 @@ function _M:combatGetTraining(weapon)
 	if not weapon.talented then return nil end
 	if not _M.weapon_talents[weapon.talented] then return nil end
 	if type(_M.weapon_talents[weapon.talented]) == "table" then
-		game.log('table training')
 		local get_priority = function(tid)
 			local t = self:getTalentFromId(tid)
 			if t.getMasteryPriority then return util.getval(t.getMasteryPriority, self, t, weapon.talented) end
@@ -1094,7 +1093,6 @@ function _M:combatGetTraining(weapon)
 		for _, tid in ipairs(_M.weapon_talents[weapon.talented]) do
 			if self:knowTalent(tid) then
 				local priority = get_priority(tid)
-				game.log('%s - %s', tid, priority)
 				if priority > max_priority then
 					max_tid = tid
 					max_priority = priority
