@@ -548,7 +548,9 @@ function _M:getTextualDesc(compare_with, use_actor)
 		combat = combat[field] or {}
 		compare_with = compare_with or {}
 		local dm = {}
-		for stat, i in pairs(combat.dammod or {}) do
+		local dammod = {}
+		if next(combat.dammod or {}) then dammod = use_actor:getDammod(combat) end
+		for stat, i in pairs(dammod) do
 			local name = Stats.stats_def[stat].short_name:capitalize()
 			if use_actor:knowTalent(use_actor.T_STRENGTH_OF_PURPOSE) then
 				if name == "Str" then name = "Mag" end
