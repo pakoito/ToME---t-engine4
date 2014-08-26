@@ -32,6 +32,8 @@ function _M:init(zone, map, level, data)
 	self.max_block_h = data.max_block_h or 20
 	self.max_building_w = data.max_building_w or 7
 	self.max_building_h = data.max_building_h or 7
+	self.margin_w = data.margin_w or 0
+	self.margin_h = data.margin_h or 0
 
 	RoomsLoader.init(self, data)
 end
@@ -161,7 +163,7 @@ function _M:generate(lev, old_lev)
 	self.walls = {}
 	self.rooms = {}
 
-	local bsp = BSP.new(self.map.w, self.map.h, self.max_block_w, self.max_block_h)
+	local bsp = BSP.new(self.map.w - self.margin_w, self.map.h - self.margin_h, self.max_block_w, self.max_block_h)
 	bsp:partition()
 
 	print("Building gen made ", #bsp.leafs, "blocks BSP leafs")
