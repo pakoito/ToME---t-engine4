@@ -695,8 +695,10 @@ end
 -- Extra recursive methods not handled yet
 function resolvers.calc.talented_ai_tactic(t, e)
 	local old_on_added_to_level = e.on_added_to_level
-	e.on_added_to_level = function(self, level, x, y)
-		if old_on_added_to_level then old_on_added_to_level(self, level, x, y) end
+	e.__ai_compute = t
+	e.on_added_to_level = function(e, level, x, y)
+		local t = e.__ai_compute
+		if old_on_added_to_level then old_on_added_to_level(e, level, x, y) end
 		print("  # talented_ai_tactic resolver function for", e.name, "level=", e.level, e.uid)
 		local tactic_total = t[2] or t.tactic_total or 10 --want tactic weights to total 10
 		local weight_power = t[3] or t.weight_power or 0.5 --smooth out tactical weights
@@ -811,8 +813,8 @@ function resolvers.calc.talented_ai_tactic(t, e)
 		tactic.type = "computed"
 print("  ### ai_tactic table:")
 for tac, wt in pairs(tactic) do print("    ##", tac, wt) end
-		self.ai_tactic = tactic
---		self.on_added_to_level = nil
+		e.ai_tactic = tactic
+		e.__ai_compute = nil
 		return tactic
 	end
 end
